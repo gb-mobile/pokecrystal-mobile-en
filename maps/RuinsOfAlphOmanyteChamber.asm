@@ -1,9 +1,9 @@
 RuinsOfAlphOmanyteChamber_MapScripts:
-	def_scene_scripts
-	scene_script .CheckWall,  SCENE_RUINSOFALPHOMANYTECHAMBER_CHECK_WALL
-	scene_script .DummyScene, SCENE_RUINSOFALPHOMANYTECHAMBER_NOOP
+	db 2 ; scene scripts
+	scene_script .CheckWall ; SCENE_DEFAULT
+	scene_script .DummyScene ; SCENE_FINISHED
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_TILES, .HiddenDoors
 
 .CheckWall:
@@ -13,7 +13,7 @@ RuinsOfAlphOmanyteChamber_MapScripts:
 	end
 
 .OpenWall:
-	sdefer .WallOpenScript
+	prioritysjump .WallOpenScript
 	end
 
 .DummyScene:
@@ -26,12 +26,12 @@ RuinsOfAlphOmanyteChamber_MapScripts:
 .WallOpen:
 	checkevent EVENT_SOLVED_OMANYTE_PUZZLE
 	iffalse .FloorClosed
-	endcallback
+	return
 
 .FloorClosed:
 	changeblock 2, 2, $01 ; left floor
 	changeblock 4, 2, $02 ; right floor
-	endcallback
+	return
 
 .WallOpenScript:
 	pause 30
@@ -42,7 +42,7 @@ RuinsOfAlphOmanyteChamber_MapScripts:
 	changeblock 4, 0, $30 ; open wall
 	reloadmappart
 	earthquake 50
-	setscene SCENE_RUINSOFALPHOMANYTECHAMBER_NOOP
+	setscene SCENE_FINISHED
 	closetext
 	end
 
@@ -113,7 +113,8 @@ RuinsOfAlphOmanyteChamberWallPatternLeftText:
 	line "on the walls…"
 	done
 
-RuinsOfAlphOmanyteChamberUnownText: ; unreferenced
+RuinsOfAlphOmanyteChamberUnownText:
+; unused
 	text "It's UNOWN text!"
 	done
 
@@ -144,16 +145,16 @@ RuinsOfAlphOmanyteChamberDescriptionText:
 RuinsOfAlphOmanyteChamber_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 5 ; warp events
 	warp_event  3,  9, RUINS_OF_ALPH_OUTSIDE, 3
 	warp_event  4,  9, RUINS_OF_ALPH_OUTSIDE, 3
 	warp_event  3,  3, RUINS_OF_ALPH_INNER_CHAMBER, 6
 	warp_event  4,  3, RUINS_OF_ALPH_INNER_CHAMBER, 7
 	warp_event  4,  0, RUINS_OF_ALPH_OMANYTE_ITEM_ROOM, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 6 ; bg events
 	bg_event  2,  3, BGEVENT_READ, RuinsOfAlphOmanyteChamberAncientReplica
 	bg_event  5,  3, BGEVENT_READ, RuinsOfAlphOmanyteChamberAncientReplica
 	bg_event  3,  2, BGEVENT_UP, RuinsOfAlphOmanyteChamberPuzzle
@@ -161,4 +162,4 @@ RuinsOfAlphOmanyteChamber_MapEvents:
 	bg_event  3,  0, BGEVENT_UP, RuinsOfAlphOmanyteChamberWallPatternLeft
 	bg_event  4,  0, BGEVENT_UP, RuinsOfAlphOmanyteChamberWallPatternRight
 
-	def_object_events
+	db 0 ; object events

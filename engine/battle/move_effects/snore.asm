@@ -1,7 +1,8 @@
 BattleCommand_Snore:
+; snore
 	ld a, BATTLE_VARS_STATUS
 	call GetBattleVar
-	and SLP_MASK
+	and SLP
 	ret nz
 	call ResetDamage
 	ld a, $1

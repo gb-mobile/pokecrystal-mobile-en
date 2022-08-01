@@ -1,20 +1,20 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const RUINSOFALPHINNERCHAMBER_FISHER
 	const RUINSOFALPHINNERCHAMBER_TEACHER
 	const RUINSOFALPHINNERCHAMBER_GRAMPS
 
 RuinsOfAlphInnerChamber_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene0, SCENE_RUINSOFALPHINNERCHAMBER_NOOP
-	scene_script .UnownAppear, SCENE_RUINSOFALPHINNERCHAMBER_STRANGE_PRESENCE
+	db 2 ; scene scripts
+	scene_script .DummyScene0 ; SCENE_RUINSOFALPHINNERCHAMBER_NOTHING
+	scene_script .UnownAppear ; SCENE_RUINSOFALPHINNERCHAMBER_STRANGE_PRESENCE
 
-	def_callbacks
+	db 0 ; callbacks
 
 .DummyScene0:
 	end
 
 .UnownAppear:
-	sdefer .StrangePresenceScript
+	prioritysjump .StrangePresenceScript
 	end
 
 .StrangePresenceScript:
@@ -22,7 +22,7 @@ RuinsOfAlphInnerChamber_MapScripts:
 	writetext RuinsOfAlphStrangePresenceText
 	waitbutton
 	closetext
-	setscene SCENE_RUINSOFALPHINNERCHAMBER_NOOP
+	setscene SCENE_RUINSOFALPHINNERCHAMBER_NOTHING
 	setevent EVENT_MADE_UNOWN_APPEAR_IN_RUINS
 	clearevent EVENT_RUINS_OF_ALPH_OUTSIDE_TOURIST_FISHER
 	end
@@ -77,7 +77,7 @@ RuinsOfAlphInnerChamberStatueText:
 RuinsOfAlphInnerChamber_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 9 ; warp events
 	warp_event 10, 13, RUINS_OF_ALPH_OUTSIDE, 5
 	warp_event  3, 15, RUINS_OF_ALPH_HO_OH_CHAMBER, 3
 	warp_event  4, 15, RUINS_OF_ALPH_HO_OH_CHAMBER, 4
@@ -88,9 +88,9 @@ RuinsOfAlphInnerChamber_MapEvents:
 	warp_event 15, 24, RUINS_OF_ALPH_AERODACTYL_CHAMBER, 3
 	warp_event 16, 24, RUINS_OF_ALPH_AERODACTYL_CHAMBER, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 26 ; bg events
 	bg_event  2,  3, BGEVENT_READ, RuinsOfAlphInnerChamberStatue
 	bg_event  5,  3, BGEVENT_READ, RuinsOfAlphInnerChamberStatue
 	bg_event  8,  3, BGEVENT_READ, RuinsOfAlphInnerChamberStatue
@@ -118,7 +118,7 @@ RuinsOfAlphInnerChamber_MapEvents:
 	bg_event 14, 24, BGEVENT_READ, RuinsOfAlphInnerChamberStatue
 	bg_event 17, 24, BGEVENT_READ, RuinsOfAlphInnerChamberStatue
 
-	def_object_events
+	db 3 ; object events
 	object_event  3,  7, SPRITE_FISHER, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, RuinsOfAlphInnerChamberFisherScript, EVENT_RUINS_OF_ALPH_INNER_CHAMBER_TOURISTS
 	object_event 14, 13, SPRITE_TEACHER, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, RuinsOfAlphInnerChamberTeacherScript, EVENT_RUINS_OF_ALPH_INNER_CHAMBER_TOURISTS
 	object_event 11, 19, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, RuinsOfAlphInnerChamberGrampsScript, EVENT_RUINS_OF_ALPH_INNER_CHAMBER_TOURISTS

@@ -1,24 +1,10 @@
-	; PokemonCenterPC.WhichPC indexes
-	const_def
-	const PCPC_BEFORE_POKEDEX ; 0
-	const PCPC_BEFORE_HOF     ; 1
-	const PCPC_POSTGAME       ; 2
-
-	; PokemonCenterPC.Jumptable indexes
-	const_def
-	const PCPCITEM_PLAYERS_PC   ; 0
-	const PCPCITEM_BILLS_PC     ; 1
-	const PCPCITEM_OAKS_PC      ; 2
-	const PCPCITEM_HALL_OF_FAME ; 3
-	const PCPCITEM_TURN_OFF     ; 4
-
 PokemonCenterPC:
 	call PC_CheckPartyForPokemon
 	ret c
 	call PC_PlayBootSound
-	ld hl, PokecenterPCTurnOnText
+	ld hl, PokecenterPCText_BootedUpPC
 	call PC_DisplayText
-	ld hl, PokecenterPCWhoseText
+	ld hl, PokecenterPCText_AccessWhosePC
 	call PC_DisplayTextWaitMenu
 	ld hl, .TopMenu
 	call LoadMenuHeader
@@ -30,7 +16,7 @@ PokemonCenterPC:
 	call DoNthMenu
 	jr c, .shutdown
 	ld a, [wMenuSelection]
-	ld hl, .Jumptable
+	ld hl, .JumpTable
 	call MenuJumptable
 	jr nc, .loop
 
@@ -51,10 +37,16 @@ PokemonCenterPC:
 	db 0 ; items
 	dw .WhichPC
 	dw PlaceNthMenuStrings
-	dw .Jumptable
+	dw .JumpTable
 
-.Jumptable:
-; entries correspond to PCPCITEM_* constants
+PCPC_PLAYERS_PC   EQU 0
+PCPC_BILLS_PC     EQU 1
+PCPC_OAKS_PC      EQU 2
+PCPC_HALL_OF_FAME EQU 3
+PCPC_TURN_OFF     EQU 4
+
+.JumpTable:
+; entries correspond to PCPC_* constants
 	dw PlayersPC,    .String_PlayersPC
 	dw BillsPC,      .String_BillsPC
 	dw OaksPC,       .String_OaksPC
@@ -68,44 +60,42 @@ PokemonCenterPC:
 .String_TurnOff:    db "TURN OFF@"
 
 .WhichPC:
-; entries correspond to PCPC_* constants
-
-	; PCPC_BEFORE_POKEDEX
+	; before Pokédex
 	db 3
-	db PCPCITEM_BILLS_PC
-	db PCPCITEM_PLAYERS_PC
-	db PCPCITEM_TURN_OFF
+	db PCPC_BILLS_PC
+	db PCPC_PLAYERS_PC
+	db PCPC_TURN_OFF
 	db -1 ; end
 
-	; PCPC_BEFORE_HOF
+	; before Hall Of Fame
 	db 4
-	db PCPCITEM_BILLS_PC
-	db PCPCITEM_PLAYERS_PC
-	db PCPCITEM_OAKS_PC
-	db PCPCITEM_TURN_OFF
+	db PCPC_BILLS_PC
+	db PCPC_PLAYERS_PC
+	db PCPC_OAKS_PC
+	db PCPC_TURN_OFF
 	db -1 ; end
 
-	; PCPC_POSTGAME
+	; postgame
 	db 5
-	db PCPCITEM_BILLS_PC
-	db PCPCITEM_PLAYERS_PC
-	db PCPCITEM_OAKS_PC
-	db PCPCITEM_HALL_OF_FAME
-	db PCPCITEM_TURN_OFF
+	db PCPC_BILLS_PC
+	db PCPC_PLAYERS_PC
+	db PCPC_OAKS_PC
+	db PCPC_HALL_OF_FAME
+	db PCPC_TURN_OFF
 	db -1 ; end
 
 .ChooseWhichPCListToUse:
 	call CheckReceivedDex
 	jr nz, .got_dex
-	ld a, PCPC_BEFORE_POKEDEX
+	ld a, 0 ; before Pokédex
 	ret
 
 .got_dex
 	ld a, [wHallOfFameCount]
 	and a
-	ld a, PCPC_BEFORE_HOF
+	ld a, 1 ; before Hall Of Fame
 	ret z
-	ld a, PCPC_POSTGAME
+	ld a, 2 ; postgame
 	ret
 
 PC_CheckPartyForPokemon:
@@ -114,34 +104,19 @@ PC_CheckPartyForPokemon:
 	ret nz
 	ld de, SFX_CHOOSE_PC_OPTION
 	call PlaySFX
-	ld hl, .PokecenterPCCantUseText
+	ld hl, .MustHavePokemonToUse
 	call PC_DisplayText
 	scf
 	ret
 
-.PokecenterPCCantUseText:
-	text_far _PokecenterPCCantUseText
+.MustHavePokemonToUse:
+	; Bzzzzt! You must have a #MON to use this!
+	text_far UnknownText_0x1c1328
 	text_end
-
-
-	; PlayersPCMenuData.WhichPC indexes
-	const_def
-	const PLAYERSPC_NORMAL ; 0
-	const PLAYERSPC_HOUSE  ; 1
-
-	; PlayersPCMenuData.PlayersPCMenuPointers indexes
-	const_def
-	const PLAYERSPCITEM_WITHDRAW_ITEM ; 0
-	const PLAYERSPCITEM_DEPOSIT_ITEM  ; 1
-	const PLAYERSPCITEM_TOSS_ITEM     ; 2
-	const PLAYERSPCITEM_MAIL_BOX      ; 3
-	const PLAYERSPCITEM_DECORATION    ; 4
-	const PLAYERSPCITEM_LOG_OFF       ; 5
-	const PLAYERSPCITEM_TURN_OFF      ; 6
 
 BillsPC:
 	call PC_PlayChoosePCSound
-	ld hl, PokecenterBillsPCText
+	ld hl, PokecenterPCText_AccessedBillsPC
 	call PC_DisplayText
 	farcall _BillsPC
 	and a
@@ -149,16 +124,16 @@ BillsPC:
 
 PlayersPC:
 	call PC_PlayChoosePCSound
-	ld hl, PokecenterPlayersPCText
+	ld hl, PokecenterPCText_AccessedOwnPC
 	call PC_DisplayText
-	ld b, PLAYERSPC_NORMAL
+	ld b, $0
 	call _PlayersPC
 	and a
 	ret
 
 OaksPC:
 	call PC_PlayChoosePCSound
-	ld hl, PokecenterOaksPCText
+	ld hl, PokecenterPCText_AccessedOaksPC
 	call PC_DisplayText
 	farcall ProfOaksPC
 	and a
@@ -173,7 +148,7 @@ HallOfFamePC:
 	ret
 
 TurnOffPC:
-	ld hl, PokecenterPCOaksClosedText
+	ld hl, PokecenterPCText_LinkClosed
 	call PrintText
 	scf
 	ret
@@ -206,55 +181,56 @@ PC_WaitPlaySFX:
 
 _PlayersHousePC:
 	call PC_PlayBootSound
-	ld hl, PlayersPCTurnOnText
+	ld hl, UnknownText_0x156ff
 	call PC_DisplayText
-	ld b, PLAYERSPC_HOUSE
+	ld b, $1
 	call _PlayersPC
 	and a
-	jr nz, .changed_deco_tiles
+	jr nz, .asm_156f9
 	call OverworldTextModeSwitch
 	call ApplyTilemap
 	call UpdateSprites
 	call PC_PlayShutdownSound
-	ld c, FALSE
+	ld c, $0
 	ret
 
-.changed_deco_tiles
+.asm_156f9
 	call ClearBGPalettes
-	ld c, TRUE
+	ld c, $1
 	ret
 
-PlayersPCTurnOnText:
-	text_far _PlayersPCTurnOnText
+UnknownText_0x156ff:
+	; turned on the PC.
+	text_far UnknownText_0x1c1353
 	text_end
 
 _PlayersPC:
 	ld a, b
 	ld [wWhichIndexSet], a
-	ld hl, PlayersPCAskWhatDoText
+	ld hl, UnknownText_0x157cc
 	call PC_DisplayTextWaitMenu
-	call .PlayersPC
+	call Function15715
 	call ExitMenu
 	ret
 
-.PlayersPC:
+Function15715:
 	xor a
 	ld [wPCItemsCursor], a
 	ld [wPCItemsScrollPosition], a
 	ld hl, PlayersPCMenuData
 	call LoadMenuHeader
-.loop
+.asm_15722
 	call UpdateTimePals
 	call DoNthMenu
-	jr c, .turn_off
+	jr c, .asm_15731
 	call MenuJumptable
-	jr nc, .loop
-	jr .done
+	jr nc, .asm_15722
+	jr .asm_15732
 
-.turn_off
+.asm_15731
 	xor a
 
-.done
+.asm_15732
 	call ExitMenu
 	ret
 
@@ -267,12 +243,20 @@ PlayersPCMenuData:
 .PlayersPCMenuData:
 	db STATICMENU_CURSOR | STATICMENU_WRAP ; flags
 	db 0 ; # items?
-	dw .WhichPC
+	dw .PlayersPCMenuList1
 	dw PlaceNthMenuStrings
 	dw .PlayersPCMenuPointers
 
+PLAYERSPC_WITHDRAW_ITEM EQU 0
+PLAYERSPC_DEPOSIT_ITEM  EQU 1
+PLAYERSPC_TOSS_ITEM     EQU 2
+PLAYERSPC_MAIL_BOX      EQU 3
+PLAYERSPC_DECORATION    EQU 4
+PLAYERSPC_TURN_OFF      EQU 5
+PLAYERSPC_LOG_OFF       EQU 6
+
 .PlayersPCMenuPointers:
-; entries correspond to PLAYERSPCITEM_* constants
+; entries correspond to PLAYERSPC_* constants
 	dw PlayerWithdrawItemMenu, .WithdrawItem
 	dw PlayerDepositItemMenu,  .DepositItem
 	dw PlayerTossItemMenu,     .TossItem
@@ -289,26 +273,23 @@ PlayersPCMenuData:
 .TurnOff:      db "TURN OFF@"
 .LogOff:       db "LOG OFF@"
 
-.WhichPC:
-; entries correspond to PLAYERSPC_* constants
-
-	; PLAYERSPC_NORMAL
+.PlayersPCMenuList1:
 	db 5
-	db PLAYERSPCITEM_WITHDRAW_ITEM
-	db PLAYERSPCITEM_DEPOSIT_ITEM
-	db PLAYERSPCITEM_TOSS_ITEM
-	db PLAYERSPCITEM_MAIL_BOX
-	db PLAYERSPCITEM_LOG_OFF
+	db PLAYERSPC_WITHDRAW_ITEM
+	db PLAYERSPC_DEPOSIT_ITEM
+	db PLAYERSPC_TOSS_ITEM
+	db PLAYERSPC_MAIL_BOX
+	db PLAYERSPC_TURN_OFF
 	db -1 ; end
 
-	; PLAYERSPC_HOUSE
+.PlayersPCMenuList2:
 	db 6
-	db PLAYERSPCITEM_WITHDRAW_ITEM
-	db PLAYERSPCITEM_DEPOSIT_ITEM
-	db PLAYERSPCITEM_TOSS_ITEM
-	db PLAYERSPCITEM_MAIL_BOX
-	db PLAYERSPCITEM_DECORATION
-	db PLAYERSPCITEM_TURN_OFF
+	db PLAYERSPC_WITHDRAW_ITEM
+	db PLAYERSPC_DEPOSIT_ITEM
+	db PLAYERSPC_TOSS_ITEM
+	db PLAYERSPC_MAIL_BOX
+	db PLAYERSPC_DECORATION
+	db PLAYERSPC_LOG_OFF
 	db -1 ; end
 
 PC_DisplayTextWaitMenu:
@@ -321,8 +302,9 @@ PC_DisplayTextWaitMenu:
 	ld [wOptions], a
 	ret
 
-PlayersPCAskWhatDoText:
-	text_far _PlayersPCAskWhatDoText
+UnknownText_0x157cc:
+	; What do you want to do?
+	text_far UnknownText_0x1c1368
 	text_end
 
 PlayerWithdrawItemMenu:
@@ -342,17 +324,17 @@ PlayerWithdrawItemMenu:
 .Submenu:
 	; check if the item has a quantity
 	farcall _CheckTossableItem
-	ld a, [wItemAttributeValue]
+	ld a, [wItemAttributeParamBuffer]
 	and a
 	jr z, .askquantity
 
 	; items without quantity are always ×1
 	ld a, 1
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	jr .withdraw
 
 .askquantity
-	ld hl, .PlayersPCHowManyWithdrawText
+	ld hl, .HowManyText
 	call MenuTextbox
 	farcall SelectQuantityToToss
 	call ExitMenu
@@ -360,21 +342,21 @@ PlayerWithdrawItemMenu:
 	jr c, .done
 
 .withdraw
-	ld a, [wItemQuantityChange]
-	ld [wPCItemQuantityChange], a
+	ld a, [wItemQuantityChangeBuffer]
+	ld [wBuffer1], a ; quantity
 	ld a, [wCurItemQuantity]
-	ld [wPCItemQuantity], a
+	ld [wBuffer2], a
 	ld hl, wNumItems
 	call ReceiveItem
 	jr nc, .PackFull
-	ld a, [wPCItemQuantityChange]
-	ld [wItemQuantityChange], a
-	ld a, [wPCItemQuantity]
+	ld a, [wBuffer1]
+	ld [wItemQuantityChangeBuffer], a
+	ld a, [wBuffer2]
 	ld [wCurItemQuantity], a
 	ld hl, wNumPCItems
 	call TossItem
 	predef PartyMonItemName
-	ld hl, .PlayersPCWithdrewItemsText
+	ld hl, .WithdrewText
 	call MenuTextbox
 	xor a
 	ldh [hBGMapMode], a
@@ -382,22 +364,22 @@ PlayerWithdrawItemMenu:
 	ret
 
 .PackFull:
-	ld hl, .PlayersPCNoRoomWithdrawText
+	ld hl, .NoRoomText
 	call MenuTextboxBackup
 	ret
 
 .done
 	ret
 
-.PlayersPCHowManyWithdrawText:
+.HowManyText:
 	text_far _PlayersPCHowManyWithdrawText
 	text_end
 
-.PlayersPCWithdrewItemsText:
+.WithdrewText:
 	text_far _PlayersPCWithdrewItemsText
 	text_end
 
-.PlayersPCNoRoomWithdrawText:
+.NoRoomText:
 	text_far _PlayersPCNoRoomWithdrawText
 	text_end
 
@@ -454,22 +436,23 @@ PlayerDepositItemMenu:
 .CheckItemsInBag:
 	farcall HasNoItems
 	ret nc
-	ld hl, .PlayersPCNoItemsText
+	ld hl, .NoItemsInBag
 	call MenuTextboxBackup
 	scf
 	ret
 
-.PlayersPCNoItemsText:
-	text_far _PlayersPCNoItemsText
+.NoItemsInBag:
+	; No items here!
+	text_far UnknownText_0x1c13df
 	text_end
 
 .TryDepositItem:
 	ld a, [wSpriteUpdatesEnabled]
 	push af
-	ld a, FALSE
+	ld a, $0
 	ld [wSpriteUpdatesEnabled], a
 	farcall CheckItemMenu
-	ld a, [wItemAttributeValue]
+	ld a, [wItemAttributeParamBuffer]
 	ld hl, .dw
 	rst JumpTable
 	pop af
@@ -490,28 +473,28 @@ PlayerDepositItemMenu:
 	ret
 
 .tossable
-	ld a, [wPCItemQuantityChange]
+	ld a, [wBuffer1]
 	push af
-	ld a, [wPCItemQuantity]
+	ld a, [wBuffer2]
 	push af
 	call .DepositItem
 	pop af
-	ld [wPCItemQuantity], a
+	ld [wBuffer2], a
 	pop af
-	ld [wPCItemQuantityChange], a
+	ld [wBuffer1], a
 	ret
 
 .DepositItem:
 	farcall _CheckTossableItem
-	ld a, [wItemAttributeValue]
+	ld a, [wItemAttributeParamBuffer]
 	and a
 	jr z, .AskQuantity
-	ld a, 1
-	ld [wItemQuantityChange], a
+	ld a, $1
+	ld [wItemQuantityChangeBuffer], a
 	jr .ContinueDeposit
 
 .AskQuantity:
-	ld hl, .PlayersPCHowManyDepositText
+	ld hl, .HowManyText
 	call MenuTextbox
 	farcall SelectQuantityToToss
 	push af
@@ -521,26 +504,26 @@ PlayerDepositItemMenu:
 	jr c, .DeclinedToDeposit
 
 .ContinueDeposit:
-	ld a, [wItemQuantityChange]
-	ld [wPCItemQuantityChange], a
+	ld a, [wItemQuantityChangeBuffer]
+	ld [wBuffer1], a
 	ld a, [wCurItemQuantity]
-	ld [wPCItemQuantity], a
+	ld [wBuffer2], a
 	ld hl, wNumPCItems
 	call ReceiveItem
 	jr nc, .NoRoomInPC
-	ld a, [wPCItemQuantityChange]
-	ld [wItemQuantityChange], a
-	ld a, [wPCItemQuantity]
+	ld a, [wBuffer1]
+	ld [wItemQuantityChangeBuffer], a
+	ld a, [wBuffer2]
 	ld [wCurItemQuantity], a
 	ld hl, wNumItems
 	call TossItem
 	predef PartyMonItemName
-	ld hl, .PlayersPCDepositItemsText
+	ld hl, .DepositText
 	call PrintText
 	ret
 
 .NoRoomInPC:
-	ld hl, .PlayersPCNoRoomDepositText
+	ld hl, .NoRoomText
 	call PrintText
 	ret
 
@@ -548,15 +531,15 @@ PlayerDepositItemMenu:
 	and a
 	ret
 
-.PlayersPCHowManyDepositText:
+.HowManyText:
 	text_far _PlayersPCHowManyDepositText
 	text_end
 
-.PlayersPCDepositItemsText:
+.DepositText:
 	text_far _PlayersPCDepositItemsText
 	text_end
 
-.PlayersPCNoRoomDepositText:
+.NoRoomText:
 	text_far _PlayersPCNoRoomDepositText
 	text_end
 
@@ -571,7 +554,7 @@ PCItemsJoypad:
 .loop
 	ld a, [wSpriteUpdatesEnabled]
 	push af
-	ld a, FALSE
+	ld a, $0
 	ld [wSpriteUpdatesEnabled], a
 	ld hl, .PCItemsMenuData
 	call CopyMenuHeader
@@ -580,7 +563,7 @@ PCItemsJoypad:
 	ld c, 18
 	call Textbox
 	ld a, [wPCItemsCursor]
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	ld a, [wPCItemsScrollPosition]
 	ld [wMenuScrollPosition], a
 	call ScrollingMenu
@@ -654,26 +637,32 @@ PC_DisplayText:
 	call ExitMenu
 	ret
 
-PokecenterPCTurnOnText:
-	text_far _PokecenterPCTurnOnText
+PokecenterPCText_BootedUpPC:
+	; turned on the PC.
+	text_far UnknownText_0x1c144d
 	text_end
 
-PokecenterPCWhoseText:
-	text_far _PokecenterPCWhoseText
+PokecenterPCText_AccessWhosePC:
+	; Access whose PC?
+	text_far UnknownText_0x1c1462
 	text_end
 
-PokecenterBillsPCText:
-	text_far _PokecenterBillsPCText
+PokecenterPCText_AccessedBillsPC:
+	; BILL's PC accessed. #MON Storage System opened.
+	text_far UnknownText_0x1c1474
 	text_end
 
-PokecenterPlayersPCText:
-	text_far _PokecenterPlayersPCText
+PokecenterPCText_AccessedOwnPC:
+	; Accessed own PC. Item Storage System opened.
+	text_far UnknownText_0x1c14a4
 	text_end
 
-PokecenterOaksPCText:
-	text_far _PokecenterOaksPCText
+PokecenterPCText_AccessedOaksPC:
+	; PROF.OAK's PC accessed. #DEX Rating System opened.
+	text_far UnknownText_0x1c14d2
 	text_end
 
-PokecenterPCOaksClosedText:
-	text_far _PokecenterPCOaksClosedText
+PokecenterPCText_LinkClosed:
+	; … Link closed…
+	text_far UnknownText_0x1c1505
 	text_end

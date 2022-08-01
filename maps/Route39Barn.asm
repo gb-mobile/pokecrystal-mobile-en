@@ -1,12 +1,12 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE39BARN_TWIN1
 	const ROUTE39BARN_TWIN2
 	const ROUTE39BARN_MOOMOO
 
 Route39Barn_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 Route39BarnTwin1Script:
 	faceplayer
@@ -51,7 +51,7 @@ MoomooScript:
 	writetext MoomooWeakMooText
 	setval MILTANK
 	special PlaySlowCry
-	promptbutton
+	buttonsound
 	writetext Route39BarnItsCryIsWeakText
 	checkevent EVENT_TALKED_TO_FARMER_ABOUT_MOOMOO
 	iftrue .GiveBerry
@@ -60,7 +60,7 @@ MoomooScript:
 	end
 
 .GiveBerry:
-	promptbutton
+	buttonsound
 	writetext Route39BarnAskGiveBerryText
 	yesorno
 	iffalse .Refused
@@ -80,7 +80,7 @@ MoomooScript:
 
 .ThreeBerries:
 	writetext Route39BarnGaveBerryText
-	promptbutton
+	buttonsound
 	writetext Route39BarnLittleHealthierText
 	waitbutton
 	closetext
@@ -88,7 +88,7 @@ MoomooScript:
 
 .FiveBerries:
 	writetext Route39BarnGaveBerryText
-	promptbutton
+	buttonsound
 	writetext Route39BarnQuiteHealthyText
 	waitbutton
 	closetext
@@ -98,7 +98,7 @@ MoomooScript:
 	playmusic MUSIC_HEAL
 	writetext Route39BarnGaveBerryText
 	pause 60
-	promptbutton
+	buttonsound
 	special RestartMapMusic
 	writetext Route39BarnTotallyHealthyText
 	waitbutton
@@ -189,15 +189,15 @@ Route39BarnRefusedBerryText:
 Route39Barn_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  3,  7, ROUTE_39, 1
 	warp_event  4,  7, ROUTE_39, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 3 ; object events
 	object_event  2,  3, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Route39BarnTwin1Script, -1
 	object_event  4,  3, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, Route39BarnTwin2Script, -1
 	object_event  3,  3, SPRITE_TAUROS, SPRITEMOVEDATA_POKEMON, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MoomooScript, -1

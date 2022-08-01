@@ -1,4 +1,6 @@
 BattleCommand_Transform:
+; transform
+
 	call ClearLastMove
 	ld a, BATTLE_VARS_SUBSTATUS5_OPP
 	call GetBattleVarAddr
@@ -10,7 +12,7 @@ BattleCommand_Transform:
 	ld [wNumHits], a
 	ld [wFXAnimID + 1], a
 	ld a, $1
-	ld [wBattleAnimParam], a
+	ld [wKickCounter], a
 	ld a, BATTLE_VARS_SUBSTATUS4
 	call GetBattleVarAddr
 	bit SUBSTATUS_SUBSTITUTE, [hl]
@@ -97,7 +99,7 @@ BattleCommand_Transform:
 	jr nz, .pp_loop
 	pop hl
 	ld a, [hl]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	ld hl, wEnemyStats
 	ld de, wPlayerStats
@@ -128,7 +130,7 @@ BattleCommand_Transform:
 	ld [wNumHits], a
 	ld [wFXAnimID + 1], a
 	ld a, $2
-	ld [wBattleAnimParam], a
+	ld [wKickCounter], a
 	pop af
 	ld a, SUBSTITUTE
 	call nz, LoadAnim

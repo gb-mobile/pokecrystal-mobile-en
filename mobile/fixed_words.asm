@@ -31,7 +31,7 @@ Function11c075:
 	call Function11c08f
 	ret
 
-Function11c082: ; unreferenced
+Unreferenced_Function11c082:
 	push de
 	ld a, c
 	call Function11c254
@@ -93,25 +93,25 @@ Function11c08f:
 
 PrintEZChatBattleMessage:
 ; Use up to 6 words from bc to print text starting at de.
-	; Preserve [wJumptableIndex], [wcf64]
+	; Preserve $cf63, $cf64
 	ld a, [wJumptableIndex]
 	ld l, a
 	ld a, [wcf64]
 	ld h, a
 	push hl
-	; reset value at [wc618] (not preserved)
-	ld hl, wc618
+	; reset value at c618 (not preserved)
+	ld hl, $c618
 	ld a, $0
 	ld [hli], a
 	; preserve de
 	push de
-	; [wJumptableIndex] keeps track of which line we're on (0, 1, or 2)
-	; [wcf64] keeps track of how much room we have left in the current line
+	; $cf63 keeps track of which line we're on (0, 1, or 2)
+	; $cf64 keeps track of how much room we have left in the current line
 	xor a
 	ld [wJumptableIndex], a
 	ld a, 18
 	ld [wcf64], a
-	ld a, 6
+	ld a, $6 ; up to 6 times
 .loop
 	push af
 	; load the 2-byte word data pointed to by bc
@@ -178,7 +178,7 @@ PrintEZChatBattleMessage:
 	; deduct the length of the word
 	sub e
 	ld [wcf64], a
-	ld de, wc608
+	ld de, $c608
 .place_string_loop
 	; load the string from de to hl
 	ld a, [de]
@@ -195,11 +195,11 @@ PrintEZChatBattleMessage:
 	jr nz, .loop
 	; we're finished, place "<DONE>"
 	ld [hl], "<DONE>"
-	; now, let's place the string from wc618 to bc
+	; now, let's place the string from c618 to bc
 	pop bc
-	ld hl, wc618
+	ld hl, $c618
 	call PlaceHLTextAtBC
-	; restore the original values of [wJumptableIndex] and [wcf64]
+	; restore the original values of $cf63 and $cf64
 	pop hl
 	ld a, l
 	ld [wJumptableIndex], a
@@ -209,7 +209,7 @@ PrintEZChatBattleMessage:
 
 GetLengthOfWordAtC608:
 	ld c, $0
-	ld hl, wc608
+	ld hl, $c608
 .loop
 	ld a, [hli]
 	cp "@"
@@ -223,7 +223,7 @@ CopyMobileEZChatToC608:
 	ld a, $1
 	ldh [rSVBK], a
 	ld a, "@"
-	ld hl, wc608
+	ld hl, $c608
 	ld bc, NAME_LENGTH
 	call ByteFill
 	ld a, d
@@ -252,16 +252,16 @@ CopyMobileEZChatToC608:
 	add hl, bc
 	ld bc, NAME_LENGTH_JAPANESE - 1
 .copy_string
-	ld de, wc608
+	ld de, $c608
 	call CopyBytes
-	ld de, wc608
+	ld de, $c608
 	pop af
 	ldh [rSVBK], a
 	ret
 
 .get_name
 	ld a, e
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	ld hl, wStringBuffer1
 	ld bc, MON_NAME_LENGTH - 1
@@ -311,11 +311,11 @@ Function11c1b9:
 	call Function11d323
 	call SetPalettes
 	call DisableLCD
-	ld hl, SelectStartGFX
+	ld hl, GFX_11d67e
 	ld de, vTiles2
 	ld bc, $60
 	call CopyBytes
-	ld hl, EZChatSlowpokeLZ
+	ld hl, LZ_11d6de
 	ld de, vTiles0
 	call Decompress
 	call EnableLCD
@@ -327,7 +327,7 @@ Function11c1b9:
 	push af
 	ld a, $5
 	ldh [rSVBK], a
-	ld hl, wc6d0
+	ld hl, $c6d0
 	ld de, wLYOverrides
 	ld bc, $100
 	call CopyBytes
@@ -340,7 +340,7 @@ Function11c1b9:
 Function11c254:
 	push af
 	ld a, BANK(s4_a007)
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, s4_a007
 	pop af
 	sla a
@@ -349,7 +349,7 @@ Function11c254:
 	sla a
 	add c
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld de, wcd36
 	ld bc, 12
@@ -413,44 +413,44 @@ EZChat_MasterLoop:
 .SpawnObjects:
 	depixel 3, 1, 2, 5
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
+	call _InitSpriteAnimStruct
 	depixel 8, 1, 2, 5
 
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	call _InitSpriteAnimStruct
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
 	ld a, $1
 	ld [hl], a
 
 	depixel 9, 2, 2, 0
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	call _InitSpriteAnimStruct
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
 	ld a, $3
 	ld [hl], a
 
 	depixel 10, 16
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	call _InitSpriteAnimStruct
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
 	ld a, $4
 	ld [hl], a
 
 	depixel 10, 4
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	call _InitSpriteAnimStruct
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
 	ld a, $5
 	ld [hl], a
 
 	depixel 10, 2
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	call _InitSpriteAnimStruct
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
 	ld a, $2
 	ld [hl], a
@@ -560,7 +560,7 @@ Function11c3c2:
 	call Function11cfb5
 
 Function11c3ed:
-	ld hl, wcd20
+	ld hl, wcd20 ; wcd20
 	ld de, hJoypadPressed
 	ld a, [de]
 	and $8
@@ -595,11 +595,11 @@ Function11c3ed:
 	jr .asm_11c475
 .asm_11c426
 	ld a, $8
-	ld [wcd20], a
+	ld [wcd20], a ; wcd20
 	ret
 
 .asm_11c42c
-	ld a, [wcd20]
+	ld a, [wcd20] ; wcd20
 	cp $6
 	jr c, .asm_11c472
 	sub $6
@@ -696,25 +696,25 @@ Function11c4a5:
 
 Function11c4be:
 	ld a, $1
-	hlcoord 0, 6, wAttrmap
+	hlcoord 0, 6, wAttrMap
 	ld bc, $a0
 	call ByteFill
 	ld a, $7
-	hlcoord 0, 14, wAttrmap
+	hlcoord 0, 14, wAttrMap
 	ld bc, $28
 	call ByteFill
 	farcall ReloadMapPart
 	ret
 
 String_11c4db:
-	db   "６つのことば¯くみあわせます"
-	next "かえたいところ¯えらぶと　でてくる"
-	next "ことばのグループから　いれかえたい"
-	next "たんご¯えらんでください"
+	db   "Combine 6 words.";"６つのことば¯くみあわせます"
+	next "Select the space";"かえたいところ¯えらぶと　でてくる"
+	next "to change and";"ことばのグループから　いれかえたい"
+	next "choose a new word.";"たんご¯えらんでください"
 	db   "@"
 
 String_11c51b:
-	db "ぜんぶけす　やめる　　　けってい@"
+	db "RESET　QUIT　　OK@";"ぜんぶけす　やめる　　　けってい@"
 
 Function11c52c:
 	call EZChat_ClearBottom12Rows
@@ -778,7 +778,7 @@ Function11c53d:
 	ld hl, wcd24
 	set 0, [hl]
 	ld a, $8
-	ld [wcd20], a
+	ld [wcd20], a ; wcd20
 
 .b
 	ld a, $4
@@ -806,7 +806,7 @@ Function11c53d:
 	ret
 
 .done
-	ld a, [wcd20]
+	ld a, [wcd20] ; wcd20
 	call Function11ca6a
 	call PlayClickSFX
 	ret
@@ -895,14 +895,14 @@ EZChat_PlaceCategoryNames:
 
 Function11c618:
 	ld a, $2
-	hlcoord 0, 6, wAttrmap
+	hlcoord 0, 6, wAttrMap
 	ld bc, $c8
 	call ByteFill
 	farcall ReloadMapPart
 	ret
 
 EZChatString_Stop_Mode_Cancel:
-	db "けす　　　　モード　　　やめる@"
+	db "ERASE　MODE　　CANCEL@";"けす　　　　モード　　　やめる@"
 
 Coords_11c63a:
 	dwcoord  1,  7
@@ -1132,8 +1132,8 @@ Function11c770:
 	jr .load
 
 .cd2b_is_nonzero
-	; compute from [wc6a8 + 2 * [wcd22]]
-	ld hl, wc6a8
+	; compute from [c6a8 + 2 * [cd22]]
+	ld hl, $c6a8 ; $c68a + 30
 	ld a, [wcd22]
 	ld c, a
 	ld b, 0
@@ -1184,7 +1184,7 @@ Function11c7bc:
 	push de
 	ld a, [hli]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	push hl
 	ld a, [bc]
 	ld l, a
@@ -1212,10 +1212,10 @@ Function11c7bc:
 	ret
 
 .asm_11c814
-	ld hl, wc648
+	ld hl, $c648
 	ld a, [wcd22]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	add hl, de
 	ld a, [hli]
@@ -1226,7 +1226,7 @@ Function11c7bc:
 	pop hl
 	ld a, [wcd26]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	add hl, de
 	ld a, [wcd26]
@@ -1334,7 +1334,7 @@ Function11c86e:
 	jr nz, .asm_11c8c2
 	ret
 
-BCD2String: ; unreferenced
+BCD2String:
 	inc a
 	push af
 	and $f
@@ -1356,17 +1356,17 @@ BCD2String: ; unreferenced
 	ld [hli], a
 	ret
 
-MobileString_Page: ; unreferenced
-	db "ぺージ@"
+MobileString_Page:
+	db "PAGE@";"ぺージ@"
 
 MobileString_Prev:
-	db "まえ@"
+	db "PREV@";"まえ@"
 
 MobileString_Next:
-	db "つぎ@"
+	db "NEXT@";"つぎ@"
 
 Function11c8f6:
-	ld a, [wcd20]
+	ld a, [wcd20] ; wcd20
 	call Function11c95d
 	push hl
 	ld a, [wcd2b]
@@ -1386,9 +1386,9 @@ Function11c8f6:
 	push de
 	call Function11c05d
 	pop de
-	ld a, [wcd20]
+	ld a, [wcd20] ; wcd20
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld hl, wcd36
 	add hl, bc
 	add hl, bc
@@ -1402,16 +1402,16 @@ Function11c8f6:
 	ld a, [wMobileCommsJumptableIndex]
 	add [hl]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld hl, wListPointer
 	add hl, bc
 	ld a, [hl]
 	jr .asm_11c911
 .asm_11c938
-	ld hl, wc648
+	ld hl, $c648
 	ld a, [wcd22]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	add hl, de
 	ld a, [hli]
@@ -1422,7 +1422,7 @@ Function11c8f6:
 	pop hl
 	ld a, [wcd26]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	add hl, de
 	ld a, [wMobileCommsJumptableIndex]
@@ -1495,7 +1495,7 @@ Function11c992:
 
 Function11c9ab:
 	ld a, $7
-	hlcoord 0, 6, wAttrmap
+	hlcoord 0, 6, wAttrMap
 	ld bc, $c8
 	call ByteFill
 	farcall ReloadMapPart
@@ -1528,7 +1528,7 @@ Function11c9c3:
 	jr nz, .asm_11c9e9
 	call Function11ca5e
 	xor a
-	ld [wcd20], a
+	ld [wcd20], a ; wcd20
 .asm_11c9e9
 	ld hl, wcd24
 	set 4, [hl]
@@ -1552,7 +1552,7 @@ Function11c9c3:
 	ret
 
 Function11ca01:
-	hlcoord 14, 7, wAttrmap
+	hlcoord 14, 7, wAttrMap
 	ld de, $14
 	ld a, $5
 	ld c, a
@@ -1571,7 +1571,7 @@ Function11ca01:
 	jr nz, .asm_11ca0a
 
 Function11ca19:
-	hlcoord 0, 12, wAttrmap
+	hlcoord 0, 12, wAttrMap
 	ld de, $14
 	ld a, $6
 	ld c, a
@@ -1592,12 +1592,12 @@ Function11ca19:
 	ret
 
 String_11ca38:
-	db   "とうろくちゅう<NO>あいさつ¯ぜんぶ"
-	next "けしても　よろしいですか？@"
+	db   "Want to erase";"とうろくちゅう<NO>あいさつ¯ぜんぶ"
+	next "all words?@";"けしても　よろしいですか？@"
 
 String_11ca57:
-	db   "はい"
-	next "いいえ@"
+	db   "YES";"はい"
+	next "NO@";"いいえ@"
 
 Function11ca5e:
 	xor a
@@ -1613,7 +1613,7 @@ Function11ca5e:
 Function11ca6a:
 	ld hl, wcd36
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	add hl, bc
 	ld [hl], b
@@ -1718,12 +1718,12 @@ Function11cab3:
 	ret
 
 String_11cb1c:
-	db   "あいさつ<NO>とうろく¯ちゅうし"
-	next "しますか？@"
+	db   "Want to stop";"あいさつ<NO>とうろく¯ちゅうし"
+	next "setting a MESSAGE?@";"しますか？@"
 
 String_11cb31:
-	db   "とうろくちゅう<NO>あいさつ<WA>ほぞん"
-	next "されません<GA>よろしい　ですか？@"
+	db   "Quit without sav-";"とうろくちゅう<NO>あいさつ<WA>ほぞん"
+	next "ing the MESSAGE?  @";"されません<GA>よろしい　ですか？@"
 
 Function11cb52:
 	ld hl, Unknown_11cc01
@@ -1763,7 +1763,7 @@ Function11cb66:
 	and a
 	jr nz, .asm_11cbd4
 	ld a, BANK(s4_a007)
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, s4_a007
 	ld a, [wMenuCursorY]
 	dec a
@@ -1773,10 +1773,10 @@ Function11cb66:
 	sla a
 	add c
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld de, wcd36
-	ld c, 12
+	ld c, $c
 .asm_11cba2
 	ld a, [de]
 	ld [hli], a
@@ -1851,20 +1851,20 @@ Unknown_11cc01:
 	dw String_11cc60
 
 String_11cc09:
-	db   "じこしょうかい　は"
-	next "この　あいさつで　いいですか？@"
+	db   "Shown to introduce";"じこしょうかい　は"
+	next "yourself. OK?@";"この　あいさつで　いいですか？@"
 
 String_11cc23:
-	db   "たいせん　<GA>はじまるとき　は"
-	next "この　あいさつで　いいですか？@"
+	db   "Shown when begin-";"たいせん　<GA>はじまるとき　は"
+	next "ning a battle. OK?@";"この　あいさつで　いいですか？@"
 
 String_11cc42:
-	db   "たいせん　<NI>かったとき　は"
-	next "この　あいさつで　いいですか？@"
+	db   "Shown when win-";"たいせん　<NI>かったとき　は"
+	next "ning a battle. OK?@";"この　あいさつで　いいですか？@"
 
 String_11cc60:
-	db   "たいせん　<NI>まけたとき　は"
-	next "この　あいさつで　いいですか？@"
+	db   "Shown when los-";"たいせん　<NI>まけたとき　は"
+	next "ing a battle. OK?@";"この　あいさつで　いいですか？@"
 
 Unknown_11cc7e:
 	dw String_11cc86
@@ -1873,20 +1873,20 @@ Unknown_11cc7e:
 	dw String_11ccd4
 
 String_11cc86:
-	db   "じこしょうかい　の"
-	next "あいさつ¯とうろくした！@"
+	db   "MESSAGE set!@";"じこしょうかい　の"
+	;next "あいさつ¯とうろくした！@"
 
 String_11cc9d:
-	db   "たいせん　<GA>はじまるとき　の"
-	next "あいさつ¯とうろくした！@"
+	db   "MESSAGE set!@";"たいせん　<GA>はじまるとき　の"
+	;next "あいさつ¯とうろくした！@"
 
 String_11ccb9:
-	db   "たいせん　<NI>かったとき　の"
-	next "あいさつ¯とうろくした！@"
+	db   "MESSAGE set!@";"たいせん　<NI>かったとき　の"
+	;next "あいさつ¯とうろくした！@"
 
 String_11ccd4:
-	db   "たいせん　<NI>まけたとき　の"
-	next "あいさつ¯とうろくした！@"
+	db   "MESSAGE set!@";"たいせん　<NI>まけたとき　の"
+	;next "あいさつ¯とうろくした！@"
 
 Function11ccef:
 	ld de, Unknown_11cfc6
@@ -1907,7 +1907,8 @@ Function11cd04:
 	ret
 
 String_11cd10:
-	db "なにか　ことば¯いれてください@"
+	db "Please enter some";"なにか　ことば¯いれてください@"
+	next "words.@"
 
 Function11cd20:
 	call EZChat_ClearBottom12Rows
@@ -1993,11 +1994,11 @@ Function11cd54:
 
 Function11cdaa:
 	ld a, $2
-	hlcoord 0, 6, wAttrmap
+	hlcoord 0, 6, wAttrMap
 	ld bc, 6 * SCREEN_WIDTH
 	call ByteFill
 	ld a, $7
-	hlcoord 0, 12, wAttrmap
+	hlcoord 0, 12, wAttrMap
 	ld bc, 4 * SCREEN_WIDTH
 	call ByteFill
 	farcall ReloadMapPart
@@ -2005,17 +2006,17 @@ Function11cdaa:
 
 String_11cdc7:
 ; Words will be displayed by category
-	db   "ことば¯しゅるいべつに"
-	next "えらべます@"
+	db   "Display words";"ことば¯しゅるいべつに"
+	next "by category@";"えらべます@"
 
 String_11cdd9:
 ; Words will be displayed in alphabetical order
-	db   "ことば¯アイウエオ　の"
-	next "じゅんばんで　ひょうじ　します@"
+	db   "Display words in";"ことば¯アイウエオ　の"
+	next "alphabetical order@";"じゅんばんで　ひょうじ　します@"
 
 String_11cdf5:
-	db   "しゅるいべつ　モード"  ; Category mode
-	next "アイウエオ　　モード@" ; ABC mode
+	db   "GROUP MODE";"しゅるいべつ　モード"  ; Category mode
+	next "ABC MODE@";"アイウエオ　　モード@" ; ABC mode
 
 Function11ce0b:
 	call EZChat_ClearBottom12Rows
@@ -2083,7 +2084,7 @@ Function11ce2b:
 	ld hl, wcd24
 	set 0, [hl]
 	ld a, $8
-	ld [wcd20], a
+	ld [wcd20], a ; wcd20
 .b
 	ld a, $4
 	jr .load
@@ -2109,7 +2110,7 @@ Function11ce2b:
 	ret
 
 .done
-	ld a, [wcd20]
+	ld a, [wcd20] ; wcd20
 	call Function11ca6a
 	call PlayClickSFX
 	ret
@@ -2363,7 +2364,7 @@ Function11d035:
 .done_add_n_times
 	pop af
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	push hl
 	ld a, $79
@@ -2414,7 +2415,7 @@ Function11d035:
 	ld a, [de]
 	dec a
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	pop bc
 	inc de
@@ -2453,9 +2454,18 @@ Function11d035:
 	ret
 
 AnimateEZChatCursor:
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
-	jumptable .Jumptable, hl
+	ld a, [hl]
+	ld e, a
+	ld d, 0
+	ld hl, .Jumptable
+	add hl, de
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	jp hl
 
 .Jumptable:
 	dw .zero
@@ -2471,7 +2481,7 @@ AnimateEZChatCursor:
 	dw .ten
 
 .zero
-	ld a, [wcd20]
+	ld a, [wcd20] ; wcd20
 	sla a
 	ld hl, .Coords_Zero
 	ld e, $1
@@ -2488,7 +2498,7 @@ AnimateEZChatCursor:
 	ld hl, .FramesetsIDs_Two
 	ld a, [wcd22]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	ld a, [hl]
 	call ReinitSpriteAnimFrame
@@ -2509,7 +2519,7 @@ AnimateEZChatCursor:
 .load
 	push de
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	push hl
 	pop de
@@ -2820,7 +2830,7 @@ AnimateEZChatCursor:
 	ld hl, wcd23
 	and [hl]
 	jr z, .reset_y_offset
-	ld hl, SPRITEANIMSTRUCT_VAR3
+	ld hl, SPRITEANIMSTRUCT_0E
 	add hl, bc
 	ld a, [hl]
 	and a
@@ -2950,7 +2960,7 @@ Palette_11d33a:
 EZChat_GetSeenPokemonByKana:
 	ldh a, [rSVBK]
 	push af
-	ld hl, wc648
+	ld hl, $c648
 	ld a, LOW(w5_d800)
 	ld [wcd2d], a
 	ld [hli], a
@@ -2963,14 +2973,14 @@ EZChat_GetSeenPokemonByKana:
 	ld a, HIGH(EZChat_SortedPokemon)
 	ld [wcd30], a
 
-	ld a, LOW(wc6a8)
+	ld a, LOW($c6a8)
 	ld [wcd31], a
-	ld a, HIGH(wc6a8)
+	ld a, HIGH($c6a8)
 	ld [wcd32], a
 
-	ld a, LOW(wc64a)
+	ld a, LOW($c64a)
 	ld [wcd33], a
-	ld a, HIGH(wc64a)
+	ld a, HIGH($c64a)
 	ld [wcd34], a
 
 	ld hl, EZChat_SortedWords
@@ -3080,7 +3090,7 @@ EZChat_GetSeenPokemonByKana:
 ; Push pop to bc.
 	push hl
 	pop bc
-; Load the pointer from [wcd31] (default: wc6a8)
+; Load the pointer from [wcd31] (default: $c6a8)
 	ld a, [wcd31]
 	ld l, a
 	ld a, [wcd32]
@@ -3095,7 +3105,7 @@ EZChat_GetSeenPokemonByKana:
 	ld [wcd31], a
 	ld a, h
 	ld [wcd32], a
-; Recover the pointer from [wcd33] (default: wc64a)
+; Recover the pointer from [wcd33] (default: $c64a)
 	ld a, [wcd33]
 	ld l, a
 	ld a, [wcd34]
@@ -3227,29 +3237,29 @@ EZChat_GetCategoryWordsByKana:
 
 INCLUDE "data/pokemon/ezchat_order.asm"
 
-SelectStartGFX:
-INCBIN "gfx/mobile/select_start.2bpp"
+GFX_11d67e:
+INCBIN "gfx/pokedex/select_start.2bpp"
 
-EZChatSlowpokeLZ:
-INCBIN "gfx/pokedex/slowpoke.2bpp.lz"
+LZ_11d6de:
+INCBIN "gfx/pokedex/slowpoke_mobile.2bpp.lz"
 
 MobileEZChatCategoryNames:
-; entries correspond to EZCHAT_* constants
-	db "ポケモン@@" ; 00
-	db "タイプ@@@" ; 01
-	db "あいさつ@@" ; 02
-	db "ひと@@@@" ; 03
-	db "バトル@@@" ; 04
-	db "こえ@@@@" ; 05
-	db "かいわ@@@" ; 06
-	db "きもち@@@" ; 07
-	db "じょうたい@" ; 08
-	db "せいかつ@@" ; 09
-	db "しゅみ@@@" ; 0a
-	db "こうどう@@" ; 0b
-	db "じかん@@@" ; 0c
-	db "むすび@@@" ; 0d
-	db "あれこれ@@" ; 0e
+; Fixed message categories
+	db "PKMN@@" 	; 00 ; Pokemon 		; "ポケモン@@"
+	db "TYPES@" 	; 01 ; Types		; "タイプ@@@"
+	db "GREET@" 	; 02 ; Greetings	; "あいさつ@@"
+	db "HUMAN@" 	; 03 ; People		; "ひと@@@@"
+	db "FIGHT@" 	; 04 ; Battle		; "バトル@@@"
+	db "VOICE@" 	; 05 ; Voices		; "こえ@@@@"
+	db "TALK@@" 	; 06 ; Speech		; "かいわ@@@"
+	db "EMOTE@" 	; 07 ; Feelings		; "きもち@@@"
+	db "DESC@@" 	; 08 ; Conditions	; "じょうたい@"
+	db "LIFE@@" 	; 09 ; Lifestyle	; "せいかつ@@"
+	db "HOBBY@" 	; 0a ; Hobbies		; "しゅみ@@@" 
+	db "ACT@@@" 	; 0b ; Actions		; "こうどう@@"
+	db "ITEM@@" 	; 0c ; Time			; "じかん@@@"
+	db "END@@@" 	; 0d ; Endings		; "むすび@@@"
+	db "MISC@@" 	; 0e ; Misc			; "あれこれ@@"
 
 MobileEZChatCategoryPointers:
 ; entries correspond to EZCHAT_* constants
@@ -3269,786 +3279,790 @@ MobileEZChatCategoryPointers:
 	dw .ThisAndThat    ; 0e
 
 .Types:
-	db "あく@@@", $26, $0, $0
-	db "いわ@@@", $aa, $0, $0
-	db "エスパー@", $da, $0, $0
-	db "かくとう@", $4e, $1, $0
-	db "くさ@@@", $ba, $1, $0
-	db "ゴースト@", $e4, $1, $0
-	db "こおり@@", $e6, $1, $0
-	db "じめん@@", $68, $2, $0
-	db "タイプ@@", $e8, $2, $0
-	db "でんき@@", $8e, $3, $0
-	db "どく@@@", $ae, $3, $0
-	db "ドラゴン@", $bc, $3, $0
-	db "ノーマル@", $22, $4, $0
-	db "はがね@@", $36, $4, $0
-	db "ひこう@@", $5e, $4, $0
-	db "ほのお@@", $b2, $4, $0
-	db "みず@@@", $f4, $4, $0
-	db "むし@@@", $12, $5, $0
-
-.Greetings:
-	db "ありがと@", $58, $0, $0
-	db "ありがとう", $5a, $0, $0
-	db "いくぜ！@", $80, $0, $0
-	db "いくよ！@", $82, $0, $0
-	db "いくわよ！", $84, $0, $0
-	db "いやー@@", $a6, $0, $0
-	db "おっす@@", $a, $1, $0
-	db "おはつです", $22, $1, $0
-	db "おめでとう", $2a, $1, $0
-	db "ごめん@@", $f8, $1, $0
-	db "ごめんよ@", $fa, $1, $0
-	db "こらっ@@", $fc, $1, $0
-	db "こんちは！", $a, $2, $0
-	db "こんにちは", $10, $2, $0
-	db "さようなら", $28, $2, $0
-	db "サンキュー", $2e, $2, $0
-	db "さんじょう", $30, $2, $0
-	db "しっけい@", $48, $2, $0
-	db "しつれい@", $4c, $2, $0
-	db "じゃーね@", $6c, $2, $0
-	db "すいません", $8c, $2, $0
-	db "それじゃ@", $ca, $2, $0
-	db "どうも@@", $a6, $3, $0
-	db "なんじゃ@", $ee, $3, $0
-	db "ハーイ@@", $2c, $4, $0
-	db "はいはい@", $32, $4, $0
-	db "バイバイ@", $34, $4, $0
-	db "へイ@@@", $8a, $4, $0
-	db "またね@@", $de, $4, $0
-	db "もしもし@", $32, $5, $0
-	db "やあ@@@", $3e, $5, $0
-	db "やっほー@", $4e, $5, $0
-	db "よう@@@", $62, $5, $0
-	db "ようこそ@", $64, $5, $0
-	db "よろしく@", $80, $5, $0
-	db "らっしゃい", $94, $5, $0
+	db	"DARK@",	$26,	$0,	$0		; あく@@@,
+	db	"ROCK@",	$aa,	$0,	$0		; いわ@@@,
+	db	"PSYCH",	$da,	$0,	$0		; エスパー@,
+	db	"FIGHT",	$4e,	$1,	$0		; かくとう@,
+	db	"GRASS",	$ba,	$1,	$0		; くさ@@@,
+	db	"GHOST",	$e4,	$1,	$0		; ゴースト@,
+	db	"ICE@@",	$e6,	$1,	$0		; こおり@@,
+	db	"GROUN",	$68,	$2,	$0		; じめん@@,
+	db	"TYPE@",	$e8,	$2,	$0		; タイプ@@,
+	db	"ELECT",	$8e,	$3,	$0		; でんき@@,
+	db	"POISO",	$ae,	$3,	$0		; どく@@@,
+	db	"DRAGO",	$bc,	$3,	$0		; ドラゴン@,
+	db	"NORMA",	$22,	$4,	$0		; ノーマル@,
+	db	"STEEL",	$36,	$4,	$0		; はがね@@,
+	db	"FLYIN",	$5e,	$4,	$0		; ひこう@@,
+	db	"FIRE@",	$b2,	$4,	$0		; ほのお@@,
+	db	"WATER",	$f4,	$4,	$0		; みず@@@,
+	db	"BUG@@",	$12,	$5,	$0		; むし@@@,
+						
+.Greetings:						
+	db	"THANK",	$58,	$0,	$0		; ありがと@,
+	db	"THANK",	$5a,	$0,	$0		; ありがとう,
+	db	"LETS ",	$80,	$0,	$0		; いくぜ！@,
+	db	"GO ON",	$82,	$0,	$0		; いくよ！@,
+	db	"DO IT",	$84,	$0,	$0		; いくわよ！,
+	db	"YEAH@",	$a6,	$0,	$0		; いやー@@,
+	db	"HOW D",	$a,		$1,	$0		; おっす@@,
+	db	"HOWDY",	$22,	$1,	$0		; おはつです,
+	db	"CONGR",	$2a,	$1,	$0		; おめでとう,
+	db	"SORRY",	$f8,	$1,	$0		; ごめん@@,
+	db	"SORRY",	$fa,	$1,	$0		; ごめんよ@,
+	db	"HI TH",	$fc,	$1,	$0		; こらっ@@,
+	db	"HI!@@",	$a,		$2,	$0		; こんちは！,
+	db	"HELLO",	$10,	$2,	$0		; こんにちは,
+	db	"GOOD-",	$28,	$2,	$0		; さようなら,
+	db	"CHEER",	$2e,	$2,	$0		; サンキュー,
+	db	"I'M H",	$30,	$2,	$0		; さんじょう,
+	db	"PARDO",	$48,	$2,	$0		; しっけい@,
+	db	"EXCUS",	$4c,	$2,	$0		; しつれい@,
+	db	"SEE Y",	$6c,	$2,	$0		; じゃーね@,
+	db	"YO!@@",	$8c,	$2,	$0		; すいません,
+	db	"WELL.",	$ca,	$2,	$0		; それじゃ@,
+	db	"GRATE",	$a6,	$3,	$0		; どうも@@,
+	db	"WASSU",	$ee,	$3,	$0		; なんじゃ@,
+	db	"HI@@@",	$2c,	$4,	$0		; ハーイ@@,
+	db	"YEA, ",	$32,	$4,	$0		; はいはい@,
+	db	"BYE-B",	$34,	$4,	$0		; バイバイ@,
+	db	"HEY@@",	$8a,	$4,	$0		; へイ@@@,
+	db	"SMELL",	$de,	$4,	$0		; またね@@,
+	db	"TUNED",	$32,	$5,	$0		; もしもし@,
+	db	"HOO-H",	$3e,	$5,	$0		; やあ@@@,
+	db	"YAHOO",	$4e,	$5,	$0		; やっほー@,
+	db	"YO@@@",	$62,	$5,	$0		; よう@@@,
+	db	"GO OV",	$64,	$5,	$0		; ようこそ@,
+	db	"COUNT",	$80,	$5,	$0		; よろしく@,
+	db	"WELCO",	$94,	$5,	$0		; らっしゃい,
 
 .People:
-	db "あいて@@", $1c, $0, $0
-	db "あたし@@", $36, $0, $0
-	db "あなた@@", $40, $0, $0
-	db "あなたが@", $42, $0, $0
-	db "あなたに@", $44, $0, $0
-	db "あなたの@", $46, $0, $0
-	db "あなたは@", $48, $0, $0
-	db "あなたを@", $4a, $0, $0
-	db "おかあさん", $e8, $0, $0
-	db "おじいさん", $fc, $0, $0
-	db "おじさん@", $2, $1, $0
-	db "おとうさん", $e, $1, $0
-	db "おとこのこ", $10, $1, $0
-	db "おとな@@", $14, $1, $0
-	db "おにいさん", $16, $1, $0
-	db "おねえさん", $18, $1, $0
-	db "おばあさん", $1c, $1, $0
-	db "おばさん@", $20, $1, $0
-	db "おれさま@", $34, $1, $0
-	db "おんなのこ", $3a, $1, $0
-	db "ガール@@", $40, $1, $0
-	db "かぞく@@", $52, $1, $0
-	db "かのじょ@", $72, $1, $0
-	db "かれ@@@", $7c, $1, $0
-	db "きみ@@@", $9a, $1, $0
-	db "きみが@@", $9c, $1, $0
-	db "きみに@@", $9e, $1, $0
-	db "きみの@@", $a0, $1, $0
-	db "きみは@@", $a2, $1, $0
-	db "きみを@@", $a4, $1, $0
-	db "ギャル@@", $ae, $1, $0
-	db "きょうだい", $b2, $1, $0
-	db "こども@@", $f0, $1, $0
-	db "じぶん@@", $54, $2, $0
-	db "じぶんが@", $56, $2, $0
-	db "じぶんに@", $58, $2, $0
-	db "じぶんの@", $5a, $2, $0
-	db "じぶんは@", $5c, $2, $0
-	db "じぶんを@", $5e, $2, $0
-	db "だれ@@@", $18, $3, $0
-	db "だれか@@", $1a, $3, $0
-	db "だれが@@", $1c, $3, $0
-	db "だれに@@", $1e, $3, $0
-	db "だれの@@", $20, $3, $0
-	db "だれも@@", $22, $3, $0
-	db "だれを@@", $24, $3, $0
-	db "ちゃん@@", $38, $3, $0
-	db "ともだち@", $b8, $3, $0
-	db "なかま@@", $d4, $3, $0
-	db "ひと@@@", $62, $4, $0
-	db "ボーイ@@", $98, $4, $0
-	db "ボク@@@", $a0, $4, $0
-	db "ボクが@@", $a2, $4, $0
-	db "ボクに@@", $a4, $4, $0
-	db "ボクの@@", $a6, $4, $0
-	db "ボクは@@", $a8, $4, $0
-	db "ボクを@@", $aa, $4, $0
-	db "みんな@@", $4, $5, $0
-	db "みんなが@", $6, $5, $0
-	db "みんなに@", $8, $5, $0
-	db "みんなの@", $a, $5, $0
-	db "みんなは@", $c, $5, $0
-	db "ライバル@", $8a, $5, $0
-	db "わたし@@", $c2, $5, $0
-	db "わたしが@", $c4, $5, $0
-	db "わたしに@", $c6, $5, $0
-	db "わたしの@", $c8, $5, $0
-	db "わたしは@", $ca, $5, $0
-	db "わたしを@", $cc, $5, $0
+	db	"OPPON",	$1c,	$0,	$0		; あいて@@,
+	db	"I@@@@",	$36,	$0,	$0		; あたし@@,
+	db	"YOU@@",	$40,	$0,	$0		; あなた@@,
+	db	"YOURS",	$42,	$0,	$0		; あなたが@,
+	db	"SON@@",	$44,	$0,	$0		; あなたに@,
+	db	"YOUR@",	$46,	$0,	$0		; あなたの@,
+	db	"YOU'R",	$48,	$0,	$0		; あなたは@,
+	db	"YOU'V",	$4a,	$0,	$0		; あなたを@,
+	db	"MOM@@",	$e8,	$0,	$0		; おかあさん,
+	db	"GRAND",	$fc,	$0,	$0		; おじいさん,
+	db	"UNCLE",	$2,		$1,	$0		; おじさん@,
+	db	"DAD@@",	$e,		$1,	$0		; おとうさん,
+	db	"BOY@@",	$10,	$1,	$0		; おとこのこ,
+	db	"ADULT",	$14,	$1,	$0		; おとな@@,
+	db	"BROTH",	$16,	$1,	$0		; おにいさん,
+	db	"SISTE",	$18,	$1,	$0		; おねえさん,
+	db	"GRAND",	$1c,	$1,	$0		; おばあさん,
+	db	"AUNT@",	$20,	$1,	$0		; おばさん@,
+	db	"ME@@@",	$34,	$1,	$0		; おれさま@,
+	db	"GIRL@",	$3a,	$1,	$0		; おんなのこ,
+	db	"BABE@",	$40,	$1,	$0		; ガール@@,
+	db	"FAMIL",	$52,	$1,	$0		; かぞく@@,
+	db	"HER@@",	$72,	$1,	$0		; かのじょ@,
+	db	"HIM@@",	$7c,	$1,	$0		; かれ@@@,
+	db	"HE@@@",	$9a,	$1,	$0		; きみ@@@,
+	db	"PLACE",	$9c,	$1,	$0		; きみが@@,
+	db	"DAUGH",	$9e,	$1,	$0		; きみに@@,
+	db	"HIS@@",	$a0,	$1,	$0		; きみの@@,
+	db	"HE'S@",	$a2,	$1,	$0		; きみは@@,
+	db	"AREN'",	$a4,	$1,	$0		; きみを@@,
+	db	"GAL@@",	$ae,	$1,	$0		; ギャル@@,
+	db	"SIBLI",	$b2,	$1,	$0		; きょうだい,
+	db	"CHILD",	$f0,	$1,	$0		; こども@@,
+	db	"MYSEL",	$54,	$2,	$0		; じぶん@@,
+	db	"I WAS",	$56,	$2,	$0		; じぶんが@,
+	db	"TO ME",	$58,	$2,	$0		; じぶんに@,
+	db	"MY@@@",	$5a,	$2,	$0		; じぶんの@,
+	db	"I AM@",	$5c,	$2,	$0		; じぶんは@,
+	db	"I'VE@",	$5e,	$2,	$0		; じぶんを@,
+	db	"WHO@@",	$18,	$3,	$0		; だれ@@@,
+	db	"SOMEO",	$1a,	$3,	$0		; だれか@@,
+	db	"WHO W",	$1c,	$3,	$0		; だれが@@,
+	db	"TO WH",	$1e,	$3,	$0		; だれに@@,
+	db	"WHOSE",	$20,	$3,	$0		; だれの@@,
+	db	"WHO I",	$22,	$3,	$0		; だれも@@,
+	db	"IT'S@",	$24,	$3,	$0		; だれを@@,
+	db	"LADY@",	$38,	$3,	$0		; ちゃん@@,
+	db	"FRIEN",	$b8,	$3,	$0		; ともだち@,
+	db	"ALLY@",	$d4,	$3,	$0		; なかま@@,
+	db	"PEOPL",	$62,	$4,	$0		; ひと@@@,
+	db	"DUDE@",	$98,	$4,	$0		; ボーイ@@,
+	db	"THEY@",	$a0,	$4,	$0		; ボク@@@,
+	db	"THEY ",	$a2,	$4,	$0		; ボクが@@,
+	db	"TO TH",	$a4,	$4,	$0		; ボクに@@,
+	db	"THEIR",	$a6,	$4,	$0		; ボクの@@,
+	db	"THEY'",	$a8,	$4,	$0		; ボクは@@,
+	db	"THEY'",	$aa,	$4,	$0		; ボクを@@,
+	db	"WE@@@",	$4,		$5,	$0		; みんな@@,
+	db	"BEEN@",	$6,		$5,	$0		; みんなが@,
+	db	"TO US",	$8,		$5,	$0		; みんなに@,
+	db	"OUR@@",	$a,		$5,	$0		; みんなの@,
+	db	"WE'RE",	$c,		$5,	$0		; みんなは@,
+	db	"RIVAL",	$8a,	$5,	$0		; ライバル@,
+	db	"SHE@@",	$c2,	$5,	$0		; わたし@@,
+	db	"SHE W",	$c4,	$5,	$0		; わたしが@,
+	db	"TO HE",	$c6,	$5,	$0		; わたしに@,
+	db	"HERS@",	$c8,	$5,	$0		; わたしの@,
+	db	"SHE I",	$ca,	$5,	$0		; わたしは@,
+	db	"SOME@",	$cc,	$5,	$0		; わたしを@,
 
 .Battle:
-	db "あいしょう", $18, $0, $0
-	db "いけ！@@", $88, $0, $0
-	db "いちばん@", $96, $0, $0
-	db "かくご@@", $4c, $1, $0
-	db "かたせて@", $54, $1, $0
-	db "かち@@@", $56, $1, $0
-	db "かつ@@@", $58, $1, $0
-	db "かった@@", $60, $1, $0
-	db "かったら@", $62, $1, $0
-	db "かって@@", $64, $1, $0
-	db "かてない@", $66, $1, $0
-	db "かてる@@", $68, $1, $0
-	db "かなわない", $70, $1, $0
-	db "きあい@@", $84, $1, $0
-	db "きめた@@", $a8, $1, $0
-	db "きりふだ@", $b6, $1, $0
-	db "くらえ@@", $c2, $1, $0
-	db "こい！@@", $da, $1, $0
-	db "こうげき@", $e0, $1, $0
-	db "こうさん@", $e2, $1, $0
-	db "こんじょう", $8, $2, $0
-	db "さいのう@", $16, $2, $0
-	db "さくせん@", $1a, $2, $0
-	db "さばき@@", $22, $2, $0
-	db "しょうぶ@", $7e, $2, $0
-	db "しょうり@", $80, $2, $0
-	db "せめ@@@", $b4, $2, $0
-	db "センス@@", $b6, $2, $0
-	db "たいせん@", $e6, $2, $0
-	db "たたかい@", $f6, $2, $0
-	db "ちから@@", $32, $3, $0
-	db "チャレンジ", $36, $3, $0
-	db "つよい@@", $58, $3, $0
-	db "つよすぎ@", $5a, $3, $0
-	db "つらい@@", $5c, $3, $0
-	db "つらかった", $5e, $3, $0
-	db "てかげん@", $6c, $3, $0
-	db "てき@@@", $6e, $3, $0
-	db "てんさい@", $90, $3, $0
-	db "でんせつ@", $94, $3, $0
-	db "トレーナー", $c6, $3, $0
-	db "にげ@@@", $4, $4, $0
-	db "ぬるい@@", $10, $4, $0
-	db "ねらう@@", $16, $4, $0
-	db "バトル@@", $4a, $4, $0
-	db "ファイト@", $72, $4, $0
-	db "ふっかつ@", $78, $4, $0
-	db "ポイント@", $94, $4, $0
-	db "ポケモン@", $ac, $4, $0
-	db "ほんき@@", $bc, $4, $0
-	db "まいった！", $c4, $4, $0
-	db "まけ@@@", $c8, $4, $0
-	db "まけたら@", $ca, $4, $0
-	db "まけて@@", $cc, $4, $0
-	db "まける@@", $ce, $4, $0
-	db "まもり@@", $ea, $4, $0
-	db "みかた@@", $f2, $4, $0
-	db "みとめない", $fe, $4, $0
-	db "みとめる@", $0, $5, $0
-	db "むてき@@", $16, $5, $0
-	db "もらった！", $3c, $5, $0
-	db "よゆう@@", $7a, $5, $0
-	db "よわい@@", $82, $5, $0
-	db "よわすぎ@", $84, $5, $0
-	db "らくしょう", $8e, $5, $0
-	db "りーダー@", $9e, $5, $0
-	db "ルール@@", $a0, $5, $0
-	db "レべル@@", $a6, $5, $0
-	db "わざ@@@", $be, $5, $0
+	db	"MATCH",	$18,	$0,	$0		; あいしょう,
+	db	"GO!@@",	$88,	$0,	$0		; いけ！@@,
+	db	"NO. 1",	$96,	$0,	$0		; いちばん@,
+	db	"DECID",	$4c,	$1,	$0		; かくご@@,
+	db	"I WIN",	$54,	$1,	$0		; かたせて@,
+	db	"WINS@",	$56,	$1,	$0		; かち@@@,
+	db	"WIN@@",	$58,	$1,	$0		; かつ@@@,
+	db	"WON@@",	$60,	$1,	$0		; かった@@,
+	db	"IF I ",	$62,	$1,	$0		; かったら@,
+	db	"I'LL ",	$64,	$1,	$0		; かって@@,
+	db	"CANT ",	$66,	$1,	$0		; かてない@,
+	db	"CAN W",	$68,	$1,	$0		; かてる@@,
+	db	"NO MA",	$70,	$1,	$0		; かなわない,
+	db	"SPIRI",	$84,	$1,	$0		; きあい@@,
+	db	"DECID",	$a8,	$1,	$0		; きめた@@,
+	db	"ACE C",	$b6,	$1,	$0		; きりふだ@,
+	db	"HI-YA",	$c2,	$1,	$0		; くらえ@@,
+	db	"COME ",	$da,	$1,	$0		; こい！@@,
+	db	"ATTAC",	$e0,	$1,	$0		; こうげき@,
+	db	"GIVE ",	$e2,	$1,	$0		; こうさん@,
+	db	"GUTS@",	$8,		$2,	$0		; こんじょう,
+	db	"TALEN",	$16,	$2,	$0		; さいのう@,
+	db	"STRAT",	$1a,	$2,	$0		; さくせん@,
+	db	"SMITE",	$22,	$2,	$0		; さばき@@,
+	db	"MATCH",	$7e,	$2,	$0		; しょうぶ@,
+	db	"VICTO",	$80,	$2,	$0		; しょうり@,
+	db	"OFFEN",	$b4,	$2,	$0		; せめ@@@,
+	db	"SENSE",	$b6,	$2,	$0		; センス@@,
+	db	"VERSU",	$e6,	$2,	$0		; たいせん@,
+	db	"FIGHT",	$f6,	$2,	$0		; たたかい@,
+	db	"POWER",	$32,	$3,	$0		; ちから@@,
+	db	"TASK@",	$36,	$3,	$0		; チャレンジ,
+	db	"STRON",	$58,	$3,	$0		; つよい@@,
+	db	"TOO M",	$5a,	$3,	$0		; つよすぎ@,
+	db	"HARD@",	$5c,	$3,	$0		; つらい@@,
+	db	"TERRI",	$5e,	$3,	$0		; つらかった,
+	db	"GO EA",	$6c,	$3,	$0		; てかげん@,
+	db	"FOE@@",	$6e,	$3,	$0		; てき@@@,
+	db	"GENIU",	$90,	$3,	$0		; てんさい@,
+	db	"LEGEN",	$94,	$3,	$0		; でんせつ@,
+	db	"TRAIN",	$c6,	$3,	$0		; トレーナー,
+	db	"ESCAP",	$4,		$4,	$0		; にげ@@@,
+	db	"LUKEW",	$10,	$4,	$0		; ぬるい@@,
+	db	"AIM@@",	$16,	$4,	$0		; ねらう@@,
+	db	"BATTL",	$4a,	$4,	$0		; バトル@@,
+	db	"FIGHT",	$72,	$4,	$0		; ファイト@,
+	db	"REVIV",	$78,	$4,	$0		; ふっかつ@,
+	db	"POINT",	$94,	$4,	$0		; ポイント@,
+	db	"POKÉM",	$ac,	$4,	$0		; ポケモン@,
+	db	"SERIO",	$bc,	$4,	$0		; ほんき@@,
+	db	"OH NO",	$c4,	$4,	$0		; まいった！,
+	db	"LOSS@",	$c8,	$4,	$0		; まけ@@@,
+	db	"YOU L",	$ca,	$4,	$0		; まけたら@,
+	db	"LOST@",	$cc,	$4,	$0		; まけて@@,
+	db	"LOSE@",	$ce,	$4,	$0		; まける@@,
+	db	"GUARD",	$ea,	$4,	$0		; まもり@@,
+	db	"PARTN",	$f2,	$4,	$0		; みかた@@,
+	db	"REJEC",	$fe,	$4,	$0		; みとめない,
+	db	"ACCEP",	$0,		$5,	$0		; みとめる@,
+	db	"UNBEA",	$16,	$5,	$0		; むてき@@,
+	db	"GOT I",	$3c,	$5,	$0		; もらった！,
+	db	"EASY@",	$7a,	$5,	$0		; よゆう@@,
+	db	"WEAK@",	$82,	$5,	$0		; よわい@@,
+	db	"TOO W",	$84,	$5,	$0		; よわすぎ@,
+	db	"PUSHO",	$8e,	$5,	$0		; らくしょう,
+	db	"CHIEF",	$9e,	$5,	$0		; りーダー@,
+	db	"RULE@",	$a0,	$5,	$0		; ルール@@,
+	db	"LEVEL",	$a6,	$5,	$0		; レべル@@,
+	db	"MOVE@",	$be,	$5,	$0		; わざ@@@,
 
 .Exclamations:
-	db "！@@@@", $0, $0, $0
-	db "！！@@@", $2, $0, $0
-	db "！？@@@", $4, $0, $0
-	db "？@@@@", $6, $0, $0
-	db "⋯@@@@", $8, $0, $0
-	db "⋯！@@@", $a, $0, $0
-	db "⋯⋯⋯@@", $c, $0, $0
-	db "ー@@@@", $e, $0, $0
-	db "ーーー@@", $10, $0, $0
-	db "あーあ@@", $14, $0, $0
-	db "あーん@@", $16, $0, $0
-	db "あははー@", $52, $0, $0
-	db "あら@@@", $54, $0, $0
-	db "いえ@@@", $72, $0, $0
-	db "イエス@@", $74, $0, $0
-	db "うう@@@", $ac, $0, $0
-	db "うーん@@", $ae, $0, $0
-	db "うおー！@", $b0, $0, $0
-	db "うおりゃー", $b2, $0, $0
-	db "うひょー@", $bc, $0, $0
-	db "うふふ@@", $be, $0, $0
-	db "うわー@@", $ca, $0, $0
-	db "うわーん@", $cc, $0, $0
-	db "ええ@@@", $d2, $0, $0
-	db "えー@@@", $d4, $0, $0
-	db "えーん@@", $d6, $0, $0
-	db "えへへ@@", $dc, $0, $0
-	db "おいおい@", $e0, $0, $0
-	db "おお@@@", $e2, $0, $0
-	db "おっと@@", $c, $1, $0
-	db "がーん@@", $42, $1, $0
-	db "キャー@@", $aa, $1, $0
-	db "ギャー@@", $ac, $1, $0
-	db "ぐふふふふ", $bc, $1, $0
-	db "げっ@@@", $ce, $1, $0
-	db "しくしく@", $3e, $2, $0
-	db "ちえっ@@", $2e, $3, $0
-	db "てへ@@@", $86, $3, $0
-	db "ノー@@@", $20, $4, $0
-	db "はあー@@", $2a, $4, $0
-	db "はい@@@", $30, $4, $0
-	db "はっはっは", $48, $4, $0
-	db "ひいー@@", $56, $4, $0
-	db "ひゃあ@@", $6a, $4, $0
-	db "ふっふっふ", $7c, $4, $0
-	db "ふにゃ@@", $7e, $4, $0
-	db "ププ@@@", $80, $4, $0
-	db "ふふん@@", $82, $4, $0
-	db "ふん@@@", $88, $4, $0
-	db "へっへっへ", $8e, $4, $0
-	db "へへー@@", $90, $4, $0
-	db "ほーほほほ", $9c, $4, $0
-	db "ほら@@@", $b6, $4, $0
-	db "まあ@@@", $c0, $4, $0
-	db "むきー！！", $10, $5, $0
-	db "むふー@@", $18, $5, $0
-	db "むふふ@@", $1a, $5, $0
-	db "むむ@@@", $1c, $5, $0
-	db "よーし@@", $6a, $5, $0
-	db "よし！@@", $72, $5, $0
-	db "ラララ@@", $98, $5, $0
-	db "わーい@@", $ac, $5, $0
-	db "わーん！！", $b0, $5, $0
-	db "ワオ@@@", $b2, $5, $0
-	db "わっ！！@", $ce, $5, $0
-	db "わははは！", $d0, $5, $0
+	db	"!@@@@",	$0,		$0,	$0		; ！@@@@,
+	db	"!!@@@",	$2,		$0,	$0		; ！！@@@,
+	db	"!?@@@",	$4,		$0,	$0		; ！？@@@,
+	db	"?@@@@",	$6,		$0,	$0		; ？@@@@,
+	db	"…@@@@",	$8,		$0,	$0		; ⋯@@@@,
+	db	"…!@@@",	$a,		$0,	$0		; ⋯！@@@,
+	db	"………@@",	$c,		$0,	$0		; ⋯⋯⋯@@,
+	db	"-@@@@",	$e,		$0,	$0		; ー@@@@,
+	db	"- - -",	$10,	$0,	$0		; ーーー@@,
+	db	"UH-OH",	$14,	$0,	$0		; あーあ@@,
+	db	"WAAAH",	$16,	$0,	$0		; あーん@@,
+	db	"AHAHA",	$52,	$0,	$0		; あははー@,
+	db	"OH?@@",	$54,	$0,	$0		; あら@@@,
+	db	"NOPE@",	$72,	$0,	$0		; いえ@@@,
+	db	"YES@@",	$74,	$0,	$0		; イエス@@,
+	db	"URGH@",	$ac,	$0,	$0		; うう@@@,
+	db	"HMM@@",	$ae,	$0,	$0		; うーん@@,
+	db	"WHOAH",	$b0,	$0,	$0		; うおー！@,
+	db	"WROOA",	$b2,	$0,	$0		; うおりゃー,
+	db	"WOW@@",	$bc,	$0,	$0		; うひょー@,
+	db	"GIGGL",	$be,	$0,	$0		; うふふ@@,
+	db	"SHOCK",	$ca,	$0,	$0		; うわー@@,
+	db	"CRIES",	$cc,	$0,	$0		; うわーん@,
+	db	"AGREE",	$d2,	$0,	$0		; ええ@@@,
+	db	"EH?@@",	$d4,	$0,	$0		; えー@@@,
+	db	"CRY@@",	$d6,	$0,	$0		; えーん@@,
+	db	"EHEHE",	$dc,	$0,	$0		; えへへ@@,
+	db	"HOLD ",	$e0,	$0,	$0		; おいおい@,
+	db	"OH, Y",	$e2,	$0,	$0		; おお@@@,
+	db	"OOPS@",	$c,		$1,	$0		; おっと@@,
+	db	"SHOCK",	$42,	$1,	$0		; がーん@@,
+	db	"EEK@@",	$aa,	$1,	$0		; キャー@@,
+	db	"GRAAA",	$ac,	$1,	$0		; ギャー@@,
+	db	"HE-HE",	$bc,	$1,	$0		; ぐふふふふ,
+	db	"ICK!@",	$ce,	$1,	$0		; げっ@@@,
+	db	"WEEP@",	$3e,	$2,	$0		; しくしく@,
+	db	"HMPH@",	$2e,	$3,	$0		; ちえっ@@,
+	db	"BLUSH",	$86,	$3,	$0		; てへ@@@,
+	db	"NO@@@",	$20,	$4,	$0		; ノー@@@,
+	db	"HUH?@",	$2a,	$4,	$0		; はあー@@,
+	db	"YUP@@",	$30,	$4,	$0		; はい@@@,
+	db	"HAHAH",	$48,	$4,	$0		; はっはっは,
+	db	"AIYEE",	$56,	$4,	$0		; ひいー@@,
+	db	"HIYAH",	$6a,	$4,	$0		; ひゃあ@@,
+	db	"FUFU@",	$7c,	$4,	$0		; ふっふっふ,
+	db	"MUTTE",	$7e,	$4,	$0		; ふにゃ@@,
+	db	"LOL@@",	$80,	$4,	$0		; ププ@@@,
+	db	"SNORT",	$82,	$4,	$0		; ふふん@@,
+	db	"HUMPH",	$88,	$4,	$0		; ふん@@@,
+	db	"HEHEH",	$8e,	$4,	$0		; へっへっへ,
+	db	"HEHE@",	$90,	$4,	$0		; へへー@@,
+	db	"HOHOH",	$9c,	$4,	$0		; ほーほほほ,
+	db	"UH-HU",	$b6,	$4,	$0		; ほら@@@,
+	db	"OH, D",	$c0,	$4,	$0		; まあ@@@,
+	db	"ARRGH",	$10,	$5,	$0		; むきー！！,
+	db	"MUFU@",	$18,	$5,	$0		; むふー@@,
+	db	"MUFUF",	$1a,	$5,	$0		; むふふ@@,
+	db	"MMM@@",	$1c,	$5,	$0		; むむ@@@,
+	db	"OH-KA",	$6a,	$5,	$0		; よーし@@,
+	db	"OKAY!",	$72,	$5,	$0		; よし！@@,
+	db	"LALAL",	$98,	$5,	$0		; ラララ@@,
+	db	"YAY@@",	$ac,	$5,	$0		; わーい@@,
+	db	"AWW!@",	$b0,	$5,	$0		; わーん！！,
+	db	"WOWEE",	$b2,	$5,	$0		; ワオ@@@,
+	db	"GWAH!",	$ce,	$5,	$0		; わっ！！@,
+	db	"WAHAH",	$d0,	$5,	$0		; わははは！,
 
 .Conversation:
-	db "あのね@@", $50, $0, $0
-	db "あんまり@", $6e, $0, $0
-	db "いじわる@", $8e, $0, $0
-	db "うそ@@@", $b6, $0, $0
-	db "うむ@@@", $c4, $0, $0
-	db "おーい@@", $e4, $0, $0
-	db "おすすめ@", $6, $1, $0
-	db "おばかさん", $1e, $1, $0
-	db "かなり@@", $6e, $1, $0
-	db "から@@@", $7a, $1, $0
-	db "きぶん@@", $98, $1, $0
-	db "けど@@@", $d6, $1, $0
-	db "こそ@@@", $ea, $1, $0
-	db "こと@@@", $ee, $1, $0
-	db "さあ@@@", $12, $2, $0
-	db "さっぱり@", $1e, $2, $0
-	db "さて@@@", $20, $2, $0
-	db "じゅうぶん", $72, $2, $0
-	db "すぐ@@@", $94, $2, $0
-	db "すごく@@", $98, $2, $0
-	db "すこしは@", $9a, $2, $0
-	db "すっっごい", $a0, $2, $0
-	db "ぜーんぜん", $b0, $2, $0
-	db "ぜったい@", $b2, $2, $0
-	db "それで@@", $ce, $2, $0
-	db "だけ@@@", $f2, $2, $0
-	db "だって@@", $fc, $2, $0
-	db "たぶん@@", $6, $3, $0
-	db "たら@@@", $14, $3, $0
-	db "ちょー@@", $3a, $3, $0
-	db "ちょっと@", $3c, $3, $0
-	db "ったら@@", $4e, $3, $0
-	db "って@@@", $50, $3, $0
-	db "ていうか@", $62, $3, $0
-	db "でも@@@", $88, $3, $0
-	db "どうしても", $9c, $3, $0
-	db "とうぜん@", $a0, $3, $0
-	db "どうぞ@@", $a2, $3, $0
-	db "とりあえず", $be, $3, $0
-	db "なあ@@@", $cc, $3, $0
-	db "なんて@@", $f4, $3, $0
-	db "なんでも@", $fc, $3, $0
-	db "なんとか@", $fe, $3, $0
-	db "には@@@", $8, $4, $0
-	db "バッチり@", $46, $4, $0
-	db "ばりばり@", $52, $4, $0
-	db "ほど@@@", $b0, $4, $0
-	db "ほんと@@", $be, $4, $0
-	db "まさに@@", $d0, $4, $0
-	db "マジ@@@", $d2, $4, $0
-	db "マジで@@", $d4, $4, $0
-	db "まったく@", $e4, $4, $0
-	db "まで@@@", $e6, $4, $0
-	db "まるで@@", $ec, $4, $0
-	db "ムード@@", $e, $5, $0
-	db "むしろ@@", $14, $5, $0
-	db "めちゃ@@", $24, $5, $0
-	db "めっぽう@", $28, $5, $0
-	db "もう@@@", $2c, $5, $0
-	db "モード@@", $2e, $5, $0
-	db "もっと@@", $36, $5, $0
-	db "もはや@@", $38, $5, $0
-	db "やっと@@", $4a, $5, $0
-	db "やっぱり@", $4c, $5, $0
-	db "より@@@", $7c, $5, $0
-	db "れば@@@", $a4, $5, $0
+	db	"LISTE",	$50,	$0,	$0		; あのね@@,
+	db	"NOT V",	$6e,	$0,	$0		; あんまり@,
+	db	"MEAN@",	$8e,	$0,	$0		; いじわる@,
+	db	"LIE@@",	$b6,	$0,	$0		; うそ@@@,
+	db	"LAY@@",	$c4,	$0,	$0		; うむ@@@,
+	db	"OI@@@",	$e4,	$0,	$0		; おーい@@,
+	db	"SUGGE",	$6,		$1,	$0		; おすすめ@,
+	db	"NITWI",	$1e,	$1,	$0		; おばかさん,
+	db	"QUITE",	$6e,	$1,	$0		; かなり@@,
+	db	"FROM@",	$7a,	$1,	$0		; から@@@,
+	db	"FEELI",	$98,	$1,	$0		; きぶん@@,
+	db	"BUT@@",	$d6,	$1,	$0		; けど@@@,
+	db	"HOWEV",	$ea,	$1,	$0		; こそ@@@,
+	db	"CASE@",	$ee,	$1,	$0		; こと@@@,
+	db	"MISS@",	$12,	$2,	$0		; さあ@@@,
+	db	"HOW@@",	$1e,	$2,	$0		; さっぱり@,
+	db	"HIT@@",	$20,	$2,	$0		; さて@@@,
+	db	"ENOUG",	$72,	$2,	$0		; じゅうぶん,
+	db	"SOON@",	$94,	$2,	$0		; すぐ@@@,
+	db	"A LOT",	$98,	$2,	$0		; すごく@@,
+	db	"A LIT",	$9a,	$2,	$0		; すこしは@,
+	db	"AMAZI",	$a0,	$2,	$0		; すっっごい,
+	db	"ENTIR",	$b0,	$2,	$0		; ぜーんぜん,
+	db	"FULLY",	$b2,	$2,	$0		; ぜったい@,
+	db	"AND S",	$ce,	$2,	$0		; それで@@,
+	db	"ONLY@",	$f2,	$2,	$0		; だけ@@@,
+	db	"AROUN",	$fc,	$2,	$0		; だって@@,
+	db	"PROBA",	$6,		$3,	$0		; たぶん@@,
+	db	"IF@@@",	$14,	$3,	$0		; たら@@@,
+	db	"VERY@",	$3a,	$3,	$0		; ちょー@@,
+	db	"A BIT",	$3c,	$3,	$0		; ちょっと@,
+	db	"WILD@",	$4e,	$3,	$0		; ったら@@,
+	db	"THAT'",	$50,	$3,	$0		; って@@@,
+	db	"I MEA",	$62,	$3,	$0		; ていうか@,
+	db	"EVEN ",	$88,	$3,	$0		; でも@@@,
+	db	"MUST ",	$9c,	$3,	$0		; どうしても,
+	db	"NATUR",	$a0,	$3,	$0		; とうぜん@,
+	db	"GO AH",	$a2,	$3,	$0		; どうぞ@@,
+	db	"FOR N",	$be,	$3,	$0		; とりあえず,
+	db	"HEY?@",	$cc,	$3,	$0		; なあ@@@,
+	db	"JOKIN",	$f4,	$3,	$0		; なんて@@,
+	db	"READY",	$fc,	$3,	$0		; なんでも@,
+	db	"SOMEH",	$fe,	$3,	$0		; なんとか@,
+	db	"ALTHO",	$8,		$4,	$0		; には@@@,
+	db	"PERFE",	$46,	$4,	$0		; バッチり@,
+	db	"FIRML",	$52,	$4,	$0		; ばりばり@,
+	db	"EQUAL",	$b0,	$4,	$0		; ほど@@@,
+	db	"REALL",	$be,	$4,	$0		; ほんと@@,
+	db	"TRULY",	$d0,	$4,	$0		; まさに@@,
+	db	"SUREL",	$d2,	$4,	$0		; マジ@@@,
+	db	"FOR S",	$d4,	$4,	$0		; マジで@@,
+	db	"TOTAL",	$e4,	$4,	$0		; まったく@,
+	db	"UNTIL",	$e6,	$4,	$0		; まで@@@,
+	db	"AS IF",	$ec,	$4,	$0		; まるで@@,
+	db	"MOOD@",	$e,		$5,	$0		; ムード@@,
+	db	"RATHE",	$14,	$5,	$0		; むしろ@@,
+	db	"NO WA",	$24,	$5,	$0		; めちゃ@@,
+	db	"AWFUL",	$28,	$5,	$0		; めっぽう@,
+	db	"ALMOS",	$2c,	$5,	$0		; もう@@@,
+	db	"MODE@",	$2e,	$5,	$0		; モード@@,
+	db	"MORE@",	$36,	$5,	$0		; もっと@@,
+	db	"TOO L",	$38,	$5,	$0		; もはや@@,
+	db	"FINAL",	$4a,	$5,	$0		; やっと@@,
+	db	"ANY@@",	$4c,	$5,	$0		; やっぱり@,
+	db	"INSTE",	$7c,	$5,	$0		; より@@@,
+	db	"TERRI",	$a4,	$5,	$0		; れば@@@,
 
 .Feelings:
-	db "あいたい@", $1a, $0, $0
-	db "あそびたい", $32, $0, $0
-	db "いきたい@", $7c, $0, $0
-	db "うかれて@", $b4, $0, $0
-	db "うれしい@", $c6, $0, $0
-	db "うれしさ@", $c8, $0, $0
-	db "エキサイト", $d8, $0, $0
-	db "えらい@@", $de, $0, $0
-	db "おかしい@", $ec, $0, $0
-	db "オッケー@", $8, $1, $0
-	db "かえりたい", $48, $1, $0
-	db "がっくし@", $5a, $1, $0
-	db "かなしい@", $6c, $1, $0
-	db "がんばって", $80, $1, $0
-	db "きがしない", $86, $1, $0
-	db "きがする@", $88, $1, $0
-	db "ききたい@", $8a, $1, $0
-	db "きになる@", $90, $1, $0
-	db "きのせい@", $96, $1, $0
-	db "きらい@@", $b4, $1, $0
-	db "くやしい@", $be, $1, $0
-	db "くやしさ@", $c0, $1, $0
-	db "さみしい@", $24, $2, $0
-	db "ざんねん@", $32, $2, $0
-	db "しあわせ@", $36, $2, $0
-	db "したい@@", $44, $2, $0
-	db "したくない", $46, $2, $0
-	db "しまった@", $64, $2, $0
-	db "しょんぼり", $82, $2, $0
-	db "すき@@@", $92, $2, $0
-	db "だいきらい", $da, $2, $0
-	db "たいくつ@", $dc, $2, $0
-	db "だいじ@@", $de, $2, $0
-	db "だいすき@", $e4, $2, $0
-	db "たいへん@", $ea, $2, $0
-	db "たのしい@", $0, $3, $0
-	db "たのしすぎ", $2, $3, $0
-	db "たべたい@", $8, $3, $0
-	db "ダメダメ@", $e, $3, $0
-	db "たりない@", $16, $3, $0
-	db "ちくしょー", $34, $3, $0
-	db "どうしよう", $9e, $3, $0
-	db "ドキドキ@", $ac, $3, $0
-	db "ナイス@@", $d0, $3, $0
-	db "のみたい@", $26, $4, $0
-	db "びっくり@", $60, $4, $0
-	db "ふあん@@", $74, $4, $0
-	db "ふらふら@", $86, $4, $0
-	db "ほしい@@", $ae, $4, $0
-	db "ボロボロ@", $b8, $4, $0
-	db "まだまだ@", $e0, $4, $0
-	db "まてない@", $e8, $4, $0
-	db "まんぞく@", $f0, $4, $0
-	db "みたい@@", $f8, $4, $0
-	db "めずらしい", $22, $5, $0
-	db "メラメラ@", $2a, $5, $0
-	db "やだ@@@", $46, $5, $0
-	db "やったー@", $48, $5, $0
-	db "やばい@@", $50, $5, $0
-	db "やばすぎる", $52, $5, $0
-	db "やられた@", $54, $5, $0
-	db "やられて@", $56, $5, $0
-	db "よかった@", $6e, $5, $0
-	db "ラブラブ@", $96, $5, $0
-	db "ロマン@@", $a8, $5, $0
-	db "ろんがい@", $aa, $5, $0
-	db "わから@@", $b4, $5, $0
-	db "わかり@@", $b6, $5, $0
-	db "わくわく@", $ba, $5, $0
+	db	"MEET@",	$1a,	$0,	$0		; あいたい@,
+	db	"PLAY@",	$32,	$0,	$0		; あそびたい,
+	db	"GOES@",	$7c,	$0,	$0		; いきたい@,
+	db	"GIDDY",	$b4,	$0,	$0		; うかれて@,
+	db	"HAPPY",	$c6,	$0,	$0		; うれしい@,
+	db	"GLEE@",	$c8,	$0,	$0		; うれしさ@,
+	db	"EXCIT",	$d8,	$0,	$0		; エキサイト,
+	db	"CRUCI",	$de,	$0,	$0		; えらい@@,
+	db	"FUNNY",	$ec,	$0,	$0		; おかしい@,
+	db	"GOT@@",	$8,		$1,	$0		; オッケー@,
+	db	"GO HO",	$48,	$1,	$0		; かえりたい,
+	db	"FAILS",	$5a,	$1,	$0		; がっくし@,
+	db	"SAD@@",	$6c,	$1,	$0		; かなしい@,
+	db	"TRY@@",	$80,	$1,	$0		; がんばって,
+	db	"HEARS",	$86,	$1,	$0		; きがしない,
+	db	"THINK",	$88,	$1,	$0		; きがする@,
+	db	"HEAR@",	$8a,	$1,	$0		; ききたい@,
+	db	"WANTS",	$90,	$1,	$0		; きになる@,
+	db	"MISHE",	$96,	$1,	$0		; きのせい@,
+	db	"DISLI",	$b4,	$1,	$0		; きらい@@,
+	db	"ANGRY",	$be,	$1,	$0		; くやしい@,
+	db	"ANGER",	$c0,	$1,	$0		; くやしさ@,
+	db	"LONES",	$24,	$2,	$0		; さみしい@,
+	db	"FAIL@",	$32,	$2,	$0		; ざんねん@,
+	db	"JOY@@",	$36,	$2,	$0		; しあわせ@,
+	db	"GETS@",	$44,	$2,	$0		; したい@@,
+	db	"NEVER",	$46,	$2,	$0		; したくない,
+	db	"DARN@",	$64,	$2,	$0		; しまった@,
+	db	"DOWNC",	$82,	$2,	$0		; しょんぼり,
+	db	"LIKES",	$92,	$2,	$0		; すき@@@,
+	db	"DISLI",	$da,	$2,	$0		; だいきらい,
+	db	"BORIN",	$dc,	$2,	$0		; たいくつ@,
+	db	"CARE@",	$de,	$2,	$0		; だいじ@@,
+	db	"ADORE",	$e4,	$2,	$0		; だいすき@,
+	db	"DISAS",	$ea,	$2,	$0		; たいへん@,
+	db	"ENJOY",	$0,		$3,	$0		; たのしい@,
+	db	"ENJOY",	$2,		$3,	$0		; たのしすぎ,
+	db	"EAT@@",	$8,		$3,	$0		; たべたい@,
+	db	"USELE",	$e,		$3,	$0		; ダメダメ@,
+	db	"LACKI",	$16,	$3,	$0		; たりない@,
+	db	"BAD@@",	$34,	$3,	$0		; ちくしょー,
+	db	"SHOUL",	$9e,	$3,	$0		; どうしよう,
+	db	"EXCIT",	$ac,	$3,	$0		; ドキドキ@,
+	db	"NICE@",	$d0,	$3,	$0		; ナイス@@,
+	db	"DRINK",	$26,	$4,	$0		; のみたい@,
+	db	"SURPR",	$60,	$4,	$0		; びっくり@,
+	db	"FEAR@",	$74,	$4,	$0		; ふあん@@,
+	db	"WOBBL",	$86,	$4,	$0		; ふらふら@,
+	db	"WANT@",	$ae,	$4,	$0		; ほしい@@,
+	db	"SHRED",	$b8,	$4,	$0		; ボロボロ@,
+	db	"YET@@",	$e0,	$4,	$0		; まだまだ@,
+	db	"WAIT@",	$e8,	$4,	$0		; まてない@,
+	db	"CONTE",	$f0,	$4,	$0		; まんぞく@,
+	db	"SEE@@",	$f8,	$4,	$0		; みたい@@,
+	db	"RARE@",	$22,	$5,	$0		; めずらしい,
+	db	"FIERY",	$2a,	$5,	$0		; メラメラ@,
+	db	"NEGAT",	$46,	$5,	$0		; やだ@@@,
+	db	"DONE@",	$48,	$5,	$0		; やったー@,
+	db	"DANGE",	$50,	$5,	$0		; やばい@@,
+	db	"DONE ",	$52,	$5,	$0		; やばすぎる,
+	db	"DEFEA",	$54,	$5,	$0		; やられた@,
+	db	"BEAT@",	$56,	$5,	$0		; やられて@,
+	db	"GREAT",	$6e,	$5,	$0		; よかった@,
+	db	"DOTIN",	$96,	$5,	$0		; ラブラブ@,
+	db	"ROMAN",	$a8,	$5,	$0		; ロマン@@,
+	db	"QUEST",	$aa,	$5,	$0		; ろんがい@,
+	db	"REALI",	$b4,	$5,	$0		; わから@@,
+	db	"REALI",	$b6,	$5,	$0		; わかり@@,
+	db	"SUSPE",	$ba,	$5,	$0		; わくわく@,
 
 .Conditions:
-	db "あつい@@", $38, $0, $0
-	db "あった@@", $3a, $0, $0
-	db "あり@@@", $56, $0, $0
-	db "ある@@@", $5e, $0, $0
-	db "あわてて@", $6a, $0, $0
-	db "いい@@@", $70, $0, $0
-	db "いか@@@", $76, $0, $0
-	db "イカス@@", $78, $0, $0
-	db "いきおい@", $7a, $0, $0
-	db "いける@@", $8a, $0, $0
-	db "いじょう@", $8c, $0, $0
-	db "いそがしい", $90, $0, $0
-	db "いっしょに", $9a, $0, $0
-	db "いっぱい@", $9c, $0, $0
-	db "いない@@", $a0, $0, $0
-	db "いや@@@", $a4, $0, $0
-	db "いる@@@", $a8, $0, $0
-	db "うまい@@", $c0, $0, $0
-	db "うまく@@", $c2, $0, $0
-	db "おおきい@", $e6, $0, $0
-	db "おくれ@@", $f2, $0, $0
-	db "おしい@@", $fa, $0, $0
-	db "おもしろい", $2c, $1, $0
-	db "おもしろく", $2e, $1, $0
-	db "かっこいい", $5c, $1, $0
-	db "かわいい@", $7e, $1, $0
-	db "かんぺき@", $82, $1, $0
-	db "けっこう@", $d0, $1, $0
-	db "げんき@@", $d8, $1, $0
-	db "こわい@@", $6, $2, $0
-	db "さいこう@", $14, $2, $0
-	db "さむい@@", $26, $2, $0
-	db "さわやか@", $2c, $2, $0
-	db "しかたない", $38, $2, $0
-	db "すごい@@", $96, $2, $0
-	db "すごすぎ@", $9c, $2, $0
-	db "すてき@@", $a4, $2, $0
-	db "たいした@", $e0, $2, $0
-	db "だいじょぶ", $e2, $2, $0
-	db "たかい@@", $ec, $2, $0
-	db "ただしい@", $f8, $2, $0
-	db "だめ@@@", $c, $3, $0
-	db "ちいさい@", $2c, $3, $0
-	db "ちがう@@", $30, $3, $0
-	db "つかれ@@", $48, $3, $0
-	db "とくい@@", $b0, $3, $0
-	db "とまらない", $b6, $3, $0
-	db "ない@@@", $ce, $3, $0
-	db "なかった@", $d2, $3, $0
-	db "なし@@@", $d8, $3, $0
-	db "なって@@", $dc, $3, $0
-	db "はやい@@", $50, $4, $0
-	db "ひかる@@", $5a, $4, $0
-	db "ひくい@@", $5c, $4, $0
-	db "ひどい@@", $64, $4, $0
-	db "ひとりで@", $66, $4, $0
-	db "ひま@@@", $68, $4, $0
-	db "ふそく@@", $76, $4, $0
-	db "へた@@@", $8c, $4, $0
-	db "まちがって", $e2, $4, $0
-	db "やさしい@", $42, $5, $0
-	db "よく@@@", $70, $5, $0
-	db "よわって@", $86, $5, $0
-	db "らく@@@", $8c, $5, $0
-	db "らしい@@", $90, $5, $0
-	db "わるい@@", $d4, $5, $0
+	db	"HOT@@",	$38,	$0,	$0		; あつい@@,
+	db	"EXIST",	$3a,	$0,	$0		; あった@@,
+	db	"APPRO",	$56,	$0,	$0		; あり@@@,
+	db	"HAS@@",	$5e,	$0,	$0		; ある@@@,
+	db	"HURRI",	$6a,	$0,	$0		; あわてて@,
+	db	"GOOD@",	$70,	$0,	$0		; いい@@@,
+	db	"LESS@",	$76,	$0,	$0		; いか@@@,
+	db	"MEGA@",	$78,	$0,	$0		; イカス@@,
+	db	"MOMEN",	$7a,	$0,	$0		; いきおい@,
+	db	"GOING",	$8a,	$0,	$0		; いける@@,
+	db	"WEIRD",	$8c,	$0,	$0		; いじょう@,
+	db	"BUSY@",	$90,	$0,	$0		; いそがしい,
+	db	"TOGET",	$9a,	$0,	$0		; いっしょに,
+	db	"FULL@",	$9c,	$0,	$0		; いっぱい@,
+	db	"ABSEN",	$a0,	$0,	$0		; いない@@,
+	db	"BEING",	$a4,	$0,	$0		; いや@@@,
+	db	"NEED@",	$a8,	$0,	$0		; いる@@@,
+	db	"TASTY",	$c0,	$0,	$0		; うまい@@,
+	db	"SKILL",	$c2,	$0,	$0		; うまく@@,
+	db	"BIG@@",	$e6,	$0,	$0		; おおきい@,
+	db	"LATE@",	$f2,	$0,	$0		; おくれ@@,
+	db	"CLOSE",	$fa,	$0,	$0		; おしい@@,
+	db	"AMUSI",	$2c,	$1,	$0		; おもしろい,
+	db	"ENGAG",	$2e,	$1,	$0		; おもしろく,
+	db	"COOL@",	$5c,	$1,	$0		; かっこいい,
+	db	"CUTE@",	$7e,	$1,	$0		; かわいい@,
+	db	"FLAWL",	$82,	$1,	$0		; かんぺき@,
+	db	"PRETT",	$d0,	$1,	$0		; けっこう@,
+	db	"HEALT",	$d8,	$1,	$0		; げんき@@,
+	db	"SCARY",	$6,		$2,	$0		; こわい@@,
+	db	"SUPER",	$14,	$2,	$0		; さいこう@,
+	db	"COLD@",	$26,	$2,	$0		; さむい@@,
+	db	"LIVEL",	$2c,	$2,	$0		; さわやか@,
+	db	"FATED",	$38,	$2,	$0		; しかたない,
+	db	"MUCH@",	$96,	$2,	$0		; すごい@@,
+	db	"IMMEN",	$9c,	$2,	$0		; すごすぎ@,
+	db	"FABUL",	$a4,	$2,	$0		; すてき@@,
+	db	"ELSE@",	$e0,	$2,	$0		; たいした@,
+	db	"ALRIG",	$e2,	$2,	$0		; だいじょぶ,
+	db	"COSTL",	$ec,	$2,	$0		; たかい@@,
+	db	"CORRE",	$f8,	$2,	$0		; ただしい@,
+	db	"UNLIK",	$c,		$3,	$0		; だめ@@@,
+	db	"SMALL",	$2c,	$3,	$0		; ちいさい@,
+	db	"VARIE",	$30,	$3,	$0		; ちがう@@,
+	db	"TIRED",	$48,	$3,	$0		; つかれ@@,
+	db	"SKILL",	$b0,	$3,	$0		; とくい@@,
+	db	"NON-S",	$b6,	$3,	$0		; とまらない,
+	db	"NONE@",	$ce,	$3,	$0		; ない@@@,
+	db	"NOTHI",	$d2,	$3,	$0		; なかった@,
+	db	"NATUR",	$d8,	$3,	$0		; なし@@@,
+	db	"BECOM",	$dc,	$3,	$0		; なって@@,
+	db	"FAST@",	$50,	$4,	$0		; はやい@@,
+	db	"SHINE",	$5a,	$4,	$0		; ひかる@@,
+	db	"LOW@@",	$5c,	$4,	$0		; ひくい@@,
+	db	"AWFUL",	$64,	$4,	$0		; ひどい@@,
+	db	"ALONE",	$66,	$4,	$0		; ひとりで@,
+	db	"BORED",	$68,	$4,	$0		; ひま@@@,
+	db	"LACKS",	$76,	$4,	$0		; ふそく@@,
+	db	"LOUSY",	$8c,	$4,	$0		; へた@@@,
+	db	"MISTA",	$e2,	$4,	$0		; まちがって,
+	db	"KIND@",	$42,	$5,	$0		; やさしい@,
+	db	"WELL@",	$70,	$5,	$0		; よく@@@,
+	db	"WEAKE",	$86,	$5,	$0		; よわって@,
+	db	"SIMPL",	$8c,	$5,	$0		; らく@@@,
+	db	"SEEMS",	$90,	$5,	$0		; らしい@@,
+	db	"BADLY",	$d4,	$5,	$0		; わるい@@,
 
-.Life:
-	db "アルバイト", $64, $0, $0
-	db "うち@@@", $ba, $0, $0
-	db "おかね@@", $ee, $0, $0
-	db "おこづかい", $f4, $0, $0
-	db "おふろ@@", $24, $1, $0
-	db "がっこう@", $5e, $1, $0
-	db "きねん@@", $92, $1, $0
-	db "グループ@", $c6, $1, $0
-	db "ゲット@@", $d2, $1, $0
-	db "こうかん@", $de, $1, $0
-	db "しごと@@", $40, $2, $0
-	db "しゅぎょう", $74, $2, $0
-	db "じゅぎょう", $76, $2, $0
-	db "じゅく@@", $78, $2, $0
-	db "しんか@@", $88, $2, $0
-	db "ずかん@@", $90, $2, $0
-	db "せいかつ@", $ae, $2, $0
-	db "せんせい@", $b8, $2, $0
-	db "センター@", $ba, $2, $0
-	db "タワー@@", $28, $3, $0
-	db "つうしん@", $40, $3, $0
-	db "テスト@@", $7e, $3, $0
-	db "テレビ@@", $8c, $3, $0
-	db "でんわ@@", $96, $3, $0
-	db "どうぐ@@", $9a, $3, $0
-	db "トレード@", $c4, $3, $0
-	db "なまえ@@", $e8, $3, $0
-	db "ニュース@", $a, $4, $0
-	db "にんき@@", $c, $4, $0
-	db "パーティー", $2e, $4, $0
-	db "べんきょう", $92, $4, $0
-	db "マシン@@", $d6, $4, $0
-	db "めいし@@", $1e, $5, $0
-	db "メッセージ", $26, $5, $0
-	db "もようがえ", $3a, $5, $0
-	db "ゆめ@@@", $5a, $5, $0
-	db "ようちえん", $66, $5, $0
-	db "ラジオ@@", $92, $5, $0
-	db "ワールド@", $ae, $5, $0
+.Life:	
+	db	"CHORE",	$64,	$0,	$0		; アルバイト,
+	db	"HOME@",	$ba,	$0,	$0		; うち@@@,
+	db	"MONEY",	$ee,	$0,	$0		; おかね@@,
+	db	"SAVIN",	$f4,	$0,	$0		; おこづかい,
+	db	"BATH@",	$24,	$1,	$0		; おふろ@@,
+	db	"SCHOO",	$5e,	$1,	$0		; がっこう@,
+	db	"REMEM",	$92,	$1,	$0		; きねん@@,
+	db	"GROUP",	$c6,	$1,	$0		; グループ@,
+	db	"GOTCH",	$d2,	$1,	$0		; ゲット@@,
+	db	"EXCHA",	$de,	$1,	$0		; こうかん@,
+	db	"WORK@",	$40,	$2,	$0		; しごと@@,
+	db	"TRAIN",	$74,	$2,	$0		; しゅぎょう,
+	db	"CLASS",	$76,	$2,	$0		; じゅぎょう,
+	db	"LESSO",	$78,	$2,	$0		; じゅく@@,
+	db	"EVOLV",	$88,	$2,	$0		; しんか@@,
+	db	"HANDB",	$90,	$2,	$0		; ずかん@@,
+	db	"LIVIN",	$ae,	$2,	$0		; せいかつ@,
+	db	"TEACH",	$b8,	$2,	$0		; せんせい@,
+	db	"CENTE",	$ba,	$2,	$0		; センター@,
+	db	"TOWER",	$28,	$3,	$0		; タワー@@,
+	db	"LINK@",	$40,	$3,	$0		; つうしん@,
+	db	"TEST@",	$7e,	$3,	$0		; テスト@@,
+	db	"TV@@@",	$8c,	$3,	$0		; テレビ@@,
+	db	"PHONE",	$96,	$3,	$0		; でんわ@@,
+	db	"ITEM@",	$9a,	$3,	$0		; どうぐ@@,
+	db	"TRADE",	$c4,	$3,	$0		; トレード@,
+	db	"NAME@",	$e8,	$3,	$0		; なまえ@@,
+	db	"NEWS@",	$a,		$4,	$0		; ニュース@,
+	db	"POPUL",	$c,		$4,	$0		; にんき@@,
+	db	"PARTY",	$2e,	$4,	$0		; パーティー,
+	db	"STUDY",	$92,	$4,	$0		; べんきょう,
+	db	"MACHI",	$d6,	$4,	$0		; マシン@@,
+	db	"CARD@",	$1e,	$5,	$0		; めいし@@,
+	db	"MESSA",	$26,	$5,	$0		; メッセージ,
+	db	"MAKEO",	$3a,	$5,	$0		; もようがえ,
+	db	"DREAM",	$5a,	$5,	$0		; ゆめ@@@,
+	db	"DAY C",	$66,	$5,	$0		; ようちえん,
+	db	"RADIO",	$92,	$5,	$0		; ラジオ@@,
+	db	"WORLD",	$ae,	$5,	$0		; ワールド@,
 
 .Hobbies:
-	db "アイドル@", $1e, $0, $0
-	db "アニメ@@", $4c, $0, $0
-	db "うた@@@", $b8, $0, $0
-	db "えいが@@", $d0, $0, $0
-	db "おかし@@", $ea, $0, $0
-	db "おしゃべり", $4, $1, $0
-	db "おままごと", $28, $1, $0
-	db "おもちゃ@", $30, $1, $0
-	db "おんがく@", $38, $1, $0
-	db "カード@@", $3e, $1, $0
-	db "かいもの@", $46, $1, $0
-	db "グルメ@@", $c8, $1, $0
-	db "ゲーム@@", $cc, $1, $0
-	db "ざっし@@", $1c, $2, $0
-	db "さんぽ@@", $34, $2, $0
-	db "じてんしゃ", $50, $2, $0
-	db "しゅみ@@", $7a, $2, $0
-	db "スポーツ@", $a8, $2, $0
-	db "ダイエット", $d8, $2, $0
-	db "たからもの", $f0, $2, $0
-	db "たび@@@", $4, $3, $0
-	db "ダンス@@", $2a, $3, $0
-	db "つり@@@", $60, $3, $0
-	db "デート@@", $6a, $3, $0
-	db "でんしゃ@", $92, $3, $0
-	db "ぬいぐるみ", $e, $4, $0
-	db "パソコン@", $3e, $4, $0
-	db "はな@@@", $4c, $4, $0
-	db "ヒーロー@", $58, $4, $0
-	db "ひるね@@", $6e, $4, $0
-	db "ヒロイン@", $70, $4, $0
-	db "ぼうけん@", $96, $4, $0
-	db "ボード@@", $9a, $4, $0
-	db "ボール@@", $9e, $4, $0
-	db "ほん@@@", $ba, $4, $0
-	db "マンガ@@", $ee, $4, $0
-	db "やくそく@", $40, $5, $0
-	db "やすみ@@", $44, $5, $0
-	db "よてい@@", $74, $5, $0
+	db	"IDOL@",	$1e,	$0,	$0		; アイドル@,
+	db	"ANIME",	$4c,	$0,	$0		; アニメ@@,
+	db	"SONG@",	$b8,	$0,	$0		; うた@@@,
+	db	"MOVIE",	$d0,	$0,	$0		; えいが@@,
+	db	"CANDY",	$ea,	$0,	$0		; おかし@@,
+	db	"CHAT@",	$4,		$1,	$0		; おしゃべり,
+	db	"TOYHO",	$28,	$1,	$0		; おままごと,
+	db	"TOYS@",	$30,	$1,	$0		; おもちゃ@,
+	db	"MUSIC",	$38,	$1,	$0		; おんがく@,
+	db	"CARDS",	$3e,	$1,	$0		; カード@@,
+	db	"SHOPP",	$46,	$1,	$0		; かいもの@,
+	db	"GOURM",	$c8,	$1,	$0		; グルメ@@,
+	db	"GAME@",	$cc,	$1,	$0		; ゲーム@@,
+	db	"MAGAZ",	$1c,	$2,	$0		; ざっし@@,
+	db	"WALK@",	$34,	$2,	$0		; さんぽ@@,
+	db	"BIKE@",	$50,	$2,	$0		; じてんしゃ,
+	db	"HOBBI",	$7a,	$2,	$0		; しゅみ@@,
+	db	"SPORT",	$a8,	$2,	$0		; スポーツ@,
+	db	"DIET@",	$d8,	$2,	$0		; ダイエット,
+	db	"TREAS",	$f0,	$2,	$0		; たからもの,
+	db	"TRAVE",	$4,		$3,	$0		; たび@@@,
+	db	"DANCE",	$2a,	$3,	$0		; ダンス@@,
+	db	"FISHI",	$60,	$3,	$0		; つり@@@,
+	db	"DATE@",	$6a,	$3,	$0		; デート@@,
+	db	"TRAIN",	$92,	$3,	$0		; でんしゃ@,
+	db	"PLUSH",	$e,		$4,	$0		; ぬいぐるみ,
+	db	"PC@@@",	$3e,	$4,	$0		; パソコン@,
+	db	"FLOWE",	$4c,	$4,	$0		; はな@@@,
+	db	"HERO@",	$58,	$4,	$0		; ヒーロー@,
+	db	"NAP@@",	$6e,	$4,	$0		; ひるね@@,
+	db	"HEROI",	$70,	$4,	$0		; ヒロイン@,
+	db	"JOURN",	$96,	$4,	$0		; ぼうけん@,
+	db	"BOARD",	$9a,	$4,	$0		; ボード@@,
+	db	"BALL@",	$9e,	$4,	$0		; ボール@@,
+	db	"BOOK@",	$ba,	$4,	$0		; ほん@@@,
+	db	"MANGA",	$ee,	$4,	$0		; マンガ@@,
+	db	"PROMI",	$40,	$5,	$0		; やくそく@,
+	db	"HOLID",	$44,	$5,	$0		; やすみ@@,
+	db	"PLANS",	$74,	$5,	$0		; よてい@@,
 
-.Actions:
-	db "あう@@@", $20, $0, $0
-	db "あきらめ@", $24, $0, $0
-	db "あげる@@", $28, $0, $0
-	db "あせる@@", $2e, $0, $0
-	db "あそび@@", $30, $0, $0
-	db "あそぶ@@", $34, $0, $0
-	db "あつめ@@", $3e, $0, $0
-	db "あるき@@", $60, $0, $0
-	db "あるく@@", $62, $0, $0
-	db "いく@@@", $7e, $0, $0
-	db "いけ@@@", $86, $0, $0
-	db "おき@@@", $f0, $0, $0
-	db "おこり@@", $f6, $0, $0
-	db "おこる@@", $f8, $0, $0
-	db "おしえ@@", $fe, $0, $0
-	db "おしえて@", $0, $1, $0
-	db "おねがい@", $1a, $1, $0
-	db "おぼえ@@", $26, $1, $0
-	db "かえる@@", $4a, $1, $0
-	db "がまん@@", $74, $1, $0
-	db "きく@@@", $8c, $1, $0
-	db "きたえ@@", $8e, $1, $0
-	db "きめ@@@", $a6, $1, $0
-	db "くる@@@", $c4, $1, $0
-	db "さがし@@", $18, $2, $0
-	db "さわぎ@@", $2a, $2, $0
-	db "した@@@", $42, $2, $0
-	db "しって@@", $4a, $2, $0
-	db "して@@@", $4e, $2, $0
-	db "しない@@", $52, $2, $0
-	db "しまう@@", $60, $2, $0
-	db "じまん@@", $66, $2, $0
-	db "しらない@", $84, $2, $0
-	db "しる@@@", $86, $2, $0
-	db "しんじて@", $8a, $2, $0
-	db "する@@@", $aa, $2, $0
-	db "たべる@@", $a, $3, $0
-	db "つかう@@", $42, $3, $0
-	db "つかえ@@", $44, $3, $0
-	db "つかって@", $46, $3, $0
-	db "できない@", $70, $3, $0
-	db "できる@@", $72, $3, $0
-	db "でない@@", $84, $3, $0
-	db "でる@@@", $8a, $3, $0
-	db "なげる@@", $d6, $3, $0
-	db "なやみ@@", $ea, $3, $0
-	db "ねられ@@", $18, $4, $0
-	db "ねる@@@", $1a, $4, $0
-	db "のがし@@", $24, $4, $0
-	db "のむ@@@", $28, $4, $0
-	db "はしり@@", $3a, $4, $0
-	db "はしる@@", $3c, $4, $0
-	db "はたらき@", $40, $4, $0
-	db "はたらく@", $42, $4, $0
-	db "はまって@", $4e, $4, $0
-	db "ぶつけ@@", $7a, $4, $0
-	db "ほめ@@@", $b4, $4, $0
-	db "みせて@@", $f6, $4, $0
-	db "みて@@@", $fc, $4, $0
-	db "みる@@@", $2, $5, $0
-	db "めざす@@", $20, $5, $0
-	db "もって@@", $34, $5, $0
-	db "ゆずる@@", $58, $5, $0
-	db "ゆるす@@", $5c, $5, $0
-	db "ゆるせ@@", $5e, $5, $0
-	db "られない@", $9a, $5, $0
-	db "られる@@", $9c, $5, $0
-	db "わかる@@", $b8, $5, $0
-	db "わすれ@@", $c0, $5, $0
+.Actions:	
+	db	"MEETS",	$20,	$0,	$0		; あう@@@,
+	db	"CONCE",	$24,	$0,	$0		; あきらめ@,
+	db	"GIVE@",	$28,	$0,	$0		; あげる@@,
+	db	"GIVES",	$2e,	$0,	$0		; あせる@@,
+	db	"PLAYE",	$30,	$0,	$0		; あそび@@,
+	db	"PLAYS",	$34,	$0,	$0		; あそぶ@@,
+	db	"COLLE",	$3e,	$0,	$0		; あつめ@@,
+	db	"WALKI",	$60,	$0,	$0		; あるき@@,
+	db	"WALKS",	$62,	$0,	$0		; あるく@@,
+	db	"WENT@",	$7e,	$0,	$0		; いく@@@,
+	db	"GO@@@",	$86,	$0,	$0		; いけ@@@,
+	db	"WAKE ",	$f0,	$0,	$0		; おき@@@,
+	db	"WAKES",	$f6,	$0,	$0		; おこり@@,
+	db	"ANGER",	$f8,	$0,	$0		; おこる@@,
+	db	"TEACH",	$fe,	$0,	$0		; おしえ@@,
+	db	"TEACH",	$0,		$1,	$0		; おしえて@,
+	db	"PLEAS",	$1a,	$1,	$0		; おねがい@,
+	db	"LEARN",	$26,	$1,	$0		; おぼえ@@,
+	db	"CHANG",	$4a,	$1,	$0		; かえる@@,
+	db	"TRUST",	$74,	$1,	$0		; がまん@@,
+	db	"HEARI",	$8c,	$1,	$0		; きく@@@,
+	db	"TRAIN",	$8e,	$1,	$0		; きたえ@@,
+	db	"CHOOS",	$a6,	$1,	$0		; きめ@@@,
+	db	"COME@",	$c4,	$1,	$0		; くる@@@,
+	db	"SEARC",	$18,	$2,	$0		; さがし@@,
+	db	"CAUSE",	$2a,	$2,	$0		; さわぎ@@,
+	db	"THESE",	$42,	$2,	$0		; した@@@,
+	db	"KNOW@",	$4a,	$2,	$0		; しって@@,
+	db	"KNOWS",	$4e,	$2,	$0		; して@@@,
+	db	"REFUS",	$52,	$2,	$0		; しない@@,
+	db	"STORE",	$60,	$2,	$0		; しまう@@,
+	db	"BRAG@",	$66,	$2,	$0		; じまん@@,
+	db	"IGNOR",	$84,	$2,	$0		; しらない@,
+	db	"THINK",	$86,	$2,	$0		; しる@@@,
+	db	"BELIE",	$8a,	$2,	$0		; しんじて@,
+	db	"SLIDE",	$aa,	$2,	$0		; する@@@,
+	db	"EATS@",	$a,		$3,	$0		; たべる@@,
+	db	"USE@@",	$42,	$3,	$0		; つかう@@,
+	db	"USES@",	$44,	$3,	$0		; つかえ@@,
+	db	"USING",	$46,	$3,	$0		; つかって@,
+	db	"COULD",	$70,	$3,	$0		; できない@,
+	db	"CAPAB",	$72,	$3,	$0		; できる@@,
+	db	"VANIS",	$84,	$3,	$0		; でない@@,
+	db	"APPEA",	$8a,	$3,	$0		; でる@@@,
+	db	"THROW",	$d6,	$3,	$0		; なげる@@,
+	db	"WORRY",	$ea,	$3,	$0		; なやみ@@,
+	db	"SLEPT",	$18,	$4,	$0		; ねられ@@,
+	db	"SLEEP",	$1a,	$4,	$0		; ねる@@@,
+	db	"RELEA",	$24,	$4,	$0		; のがし@@,
+	db	"DRINK",	$28,	$4,	$0		; のむ@@@,
+	db	"RUNS@",	$3a,	$4,	$0		; はしり@@,
+	db	"RUN@@",	$3c,	$4,	$0		; はしる@@,
+	db	"WORKS",	$40,	$4,	$0		; はたらき@,
+	db	"WORKI",	$42,	$4,	$0		; はたらく@,
+	db	"SINK@",	$4e,	$4,	$0		; はまって@,
+	db	"SMACK",	$7a,	$4,	$0		; ぶつけ@@,
+	db	"PRAIS",	$b4,	$4,	$0		; ほめ@@@,
+	db	"SHOW@",	$f6,	$4,	$0		; みせて@@,
+	db	"LOOKS",	$fc,	$4,	$0		; みて@@@,
+	db	"SEES@",	$2,		$5,	$0		; みる@@@,
+	db	"SEEK@",	$20,	$5,	$0		; めざす@@,
+	db	"OWN@@",	$34,	$5,	$0		; もって@@,
+	db	"TAKE@",	$58,	$5,	$0		; ゆずる@@,
+	db	"ALLOW",	$5c,	$5,	$0		; ゆるす@@,
+	db	"FORGE",	$5e,	$5,	$0		; ゆるせ@@,
+	db	"FORGE",	$9a,	$5,	$0		; られない@,
+	db	"APPEA",	$9c,	$5,	$0		; られる@@,
+	db	"FAINT",	$b8,	$5,	$0		; わかる@@,
+	db	"FAINT",	$c0,	$5,	$0		; わすれ@@,
 
-.Time:
-	db "あき@@@", $22, $0, $0
-	db "あさ@@@", $2a, $0, $0
-	db "あした@@", $2c, $0, $0
-	db "いちにち@", $94, $0, $0
-	db "いつか@@", $98, $0, $0
-	db "いつも@@", $9e, $0, $0
-	db "いま@@@", $a2, $0, $0
-	db "えいえん@", $ce, $0, $0
-	db "おととい@", $12, $1, $0
-	db "おわり@@", $36, $1, $0
-	db "かようび@", $78, $1, $0
-	db "きのう@@", $94, $1, $0
-	db "きょう@@", $b0, $1, $0
-	db "きんようび", $b8, $1, $0
-	db "げつようび", $d4, $1, $0
-	db "このあと@", $f4, $1, $0
-	db "このまえ@", $f6, $1, $0
-	db "こんど@@", $c, $2, $0
-	db "じかん@@", $3c, $2, $0
-	db "じゅうねん", $70, $2, $0
-	db "すいようび", $8e, $2, $0
-	db "スタート@", $9e, $2, $0
-	db "ずっと@@", $a2, $2, $0
-	db "ストップ@", $a6, $2, $0
-	db "そのうち@", $c4, $2, $0
-	db "ついに@@", $3e, $3, $0
-	db "つぎ@@@", $4a, $3, $0
-	db "どようび@", $ba, $3, $0
-	db "なつ@@@", $da, $3, $0
-	db "にちようび", $6, $4, $0
-	db "はじめ@@", $38, $4, $0
-	db "はる@@@", $54, $4, $0
-	db "ひる@@@", $6c, $4, $0
-	db "ふゆ@@@", $84, $4, $0
-	db "まいにち@", $c6, $4, $0
-	db "もくようび", $30, $5, $0
-	db "よなか@@", $76, $5, $0
-	db "よる@@@", $7e, $5, $0
-	db "らいしゅう", $88, $5, $0
+.Time:	
+	db	"FALL@",	$22,	$0,	$0		; あき@@@,
+	db	"MORNI",	$2a,	$0,	$0		; あさ@@@,
+	db	"TOMOR",	$2c,	$0,	$0		; あした@@,
+	db	"DAY@@",	$94,	$0,	$0		; いちにち@,
+	db	"SOMET",	$98,	$0,	$0		; いつか@@,
+	db	"ALWAY",	$9e,	$0,	$0		; いつも@@,
+	db	"CURRE",	$a2,	$0,	$0		; いま@@@,
+	db	"FOREV",	$ce,	$0,	$0		; えいえん@,
+	db	"DAYS@",	$12,	$1,	$0		; おととい@,
+	db	"END@@",	$36,	$1,	$0		; おわり@@,
+	db	"TUESD",	$78,	$1,	$0		; かようび@,
+	db	"Y'DAY",	$94,	$1,	$0		; きのう@@,
+	db	"TODAY",	$b0,	$1,	$0		; きょう@@,
+	db	"FRIDA",	$b8,	$1,	$0		; きんようび,
+	db	"MONDA",	$d4,	$1,	$0		; げつようび,
+	db	"LATER",	$f4,	$1,	$0		; このあと@,
+	db	"EARLI",	$f6,	$1,	$0		; このまえ@,
+	db	"ANOTH",	$c,		$2,	$0		; こんど@@,
+	db	"TIME@",	$3c,	$2,	$0		; じかん@@,
+	db	"DECAD",	$70,	$2,	$0		; じゅうねん,
+	db	"WEDNS",	$8e,	$2,	$0		; すいようび,
+	db	"START",	$9e,	$2,	$0		; スタート@,
+	db	"MONTH",	$a2,	$2,	$0		; ずっと@@,
+	db	"STOP@",	$a6,	$2,	$0		; ストップ@,
+	db	"NOW@@",	$c4,	$2,	$0		; そのうち@,
+	db	"FINAL",	$3e,	$3,	$0		; ついに@@,
+	db	"NEXT@",	$4a,	$3,	$0		; つぎ@@@,
+	db	"SATUR",	$ba,	$3,	$0		; どようび@,
+	db	"SUMME",	$da,	$3,	$0		; なつ@@@,
+	db	"SUNDA",	$6,		$4,	$0		; にちようび,
+	db	"OUTSE",	$38,	$4,	$0		; はじめ@@,
+	db	"SPRIN",	$54,	$4,	$0		; はる@@@,
+	db	"DAYTI",	$6c,	$4,	$0		; ひる@@@,
+	db	"WINTE",	$84,	$4,	$0		; ふゆ@@@,
+	db	"DAILY",	$c6,	$4,	$0		; まいにち@,
+	db	"THURS",	$30,	$5,	$0		; もくようび,
+	db	"NITET",	$76,	$5,	$0		; よなか@@,
+	db	"NIGHT",	$7e,	$5,	$0		; よる@@@,
+	db	"WEEK@",	$88,	$5,	$0		; らいしゅう,
 
-.Farewells:
-	db "いたします", $92, $0, $0
-	db "おります@", $32, $1, $0
-	db "か！？@@", $3c, $1, $0
-	db "かい？@@", $44, $1, $0
-	db "かしら？@", $50, $1, $0
-	db "かな？@@", $6a, $1, $0
-	db "かも@@@", $76, $1, $0
-	db "くれ@@@", $ca, $1, $0
-	db "ございます", $e8, $1, $0
-	db "しがち@@", $3a, $2, $0
-	db "します@@", $62, $2, $0
-	db "じゃ@@@", $6a, $2, $0
-	db "じゃん@@", $6e, $2, $0
-	db "しよう@@", $7c, $2, $0
-	db "ぜ！@@@", $ac, $2, $0
-	db "ぞ！@@@", $bc, $2, $0
-	db "た@@@@", $d4, $2, $0
-	db "だ@@@@", $d6, $2, $0
-	db "だからね@", $ee, $2, $0
-	db "だぜ@@@", $f4, $2, $0
-	db "だった@@", $fa, $2, $0
-	db "だね@@@", $fe, $2, $0
-	db "だよ@@@", $10, $3, $0
-	db "だよねー！", $12, $3, $0
-	db "だわ@@@", $26, $3, $0
-	db "ッス@@@", $4c, $3, $0
-	db "ってかんじ", $52, $3, $0
-	db "っぱなし@", $54, $3, $0
-	db "つもり@@", $56, $3, $0
-	db "ていない@", $64, $3, $0
-	db "ている@@", $66, $3, $0
-	db "でーす！@", $68, $3, $0
-	db "でした@@", $74, $3, $0
-	db "でしょ？@", $76, $3, $0
-	db "でしょー！", $78, $3, $0
-	db "です@@@", $7a, $3, $0
-	db "ですか？@", $7c, $3, $0
-	db "ですよ@@", $80, $3, $0
-	db "ですわ@@", $82, $3, $0
-	db "どうなの？", $a4, $3, $0
-	db "どうよ？@", $a8, $3, $0
-	db "とかいって", $aa, $3, $0
-	db "なの@@@", $e0, $3, $0
-	db "なのか@@", $e2, $3, $0
-	db "なのだ@@", $e4, $3, $0
-	db "なのよ@@", $e6, $3, $0
-	db "なんだね@", $f2, $3, $0
-	db "なんです@", $f8, $3, $0
-	db "なんてね@", $fa, $3, $0
-	db "ね@@@@", $12, $4, $0
-	db "ねー@@@", $14, $4, $0
-	db "の@@@@", $1c, $4, $0
-	db "の？@@@", $1e, $4, $0
-	db "ばっかり@", $44, $4, $0
-	db "まーす！@", $c2, $4, $0
-	db "ます@@@", $d8, $4, $0
-	db "ますわ@@", $da, $4, $0
-	db "ません@@", $dc, $4, $0
-	db "みたいな@", $fa, $4, $0
-	db "よ！@@@", $60, $5, $0
-	db "よー@@@", $68, $5, $0
-	db "よーん@@", $6c, $5, $0
-	db "よね@@@", $78, $5, $0
-	db "るよ@@@", $a2, $5, $0
-	db "わけ@@@", $bc, $5, $0
-	db "わよ！@@", $d2, $5, $0
+.Farewells:	
+	db	"WILL@",	$92,	$0,	$0		; いたします,
+	db	"AYE@@",	$32,	$1,	$0		; おります@,
+	db	"?!@@@",	$3c,	$1,	$0		; か！？@@,
+	db	"HM?@@",	$44,	$1,	$0		; かい？@@,
+	db	"Y'THI",	$50,	$1,	$0		; かしら？@,
+	db	"IS IT",	$6a,	$1,	$0		; かな？@@,
+	db	"BE@@@",	$76,	$1,	$0		; かも@@@,
+	db	"GIMME",	$ca,	$1,	$0		; くれ@@@,
+	db	"COULD",	$e8,	$1,	$0		; ございます,
+	db	"TEND ",	$3a,	$2,	$0		; しがち@@,
+	db	"WOULD",	$62,	$2,	$0		; します@@,
+	db	"IS@@@",	$6a,	$2,	$0		; じゃ@@@,
+	db	"ISNT ",	$6e,	$2,	$0		; じゃん@@,
+	db	"LET'S",	$7c,	$2,	$0		; しよう@@,
+	db	"OTHER",	$ac,	$2,	$0		; ぜ！@@@,
+	db	"ARE@@",	$bc,	$2,	$0		; ぞ！@@@,
+	db	"WAS@@",	$d4,	$2,	$0		; た@@@@,
+	db	"WERE@",	$d6,	$2,	$0		; だ@@@@,
+	db	"THOSE",	$ee,	$2,	$0		; だからね@,
+	db	"ISN'T",	$f4,	$2,	$0		; だぜ@@@,
+	db	"WON'T",	$fa,	$2,	$0		; だった@@,
+	db	"CAN'T",	$fe,	$2,	$0		; だね@@@,
+	db	"CAN@@",	$10,	$3,	$0		; だよ@@@,
+	db	"DON'T",	$12,	$3,	$0		; だよねー！,
+	db	"DO@@@",	$26,	$3,	$0		; だわ@@@,
+	db	"DOES@",	$4c,	$3,	$0		; ッス@@@,
+	db	"WHOM@",	$52,	$3,	$0		; ってかんじ,
+	db	"WHICH",	$54,	$3,	$0		; っぱなし@,
+	db	"WASN'",	$56,	$3,	$0		; つもり@@,
+	db	"WEREN",	$64,	$3,	$0		; ていない@,
+	db	"HAVE@",	$66,	$3,	$0		; ている@@,
+	db	"HAVEN",	$68,	$3,	$0		; でーす！@,
+	db	"A@@@@",	$74,	$3,	$0		; でした@@,
+	db	"AN@@@",	$76,	$3,	$0		; でしょ？@,
+	db	"NOT@@",	$78,	$3,	$0		; でしょー！,
+	db	"THERE",	$7a,	$3,	$0		; です@@@,
+	db	"OK?@@",	$7c,	$3,	$0		; ですか？@,
+	db	"SO@@@",	$80,	$3,	$0		; ですよ@@,
+	db	"MAYBE",	$82,	$3,	$0		; ですわ@@,
+	db	"ABOUT",	$a4,	$3,	$0		; どうなの？,
+	db	"OVER@",	$a8,	$3,	$0		; どうよ？@,
+	db	"IT@@@",	$aa,	$3,	$0		; とかいって,
+	db	"FOR@@",	$e0,	$3,	$0		; なの@@@,
+	db	"ON@@@",	$e2,	$3,	$0		; なのか@@,
+	db	"OFF@@",	$e4,	$3,	$0		; なのだ@@,
+	db	"AS@@@",	$e6,	$3,	$0		; なのよ@@,
+	db	"TO@@@",	$f2,	$3,	$0		; なんだね@,
+	db	"WITH@",	$f8,	$3,	$0		; なんです@,
+	db	"BETTE",	$fa,	$3,	$0		; なんてね@,
+	db	"EVER@",	$12,	$4,	$0		; ね@@@@,
+	db	"SINCE",	$14,	$4,	$0		; ねー@@@,
+	db	"OF@@@",	$1c,	$4,	$0		; の@@@@,
+	db	"BELON",	$1e,	$4,	$0		; の？@@@,
+	db	"AT@@@",	$44,	$4,	$0		; ばっかり@,
+	db	"IN@@@",	$c2,	$4,	$0		; まーす！@,
+	db	"OUT@@",	$d8,	$4,	$0		; ます@@@,
+	db	"TOO@@",	$da,	$4,	$0		; ますわ@@,
+	db	"LIKE@",	$dc,	$4,	$0		; ません@@,
+	db	"DID@@",	$fa,	$4,	$0		; みたいな@,
+	db	"WITHO",	$60,	$5,	$0		; よ！@@@,
+	db	"AFTER",	$68,	$5,	$0		; よー@@@,
+	db	"BEFOR",	$6c,	$5,	$0		; よーん@@,
+	db	"WHILE",	$78,	$5,	$0		; よね@@@,
+	db	"THAN@",	$a2,	$5,	$0		; るよ@@@,
+	db	"ONCE@",	$bc,	$5,	$0		; わけ@@@,
+	db	"ANYWH",	$d2,	$5,	$0		; わよ！@@,
 
 .ThisAndThat:
-	db "ああ@@@", $12, $0, $0
-	db "あっち@@", $3c, $0, $0
-	db "あの@@@", $4e, $0, $0
-	db "ありゃ@@", $5c, $0, $0
-	db "あれ@@@", $66, $0, $0
-	db "あれは@@", $68, $0, $0
-	db "あんな@@", $6c, $0, $0
-	db "こう@@@", $dc, $1, $0
-	db "こっち@@", $ec, $1, $0
-	db "この@@@", $f2, $1, $0
-	db "こりゃ@@", $fe, $1, $0
-	db "これ@@@", $0, $2, $0
-	db "これだ！@", $2, $2, $0
-	db "これは@@", $4, $2, $0
-	db "こんな@@", $e, $2, $0
-	db "そう@@@", $be, $2, $0
-	db "そっち@@", $c0, $2, $0
-	db "その@@@", $c2, $2, $0
-	db "そりゃ@@", $c6, $2, $0
-	db "それ@@@", $c8, $2, $0
-	db "それだ！@", $cc, $2, $0
-	db "それは@@", $d0, $2, $0
-	db "そんな@@", $d2, $2, $0
-	db "どう@@@", $98, $3, $0
-	db "どっち@@", $b2, $3, $0
-	db "どの@@@", $b4, $3, $0
-	db "どりゃ@@", $c0, $3, $0
-	db "どれ@@@", $c2, $3, $0
-	db "どれを@@", $c8, $3, $0
-	db "どんな@@", $ca, $3, $0
-	db "なに@@@", $de, $3, $0
-	db "なんか@@", $ec, $3, $0
-	db "なんだ@@", $f0, $3, $0
-	db "なんで@@", $f6, $3, $0
-	db "なんなんだ", $0, $4, $0
-	db "なんの@@", $2, $4, $0
+	db	"HIGHS",	$12, $0, $0		; ああ@@@,
+	db	"LOWS@",	$3c, $0, $0		; あっち@@,
+	db	"UM@@@",	$4e, $0, $0		; あの@@@,
+	db	"REAR@",	$5c, $0, $0		; ありゃ@@,
+	db	"THING",	$66, $0, $0		; あれ@@@,
+	db	"THING",	$68, $0, $0		; あれは@@,
+	db	"BELOW",	$6c, $0, $0		; あんな@@,
+	db	"HIGH@",	$dc, $1, $0		; こう@@@,
+	db	"HERE@",	$ec, $1, $0		; こっち@@,
+	db	"INSID",	$f2, $1, $0		; この@@@,
+	db	"OUTSI",	$fe, $1, $0		; こりゃ@@,
+	db	"BESID",	$0,	 $2, $0		; これ@@@,
+	db	"THIS ",	$2,	 $2, $0		; これだ！@,
+	db	"THIS@",	$4,	 $2, $0		; これは@@,
+	db	"EVERY",	$e,	 $2, $0		; こんな@@,
+	db	"SEEMS",	$be, $2, $0		; そう@@@,
+	db	"DOWN@",	$c0, $2, $0		; そっち@@,
+	db	"THAT@",	$c2, $2, $0		; その@@@,
+	db	"THAT ",	$c6, $2, $0		; そりゃ@@,
+	db	"THAT ",	$c8, $2, $0		; それ@@@,
+	db	"THATS",	$cc, $2, $0		; それだ！@,
+	db	"THAT'",	$d0, $2, $0		; それは@@,
+	db	"THAT ",	$d2, $2, $0		; そんな@@,
+	db	"UP@@@",	$98, $3, $0		; どう@@@,
+	db	"CHOIC",	$b2, $3, $0		; どっち@@,
+	db	"FAR@@",	$b4, $3, $0		; どの@@@,
+	db	"AWAY@",	$c0, $3, $0		; どりゃ@@,
+	db	"NEAR@",	$c2, $3, $0		; どれ@@@,
+	db	"WHERE",	$c8, $3, $0		; どれを@@,
+	db	"WHEN@",	$ca, $3, $0		; どんな@@,
+	db	"WHAT@",	$de, $3, $0		; なに@@@,
+	db	"DEEP@",	$ec, $3, $0		; なんか@@,
+	db	"SHALL",	$f0, $3, $0		; なんだ@@,
+	db	"WHY@@",	$f6, $3, $0		; なんで@@,
+	db	"CONFU",	$0,  $4, $0		; なんなんだ,
+	db	"OPPOS",	$2,	 $4, $0		; なんの@@,
 
 MobileEZChatData_WordAndPageCounts:
-MACRO macro_11f220
+macro_11f220: MACRO
 ; parameter: number of words
 	db \1
 ; 12 words per page (0-based indexing)
-	db (\1 - 1) / 12
+x = \1 / 12
+if \1 % 12 == 0
+x = x + -1
+endc
+	db x
 ENDM
 	macro_11f220 18 ; 01: Types
 	macro_11f220 36 ; 02: Greetings
@@ -4070,12 +4084,12 @@ EZChat_SortedWords:
 ; with the given kana are sorted in memory, and the pre-
 ; allocated size for each.
 ; These arrays are expanded dynamically to accomodate
-; any Pokemon you've seen that starts with each kana.
-MACRO macro_11f23c
-	dw w3_d012 - w3_d000 + x, \1
-	DEF x += 2 * \1
+; any Pokemon you've seen that starts with each kana.\
+macro_11f23c: MACRO
+	dw x - w3_d000, \1
+x = x + 2 * \1
 ENDM
-DEF x = 0
+x = $d012
 	macro_11f23c $2f ; a
 	macro_11f23c $1e ; i
 	macro_11f23c $11 ; u
@@ -4120,5 +4134,6 @@ DEF x = 0
 	macro_11f23c $02 ; re
 	macro_11f23c $02 ; ro
 	macro_11f23c $15 ; wa
-	dw NULL,     $09 ; end
+x = $d000
+	macro_11f23c $09 ; end
 .End

@@ -1,4 +1,4 @@
-ReenaMonsIsAPerfectMatchText:
+UnknownText_0x1752f5:
 	text "Listen, dear…"
 
 	para "Do you recall my"
@@ -16,7 +16,7 @@ ReenaMonsIsAPerfectMatchText:
 	cont "match for me?"
 	done
 
-ReenaDefeatedMonText:
+UnknownText_0x17536b:
 	text "Have I ever faced"
 	line "a wild @"
 	text_ram wStringBuffer4
@@ -31,7 +31,7 @@ ReenaDefeatedMonText:
 	cont "occasions!"
 	done
 
-ReenaLostAMonText:
+UnknownText_0x1753c5:
 	text "Have I ever failed"
 	line "to catch a wild"
 	cont "#MON?"
@@ -47,7 +47,7 @@ ReenaLostAMonText:
 	line "Oh! Never mind!"
 	done
 
-ReenaBattleRematchText:
+UnknownText_0x17543a:
 	text "We are going to"
 	line "battle!"
 
@@ -60,11 +60,11 @@ ReenaBattleRematchText:
 	line "wait! Got it?"
 	done
 
-ReenaHangUpText:
+UnknownText_0x175488:
 	text "Fine, you may go."
 	done
 
-ReenaForwardText:
+UnknownText_0x17549b:
 	text "Don't be too proud"
 	line "just because you"
 
@@ -74,7 +74,7 @@ ReenaForwardText:
 	para "It was a fluke!"
 	done
 
-ReenaHurryText:
+UnknownText_0x1754e5:
 	text "What are you"
 	line "doing?"
 

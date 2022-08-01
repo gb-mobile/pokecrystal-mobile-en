@@ -1,4 +1,4 @@
-CorrectPartyErrors: ; unreferenced
+Unreferenced_CorrectPartyErrors:
 	ld hl, wPartyCount
 	ld a, [hl]
 	and a
@@ -123,7 +123,7 @@ CorrectPartyErrors: ; unreferenced
 	cp EGG
 	ld hl, .TAMAGO
 	jr z, .got_nickname
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	ld hl, wStringBuffer1
 .got_nickname
@@ -137,7 +137,7 @@ CorrectPartyErrors: ; unreferenced
 	dec b
 	jr nz, .loop3
 
-	ld de, wPartyMonOTs
+	ld de, wPartyMonOT
 	ld a, [wPartyCount]
 	ld b, a
 	ld c, 0

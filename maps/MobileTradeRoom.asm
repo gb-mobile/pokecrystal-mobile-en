@@ -1,19 +1,19 @@
 MobileTradeRoom_MapScripts:
-	def_scene_scripts
-	scene_script .InitializeMobileTradeRoom, SCENE_MOBILETRADEROOM_INITIALIZE
-	scene_script .DummyScene,                SCENE_MOBILETRADEROOM_NOOP
+	db 2 ; scene scripts
+	scene_script .InitializeMobileTradeRoom ; SCENE_DEFAULT
+	scene_script .DummyScene ; SCENE_FINISHED
 
-	def_callbacks
+	db 0 ; callbacks
 
 .InitializeMobileTradeRoom:
-	sdefer .InitializeAndPreparePokecenter2F
+	prioritysjump .InitializeAndPreparePokecenter2F
 	end
 
 .DummyScene:
 	end
 
 .InitializeAndPreparePokecenter2F:
-	setscene SCENE_MOBILETRADEROOM_NOOP
+	setscene SCENE_FINISHED
 	setmapscene POKECENTER_2F, SCENE_POKECENTER2F_LEAVE_MOBILE_TRADE_ROOM
 	end
 
@@ -35,13 +35,13 @@ MobileTradeRoom_EstablishingCommsText:
 MobileTradeRoom_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4,  7, POKECENTER_2F, 5
 	warp_event  5,  7, POKECENTER_2F, 5
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 1 ; bg events
 	bg_event  4,  2, BGEVENT_UP, MobileTradeRoomConsoleScript
 
-	def_object_events
+	db 0 ; object events

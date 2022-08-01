@@ -3,9 +3,9 @@ GetPredefPointer::
 
 ; Save hl for later (back in Predef)
 	ld a, h
-	ld [wPredefHL], a
+	ld [wPredefTemp], a
 	ld a, l
-	ld [wPredefHL + 1], a
+	ld [wPredefTemp + 1], a
 
 	push de
 	ld a, [wPredefID]

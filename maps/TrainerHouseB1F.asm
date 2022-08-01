@@ -1,12 +1,12 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const TRAINERHOUSEB1F_RECEPTIONIST
 	const TRAINERHOUSEB1F_CHRIS
 
 TrainerHouseB1F_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene, SCENE_TRAINERHOUSEB1F_ASK_BATTLE
+	db 1 ; scene scripts
+	scene_script .DummyScene ; SCENE_DEFAULT
 
-	def_callbacks
+	db 0 ; callbacks
 
 .DummyScene:
 	end
@@ -17,7 +17,7 @@ TrainerHouseReceptionistScript:
 	checkflag ENGINE_FOUGHT_IN_TRAINER_HALL_TODAY
 	iftrue .FoughtTooManyTimes
 	writetext TrainerHouseB1FIntroText
-	promptbutton
+	buttonsound
 	special TrainerHouse
 	iffalse .GetCal3Name
 	gettrainername STRING_BUFFER_3, CAL, CAL2
@@ -27,7 +27,7 @@ TrainerHouseReceptionistScript:
 	gettrainername STRING_BUFFER_3, CAL, CAL3
 .GotName:
 	writetext TrainerHouseB1FYourOpponentIsText
-	promptbutton
+	buttonsound
 	writetext TrainerHouseB1FAskWantToBattleText
 	yesorno
 	iffalse .Declined
@@ -170,14 +170,14 @@ TrainerHouseB1FCalBeforeText:
 TrainerHouseB1F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 1 ; warp events
 	warp_event  9,  4, TRAINER_HOUSE_1F, 3
 
-	def_coord_events
-	coord_event  7,  3, SCENE_TRAINERHOUSEB1F_ASK_BATTLE, TrainerHouseReceptionistScript
+	db 1 ; coord events
+	coord_event  7,  3, SCENE_DEFAULT, TrainerHouseReceptionistScript
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 2 ; object events
 	object_event  7,  1, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, ObjectEvent, -1
 	object_event  6, 11, SPRITE_CHRIS, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ObjectEvent, -1

@@ -16,7 +16,16 @@ Printer_StartTransmission:
 	ret
 
 PrinterJumptableIteration:
-	jumptable .Jumptable, wJumptableIndex
+	ld a, [wJumptableIndex]
+	ld e, a
+	ld d, 0
+	ld hl, .Jumptable
+	add hl, de
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	jp hl
 
 .Jumptable:
 	dw Print_InitPrinterHandshake ; 00
@@ -85,7 +94,7 @@ Print_InitPrinterHandshake:
 
 Printer_StartTransmittingTilemap:
 	call Printer_ResetData
-	; check remaining tile data
+	; check ???
 	ld hl, wPrinterRowIndex
 	ld a, [hl]
 	and a
@@ -304,7 +313,7 @@ Printer_ResetData:
 	xor a
 	ld [wPrinterSendByteCounter], a
 	ld [wPrinterSendByteCounter + 1], a
-	ld hl, wGameboyPrinter2bppSource
+	ld hl, wGameboyPrinterRAM
 	ld bc, wGameboyPrinter2bppSourceEnd - wGameboyPrinter2bppSource
 	call Printer_ByteFill
 	ret
@@ -353,14 +362,14 @@ Printer_StageHeaderForSend:
 	ret
 
 Printer_Convert2RowsTo2bpp:
-	; de = wPrinterTilemapBuffer + 2 * SCREEN_WIDTH * ([wPrinterQueueLength] - [wPrinterRowIndex])
+	; de = wPrinterTileMapBuffer + 2 * SCREEN_WIDTH * ([wPrinterQueueLength] - [wPrinterRowIndex])
 	ld a, [wPrinterRowIndex]
 	xor $ff
 	ld d, a
 	ld a, [wPrinterQueueLength]
 	inc a
 	add d
-	ld hl, wPrinterTilemapBuffer
+	ld hl, wPrinterTileMapBuffer
 	ld de, 2 * SCREEN_WIDTH
 .loop1
 	and a
@@ -435,10 +444,10 @@ PrinterDataPacket3:
 PrinterDataPacket4:
 	db  4, 0, $00, 0
 	dw 4
-PrinterDataPacket5: ; unreferenced
+PrinterDataPacket5: ; unused
 	db  8, 0, $00, 0
 	dw 8
-PrinterDataPacket6: ; unreferenced
+PrinterDataPacket6: ; unused
 	db 15, 0, $00, 0
 	dw 15
 

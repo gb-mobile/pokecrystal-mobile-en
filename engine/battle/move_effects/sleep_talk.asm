@@ -1,4 +1,6 @@
 BattleCommand_SleepTalk:
+; sleeptalk
+
 	call ClearLastMove
 	ld a, [wAttackMissed]
 	and a
@@ -15,7 +17,7 @@ BattleCommand_SleepTalk:
 .got_moves
 	ld a, BATTLE_VARS_STATUS
 	call GetBattleVar
-	and SLP_MASK
+	and SLP
 	jr z, .fail
 	ld a, [hl]
 	and a
@@ -50,11 +52,11 @@ BattleCommand_SleepTalk:
 	ld [hl], a
 	call CheckUserIsCharging
 	jr nz, .charging
-	ld a, [wBattleAnimParam]
+	ld a, [wKickCounter]
 	push af
 	call BattleCommand_LowerSub
 	pop af
-	ld [wBattleAnimParam], a
+	ld [wKickCounter], a
 .charging
 	call LoadMoveAnim
 	call UpdateMoveData

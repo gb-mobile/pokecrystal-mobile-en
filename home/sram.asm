@@ -1,26 +1,11 @@
-OpenSRAM::
+GetSRAMBank::
+; load sram bank a
 ; if invalid bank, sram is disabled
 	cp NUM_SRAM_BANKS
-	jr c, .valid
-if DEF(_DEBUG)
-	push af
-	push bc
-	ld b, 1
-.loop
-	sla b
-	dec a
-	jr nz, .loop
-	ld a, BANK(sOpenedInvalidSRAM)
-	call OpenSRAM
-	ld a, [sOpenedInvalidSRAM]
-	or b
-	ld [sOpenedInvalidSRAM], a
-	pop bc
-	pop af
-endc
+	jr c, OpenSRAM
 	jr CloseSRAM
 
-.valid:
+OpenSRAM::
 ; switch to sram bank a
 	push af
 ; latch clock data

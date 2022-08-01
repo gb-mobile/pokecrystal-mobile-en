@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE34_YOUNGSTER1
 	const ROUTE34_YOUNGSTER2
 	const ROUTE34_YOUNGSTER3
@@ -14,9 +14,9 @@
 	const ROUTE34_POKE_BALL
 
 Route34_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .EggCheckCallback
 
 .EggCheckCallback:
@@ -45,11 +45,11 @@ Route34_MapScripts:
 	checkflag ENGINE_DAY_CARE_LADY_HAS_MON
 	iffalse .HideMon2
 	clearevent EVENT_DAY_CARE_MON_2
-	endcallback
+	return
 
 .HideMon2:
 	setevent EVENT_DAY_CARE_MON_2
-	endcallback
+	return
 
 DayCareManScript_Outside:
 	faceplayer
@@ -92,7 +92,7 @@ TrainerCamperTodd1:
 	loadvar VAR_CALLERID, PHONE_CAMPER_TODD
 	endifjustbattled
 	opentext
-	checkflag ENGINE_TODD_READY_FOR_REMATCH
+	checkflag ENGINE_TODD
 	iftrue .Rematch
 	checkflag ENGINE_GOLDENROD_DEPT_STORE_SALE_IS_ON
 	iftrue .SaleIsOn
@@ -101,7 +101,7 @@ TrainerCamperTodd1:
 	checkevent EVENT_TODD_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskAgain
 	writetext CamperTodd1AfterText
-	promptbutton
+	buttonsound
 	setevent EVENT_TODD_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber
 	sjump .FinishAsk
@@ -142,7 +142,7 @@ TrainerCamperTodd1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wToddFightCount, 1
-	clearflag ENGINE_TODD_READY_FOR_REMATCH
+	clearflag ENGINE_TODD
 	end
 
 .LoadFight1:
@@ -150,7 +150,7 @@ TrainerCamperTodd1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wToddFightCount, 2
-	clearflag ENGINE_TODD_READY_FOR_REMATCH
+	clearflag ENGINE_TODD
 	end
 
 .LoadFight2:
@@ -158,7 +158,7 @@ TrainerCamperTodd1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wToddFightCount, 3
-	clearflag ENGINE_TODD_READY_FOR_REMATCH
+	clearflag ENGINE_TODD
 	end
 
 .LoadFight3:
@@ -166,14 +166,14 @@ TrainerCamperTodd1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wToddFightCount, 4
-	clearflag ENGINE_TODD_READY_FOR_REMATCH
+	clearflag ENGINE_TODD
 	end
 
 .LoadFight4:
 	loadtrainer CAMPER, TODD5
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_TODD_READY_FOR_REMATCH
+	clearflag ENGINE_TODD
 	end
 
 .SaleIsOn:
@@ -183,31 +183,31 @@ TrainerCamperTodd1:
 	end
 
 .AskNumber:
-	jumpstd AskNumber1MScript
+	jumpstd asknumber1m
 	end
 
 .AskNumber2:
-	jumpstd AskNumber2MScript
+	jumpstd asknumber2m
 	end
 
 .RegisteredNumber:
-	jumpstd RegisteredNumberMScript
+	jumpstd registerednumberm
 	end
 
 .NumberAccepted:
-	jumpstd NumberAcceptedMScript
+	jumpstd numberacceptedm
 	end
 
 .NumberDeclined:
-	jumpstd NumberDeclinedMScript
+	jumpstd numberdeclinedm
 	end
 
 .PhoneFull:
-	jumpstd PhoneFullMScript
+	jumpstd phonefullm
 	end
 
 .RematchStd:
-	jumpstd RematchMScript
+	jumpstd rematchm
 	end
 
 TrainerPicnickerGina1:
@@ -217,7 +217,7 @@ TrainerPicnickerGina1:
 	loadvar VAR_CALLERID, PHONE_PICNICKER_GINA
 	endifjustbattled
 	opentext
-	checkflag ENGINE_GINA_READY_FOR_REMATCH
+	checkflag ENGINE_GINA
 	iftrue .Rematch
 	checkflag ENGINE_GINA_HAS_LEAF_STONE
 	iftrue .LeafStone
@@ -226,7 +226,7 @@ TrainerPicnickerGina1:
 	checkevent EVENT_GINA_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskAgain
 	writetext PicnickerGina1AfterText
-	promptbutton
+	buttonsound
 	setevent EVENT_GINA_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
 	sjump .FinishAsk
@@ -267,7 +267,7 @@ TrainerPicnickerGina1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wGinaFightCount, 1
-	clearflag ENGINE_GINA_READY_FOR_REMATCH
+	clearflag ENGINE_GINA
 	end
 
 .LoadFight1:
@@ -275,7 +275,7 @@ TrainerPicnickerGina1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wGinaFightCount, 2
-	clearflag ENGINE_GINA_READY_FOR_REMATCH
+	clearflag ENGINE_GINA
 	end
 
 .LoadFight2:
@@ -283,7 +283,7 @@ TrainerPicnickerGina1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wGinaFightCount, 3
-	clearflag ENGINE_GINA_READY_FOR_REMATCH
+	clearflag ENGINE_GINA
 	end
 
 .LoadFight3:
@@ -291,14 +291,14 @@ TrainerPicnickerGina1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wGinaFightCount, 4
-	clearflag ENGINE_GINA_READY_FOR_REMATCH
+	clearflag ENGINE_GINA
 	end
 
 .LoadFight4:
 	loadtrainer PICNICKER, GINA5
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_GINA_READY_FOR_REMATCH
+	clearflag ENGINE_GINA
 	end
 
 .LeafStone:
@@ -313,39 +313,39 @@ TrainerPicnickerGina1:
 	sjump .PackFull
 
 .AskNumber1:
-	jumpstd AskNumber1FScript
+	jumpstd asknumber1f
 	end
 
 .AskNumber2:
-	jumpstd AskNumber2FScript
+	jumpstd asknumber2f
 	end
 
 .RegisteredNumber:
-	jumpstd RegisteredNumberFScript
+	jumpstd registerednumberf
 	end
 
 .NumberAccepted:
-	jumpstd NumberAcceptedFScript
+	jumpstd numberacceptedf
 	end
 
 .NumberDeclined:
-	jumpstd NumberDeclinedFScript
+	jumpstd numberdeclinedf
 	end
 
 .PhoneFull:
-	jumpstd PhoneFullFScript
+	jumpstd phonefullf
 	end
 
 .RematchStd:
-	jumpstd RematchFScript
+	jumpstd rematchf
 	end
 
 .Gift:
-	jumpstd GiftFScript
+	jumpstd giftf
 	end
 
 .PackFull:
-	jumpstd PackFullFScript
+	jumpstd packfullf
 	end
 
 OfficerKeithScript:
@@ -459,7 +459,7 @@ TrainerCooltrainerfKate:
 	checkevent EVENT_GOT_SOFT_SAND_FROM_KATE
 	iftrue .GotSoftSand
 	writetext CooltrainerfKateOfferSoftSandText
-	promptbutton
+	buttonsound
 	verbosegiveitem SOFT_SAND
 	iffalse .BagFull
 	setevent EVENT_GOT_SOFT_SAND_FROM_KATE
@@ -470,7 +470,8 @@ TrainerCooltrainerfKate:
 	closetext
 	end
 
-Route34IlexForestSign: ; unreferenced
+Route34IlexForestSign:
+; unused
 	jumptext Route34IlexForestSignText
 
 Route34Sign:
@@ -515,7 +516,7 @@ YoungsterSamuelBeatenText:
 	line "passing stranger!"
 	done
 
-YoungsterSamuelMobileText: ; unreferenced
+YoungsterSamuelMobileText:
 	text "Have you been to"
 	line "GOLDENROD CITY?"
 
@@ -725,6 +726,7 @@ CooltrainerfKateAfterText:
 	done
 
 Route34IlexForestSignText:
+; unused
 	text "ILEX FOREST"
 	line "THROUGH THE GATE"
 	done
@@ -761,23 +763,23 @@ DayCareSignText:
 Route34_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 5 ; warp events
 	warp_event 13, 37, ROUTE_34_ILEX_FOREST_GATE, 1
 	warp_event 14, 37, ROUTE_34_ILEX_FOREST_GATE, 2
 	warp_event 11, 14, DAY_CARE, 1
 	warp_event 11, 15, DAY_CARE, 2
 	warp_event 13, 15, DAY_CARE, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 5 ; bg events
 	bg_event 12,  6, BGEVENT_READ, Route34Sign
 	bg_event 13, 33, BGEVENT_READ, Route34TrainerTips
 	bg_event 10, 13, BGEVENT_READ, DayCareSign
 	bg_event  8, 32, BGEVENT_ITEM, Route34HiddenRareCandy
 	bg_event 17, 19, BGEVENT_ITEM, Route34HiddenSuperPotion
 
-	def_object_events
+	db 13 ; object events
 	object_event 13,  7, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 5, TrainerCamperTodd1, -1
 	object_event 15, 32, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerYoungsterSamuel, -1
 	object_event 11, 20, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerYoungsterIan, -1

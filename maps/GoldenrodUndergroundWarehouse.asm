@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODUNDERGROUNDWAREHOUSE_ROCKET1
 	const GOLDENRODUNDERGROUNDWAREHOUSE_ROCKET2
 	const GOLDENRODUNDERGROUNDWAREHOUSE_ROCKET3
@@ -8,9 +8,9 @@
 	const GOLDENRODUNDERGROUNDWAREHOUSE_POKE_BALL3
 
 GoldenrodUndergroundWarehouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .ResetSwitches
 
 .ResetSwitches:
@@ -31,7 +31,7 @@ GoldenrodUndergroundWarehouse_MapScripts:
 	clearevent EVENT_SWITCH_14
 	setval 0
 	writemem wUndergroundSwitchPositions
-	endcallback
+	return
 
 TrainerGruntM24:
 	trainer GRUNTM, GRUNTM_24, EVENT_BEAT_ROCKET_GRUNTM_24, GruntM24SeenText, GruntM24BeatenText, 0, .Script
@@ -72,14 +72,14 @@ GoldenrodUndergroundWarehouseDirectorScript:
 	checkevent EVENT_RECEIVED_CARD_KEY
 	iftrue .GotCardKey
 	writetext DirectorIntroText
-	promptbutton
+	buttonsound
 	verbosegiveitem CARD_KEY
 	setevent EVENT_RECEIVED_CARD_KEY
 	setevent EVENT_GOLDENROD_DEPT_STORE_B1F_LAYOUT_1
 	clearevent EVENT_GOLDENROD_DEPT_STORE_B1F_LAYOUT_2
 	clearevent EVENT_GOLDENROD_DEPT_STORE_B1F_LAYOUT_3
 	writetext DirectorCardKeyText
-	promptbutton
+	buttonsound
 .GotCardKey:
 	writetext DirectorAfterText
 	waitbutton
@@ -211,16 +211,16 @@ DirectorAfterText:
 GoldenrodUndergroundWarehouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  2, 12, GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES, 2
 	warp_event  3, 12, GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES, 3
 	warp_event 17,  2, GOLDENROD_DEPT_STORE_B1F, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 7 ; object events
 	object_event  9,  8, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 3, TrainerGruntM24, EVENT_RADIO_TOWER_ROCKET_TAKEOVER
 	object_event  8, 15, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 3, TrainerGruntM14, EVENT_RADIO_TOWER_ROCKET_TAKEOVER
 	object_event 14,  3, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 4, TrainerGruntM15, EVENT_RADIO_TOWER_ROCKET_TAKEOVER

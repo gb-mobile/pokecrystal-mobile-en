@@ -1,20 +1,20 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const AZALEAPOKECENTER1F_NURSE
 	const AZALEAPOKECENTER1F_GENTLEMAN
 	const AZALEAPOKECENTER1F_FISHING_GURU
 	const AZALEAPOKECENTER1F_POKEFAN_F
 
 AzaleaPokecenter1F_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene ; unusable
+	db 1 ; scene scripts
+	scene_script .DummyScene
 
-	def_callbacks
+	db 0 ; callbacks
 
 .DummyScene:
 	end
 
 AzaleaPokecenter1FNurseScript:
-	jumpstd PokecenterNurseScript
+	jumpstd pokecenternurse
 
 AzaleaPokecenter1FGentlemanScript:
 	jumptextfaceplayer AzaleaPokecenter1FGentlemanText
@@ -36,7 +36,8 @@ AzaleaPokecenter1FGentlemanText:
 	line "fainted."
 	done
 
-AzaleaPokecenter1FUnusedText: ; unreferenced
+AzaleaPokecenter1FUnusedText:
+; unreferenced
 	text "This BILL guy"
 	line "created the system"
 
@@ -77,16 +78,16 @@ AzaleaPokecenter1FPokefanFText:
 AzaleaPokecenter1F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  3,  7, AZALEA_TOWN, 1
 	warp_event  4,  7, AZALEA_TOWN, 1
 	warp_event  0,  7, POKECENTER_2F, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 4 ; object events
 	object_event  3,  1, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, AzaleaPokecenter1FNurseScript, -1
 	object_event  9,  6, SPRITE_GENTLEMAN, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, AzaleaPokecenter1FGentlemanScript, -1
 	object_event  6,  1, SPRITE_FISHING_GURU, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, AzaleaPokecenter1FFishingGuruScript, -1

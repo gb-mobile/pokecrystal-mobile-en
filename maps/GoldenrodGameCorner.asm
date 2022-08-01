@@ -1,11 +1,11 @@
-DEF GOLDENRODGAMECORNER_TM25_COINS      EQU 5500
-DEF GOLDENRODGAMECORNER_TM14_COINS      EQU 5500
-DEF GOLDENRODGAMECORNER_TM38_COINS      EQU 5500
-DEF GOLDENRODGAMECORNER_ABRA_COINS      EQU 100
-DEF GOLDENRODGAMECORNER_CUBONE_COINS    EQU 800
-DEF GOLDENRODGAMECORNER_WOBBUFFET_COINS EQU 1500
+GOLDENRODGAMECORNER_TM25_COINS EQU 5500
+GOLDENRODGAMECORNER_TM14_COINS EQU 5500
+GOLDENRODGAMECORNER_TM38_COINS EQU 5500
+GOLDENRODGAMECORNER_ABRA_COINS      EQU 100
+GOLDENRODGAMECORNER_CUBONE_COINS    EQU 800
+GOLDENRODGAMECORNER_WOBBUFFET_COINS EQU 1500
 
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODGAMECORNER_CLERK
 	const GOLDENRODGAMECORNER_RECEPTIONIST1
 	const GOLDENRODGAMECORNER_RECEPTIONIST2
@@ -20,9 +20,9 @@ DEF GOLDENRODGAMECORNER_WOBBUFFET_COINS EQU 1500
 	const GOLDENRODGAMECORNER_MOVETUTOR
 
 GoldenrodGameCorner_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .MoveTutor
 
 .MoveTutor:
@@ -35,14 +35,14 @@ GoldenrodGameCorner_MapScripts:
 	ifequal SATURDAY, .move_tutor_outside
 .move_tutor_inside
 	appear GOLDENRODGAMECORNER_MOVETUTOR
-	endcallback
+	return
 
 .move_tutor_outside
 	checkflag ENGINE_DAILY_MOVE_TUTOR
 	iftrue .finish
 	disappear GOLDENRODGAMECORNER_MOVETUTOR
 .finish
-	endcallback
+	return
 
 MoveTutorInsideScript:
 	faceplayer
@@ -54,7 +54,7 @@ MoveTutorInsideScript:
 	end
 
 GoldenrodGameCornerCoinVendorScript:
-	jumpstd GameCornerCoinVendorScript
+	jumpstd gamecornercoinvendor
 
 GoldenrodGameCornerTMVendorScript:
 	faceplayer
@@ -479,13 +479,13 @@ GoldenrodGameCornerLeftTheirDrinkText:
 GoldenrodGameCorner_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2, 13, GOLDENROD_CITY, 10
 	warp_event  3, 13, GOLDENROD_CITY, 10
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 31 ; bg events
 	bg_event  6,  6, BGEVENT_READ, GoldenrodGameCornerSlotsMachineScript
 	bg_event  6,  7, BGEVENT_READ, GoldenrodGameCornerSlotsMachineScript
 	bg_event  6,  8, BGEVENT_READ, GoldenrodGameCornerSlotsMachineScript
@@ -518,7 +518,7 @@ GoldenrodGameCorner_MapEvents:
 	bg_event 18, 11, BGEVENT_RIGHT, GoldenrodGameCornerCardFlipMachineScript
 	bg_event 12,  1, BGEVENT_LEFT, GoldenrodGameCornerLeftTheirDrinkScript
 
-	def_object_events
+	db 12 ; object events
 	object_event  3,  2, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, GoldenrodGameCornerCoinVendorScript, -1
 	object_event 16,  2, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, GoldenrodGameCornerTMVendorScript, -1
 	object_event 18,  2, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, GoldenrodGameCornerPrizeMonVendorScript, -1

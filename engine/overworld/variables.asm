@@ -106,11 +106,11 @@ _GetVarAction::
 
 .UnownCaught:
 ; Number of unique Unown caught.
-	call .count_unown
+	call .count
 	ld a, b
 	jp .loadstringbuffer2
 
-.count_unown
+.count
 	ld hl, wUnownDex
 	ld b, 0
 .loop
@@ -126,7 +126,7 @@ _GetVarAction::
 .BoxFreeSpace:
 ; Remaining slots in the current box.
 	ld a, BANK(sBoxCount)
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, sBoxCount
 	ld a, MONS_PER_BOX
 	sub [hl]
@@ -137,5 +137,5 @@ _GetVarAction::
 
 .BattleResult:
 	ld a, [wBattleResult]
-	and ~BATTLERESULT_BITMASK
+	and $ff ^ BATTLERESULT_BITMASK
 	jp .loadstringbuffer2

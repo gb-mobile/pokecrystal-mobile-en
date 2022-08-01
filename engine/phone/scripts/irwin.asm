@@ -3,10 +3,10 @@ IrwinPhoneCalleeScript:
 	farscall PhoneScript_AnswerPhone_Male
 	checkflag ENGINE_ROCKETS_IN_RADIO_TOWER
 	iftrue .Rockets
-	farsjump IrwinRandomTextScript
+	farsjump UnknownScript_0xa09c8
 
 .Rockets:
-	farsjump IrwinRocketRumorScript
+	farsjump IrwinRocketRumor
 
 IrwinPhoneCallerScript:
 	gettrainername STRING_BUFFER_3, JUGGLER, IRWIN1
@@ -16,4 +16,4 @@ IrwinPhoneCallerScript:
 	farsjump IrwinRumorScript
 
 .Rockets:
-	farsjump IrwinRocketRumorScript
+	farsjump IrwinRocketRumor

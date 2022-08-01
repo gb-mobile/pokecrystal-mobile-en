@@ -1,6 +1,5 @@
 Facings:
-; entries correspond to FACING_* constants (see constants/map_object_constants.asm)
-	table_width 2, Facings
+; entries correspond to FACING_* constants
 	dw FacingStepDown0
 	dw FacingStepDown1
 	dw FacingStepDown2
@@ -33,8 +32,10 @@ Facings:
 	dw FacingBoulderDust2
 	dw FacingGrass1
 	dw FacingGrass2
-	assert_table_length NUM_FACINGS
-	dw 0 ; end
+.End
+	dw 0
+
+NUM_FACINGS EQU (Facings.End - Facings) / 2
 
 ; Tables used as a reference to transform OAM data.
 

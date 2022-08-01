@@ -1,4 +1,4 @@
-; CreditsStringsPointers indexes (see data/credits_strings.asm)
+; CreditsStrings indexes (see data/credits_strings.asm)
 	const_def
 	const SATOSHI_TAJIRI
 	const JUNICHI_MASUDA
@@ -103,14 +103,13 @@
 	const US_COORDINATION
 	const TEXT_TRANSLATION
 	const PAAD_TESTING
-DEF NUM_CREDITS_STRINGS EQU const_value
 
 ; CreditsScript indexes (see data/credits_script.asm)
-	const_def -1, -1
-	const CREDITS_END
-	const CREDITS_WAIT
-	const CREDITS_SCENE
-	const CREDITS_CLEAR
-	const CREDITS_MUSIC
-	const CREDITS_WAIT2
+	const_def -7
 	const CREDITS_THEEND
+	const CREDITS_WAIT2
+	const CREDITS_MUSIC
+	const CREDITS_CLEAR
+	const CREDITS_SCENE
+	const CREDITS_WAIT
+	const CREDITS_END

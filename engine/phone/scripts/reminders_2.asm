@@ -1,15 +1,15 @@
-RalphHurryScript:
-	farwritetext RalphHurryText
+UnknownScript_0xa0af5:
+	farwritetext UnknownText_0x175f70
 	end
 
-AnthonyHurryScript:
-	farwritetext AnthonyHurryText
+UnknownScript_0xa0afa:
+	farwritetext UnknownText_0x176dd1
 	end
 
-ArnieHurryScript:
-	farwritetext ArnieHurryText
+UnknownScript_0xa0aff:
+	farwritetext UnknownText_0x64c5a
 	end
 
-ToddHurryScript:
-	farwritetext ToddHaveYouGoneToDepartmentStoreText
+UnknownScript_0xa0b04:
+	farwritetext UnknownText_0x17717c
 	end

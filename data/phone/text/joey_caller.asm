@@ -1,4 +1,4 @@
-JoeyMonLookingSharperText:
+JoeySharperText:
 	text "My @"
 	text_ram wStringBuffer4
 	text "'s"
@@ -12,7 +12,7 @@ JoeyMonLookingSharperText:
 	line "party!"
 	done
 
-JoeyDefeatedMonText:
+UnknownText_0x175591:
 	text "Oh yeah, I took"
 	line "down a @"
 	text_ram wStringBuffer4
@@ -27,7 +27,7 @@ JoeyDefeatedMonText:
 	line "us being so tough."
 	done
 
-JoeyLostAMonText:
+UnknownText_0x175611:
 	text "Oh yeah, I saw a"
 	line "wild @"
 	text_ram wStringBuffer4
@@ -43,7 +43,7 @@ JoeyLostAMonText:
 	line "extreme end."
 	done
 
-JoeyBattleRematchText:
+UnknownText_0x175693:
 	text "Let's get together"
 	line "and battle!"
 
@@ -59,11 +59,11 @@ JoeyBattleRematchText:
 	line "when you come."
 	done
 
-JoeyHangUpText:
+UnknownText_0x17570a:
 	text "All right. Later!"
 	done
 
-JoeyDevisingStrategiesText:
+UnknownText_0x17571d:
 	text "I'm checking out"
 	line "@"
 	text_ram wStringBuffer4
@@ -77,7 +77,7 @@ JoeyDevisingStrategiesText:
 	cont "let's battle!"
 	done
 
-JoeyReminderText:
+UnknownText_0x175786:
 	text "What's keeping"
 	line "you, <PLAYER>!"
 

@@ -36,7 +36,7 @@ InitPartyMenuLayout:
 
 LoadPartyMenuGFX:
 	call LoadFontsBattleExtra
-	callfar InitPartyMenuPalettes
+	callfar InitPartyMenuPalettes ; engine/color.asm
 	callfar ClearSpriteAnims2
 	ret
 
@@ -91,7 +91,7 @@ PlacePartyNicknames:
 	push hl
 	ld hl, wPartyMonNicknames
 	ld a, b
-	call GetNickname
+	call GetNick
 	pop hl
 	call PlaceString
 	pop hl
@@ -105,11 +105,11 @@ PlacePartyNicknames:
 .end
 	dec hl
 	dec hl
-	ld de, .CancelString
+	ld de, .CANCEL
 	call PlaceString
 	ret
 
-.CancelString:
+.CANCEL:
 	db "CANCEL@"
 
 PlacePartyHPBar:
@@ -135,10 +135,10 @@ PlacePartyHPBar:
 	ld hl, wHPPals
 	ld a, [wSGBPals]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	call SetHPPal
-	ld b, SCGB_PARTY_MENU_HP_BARS
+	ld b, SCGB_PARTY_MENU_HP_PALS
 	call GetSGBLayout
 .skip
 	ld hl, wSGBPals
@@ -246,10 +246,10 @@ PlacePartyMonLevel:
 	jr nc, .ThreeDigits
 	ld a, "<LV>"
 	ld [hli], a
-	lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	lb bc, PRINTNUM_RIGHTALIGN | 1, 2
 	; jr .okay
 .ThreeDigits:
-	lb bc, PRINTNUM_LEFTALIGN | 1, 3
+	lb bc, PRINTNUM_RIGHTALIGN | 1, 3
 ; .okay
 	call PrintNum
 
@@ -385,7 +385,6 @@ PlacePartyMonEvoStoneCompatibility:
 	ret
 
 .DetermineCompatibility:
-; BUG: Only the first three evolution entries can have Stone compatibility reported correctly (see docs/bugs_and_glitches.md)
 	ld de, wStringBuffer1
 	ld a, BANK(EvosAttacksPointers)
 	ld bc, 2
@@ -400,7 +399,6 @@ PlacePartyMonEvoStoneCompatibility:
 	call FarCopyBytes
 	ld hl, wStringBuffer1
 .loop2
-; BUG: EVOLVE_STAT can break Stone compatibility reporting (see docs/bugs_and_glitches.md)
 	ld a, [hli]
 	and a
 	jr z, .nope
@@ -481,7 +479,7 @@ PlacePartyMonMobileBattleSelection:
 	ret z
 	ld c, a
 	ld b, 0
-	hlcoord 12, 1
+	hlcoord 12, 2;12, 1
 .loop
 	push bc
 	push hl
@@ -495,7 +493,7 @@ PlacePartyMonMobileBattleSelection:
 	dec c
 	jr nz, .loop
 	ld a, l
-	ld e, MON_NAME_LENGTH
+	ld e, MON_NAME_LENGTH + 20
 	sub e
 	ld l, a
 	ld a, h
@@ -510,7 +508,7 @@ PlacePartyMonMobileBattleSelection:
 .loop2
 	push hl
 	push bc
-	hlcoord 12, 1
+	hlcoord 12, 2;12, 1
 .loop3
 	and a
 	jr z, .done
@@ -544,11 +542,11 @@ PlacePartyMonMobileBattleSelection:
 	jr .loop2
 
 .String_Banme:
-	db "　ばんめ　　@" ; Place
+	db "  PLACE @";"　ばんめ　　@" ; Place
 .String_Sanka_Shinai:
-	db "さんかしない@" ; Cancel
+	db "NO ENTRY@";"さんかしない@" ; Cancel
 .String_Kettei_Yameru:
-	db "けってい　　やめる@" ; Quit
+	db "OK  　　CANCEL@";"けってい　　やめる@" ; Quit
 .Strings_1_2_3:
 	db "１@", "２@", "３@" ; 1st, 2nd, 3rd
 
@@ -592,7 +590,7 @@ InitPartyMenuGFX:
 	ret z
 	ld c, a
 	xor a
-	ldh [hObjectStructIndex], a
+	ldh [hObjectStructIndexBuffer], a
 .loop
 	push bc
 	push hl
@@ -600,9 +598,9 @@ InitPartyMenuGFX:
 	ld a, BANK(LoadMenuMonIcon)
 	ld e, MONICON_PARTYMENU
 	rst FarCall
-	ldh a, [hObjectStructIndex]
+	ldh a, [hObjectStructIndexBuffer]
 	inc a
-	ldh [hObjectStructIndex], a
+	ldh [hObjectStructIndexBuffer], a
 	pop hl
 	pop bc
 	dec c
@@ -614,8 +612,8 @@ InitPartyMenuWithCancel:
 ; with cancel
 	xor a
 	ld [wSwitchMon], a
-	ld de, PartyMenu2DMenuData
-	call Load2DMenuData
+	ld de, PartyMenuAttributes
+	call SetMenuAttributes
 	ld a, [wPartyCount]
 	inc a
 	ld [w2DMenuNumRows], a ; list length
@@ -639,8 +637,8 @@ InitPartyMenuWithCancel:
 
 InitPartyMenuNoCancel:
 ; no cancel
-	ld de, PartyMenu2DMenuData
-	call Load2DMenuData
+	ld de, PartyMenuAttributes
+	call SetMenuAttributes
 	ld a, [wPartyCount]
 	ld [w2DMenuNumRows], a ; list length
 	ld b, a
@@ -658,12 +656,20 @@ InitPartyMenuNoCancel:
 	ld [wMenuJoypadFilter], a
 	ret
 
-PartyMenu2DMenuData:
-	db 1, 0 ; cursor start y, x
-	db 0, 1 ; rows, columns
-	db $60, $00 ; flags
-	dn 2, 0 ; cursor offset
-	db 0 ; accepted buttons
+PartyMenuAttributes:
+; cursor y
+; cursor x
+; num rows
+; num cols
+; bit 6: animate sprites  bit 5: wrap around
+; ?
+; distance between items (hi: y, lo: x)
+; allowed buttons (mask)
+	db 1, 0
+	db 0, 1
+	db $60, $00
+	dn 2, 0
+	db 0
 
 PartyMenuSelect:
 ; sets carry if exitted menu.
@@ -684,7 +690,7 @@ PartyMenuSelect:
 	dec a
 	ld [wCurPartyMon], a
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld hl, wPartySpecies
 	add hl, bc
 	ld a, [hl]
@@ -717,7 +723,7 @@ PrintPartyMenuText:
 	and $f ; drop high nibble
 	ld hl, PartyMenuStrings
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	add hl, de
 	ld a, [hli]
@@ -760,10 +766,12 @@ TeachWhichPKMNString:
 MoveToWhereString:
 	db "Move to where?@"
 
-ChooseAFemalePKMNString: ; unreferenced
+ChooseAFemalePKMNString:
+; unused
 	db "Choose a ♀<PK><MN>.@"
 
-ChooseAMalePKMNString: ; unreferenced
+ChooseAMalePKMNString:
+; unused
 	db "Choose a ♂<PK><MN>.@"
 
 ToWhichPKMNString:
@@ -775,7 +783,7 @@ YouHaveNoPKMNString:
 PrintPartyMenuActionText:
 	ld a, [wCurPartyMon]
 	ld hl, wPartyMonNicknames
-	call GetNickname
+	call GetNick
 	ld a, [wPartyMenuActionText]
 	and $f
 	ld hl, .MenuActionTexts
@@ -784,54 +792,64 @@ PrintPartyMenuActionText:
 
 .MenuActionTexts:
 ; entries correspond to PARTYMENUTEXT_* constants
-	dw .CuredOfPoisonText
-	dw .BurnWasHealedText
-	dw .WasDefrostedText
-	dw .WokeUpText
-	dw .RidOfParalysisText
-	dw .RecoveredSomeHPText
-	dw .HealthReturnedText
-	dw .RevitalizedText
-	dw .GrewToLevelText
-	dw .CameToItsSensesText
+	dw .Text_CuredOfPoison
+	dw .Text_BurnWasHealed
+	dw .Text_Defrosted
+	dw .Text_WokeUp
+	dw .Text_RidOfParalysis
+	dw .Text_RecoveredSomeHP
+	dw .Text_HealthReturned
+	dw .Text_Revitalized
+	dw .Text_GrewToLevel
+	dw .Text_CameToItsSenses
 
-.RecoveredSomeHPText:
+.Text_RecoveredSomeHP:
+	; recovered @ HP!
 	text_far _RecoveredSomeHPText
 	text_end
 
-.CuredOfPoisonText:
+.Text_CuredOfPoison:
+	; 's cured of poison.
 	text_far _CuredOfPoisonText
 	text_end
 
-.RidOfParalysisText:
+.Text_RidOfParalysis:
+	; 's rid of paralysis.
 	text_far _RidOfParalysisText
 	text_end
 
-.BurnWasHealedText:
+.Text_BurnWasHealed:
+	; 's burn was healed.
 	text_far _BurnWasHealedText
 	text_end
 
-.WasDefrostedText:
+.Text_Defrosted:
+	; was defrosted.
 	text_far _WasDefrostedText
 	text_end
 
-.WokeUpText:
+.Text_WokeUp:
+	; woke up.
 	text_far _WokeUpText
 	text_end
 
-.HealthReturnedText:
+.Text_HealthReturned:
+	; 's health returned.
 	text_far _HealthReturnedText
 	text_end
 
-.RevitalizedText:
+.Text_Revitalized:
+	; is revitalized.
 	text_far _RevitalizedText
 	text_end
 
-.GrewToLevelText:
+.Text_GrewToLevel:
+	; grew to level @ !@ @
 	text_far _GrewToLevelText
 	text_end
 
-.CameToItsSensesText:
+.Text_CameToItsSenses:
+	; came to its senses.
 	text_far _CameToItsSensesText
 	text_end
 

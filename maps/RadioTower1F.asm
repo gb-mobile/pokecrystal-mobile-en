@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const RADIOTOWER1F_RECEPTIONIST
 	const RADIOTOWER1F_LASS
 	const RADIOTOWER1F_YOUNGSTER
@@ -7,9 +7,9 @@
 	const RADIOTOWER1F_CARD_WOMAN
 
 RadioTower1F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 RadioTower1FReceptionistScript:
 	faceplayer
@@ -31,7 +31,7 @@ RadioTower1FLuckyNumberManScript:
 	faceplayer
 	opentext
 	writetext RadioTower1FLuckyNumberManAskToPlayText
-	promptbutton
+	buttonsound
 	special CheckLuckyNumberShowFlag
 	iffalse .skip
 	special ResetLuckyNumberShowFlag
@@ -40,17 +40,17 @@ RadioTower1FLuckyNumberManScript:
 	checkflag ENGINE_LUCKY_NUMBER_SHOW
 	iftrue .GameOver
 	writetext RadioTower1FLuckyNumberManThisWeeksIdIsText
-	promptbutton
+	buttonsound
 	closetext
 	applymovement RADIOTOWER1F_LUCKYNUMBERMAN, RadioTower1FLuckyNumberManGoToPCMovement
 	opentext
 	writetext RadioTower1FLuckyNumberManCheckIfMatchText
-	promptbutton
+	buttonsound
 	waitsfx
 	writetext RadioTower1FLuckyNumberManDotDotDotText
 	playsound SFX_DEX_FANFARE_20_49
 	waitsfx
-	promptbutton
+	buttonsound
 	special CheckForLuckyNumberWinners
 	closetext
 	applymovement RADIOTOWER1F_LUCKYNUMBERMAN, RadioTower1FLuckyNumberManReturnToPlayerMovement
@@ -70,7 +70,7 @@ RadioTower1FLuckyNumberManScript:
 	writetext RadioTower1FLuckyNumberManPerfectMatchText
 	playsound SFX_1ST_PLACE
 	waitsfx
-	promptbutton
+	buttonsound
 	giveitem MASTER_BALL
 	iffalse .BagFull
 	itemnotify
@@ -81,7 +81,7 @@ RadioTower1FLuckyNumberManScript:
 	writetext RadioTower1FLuckyNumberManOkayMatchText
 	playsound SFX_2ND_PLACE
 	waitsfx
-	promptbutton
+	buttonsound
 	giveitem EXP_SHARE
 	iffalse .BagFull
 	itemnotify
@@ -92,7 +92,7 @@ RadioTower1FLuckyNumberManScript:
 	writetext RadioTower1FLuckyNumberManWeakMatchText
 	playsound SFX_3RD_PLACE
 	waitsfx
-	promptbutton
+	buttonsound
 	giveitem PP_UP
 	iffalse .BagFull
 	itemnotify
@@ -145,11 +145,11 @@ RadioTower1FRadioCardWomanScript:
 	playsound SFX_ELEVATOR_END
 	waitsfx
 	writetext RadioTower1FRadioCardWomanYouWinText
-	promptbutton
+	buttonsound
 	getstring STRING_BUFFER_4, .RadioCardText
 	scall .ReceiveItem
 	writetext RadioTower1FPokegearIsARadioText
-	promptbutton
+	buttonsound
 	setflag ENGINE_RADIO_CARD
 .GotCard:
 	writetext RadioTower1FRadioCardWomanTuneInText
@@ -161,7 +161,7 @@ RadioTower1FRadioCardWomanScript:
 	db "RADIO CARD@"
 
 .ReceiveItem:
-	jumpstd ReceiveItemScript
+	jumpstd receiveitem
 	end
 
 .WrongAnswer:
@@ -473,18 +473,18 @@ RadioTower1FLuckyChannelSignText:
 RadioTower1F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  2,  7, GOLDENROD_CITY, 11
 	warp_event  3,  7, GOLDENROD_CITY, 11
 	warp_event 15,  0, RADIO_TOWER_2F, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  3,  0, BGEVENT_READ, RadioTower1FDirectory
 	bg_event 13,  0, BGEVENT_READ, RadioTower1FLuckyChannelSign
 
-	def_object_events
+	db 6 ; object events
 	object_event  5,  6, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, RadioTower1FReceptionistScript, -1
 	object_event 16,  4, SPRITE_LASS, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, RadioTower1FLassScript, EVENT_GOLDENROD_CITY_CIVILIANS
 	object_event 15,  4, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, RadioTower1FYoungsterScript, EVENT_GOLDENROD_CITY_CIVILIANS

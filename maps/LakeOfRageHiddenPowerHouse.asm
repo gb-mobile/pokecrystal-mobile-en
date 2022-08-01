@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const LAKEOFRAGEHIDDENPOWERHOUSE_FISHER
 
 LakeOfRageHiddenPowerHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 HiddenPowerGuy:
 	faceplayer
@@ -12,7 +12,7 @@ HiddenPowerGuy:
 	checkevent EVENT_GOT_TM10_HIDDEN_POWER
 	iftrue .AlreadyGotItem
 	writetext HiddenPowerGuyText1
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_HIDDEN_POWER
 	iffalse .Done
 	setevent EVENT_GOT_TM10_HIDDEN_POWER
@@ -28,7 +28,7 @@ HiddenPowerGuy:
 	end
 
 HiddenPowerHouseBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 HiddenPowerGuyText1:
 	text "…You have strayed"
@@ -68,15 +68,15 @@ HiddenPowerGuyText3:
 LakeOfRageHiddenPowerHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, LAKE_OF_RAGE, 1
 	warp_event  3,  7, LAKE_OF_RAGE, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  0,  1, BGEVENT_READ, HiddenPowerHouseBookshelf
 	bg_event  1,  1, BGEVENT_READ, HiddenPowerHouseBookshelf
 
-	def_object_events
+	db 1 ; object events
 	object_event  2,  3, SPRITE_FISHER, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, HiddenPowerGuy, -1

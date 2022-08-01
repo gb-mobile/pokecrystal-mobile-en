@@ -1,11 +1,11 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ELMSHOUSE_ELMS_WIFE
 	const ELMSHOUSE_ELMS_SON
 
 ElmsHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 ElmsWife:
 	jumptextfaceplayer ElmsWifeText
@@ -17,7 +17,7 @@ ElmsHousePC:
 	jumptext ElmsHousePCText
 
 ElmsHouseBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 ElmsWifeText:
 	text "Hi, <PLAY_G>! My"
@@ -43,13 +43,15 @@ ElmsSonText:
 	cont "professor!"
 	done
 
-ElmsHouseLabFoodText: ; unreferenced
+ElmsHouseLabFoodText:
+; unused
 	text "There's some food"
 	line "here. It must be"
 	cont "for the LAB."
 	done
 
-ElmsHousePokemonFoodText: ; unreferenced
+ElmsHousePokemonFoodText:
+; unused
 	text "There's some food"
 	line "here. This must be"
 	cont "for #MON."
@@ -82,17 +84,17 @@ ElmsHousePCText:
 ElmsHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, NEW_BARK_TOWN, 4
 	warp_event  3,  7, NEW_BARK_TOWN, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event  0,  1, BGEVENT_READ, ElmsHousePC
 	bg_event  6,  1, BGEVENT_READ, ElmsHouseBookshelf
 	bg_event  7,  1, BGEVENT_READ, ElmsHouseBookshelf
 
-	def_object_events
+	db 2 ; object events
 	object_event  1,  5, SPRITE_TEACHER, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, ElmsWife, -1
 	object_event  5,  4, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ElmsSon, -1

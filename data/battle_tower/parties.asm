@@ -1,8 +1,7 @@
 BattleTowerMons:
-; 10 groups (one per floor level) of 21 mons (BATTLETOWER_NUM_UNIQUE_MON).
-	table_width NICKNAMED_MON_STRUCT_LENGTH, BattleTowerMons
+; 10 groups of 21 mons.
 
-; BattleTowerMons group 1
+BattleTowerMons1:
 
 	db JOLTEON
 	db MIRACLEBERRY
@@ -551,7 +550,7 @@ BattleTowerMons:
 	db "BARIYA-DO@@"
 
 
-; BattleTowerMons group 2
+BattleTowerMons2:
 
 	db UMBREON
 	db LEFTOVERS
@@ -1100,7 +1099,7 @@ BattleTowerMons:
 	db "NUO-@@@@@@@"
 
 
-; BattleTowerMons group 3
+BattleTowerMons3:
 
 	db JOLTEON
 	db MIRACLEBERRY
@@ -1649,7 +1648,7 @@ BattleTowerMons:
 	db "OKORIZARU@@"
 
 
-; BattleTowerMons group 4
+BattleTowerMons4:
 
 	db TAUROS
 	db GOLD_BERRY
@@ -2198,7 +2197,7 @@ BattleTowerMons:
 	db "EREBU-@@@@@"
 
 
-; BattleTowerMons group 5
+BattleTowerMons5:
 
 	db KINGDRA
 	db GOLD_BERRY
@@ -2747,7 +2746,7 @@ BattleTowerMons:
 	db "HURI-ZA-@@@"
 
 
-; BattleTowerMons group 6
+BattleTowerMons6:
 
 	db KINGDRA
 	db LEFTOVERS
@@ -3296,7 +3295,7 @@ BattleTowerMons:
 	db "GORO-NIya@@"
 
 
-; BattleTowerMons group 7
+BattleTowerMons7:
 
 	db JOLTEON
 	db MIRACLEBERRY
@@ -3845,7 +3844,7 @@ BattleTowerMons:
 	db "KAMEtuKUSU@"
 
 
-; BattleTowerMons group 8
+BattleTowerMons8:
 
 	db JOLTEON
 	db MIRACLEBERRY
@@ -4394,7 +4393,7 @@ BattleTowerMons:
 	db "GURANBURU@@"
 
 
-; BattleTowerMons group 9
+BattleTowerMons9:
 
 	db UMBREON
 	db KINGS_ROCK
@@ -4943,7 +4942,7 @@ BattleTowerMons:
 	db "BETOBETON@@"
 
 
-; BattleTowerMons group 10
+BattleTowerMons10:
 
 	db HOUNDOOM
 	db MINT_BERRY
@@ -5490,5 +5489,3 @@ BattleTowerMons:
 	bigdw 214 ; SAtk
 	bigdw 214 ; SDef
 	db "RANTA-N@@@@"
-
-	assert_table_length 10 * BATTLETOWER_NUM_UNIQUE_MON

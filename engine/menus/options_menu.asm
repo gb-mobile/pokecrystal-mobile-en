@@ -1,34 +1,21 @@
-; GetOptionPointer.Pointers indexes
-	const_def
-	const OPT_TEXT_SPEED   ; 0
-	const OPT_BATTLE_SCENE ; 1
-	const OPT_BATTLE_STYLE ; 2
-	const OPT_SOUND        ; 3
-	const OPT_PRINT        ; 4
-	const OPT_MENU_ACCOUNT ; 5
-	const OPT_FRAME        ; 6
-	const OPT_CANCEL       ; 7
-DEF NUM_OPTIONS EQU const_value    ; 8
-
-_Option:
+_OptionsMenu:
 	ld hl, hInMenu
 	ld a, [hl]
 	push af
-	ld [hl], TRUE
+	ld [hl], $1
 	call ClearBGPalettes
 	hlcoord 0, 0
-	ld b, SCREEN_HEIGHT - 2
-	ld c, SCREEN_WIDTH - 2
+	ld b, 16
+	ld c, 18
 	call Textbox
 	hlcoord 2, 2
 	ld de, StringOptions
 	call PlaceString
 	xor a
 	ld [wJumptableIndex], a
+	ld c, $6 ; number of items on the menu minus 1 (for cancel)
 
-; display the settings of each option when the menu is opened
-	ld c, NUM_OPTIONS - 2 ; omit frame type, the last option
-.print_text_loop
+.print_text_loop ; this next will display the settings of each option when the menu is opened
 	push bc
 	xor a
 	ldh [hJoyLast], a
@@ -38,8 +25,8 @@ _Option:
 	inc [hl]
 	dec c
 	jr nz, .print_text_loop
-	call UpdateFrame ; display the frame type
 
+	call UpdateFrame
 	xor a
 	ld [wJumptableIndex], a
 	inc a
@@ -91,10 +78,18 @@ StringOptions:
 	db "CANCEL@"
 
 GetOptionPointer:
-	jumptable .Pointers, wJumptableIndex
+	ld a, [wJumptableIndex] ; load the cursor position to a
+	ld e, a ; copy it to de
+	ld d, 0
+	ld hl, .Pointers
+	add hl, de
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	jp hl ; jump to the code of the current highlighted item
 
 .Pointers:
-; entries correspond to OPT_* constants
 	dw Options_TextSpeed
 	dw Options_BattleScene
 	dw Options_BattleStyle
@@ -119,7 +114,7 @@ Options_TextSpeed:
 	ld a, c ; right pressed
 	cp OPT_TEXT_SPEED_SLOW
 	jr c, .Increase
-	ld c, OPT_TEXT_SPEED_FAST - 1
+	ld c, OPT_TEXT_SPEED_FAST + -1
 
 .Increase:
 	inc c
@@ -351,7 +346,7 @@ Options_Print:
 	ld [wGBPrinterBrightness], a
 
 .NonePressed:
-	ld b, 0
+	ld b, $0
 	ld hl, .Strings
 	add hl, bc
 	add hl, bc
@@ -505,17 +500,17 @@ OptionsControl:
 	ret
 
 .DownPressed:
-	ld a, [hl]
-	cp OPT_CANCEL ; maximum option index
-	jr nz, .CheckMenuAccount
-	ld [hl], OPT_TEXT_SPEED ; first option
+	ld a, [hl] ; load the cursor position to a
+	cp $7 ; maximum number of items in option menu
+	jr nz, .CheckFive
+	ld [hl], $0
 	scf
 	ret
 
-.CheckMenuAccount: ; I have no idea why this exists...
-	cp OPT_MENU_ACCOUNT
+.CheckFive: ; I have no idea why this exists...
+	cp $5
 	jr nz, .Increase
-	ld [hl], OPT_MENU_ACCOUNT
+	ld [hl], $5
 
 .Increase:
 	inc [hl]
@@ -524,18 +519,16 @@ OptionsControl:
 
 .UpPressed:
 	ld a, [hl]
-
-; Another thing where I'm not sure why it exists
-	cp OPT_FRAME
-	jr nz, .NotFrame
-	ld [hl], OPT_MENU_ACCOUNT
+	cp $6
+	jr nz, .NotSix
+	ld [hl], $5 ; Another thing where I'm not sure why it exists
 	scf
 	ret
 
-.NotFrame:
-	and a ; OPT_TEXT_SPEED, minimum option index
+.NotSix:
+	and a
 	jr nz, .Decrease
-	ld [hl], NUM_OPTIONS ; decrements to OPT_CANCEL, maximum option index
+	ld [hl], $8 ; number of option items +1
 
 .Decrease:
 	dec [hl]
@@ -545,7 +538,7 @@ OptionsControl:
 Options_UpdateCursorPosition:
 	hlcoord 1, 1
 	ld de, SCREEN_WIDTH
-	ld c, SCREEN_HEIGHT - 2
+	ld c, $10
 .loop
 	ld [hl], " "
 	add hl, de

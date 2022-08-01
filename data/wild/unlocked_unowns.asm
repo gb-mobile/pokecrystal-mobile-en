@@ -1,4 +1,4 @@
-MACRO unown_set
+unown_set: MACRO
 rept _NARG
 	db UNOWN_\1
 	shift

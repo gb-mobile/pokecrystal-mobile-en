@@ -27,7 +27,7 @@ Elevator::
 	ret
 
 .LoadFloors:
-	ld de, wCurElevatorCount
+	ld de, wCurElevator
 	ld bc, wElevatorDataEnd - wElevatorData
 	ld hl, wElevatorPointer
 	ld a, [hli]
@@ -38,7 +38,6 @@ Elevator::
 	inc hl
 	ld [de], a
 	inc de
-	assert wCurElevatorCount + 1 == wCurElevatorFloors
 .loop
 	ld a, [wElevatorPointerBank]
 	call GetFarByte
@@ -116,7 +115,7 @@ Elevator_GoToFloor:
 
 Elevator_AskWhichFloor:
 	call LoadStandardMenuHeader
-	ld hl, AskFloorElevatorText
+	ld hl, Elevator_WhichFloorText
 	call PrintText
 	call Elevator_GetCurrentFloorText
 	ld hl, Elevator_MenuHeader
@@ -138,8 +137,9 @@ Elevator_AskWhichFloor:
 	scf
 	ret
 
-AskFloorElevatorText:
-	text_far _AskFloorElevatorText
+Elevator_WhichFloorText:
+	; Which floor?
+	text_far UnknownText_0x1bd2bc
 	text_end
 
 Elevator_GetCurrentFloorText:
@@ -185,7 +185,7 @@ Elevator_MenuData:
 	db SCROLLINGMENU_DISPLAY_ARROWS ; flags
 	db 4, 0 ; rows, columns
 	db SCROLLINGMENU_ITEMS_NORMAL ; item format
-	dbw 0, wCurElevatorCount
+	dbw 0, wCurElevator
 	dba GetElevatorFloorStrings
 	dba NULL
 	dba NULL

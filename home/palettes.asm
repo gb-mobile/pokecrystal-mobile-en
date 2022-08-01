@@ -16,7 +16,6 @@ UpdateCGBPals::
 	ldh a, [hCGBPalUpdate]
 	and a
 	ret z
-	; fallthrough
 
 ForceUpdateCGBPals::
 	ldh a, [rSVBK]
@@ -82,7 +81,6 @@ DmgToCgbBGPals::
 	push hl
 	push de
 	push bc
-
 	ldh a, [rSVBK]
 	push af
 
@@ -99,12 +97,11 @@ DmgToCgbBGPals::
 	ld c, 8
 	call CopyPals
 ; request pal update
-	ld a, TRUE
+	ld a, 1
 	ldh [hCGBPalUpdate], a
 
 	pop af
 	ldh [rSVBK], a
-
 	pop bc
 	pop de
 	pop hl
@@ -130,7 +127,6 @@ DmgToCgbObjPals::
 	push hl
 	push de
 	push bc
-
 	ldh a, [rSVBK]
 	push af
 
@@ -147,12 +143,11 @@ DmgToCgbObjPals::
 	ld c, 8
 	call CopyPals
 ; request pal update
-	ld a, TRUE
+	ld a, 1
 	ldh [hCGBPalUpdate], a
 
 	pop af
 	ldh [rSVBK], a
-
 	pop bc
 	pop de
 	pop hl
@@ -182,7 +177,7 @@ DmgToCgbObjPal0::
 	ld b, a
 	ld c, 1
 	call CopyPals
-	ld a, TRUE
+	ld a, 1
 	ldh [hCGBPalUpdate], a
 
 	pop af
@@ -219,7 +214,7 @@ DmgToCgbObjPal1::
 	ld b, a
 	ld c, 1
 	call CopyPals
-	ld a, TRUE
+	ld a, 1
 	ldh [hCGBPalUpdate], a
 
 	pop af
@@ -302,7 +297,7 @@ ClearVBank1::
 	ldh [rVBK], a
 	ret
 
-GSReloadPalettes:: ; dummied out
+ret_d90::
 	ret
 
 ReloadSpritesNoPalettes::
@@ -319,15 +314,15 @@ ReloadSpritesNoPalettes::
 	call ByteFill
 	pop af
 	ldh [rSVBK], a
-	ld a, TRUE
+	ld a, 1
 	ldh [hCGBPalUpdate], a
 	call DelayFrame
 	ret
 
-SwapTextboxPalettes::
-	homecall _SwapTextboxPalettes
+FarCallSwapTextboxPalettes::
+	homecall SwapTextboxPalettes
 	ret
 
-ScrollBGMapPalettes::
-	homecall _ScrollBGMapPalettes
+FarCallScrollBGMapPalettes::
+	homecall ScrollBGMapPalettes
 	ret

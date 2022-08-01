@@ -25,8 +25,8 @@ MonSubmenu:
 	db 1 ; default option
 
 .GetTopCoord:
-; [wMenuBorderTopCoord] = 1 + [wMenuBorderBottomCoord] - 2 * ([wMonSubmenuCount] + 1)
-	ld a, [wMonSubmenuCount]
+; TopCoord = 1 + BottomCoord - 2 * (NumSubmenuItems + 1)
+	ld a, [wBuffer1]
 	inc a
 	add a
 	ld b, a
@@ -41,7 +41,7 @@ MonMenuLoop:
 .loop
 	ld a, MENU_UNUSED_3 | MENU_BACKUP_TILES_2 ; flags
 	ld [wMenuDataFlags], a
-	ld a, [wMonSubmenuCount]
+	ld a, [wBuffer1] ; items
 	ld [wMenuDataItems], a
 	call InitVerticalMenuCursor
 	ld hl, w2DMenuFlags1
@@ -65,7 +65,7 @@ MonMenuLoop:
 	dec a
 	ld c, a
 	ld b, 0
-	ld hl, wMonSubmenuItems
+	ld hl, wBuffer2
 	add hl, bc
 	ld a, [hl]
 	ret
@@ -74,7 +74,7 @@ PopulateMonMenu:
 	call MenuBoxCoord2Tile
 	ld bc, 2 * SCREEN_WIDTH + 2
 	add hl, bc
-	ld de, wMonSubmenuItems
+	ld de, wBuffer2
 .loop
 	ld a, [de]
 	inc de
@@ -100,7 +100,7 @@ GetMonMenuString:
 	jr z, .NotMove
 	inc hl
 	ld a, [hl]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetMoveName
 	ret
 
@@ -170,7 +170,7 @@ GetMonSubmenuItems:
 	call AddMonMenuItem
 
 .skip2
-	ld a, [wMonSubmenuCount]
+	ld a, [wBuffer1]
 	cp NUM_MONMENU_ITEMS
 	jr z, .ok2
 	ld a, MONMENUITEM_CANCEL
@@ -212,17 +212,17 @@ IsFieldMove:
 
 ResetMonSubmenu:
 	xor a
-	ld [wMonSubmenuCount], a
-	ld hl, wMonSubmenuItems
+	ld [wBuffer1], a
+	ld hl, wBuffer2
 	ld bc, NUM_MONMENU_ITEMS + 1
 	call ByteFill
 	ret
 
 TerminateMonSubmenu:
-	ld a, [wMonSubmenuCount]
+	ld a, [wBuffer1]
 	ld e, a
 	ld d, 0
-	ld hl, wMonSubmenuItems
+	ld hl, wBuffer2
 	add hl, de
 	ld [hl], -1
 	ret
@@ -231,12 +231,12 @@ AddMonMenuItem:
 	push hl
 	push de
 	push af
-	ld a, [wMonSubmenuCount]
+	ld a, [wBuffer1]
 	ld e, a
 	inc a
-	ld [wMonSubmenuCount], a
+	ld [wBuffer1], a
 	ld d, 0
-	ld hl, wMonSubmenuItems
+	ld hl, wBuffer2
 	add hl, de
 	pop af
 	ld [hl], a
@@ -245,7 +245,7 @@ AddMonMenuItem:
 	ret
 
 BattleMonMenu:
-	ld hl, .MenuHeader
+	ld hl, MenuHeader_0x24ed4
 	call CopyMenuHeader
 	xor a
 	ldh [hBGMapMode], a
@@ -276,13 +276,13 @@ BattleMonMenu:
 	and a
 	ret
 
-.MenuHeader:
+MenuHeader_0x24ed4:
 	db 0 ; flags
 	menu_coords 11, 11, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1
-	dw .MenuData
+	dw MenuData_0x24edc
 	db 1 ; default option
 
-.MenuData:
+MenuData_0x24edc:
 	db STATICMENU_CURSOR | STATICMENU_NO_TOP_SPACING ; flags
 	db 3 ; items
 	db "SWITCH@"

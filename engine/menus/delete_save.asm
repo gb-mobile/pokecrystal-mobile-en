@@ -6,20 +6,21 @@ _DeleteSaveData:
 	call LoadFontsExtra
 	ld de, MUSIC_MAIN_MENU
 	call PlayMusic
-	ld hl, .ClearAllSaveDataText
+	ld hl, .Text_ClearAllSaveData
 	call PrintText
 	ld hl, .NoYesMenuHeader
 	call CopyMenuHeader
 	call VerticalMenu
 	ret c
 	ld a, [wMenuCursorY]
-	cp 1
+	cp $1
 	ret z
 	farcall EmptyAllSRAMBanks
 	ret
 
-.ClearAllSaveDataText:
-	text_far _ClearAllSaveDataText
+.Text_ClearAllSaveData:
+	; Clear all save data?
+	text_far UnknownText_0x1c564a
 	text_end
 
 .NoYesMenuHeader:

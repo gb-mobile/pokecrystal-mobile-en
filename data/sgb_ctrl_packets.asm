@@ -2,35 +2,35 @@
 ; names taken from pandocs
 ; http://gbdev.gg8.se/wiki/articles/SGB_Functions#SGB_Palette_Commands
 
-MACRO sgb_pal_trn
+sgb_pal_trn: MACRO
 	db (SGB_PAL_TRN << 3) + 1
 	ds 15
 ENDM
 
-MACRO sgb_mlt_req
-	db (SGB_MLT_REQ << 3) + 1
+sgb_mlt_req: MACRO
+	db (SGB_MLT_REG << 3) + 1
 	db \1 - 1
 	ds 14
 ENDM
 
-MACRO sgb_chr_trn
+sgb_chr_trn: MACRO
 	db (SGB_CHR_TRN << 3) + 1
 	db \1 + (\2 << 1)
 	ds 14
 ENDM
 
-MACRO sgb_pct_trn
+sgb_pct_trn: MACRO
 	db (SGB_PCT_TRN << 3) + 1
 	ds 15
 ENDM
 
-MACRO sgb_mask_en
+sgb_mask_en: MACRO
 	db (SGB_MASK_EN << 3) + 1
 	db \1
 	ds 14
 ENDM
 
-MACRO sgb_data_snd
+sgb_data_snd: MACRO
 	db (SGB_DATA_SND << 3) + 1
 	dw \1 ; address
 	db \2 ; bank

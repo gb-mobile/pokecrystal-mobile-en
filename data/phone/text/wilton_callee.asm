@@ -1,4 +1,4 @@
-WiltonAnswerPhoneText:
+UnknownText_0x1b71d5:
 	text "Hello, you have"
 	line "reached @"
 	text_ram wStringBuffer3
@@ -7,7 +7,7 @@ WiltonAnswerPhoneText:
 	para "Ah, <PLAY_G>."
 	done
 
-WiltonAnswerPhoneDayText:
+UnknownText_0x1b71fc:
 	text "Hello, you have"
 	line "reached @"
 	text_ram wStringBuffer3
@@ -17,7 +17,7 @@ WiltonAnswerPhoneDayText:
 	line "it?"
 	done
 
-WiltonAnswerPhoneNiteText:
+UnknownText_0x1b722a:
 	text "Hello, you have"
 	line "reached @"
 	text_ram wStringBuffer3
@@ -27,7 +27,7 @@ WiltonAnswerPhoneNiteText:
 	line "<PLAY_G>."
 	done
 
-WiltonGreetText:
+UnknownText_0x1b725c:
 	text "Ah, it's @"
 	text_ram wStringBuffer3
 	text "…"
@@ -36,7 +36,7 @@ WiltonGreetText:
 	line "moment?"
 	done
 
-WiltonGreetDayText:
+UnknownText_0x1b7283:
 	text "Ah, it's @"
 	text_ram wStringBuffer3
 	text "…"
@@ -44,7 +44,7 @@ WiltonGreetDayText:
 	para "Can you talk now?"
 	done
 
-WiltonGreetNiteText:
+UnknownText_0x1b72a5:
 	text "Ah, it's @"
 	text_ram wStringBuffer3
 	text "…"
@@ -53,7 +53,7 @@ WiltonGreetNiteText:
 	line "so late."
 	done
 
-WiltonGenericText:
+UnknownText_0x1b72d0:
 	text "Have your #MON"
 	line "grown any?"
 

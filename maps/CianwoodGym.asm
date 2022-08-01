@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const CIANWOODGYM_CHUCK
 	const CIANWOODGYM_BLACK_BELT1
 	const CIANWOODGYM_BLACK_BELT2
@@ -10,9 +10,9 @@
 	const CIANWOODGYM_BOULDER4
 
 CianwoodGym_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 CianwoodGymChuckScript:
 	faceplayer
@@ -57,7 +57,7 @@ CianwoodGymChuckScript:
 	setevent EVENT_BEAT_BLACKBELT_NOB
 	setevent EVENT_BEAT_BLACKBELT_LUNG
 	writetext ChuckExplainBadgeText
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_DYNAMICPUNCH
 	iffalse .BagFull
 	setevent EVENT_GOT_TM01_DYNAMICPUNCH
@@ -79,10 +79,10 @@ CianwoodGymActivateRockets:
 	end
 
 .GoldenrodRockets:
-	jumpstd GoldenrodRocketsScript
+	jumpstd goldenrodrockets
 
 .RadioTowerRockets:
-	jumpstd RadioTowerRocketsScript
+	jumpstd radiotowerrockets
 
 TrainerBlackbeltYoshi:
 	trainer BLACKBELT_T, YOSHI, EVENT_BEAT_BLACKBELT_YOSHI, BlackbeltYoshiSeenText, BlackbeltYoshiBeatenText, 0, .Script
@@ -129,15 +129,15 @@ TrainerBlackbeltLung:
 	end
 
 CianwoodGymBoulder:
-	jumpstd StrengthBoulderScript
+	jumpstd strengthboulder
 
 CianwoodGymStatue:
 	checkflag ENGINE_STORMBADGE
 	iftrue .Beaten
-	jumpstd GymStatue1Script
+	jumpstd gymstatue1
 .Beaten:
 	gettrainername STRING_BUFFER_4, CHUCK, CHUCK1
-	jumpstd GymStatue2Script
+	jumpstd gymstatue2
 
 CianwoodGymMovement_ChuckChucksBoulder:
 	set_sliding
@@ -306,17 +306,17 @@ BlackbeltLungAfterText:
 CianwoodGym_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4, 17, CIANWOOD_CITY, 2
 	warp_event  5, 17, CIANWOOD_CITY, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  3, 15, BGEVENT_READ, CianwoodGymStatue
 	bg_event  6, 15, BGEVENT_READ, CianwoodGymStatue
 
-	def_object_events
+	db 9 ; object events
 	object_event  4,  1, SPRITE_CHUCK, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, CianwoodGymChuckScript, -1
 	object_event  2, 12, SPRITE_BLACK_BELT, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 3, TrainerBlackbeltYoshi, -1
 	object_event  7, 12, SPRITE_BLACK_BELT, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 3, TrainerBlackbeltLao, -1

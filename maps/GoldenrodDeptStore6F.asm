@@ -1,15 +1,15 @@
-DEF GOLDENRODDEPTSTORE6F_FRESH_WATER_PRICE EQU 200
-DEF GOLDENRODDEPTSTORE6F_SODA_POP_PRICE    EQU 300
-DEF GOLDENRODDEPTSTORE6F_LEMONADE_PRICE    EQU 350
+GOLDENRODDEPTSTORE6F_FRESH_WATER_PRICE EQU 200
+GOLDENRODDEPTSTORE6F_SODA_POP_PRICE    EQU 300
+GOLDENRODDEPTSTORE6F_LEMONADE_PRICE    EQU 350
 
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODDEPTSTORE6F_LASS
 	const GOLDENRODDEPTSTORE6F_SUPER_NERD
 
 GoldenrodDeptStore6F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 GoldenrodVendingMachine:
 	opentext
@@ -56,7 +56,7 @@ GoldenrodVendingMachine:
 	pause 10
 	playsound SFX_ENTER_DOOR
 	writetext GoldenrodClangText
-	promptbutton
+	buttonsound
 	itemnotify
 	sjump .Start
 
@@ -79,9 +79,9 @@ GoldenrodVendingMachine:
 .MenuData:
 	db STATICMENU_CURSOR ; flags
 	db 4 ; items
-	db "FRESH WATER  ¥{d:GOLDENRODDEPTSTORE6F_FRESH_WATER_PRICE}@"
-	db "SODA POP     ¥{d:GOLDENRODDEPTSTORE6F_SODA_POP_PRICE}@"
-	db "LEMONADE     ¥{d:GOLDENRODDEPTSTORE6F_LEMONADE_PRICE}@"
+	db "FRESH WATER  ¥200@"
+	db "SODA POP     ¥300@"
+	db "LEMONADE     ¥350@"
 	db "CANCEL@"
 
 GoldenrodDeptStore6FLassScript:
@@ -94,7 +94,7 @@ GoldenrodDeptStore6FDirectory:
 	jumptext GoldenrodDeptStore6FDirectoryText
 
 GoldenrodDeptStore6FElevatorButton:
-	jumpstd ElevatorButtonScript
+	jumpstd elevatorbutton
 
 GoldenrodVendingText:
 	text "A vending machine!"
@@ -152,14 +152,14 @@ GoldenrodDeptStore6FDirectoryText:
 GoldenrodDeptStore6F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event 15,  0, GOLDENROD_DEPT_STORE_5F, 2
 	warp_event  2,  0, GOLDENROD_DEPT_STORE_ELEVATOR, 1
 	warp_event 13,  0, GOLDENROD_DEPT_STORE_ROOF, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 6 ; bg events
 	bg_event 14,  0, BGEVENT_READ, GoldenrodDeptStore6FDirectory
 	bg_event  3,  0, BGEVENT_READ, GoldenrodDeptStore6FElevatorButton
 	bg_event  8,  1, BGEVENT_UP, GoldenrodVendingMachine
@@ -167,6 +167,6 @@ GoldenrodDeptStore6F_MapEvents:
 	bg_event 10,  1, BGEVENT_UP, GoldenrodVendingMachine
 	bg_event 11,  1, BGEVENT_UP, GoldenrodVendingMachine
 
-	def_object_events
+	db 2 ; object events
 	object_event 10,  2, SPRITE_LASS, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, GoldenrodDeptStore6FLassScript, -1
 	object_event  8,  2, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, GoldenrodDeptStore6FSuperNerdScript, -1

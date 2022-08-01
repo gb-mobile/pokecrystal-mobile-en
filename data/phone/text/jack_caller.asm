@@ -1,4 +1,4 @@
-JackIntelligenceKeepsRisingText:
+JackIntelligenceText:
 	text "My @"
 	text_ram wStringBuffer4
 	text "'s"
@@ -21,7 +21,7 @@ JackDefeatedMonText:
 	cont "starting to help."
 	done
 
-JackLostAMonText:
+UnknownText_0x174165:
 	text "Oh, and listen."
 	line "I missed catching"
 
@@ -37,7 +37,7 @@ JackLostAMonText:
 	line "caught it…"
 	done
 
-JackBattleRematchText:
+UnknownText_0x1741e1:
 	text "Do you want to"
 	line "battle? I'll show"
 
@@ -53,7 +53,7 @@ JackBattleRematchText:
 	line "you're nearby."
 	done
 
-JackHangUpText:
+UnknownText_0x174251:
 	text "See you later!"
 	done
 
@@ -165,7 +165,7 @@ JackRainDanceTriviaText:
 	line "than usual."
 	done
 
-JackHeardSomeGreatTipsText:
+UnknownText_0x1745c2:
 	text "My friend heard"
 	line "some great tips."
 
@@ -177,7 +177,7 @@ JackHeardSomeGreatTipsText:
 	cont "away and tell you."
 	done
 
-JackReminderText:
+UnknownText_0x174638:
 	text "Hey, <PLAY_G>!"
 
 	para "Do you remember"

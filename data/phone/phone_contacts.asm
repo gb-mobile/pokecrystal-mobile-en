@@ -1,4 +1,4 @@
-MACRO phone
+phone: MACRO
 ; trainer class, trainer id, map, callee time, callee script, caller time, caller script
 	db \1, \2
 	map_id \3
@@ -10,7 +10,6 @@ ENDM
 
 PhoneContacts:
 ; entries correspond to PHONE_* constants
-	table_width PHONE_CONTACT_SIZE, PhoneContacts
 	phone TRAINER_NONE, PHONE_00,              N_A,                       0,       UnusedPhoneScript,        0,       UnusedPhoneScript
 	phone TRAINER_NONE, PHONECONTACT_MOM,      PLAYERS_HOUSE_1F,          ANYTIME, MomPhoneCalleeScript,     0,       UnusedPhoneScript
 	phone TRAINER_NONE, PHONECONTACT_BIKESHOP, OAKS_LAB,                  0,       UnusedPhoneScript,        0,       UnusedPhoneScript
@@ -49,4 +48,3 @@ PhoneContacts:
 	phone HIKER,        PARRY1,                ROUTE_45,                  ANYTIME, ParryPhoneCalleeScript,   ANYTIME, ParryPhoneCallerScript
 	phone PICNICKER,    ERIN1,                 ROUTE_46,                  ANYTIME, ErinPhoneCalleeScript,    ANYTIME, ErinPhoneCallerScript
 	phone TRAINER_NONE, PHONECONTACT_BUENA,    GOLDENROD_DEPT_STORE_ROOF, ANYTIME, BuenaPhoneCalleeScript,   ANYTIME, BuenaPhoneCallerScript
-	assert_table_length NUM_PHONE_CONTACTS + 1

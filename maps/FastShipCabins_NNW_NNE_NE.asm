@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const FASTSHIPCABINS_NNW_NNE_NE_COOLTRAINER_M
 	const FASTSHIPCABINS_NNW_NNE_NE_COOLTRAINER_F
 	const FASTSHIPCABINS_NNW_NNE_NE_SUPER_NERD
@@ -8,9 +8,9 @@
 	const FASTSHIPCABINS_NNW_NNE_NE_PHARMACIST
 
 FastShipCabins_NNW_NNE_NE_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 TrainerCooltrainermSean:
 	trainer COOLTRAINERM, SEAN, EVENT_BEAT_COOLTRAINERM_SEAN, CooltrainermSeanSeenText, CooltrainermSeanBeatenText, 0, .Script
@@ -96,7 +96,7 @@ FastShipLazySailorScript:
 	waitbutton
 	closetext
 	setevent EVENT_FAST_SHIP_LAZY_SAILOR
-	setmapscene FAST_SHIP_B1F, SCENE_FASTSHIPB1F_NOOP
+	setmapscene FAST_SHIP_B1F, SCENE_FINISHED
 	readvar VAR_FACING
 	ifequal RIGHT, .Movement2
 	applymovement FASTSHIPCABINS_NNW_NNE_NE_SAILOR, FastShipLazySailorLeavesMovement1
@@ -113,7 +113,7 @@ FastShipLazySailorScript:
 	end
 
 FastShipCabins_NNW_NNE_NETrashcan:
-	jumpstd TrashCanScript
+	jumpstd trashcan
 
 FastShipLazySailorLeavesMovement1:
 	step LEFT
@@ -267,19 +267,19 @@ BurglarCoreyAfterBattleText:
 FastShipCabins_NNW_NNE_NE_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  2,  0, FAST_SHIP_1F, 2
 	warp_event  2, 12, FAST_SHIP_1F, 3
 	warp_event  2, 24, FAST_SHIP_1F, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event  6, 13, BGEVENT_READ, FastShipCabins_NNW_NNE_NETrashcan
 	bg_event  7, 19, BGEVENT_READ, FastShipCabins_NNW_NNE_NETrashcan
 	bg_event  7, 31, BGEVENT_READ, FastShipCabins_NNW_NNE_NETrashcan
 
-	def_object_events
+	db 7 ; object events
 	object_event  4,  3, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 2, TrainerCooltrainermSean, EVENT_FAST_SHIP_PASSENGERS_EASTBOUND
 	object_event  1,  5, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerCooltrainerfCarol, EVENT_FAST_SHIP_PASSENGERS_EASTBOUND
 	object_event  1,  5, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerPokemaniacEthan, EVENT_FAST_SHIP_PASSENGERS_WESTBOUND

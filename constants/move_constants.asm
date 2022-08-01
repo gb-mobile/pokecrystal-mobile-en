@@ -257,10 +257,13 @@
 	const ROCK_SMASH   ; f9
 	const WHIRLPOOL    ; fa
 	const BEAT_UP      ; fb
-DEF NUM_ATTACKS EQU const_value - 1
+NUM_ATTACKS EQU const_value + -1
+
+	const MOVE_OR_ANIM_FC ; fc
+	const MOVE_OR_ANIM_FD ; fd
+	const MOVE_OR_ANIM_FE ; fe
 
 ; Battle animations use the same constants as the moves up to this point
-	const_next $ff
 	const ANIM_SWEET_SCENT_2     ; ff
 	const ANIM_THROW_POKE_BALL   ; 100
 	const ANIM_SEND_OUT_MON      ; 101
@@ -285,7 +288,6 @@ DEF NUM_ATTACKS EQU const_value - 1
 	const ANIM_WOBBLE            ; 113
 	const ANIM_SHAKE             ; 114
 	const ANIM_HIT_CONFUSION     ; 115
-DEF NUM_BATTLE_ANIMS EQU const_value - 1
 
 ; wNumHits uses offsets from ANIM_MISS
 	const_def

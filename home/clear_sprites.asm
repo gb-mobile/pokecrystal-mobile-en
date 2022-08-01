@@ -1,7 +1,7 @@
 ClearSprites::
 ; Erase OAM data
-	ld hl, wShadowOAM
-	ld b, wShadowOAMEnd - wShadowOAM
+	ld hl, wVirtualOAM
+	ld b, wVirtualOAMEnd - wVirtualOAM
 	xor a
 .loop
 	ld [hli], a
@@ -11,7 +11,7 @@ ClearSprites::
 
 HideSprites::
 ; Set all OAM y-positions to 160 to hide them offscreen
-	ld hl, wShadowOAMSprite00YCoord
+	ld hl, wVirtualOAMSprite00YCoord
 	ld de, SPRITEOAMSTRUCT_LENGTH
 	ld b, NUM_SPRITE_OAM_STRUCTS
 	ld a, SCREEN_WIDTH_PX

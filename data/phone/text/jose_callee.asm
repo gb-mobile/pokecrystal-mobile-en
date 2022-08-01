@@ -1,4 +1,4 @@
-JoseAnswerPhoneText:
+UnknownText_0x1b55ae:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -8,7 +8,7 @@ JoseAnswerPhoneText:
 	line "Good morning!"
 	done
 
-JoseAnswerPhoneDayText:
+UnknownText_0x1b55da:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -17,7 +17,7 @@ JoseAnswerPhoneDayText:
 	para "Oh, <PLAY_G>? Hi!"
 	done
 
-JoseAnswerPhoneNiteText:
+UnknownText_0x1b55fc:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -27,7 +27,7 @@ JoseAnswerPhoneNiteText:
 	line "Good evening!"
 	done
 
-JoseGreetText:
+UnknownText_0x1b5628:
 	text "Oh, <PLAY_G>?"
 
 	para "Tweet! Yeah, it's"
@@ -36,7 +36,7 @@ JoseGreetText:
 	text "."
 	done
 
-JoseGreetDayText:
+UnknownText_0x1b564c:
 	text "Oh, <PLAY_G>?"
 
 	para "Tweet! Yeah, it's"
@@ -45,7 +45,7 @@ JoseGreetDayText:
 	text "."
 	done
 
-JoseGreetNiteText:
+UnknownText_0x1b5670:
 	text "Oh, <PLAY_G>?"
 
 	para "Tweet! Yeah, it's"
@@ -54,7 +54,7 @@ JoseGreetNiteText:
 	text "."
 	done
 
-JoseGenericText:
+UnknownText_0x1b5694:
 	text "Are your #MON"
 	line "still cooking?"
 

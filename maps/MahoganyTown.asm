@@ -1,17 +1,17 @@
-DEF MAHOGANYTOWN_RAGECANDYBAR_PRICE EQU 300
+MAHOGANYTOWN_RAGECANDYBAR_PRICE EQU 300
 
-	object_const_def
+	object_const_def ; object_event constants
 	const MAHOGANYTOWN_POKEFAN_M
 	const MAHOGANYTOWN_GRAMPS
 	const MAHOGANYTOWN_FISHER
 	const MAHOGANYTOWN_LASS
 
 MahoganyTown_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene0, SCENE_MAHOGANYTOWN_TRY_RAGECANDYBAR
-	scene_script .DummyScene1, SCENE_MAHOGANYTOWN_NOOP
+	db 2 ; scene scripts
+	scene_script .DummyScene0 ; SCENE_DEFAULT
+	scene_script .DummyScene1 ; SCENE_FINISHED
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPoint
 
 .DummyScene0:
@@ -22,17 +22,17 @@ MahoganyTown_MapScripts:
 
 .FlyPoint:
 	setflag ENGINE_FLYPOINT_MAHOGANY
-	endcallback
+	return
 
 MahoganyTownTryARageCandyBarScript:
 	showemote EMOTE_SHOCK, MAHOGANYTOWN_POKEFAN_M, 15
-	applymovement MAHOGANYTOWN_POKEFAN_M, MahoganyTownRageCandyBarMerchantBlocksYouMovement
+	applymovement MAHOGANYTOWN_POKEFAN_M, MovementData_0x1900a9
 	follow PLAYER, MAHOGANYTOWN_POKEFAN_M
-	applymovement PLAYER, MahoganyTownPlayerStepLeftMovement
+	applymovement PLAYER, MovementData_0x1900a7
 	stopfollow
 	turnobject PLAYER, RIGHT
 	scall RageCandyBarMerchantScript
-	applymovement MAHOGANYTOWN_POKEFAN_M, MahoganyTownRageCandyBarMerchantReturnsMovement
+	applymovement MAHOGANYTOWN_POKEFAN_M, MovementData_0x1900ad
 	end
 
 MahoganyTownPokefanMScript:
@@ -119,23 +119,23 @@ MahoganyGymSign:
 	jumptext MahoganyGymSignText
 
 MahoganyTownPokecenterSign:
-	jumpstd PokecenterSignScript
+	jumpstd pokecentersign
 
-MahoganyTownCollideDownFaceLeftMovement: ; unreferenced
+MovementData_0x1900a4:
 	step DOWN
 	big_step UP
 	turn_head DOWN
-MahoganyTownPlayerStepLeftMovement:
+MovementData_0x1900a7:
 	step LEFT
 	step_end
 
-MahoganyTownRageCandyBarMerchantBlocksYouMovement:
+MovementData_0x1900a9:
 	step RIGHT
 	step DOWN
 	turn_head LEFT
 	step_end
 
-MahoganyTownRageCandyBarMerchantReturnsMovement:
+MovementData_0x1900ad:
 	step UP
 	turn_head DOWN
 	step_end
@@ -247,24 +247,24 @@ MahoganyGymSignText:
 MahoganyTown_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 5 ; warp events
 	warp_event 11,  7, MAHOGANY_MART_1F, 1
 	warp_event 17,  7, MAHOGANY_RED_GYARADOS_SPEECH_HOUSE, 1
 	warp_event  6, 13, MAHOGANY_GYM, 1
 	warp_event 15, 13, MAHOGANY_POKECENTER_1F, 1
 	warp_event  9,  1, ROUTE_43_MAHOGANY_GATE, 3
 
-	def_coord_events
-	coord_event 19,  8, SCENE_MAHOGANYTOWN_TRY_RAGECANDYBAR, MahoganyTownTryARageCandyBarScript
-	coord_event 19,  9, SCENE_MAHOGANYTOWN_TRY_RAGECANDYBAR, MahoganyTownTryARageCandyBarScript
+	db 2 ; coord events
+	coord_event 19,  8, SCENE_DEFAULT, MahoganyTownTryARageCandyBarScript
+	coord_event 19,  9, SCENE_DEFAULT, MahoganyTownTryARageCandyBarScript
 
-	def_bg_events
+	db 4 ; bg events
 	bg_event  1,  5, BGEVENT_READ, MahoganyTownSign
 	bg_event  9,  7, BGEVENT_READ, MahoganyTownRagecandybarSign
 	bg_event  3, 13, BGEVENT_READ, MahoganyGymSign
 	bg_event 16, 13, BGEVENT_READ, MahoganyTownPokecenterSign
 
-	def_object_events
+	db 4 ; object events
 	object_event 19,  8, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MahoganyTownPokefanMScript, EVENT_MAHOGANY_TOWN_POKEFAN_M_BLOCKS_EAST
 	object_event  6,  9, SPRITE_GRAMPS, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MahoganyTownGrampsScript, -1
 	object_event  6, 14, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MahoganyTownFisherScript, EVENT_MAHOGANY_TOWN_POKEFAN_M_BLOCKS_GYM

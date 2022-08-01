@@ -3,7 +3,6 @@
 
 """
 Usage: python3 toc.py [-n] files.md...
-
 Replace a "## TOC" heading in a Markdown file with a table of contents,
 generated from the other headings in the file. Supports multiple files.
 Headings must start with "##" signs to be detected.
@@ -12,7 +11,6 @@ Headings must start with "##" signs to be detected.
 import sys
 import re
 from collections import namedtuple
-from urllib.parse import quote
 
 toc_name = 'Contents'
 valid_toc_headings = {'## TOC', '##TOC'}
@@ -28,7 +26,6 @@ def name_to_anchor(name):
 	anchor = re.sub(punctuation_regexp, '', anchor) # remove punctuation
 	anchor = anchor.replace(' ', '-')               # replace spaces with dash
 	anchor = re.sub(specialchar_regexp, '', anchor) # remove misc special chars
-	anchor = quote(anchor)                          # url encode
 	return anchor
 
 def get_toc_index(lines):

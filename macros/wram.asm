@@ -1,10 +1,10 @@
 ; Used in wram.asm
 
-MACRO flag_array
+flag_array: MACRO
 	ds ((\1) + 7) / 8
 ENDM
 
-MACRO box_struct
+box_struct: MACRO
 \1Species::        db
 \1Item::           db
 \1Moves::          ds NUM_MOVES
@@ -26,10 +26,10 @@ MACRO box_struct
 \1CaughtGender::
 \1CaughtLocation:: db
 \1Level::          db
-\1BoxEnd::
+\1End::
 ENDM
 
-MACRO party_struct
+party_struct: MACRO
 	box_struct \1
 \1Status::         db
 \1Unused::         db
@@ -41,10 +41,10 @@ MACRO party_struct
 \1Speed::          dw
 \1SpclAtk::        dw
 \1SpclDef::        dw
-\1StructEnd::
+\1StatsEnd::
 ENDM
 
-MACRO red_box_struct
+red_box_struct: MACRO
 \1Species::    db
 \1HP::         dw
 \1BoxLevel::   db
@@ -54,7 +54,7 @@ MACRO red_box_struct
 \1Type2::      db
 \1CatchRate::  db
 \1Moves::      ds NUM_MOVES
-\1ID::         dw
+\1OTID::       dw
 \1Exp::        ds 3
 \1HPExp::      dw
 \1AttackExp::  dw
@@ -65,7 +65,7 @@ MACRO red_box_struct
 \1PP::         ds NUM_MOVES
 ENDM
 
-MACRO red_party_struct
+red_party_struct: MACRO
 	red_box_struct \1
 \1Level::      db
 \1Stats::
@@ -76,10 +76,11 @@ MACRO red_party_struct
 \1Special::    dw
 ENDM
 
-MACRO battle_struct
+battle_struct: MACRO
 \1Species::   db
 \1Item::      db
 \1Moves::     ds NUM_MOVES
+\1MovesEnd::
 \1DVs::       dw
 \1PP::        ds NUM_MOVES
 \1Happiness:: db
@@ -93,36 +94,26 @@ MACRO battle_struct
 \1Speed::     dw
 \1SpclAtk::   dw
 \1SpclDef::   dw
+\1StatsEnd::
 \1Type::
 \1Type1::     db
 \1Type2::     db
 \1StructEnd::
 ENDM
 
-MACRO box
-\1Count::   db
-\1Species:: ds MONS_PER_BOX + 1
+box: MACRO
+\1Count::           db
+\1Species::         ds MONS_PER_BOX + 1
 \1Mons::
-	; \1Mon1 - \1Mon20
-	for n, 1, MONS_PER_BOX + 1
-	\1Mon{d:n}:: box_struct \1Mon{d:n}
-	endr
-\1MonOTs::
-	; \1Mon1OT - \1Mon20OT
-	for n, 1, MONS_PER_BOX + 1
-	\1Mon{d:n}OT:: ds NAME_LENGTH
-	endr
-\1MonNicknames::
-	; \1Mon1Nickname - \1Mon20Nickname
-	for n, 1, MONS_PER_BOX + 1
-	\1Mon{d:n}Nickname:: ds MON_NAME_LENGTH
-	endr
+\1Mon1::            box_struct \1Mon1
+\1Mon2::            ds BOXMON_STRUCT_LENGTH * (MONS_PER_BOX + -1)
+\1MonOT::           ds NAME_LENGTH * MONS_PER_BOX
+\1MonNicknames::    ds MON_NAME_LENGTH * MONS_PER_BOX
 \1MonNicknamesEnd::
-\1End::
-	ds 2 ; padding
+\1End::             ds 2 ; padding
 ENDM
 
-MACRO map_connection_struct
+map_connection_struct: MACRO
 \1ConnectedMapGroup::       db
 \1ConnectedMapNumber::      db
 \1ConnectionStripPointer::  dw
@@ -134,40 +125,41 @@ MACRO map_connection_struct
 \1ConnectionWindow::        dw
 ENDM
 
-MACRO channel_struct
+channel_struct: MACRO
+; Addreses are wChannel1 (c101).
 \1MusicID::           dw
 \1MusicBank::         db
-\1Flags1::            db ; 0:on/off 1:subroutine 2:looping 3:sfx 4:noise 5:rest
-\1Flags2::            db ; 0:vibrato on/off 1:pitch slide 2:duty cycle pattern 4:pitch offset
-\1Flags3::            db ; 0:vibrato up/down 1:pitch slide direction
+\1Flags1::            db ; 0:on/off 1:subroutine 3:sfx 4:noise 5:rest
+\1Flags2::            db ; 0:vibrato on/off 2:duty 4:cry pitch
+\1Flags3::            db ; 0:vibrato up/down
 \1MusicAddress::      dw
 \1LastMusicAddress::  dw
                       dw
 \1NoteFlags::         db ; 5:rest
 \1Condition::         db ; conditional jumps
 \1DutyCycle::         db ; bits 6-7 (0:12.5% 1:25% 2:50% 3:75%)
-\1VolumeEnvelope::    db ; hi:volume lo:fade
+\1Intensity::         db ; hi:pressure lo:velocity
 \1Frequency::         dw ; 11 bits
 \1Pitch::             db ; 0:rest 1-c:note
 \1Octave::            db ; 7-0 (0 is highest)
-\1Transposition::     db ; raises existing octaves (to repeat phrases)
+\1PitchOffset::       db ; raises existing octaves (to repeat phrases)
 \1NoteDuration::      db ; frames remaining for the current note
 \1Field16::           ds 1
                       ds 1
 \1LoopCount::         db
 \1Tempo::             dw
 \1Tracks::            db ; hi:left lo:right
-\1DutyCyclePattern::  db
+\1SFXDutyLoop::       db
 \1VibratoDelayCount:: db ; initialized by \1VibratoDelay
 \1VibratoDelay::      db ; number of frames a note plays until vibrato starts
 \1VibratoExtent::     db
 \1VibratoRate::       db ; hi:frames for each alt lo:frames to the next alt
-\1PitchSlideTarget::  dw ; frequency endpoint for pitch slide
-\1PitchSlideAmount::  db
-\1PitchSlideAmountFraction:: db
+\1PitchWheelTarget::  dw ; frequency endpoint for pitch wheel
+\1PitchWheelAmount::  db
+\1PitchWheelAmountFraction::   db
 \1Field25::           db
                       ds 1
-\1PitchOffset::       dw
+\1CryPitch::          dw
 \1Field29::           ds 1
 \1Field2a::           ds 2
 \1Field2c::           ds 1
@@ -178,30 +170,34 @@ MACRO channel_struct
                       ds 1
 ENDM
 
-MACRO battle_tower_struct
-\1Name::         ds NAME_LENGTH - 1
-\1TrainerClass:: db
-	; \1Mon1 - \1Mon3 and \1Mon1Name - \1Mon3Name
-	for n, 1, BATTLETOWER_PARTY_LENGTH + 1
-	\1Mon{d:n}::     party_struct \1Mon{d:n}
-	\1Mon{d:n}Name:: ds MON_NAME_LENGTH
-	endr
-\1TrainerData::  ds BATTLETOWER_TRAINERDATALENGTH
+battle_tower_struct: MACRO
+\1Name:: ds NAME_LENGTH + -1
+\1TrainerClass:: ds 1
+\1Mon1:: party_struct \1Mon1
+\1Mon1Name:: ds MON_NAME_LENGTH
+\1Mon1NameEnd::
+\1Mon2:: party_struct \1Mon2
+\1Mon2Name:: ds MON_NAME_LENGTH
+\1Mon2NameEnd::
+\1Mon3:: party_struct \1Mon3
+\1Mon3Name:: ds MON_NAME_LENGTH
+\1Mon3NameEnd::
+\1TrainerData:: ds BATTLETOWER_TRAINERDATALENGTH
 \1TrainerEnd::
 ENDM
 
-MACRO mailmsg
-\1Message::     ds MAIL_MSG_LENGTH
-\1MessageEnd::  db
-\1Author::      ds PLAYER_NAME_LENGTH
-\1Nationality:: dw
-\1AuthorID::    dw
-\1Species::     db
-\1Type::        db
+mailmsg: MACRO
+\1Message::    ds MAIL_MSG_LENGTH
+\1MessageEnd:: ds 1
+\1Author::     ds PLAYER_NAME_LENGTH
+\1AuthorNationality:: ds 2
+\1AuthorID::   dw
+\1Species::    db
+\1Type::       db
 \1End::
 ENDM
 
-MACRO roam_struct
+roam_struct: MACRO
 \1Species::   db
 \1Level::     db
 \1MapGroup::  db
@@ -210,52 +206,53 @@ MACRO roam_struct
 \1DVs::       dw
 ENDM
 
-MACRO bugcontestwinner
+bugcontestwinner: MACRO
 \1WinnerID:: db
 \1Mon::      db
 \1Score::    dw
 ENDM
 
-MACRO hof_mon
+hof_mon: MACRO
 \1Species::  db
 \1ID::       dw
 \1DVs::      dw
 \1Level::    db
-\1Nickname:: ds MON_NAME_LENGTH - 1
+\1Nickname:: ds MON_NAME_LENGTH + -1
 \1End::
 ENDM
 
-MACRO hall_of_fame
+hall_of_fame: MACRO
 \1WinCount:: db
-	; \1Mon1 - \1Mon6
-	for n, 1, PARTY_LENGTH + 1
-	\1Mon{d:n}:: hof_mon \1Mon{d:n}
-	endr
+\1Mon1:: hof_mon \1Mon1
+\1Mon2:: hof_mon \1Mon2
+\1Mon3:: hof_mon \1Mon3
+\1Mon4:: hof_mon \1Mon4
+\1Mon5:: hof_mon \1Mon5
+\1Mon6:: hof_mon \1Mon6
 \1End:: db
 ENDM
 
-MACRO link_battle_record
+link_battle_record: MACRO
+\1Name::   ds NAME_LENGTH + -1
 \1ID::     dw
-\1Name::   ds NAME_LENGTH - 1
 \1Wins::   dw
 \1Losses:: dw
 \1Draws::  dw
+ENDM
+
+trademon: MACRO
+\1Species::     db ; wc6d0 | wc702
+\1SpeciesName:: ds MON_NAME_LENGTH ; wc6d1 | wc703
+\1Nickname::    ds MON_NAME_LENGTH ; wc6dc | wc70e
+\1SenderName::  ds NAME_LENGTH ; wc6e7 | wc719
+\1OTName::      ds NAME_LENGTH ; wc6f2 | wc724
+\1DVs::         dw ; wc6fd | wc72f
+\1ID::          dw ; wc6ff | wc731
+\1CaughtData::  db ; wc701 | wc733
 \1End::
 ENDM
 
-MACRO trademon
-\1Species::     db
-\1SpeciesName:: ds MON_NAME_LENGTH
-\1Nickname::    ds MON_NAME_LENGTH
-\1SenderName::  ds NAME_LENGTH
-\1OTName::      ds NAME_LENGTH
-\1DVs::         dw
-\1ID::          dw
-\1CaughtData::  db
-\1End::
-ENDM
-
-MACRO move_struct
+move_struct: MACRO
 \1Animation::    db
 \1Effect::       db
 \1Power::        db
@@ -265,7 +262,7 @@ MACRO move_struct
 \1EffectChance:: db
 ENDM
 
-MACRO slot_reel
+slot_reel: MACRO
 \1ReelAction::   db
 \1TilemapAddr::  dw
 \1Position::     db
@@ -282,7 +279,7 @@ MACRO slot_reel
 \1StopDelay::    db
 ENDM
 
-MACRO object_struct
+object_struct: MACRO
 \1Sprite::            db
 \1MapObjectIndex::    db
 \1SpriteTile::        db
@@ -319,7 +316,7 @@ MACRO object_struct
 \1StructEnd::
 ENDM
 
-MACRO map_object
+map_object: MACRO
 \1ObjectStructID::  db
 \1ObjectSprite::    db
 \1ObjectYCoord::    db
@@ -335,7 +332,7 @@ MACRO map_object
 	ds 2
 ENDM
 
-MACRO sprite_oam_struct
+sprite_oam_struct: MACRO
 \1YCoord::     db
 \1XCoord::     db
 \1TileID::     db
@@ -348,7 +345,7 @@ MACRO sprite_oam_struct
 ; bit 2-0: pal # (cgb only)
 ENDM
 
-MACRO sprite_anim_struct
+sprite_anim_struct: MACRO
 \1Index::          db
 \1FramesetID::     db
 \1AnimSeqID::      db
@@ -361,36 +358,43 @@ MACRO sprite_anim_struct
 \1DurationOffset:: db
 \1FrameIndex::     db
 \1JumptableIndex:: db
-\1Var1::           ds 1
-\1Var2::           ds 1
-\1Var3::           ds 1
-\1Var4::           ds 1
+\1Field0c::        ds 1
+\1Field0d::        ds 1
+\1Field0e::        ds 1
+\1Field0f::        ds 1
 ENDM
 
-MACRO battle_anim_struct
-\1Index::          db
-\1OAMFlags::       db
-\1FixY::           db
-\1FramesetID::     db
-\1Function::       db
-\1Palette::        db
-\1TileID::         db
-\1XCoord::         db
-\1YCoord::         db
-\1XOffset::        db
-\1YOffset::        db
-\1Param::          db
-\1Duration::       db
-\1Frame::          db
-\1JumptableIndex:: db
-\1Var1::           db
-\1Var2::           db
-	ds 7
+battle_anim_struct: MACRO
+; Placeholder until we can figure out what it all means
+\1Index::              db
+\1Field01::            ds 1
+\1Field02::            ds 1
+\1FramesetID::         db
+\1Function::           db
+\1Palette::            db
+\1TileID::             db
+\1XCoord::             db
+\1YCoord::             db
+\1XOffset::            db
+\1YOffset::            db
+\1Field0b::            ds 1
+\1Duration::           db
+\1Frame::              db
+\1AnonJumptableIndex:: db
+\1Field0f::            ds 1
+\1Field10::            ds 1
+\1Field11::            ds 1
+\1Field12::            ds 1
+\1Field13::            ds 1
+\1Field14::            ds 1
+\1Field15::            ds 1
+\1Field16::            ds 1
+\1Field17::            ds 1
 ENDM
 
-MACRO battle_bg_effect
-\1Function::       db
-\1JumptableIndex:: db
-\1BattleTurn::     db
-\1Param::          db
+battle_bg_effect: MACRO
+\1Function:: db
+\1Field01::  ds 1
+\1Field02::  ds 1
+\1Field03::  ds 1
 ENDM

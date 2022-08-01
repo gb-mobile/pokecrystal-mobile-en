@@ -1,71 +1,71 @@
-MobileAPI::
+Function3e32::
 ; Mobile
 	cp $2
-	ld [wMobileAPIIndex], a
+	ld [$c988], a
 	ld a, l
-	ld [wc986], a
+	ld [$c986], a
 	ld a, h
-	ld [wc987], a
+	ld [$c987], a
 	jr nz, .okay
 
-	ld [wc982], a
+	ld [$c982], a
 	ld a, l
-	ld [wc981], a
-	ld hl, wc983
+	ld [$c981], a
+	ld hl, $c983
 	ld a, c
 	ld [hli], a
 	ld a, b
 	ld [hl], a
 
 .okay
-	ld hl, wc822
+	ld hl, $c822
 	set 6, [hl]
 	ldh a, [hROMBank]
 	push af
-	ld a, BANK(_MobileAPI)
-	ld [wc981], a
+	ld a, BANK(Function110030)
+	ld [$c981], a
 	rst Bankswitch
 
-	jp _MobileAPI
+	jp Function110030
 
-ReturnMobileAPI::
-; Return from _MobileAPI
-	ld [wc986], a
+Function3e60::
+; Return from Function110030
+	ld [$c986], a
 	ld a, l
-	ld [wc987], a
+	ld [$c987], a
 	ld a, h
-	ld [wMobileAPIIndex], a
+	ld [$c988], a
 
 	pop bc
 	ld a, b
-	ld [wc981], a
+	ld [$c981], a
 	rst Bankswitch
 
-	ld hl, wc822
+	ld hl, $c822
 	res 6, [hl]
-	ld hl, wc987
+	ld hl, $c987
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [wc986]
+	ld a, [$c986]
 	ret
 
 MobileReceive::
 	ldh a, [hROMBank]
 	push af
 	ld a, BANK(_MobileReceive)
-	ld [wc981], a
+	ld [$c981], a
 	rst Bankswitch
 
 	call _MobileReceive
 	pop bc
 	ld a, b
-	ld [wc981], a
+	ld [$c981], a
 	rst Bankswitch
 
 	ret
 
-MobileTimer::
+Timer::
 	push af
 	push bc
 	push de
@@ -83,32 +83,32 @@ MobileTimer::
 	and 1 << VBLANK | 1 << LCD_STAT | 1 << SERIAL | 1 << JOYPAD
 	ldh [rIF], a
 
-	ld a, [wc86a]
+	ld a, [$c86a]
 	or a
 	jr z, .pop_ret
 
-	ld a, [wc822]
+	ld a, [$c822]
 	bit 1, a
-	jr nz, .skip_timer
+	jr nz, .skip_Timer
 
 	ldh a, [rSC]
 	and 1 << rSC_ON
-	jr nz, .skip_timer
+	jr nz, .skip_Timer
 
 	ldh a, [hROMBank]
 	push af
 	ld a, BANK(_Timer)
-	ld [wc981], a
+	ld [$c981], a
 	rst Bankswitch
 
 	call _Timer
 
 	pop bc
 	ld a, b
-	ld [wc981], a
+	ld [$c981], a
 	rst Bankswitch
 
-.skip_timer
+.skip_Timer
 	ldh a, [rTMA]
 	ldh [rTIMA], a
 
@@ -122,7 +122,7 @@ MobileTimer::
 	pop af
 	reti
 
-Function3ed7:: ; unreferenced
+Unreferenced_Function3ed7::
 	ld [$dc02], a
 	ldh a, [hROMBank]
 	push af
@@ -140,7 +140,7 @@ Function3ed7:: ; unreferenced
 Function3eea::
 	push hl
 	push bc
-	ld de, wAttrmap - wTilemap
+	ld de, wAttrMap - wTileMap
 	add hl, de
 	inc b
 	inc b
@@ -152,7 +152,7 @@ Function3eea::
 	call MobileHome_PlaceBox
 	ret
 
-Function3efd:: ; unreferenced
+Unreferenced_Function3efd::
 	push hl
 	hlcoord 0, 12
 	ld b, 4
@@ -165,7 +165,7 @@ Function3efd:: ; unreferenced
 .fill_attr
 	push hl
 	push bc
-	ld de, wAttrmap - wTilemap
+	ld de, wAttrMap - wTileMap
 	add hl, de
 	inc b
 	inc b
@@ -178,7 +178,7 @@ Function3efd:: ; unreferenced
 	ret
 
 Function3f20::
-	hlcoord 0, 0, wAttrmap
+	hlcoord 0, 0, wAttrMap
 	ld b,  6
 	ld c, 20
 	call Function3f35

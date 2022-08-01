@@ -1,4 +1,6 @@
 BattleCommand_MirrorMove:
+; mirrormove
+
 	call ClearLastMove
 
 	ld a, BATTLE_VARS_MOVE
@@ -22,7 +24,7 @@ BattleCommand_MirrorMove:
 .use
 	ld a, b
 	ld [hl], a
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 
 	push af
 	ld a, BATTLE_VARS_MOVE_ANIM
@@ -38,11 +40,11 @@ BattleCommand_MirrorMove:
 	call CheckUserIsCharging
 	jr nz, .done
 
-	ld a, [wBattleAnimParam]
+	ld a, [wKickCounter]
 	push af
 	call BattleCommand_LowerSub
 	pop af
-	ld [wBattleAnimParam], a
+	ld [wKickCounter], a
 
 .done
 	call BattleCommand_MoveDelay

@@ -1,6 +1,6 @@
 # Design Flaws
 
-These are parts of the code that do not work *incorrectly*, like [bugs and glitches](https://github.com/pret/pokecrystal/blob/master/docs/bugs_and_glitches.md), but that clearly exist just to work around a problem. In other words, with a slightly different design, the code would not need to exist at all. Design flaws may be exceptions to a usual rule, such as "tables of pointers in different banks use `dba`" ([one exception](#pic-banks-are-offset-by-pics_fix), [and another](#pok%C3%A9dex-entry-banks-are-derived-from-their-species-ids)) or "graphics used as a unit are stored and loaded contiguously" ([a notable exception](#footprints-are-split-into-top-and-bottom-halves)).
+These are parts of the code that do not work *incorrectly*, like [bugs and glitches](https://github.com/pret/pokecrystal/blob/master/docs/bugs_and_glitches.md), but that clearly exist just to work around a problem. In other words, with a slightly different design, the code would not need to exist at all. Design flaws may be exceptions to a usual rule, such as "tables of pointers in different banks use `dba`" ([one exception](#pic-banks-are-offset-by-pics_fix), [and another](#pokédex-entry-banks-are-derived-from-their-species-ids)) or "graphics used as a unit are stored and loaded contiguously" ([a notable exception](#footprints-are-split-into-top-and-bottom-halves)).
 
 
 ## Contents
@@ -10,8 +10,7 @@ These are parts of the code that do not work *incorrectly*, like [bugs and glitc
 - [Footprints are split into top and bottom halves](#footprints-are-split-into-top-and-bottom-halves)
 - [Music IDs $64 and $80 or above have special behavior](#music-ids-64-and-80-or-above-have-special-behavior)
 - [`ITEM_C3` and `ITEM_DC` break up the continuous sequence of TM items](#item_c3-and-item_dc-break-up-the-continuous-sequence-of-tm-items)
-- [Pokédex entry banks are derived from their species IDs](#pok%C3%A9dex-entry-banks-are-derived-from-their-species-ids)
-- [The 6-bit caught level can only record up to level 63](#the-6-bit-caught-level-can-only-record-up-to-level-63)
+- [Pokédex entry banks are derived from their species IDs](#pokédex-entry-banks-are-derived-from-their-species-ids)
 - [Identical sine wave code and data is repeated five times](#identical-sine-wave-code-and-data-is-repeated-five-times)
 - [`GetForestTreeFrame` works, but it's still bad](#getforesttreeframe-works-but-its-still-bad)
 
@@ -21,7 +20,7 @@ These are parts of the code that do not work *incorrectly*, like [bugs and glitc
 [data/pokemon/pic_pointers.asm](https://github.com/pret/pokecrystal/blob/master/data/pokemon/pic_pointers.asm), [data/pokemon/unown_pic_pointers.asm](https://github.com/pret/pokecrystal/blob/master/data/pokemon/unown_pic_pointers.asm), and [data/trainers/pic_pointers.asm](https://github.com/pret/pokecrystal/blob/master/data/trainers/pic_pointers.asm) all have to use `dba_pic` instead of `dba`. This is a macro in [macros/data.asm](https://github.com/pret/pokecrystal/blob/master/macros/data.asm) that offsets banks by `PICS_FIX`:
 
 ```asm
-MACRO dba_pic ; dbw bank, address
+dba_pic: MACRO ; dbw bank, address
 	db BANK(\1) - PICS_FIX
 	dw \1
 ENDM
@@ -33,7 +32,7 @@ The offset is translated into a correct bank by `FixPicBank` in [engine/gfx/load
 FixPicBank:
 ; This is a thing for some reason.
 
-DEF PICS_FIX EQU $36
+PICS_FIX EQU $36
 GLOBAL PICS_FIX
 
 	push hl
@@ -50,7 +49,28 @@ GLOBAL PICS_FIX
 
 .PicsBanks:
 	db BANK("Pics 1")  ; BANK("Pics 1") + 0
-	...
+	db BANK("Pics 2")  ; BANK("Pics 1") + 1
+	db BANK("Pics 3")  ; BANK("Pics 1") + 2
+	db BANK("Pics 4")  ; BANK("Pics 1") + 3
+	db BANK("Pics 5")  ; BANK("Pics 1") + 4
+	db BANK("Pics 6")  ; BANK("Pics 1") + 5
+	db BANK("Pics 7")  ; BANK("Pics 1") + 6
+	db BANK("Pics 8")  ; BANK("Pics 1") + 7
+	db BANK("Pics 9")  ; BANK("Pics 1") + 8
+	db BANK("Pics 10") ; BANK("Pics 1") + 9
+	db BANK("Pics 11") ; BANK("Pics 1") + 10
+	db BANK("Pics 12") ; BANK("Pics 1") + 11
+	db BANK("Pics 13") ; BANK("Pics 1") + 12
+	db BANK("Pics 14") ; BANK("Pics 1") + 13
+	db BANK("Pics 15") ; BANK("Pics 1") + 14
+	db BANK("Pics 16") ; BANK("Pics 1") + 15
+	db BANK("Pics 17") ; BANK("Pics 1") + 16
+	db BANK("Pics 18") ; BANK("Pics 1") + 17
+	db BANK("Pics 19") ; BANK("Pics 1") + 18
+	db BANK("Pics 20") ; BANK("Pics 1") + 19
+	db BANK("Pics 21") ; BANK("Pics 1") + 20
+	db BANK("Pics 22") ; BANK("Pics 1") + 21
+	db BANK("Pics 23") ; BANK("Pics 1") + 22
 	db BANK("Pics 24") ; BANK("Pics 1") + 23
 ```
 
@@ -65,7 +85,7 @@ In [gfx/pics.asm](https://github.com/pret/pokecrystal/blob/master/gfx/pics.asm):
 
 ```asm
 ; PokemonPicPointers and UnownPicPointers are assumed to start at the same
-; address, but in different banks. This is enforced in layout.link.
+; address, but in different banks. This is enforced in pokecrystal.link.
 
 
 SECTION "Pic Pointers", ROMX
@@ -78,7 +98,7 @@ SECTION "Unown Pic Pointers", ROMX
 INCLUDE "data/pokemon/unown_pic_pointers.asm"
 ```
 
-In [layout.link](https://github.com/pret/pokecrystal/blob/master/layout.link):
+In [pokecrystal.link](https://github.com/pret/pokecrystal/blob/master/pokecrystal.link):
 
 ```
 ROMX $48
@@ -93,7 +113,7 @@ ROMX $49
 
 **Fix:**
 
-Don't enforce `org $4000` in [layout.link](https://github.com/pret/pokecrystal/blob/master/layout.link).
+Don't enforce `org $4000` in [pokecrystal.link](https://github.com/pret/pokecrystal/blob/master/pokecrystal.link).
 
 Edit `GetFrontpicPointer`:
 
@@ -101,18 +121,18 @@ Edit `GetFrontpicPointer`:
  	ld a, [wCurPartySpecies]
  	cp UNOWN
  	jr z, .unown
-+	ld hl, PokemonPicPointers
  	ld a, [wCurPartySpecies]
++	ld hl, PokemonPicPointers
  	ld d, BANK(PokemonPicPointers)
  	jr .ok
+
  .unown
-+	ld hl, UnownPicPointers
  	ld a, [wUnownLetter]
++	ld hl, UnownPicPointers
  	ld d, BANK(UnownPicPointers)
+
  .ok
--	; These are assumed to be at the same address in their respective banks.
--	assert PokemonPicPointers == UnownPicPointers
--	ld hl, PokemonPicPointers
+-	ld hl, PokemonPicPointers ; UnownPicPointers
  	dec a
  	ld bc, 6
  	call AddNTimes
@@ -122,14 +142,14 @@ And `GetMonBackpic`:
 
 ```diff
 -	; These are assumed to be at the same address in their respective banks.
--	assert PokemonPicPointers == UnownPicPointers
- 	ld hl, PokemonPicPointers
+-	ld hl, PokemonPicPointers ; UnownPicPointers
  	ld a, b
++	ld hl, PokemonPicPointers
  	ld d, BANK(PokemonPicPointers)
  	cp UNOWN
  	jr nz, .ok
-+	ld hl, UnownPicPointers
  	ld a, c
++	ld hl, UnownPicPointers
  	ld d, BANK(UnownPicPointers)
  .ok
  	dec a
@@ -149,12 +169,10 @@ In [gfx/footprints.asm](https://github.com/pret/pokecrystal/blob/master/gfx/foot
 ; then a row of the bottom two tiles for those eight footprints.
 
 ; These macros help extract the first and the last two tiles, respectively.
-DEF footprint_top    EQUS "0,                 2 * LEN_1BPP_TILE"
-DEF footprint_bottom EQUS "2 * LEN_1BPP_TILE, 2 * LEN_1BPP_TILE"
+footprint_top    EQUS "0,                 2 * LEN_1BPP_TILE"
+footprint_bottom EQUS "2 * LEN_1BPP_TILE, 2 * LEN_1BPP_TILE"
 
-Footprints:
 ; Entries correspond to Pokémon species, two apiece, 8 tops then 8 bottoms
-	table_width LEN_1BPP_TILE * 4, Footprints
 
 ; 001-008 top halves
 INCBIN "gfx/footprints/bulbasaur.1bpp",  footprint_top
@@ -184,10 +202,6 @@ INCBIN "gfx/footprints/wartortle.1bpp",  footprint_bottom
 Store footprints contiguously:
 
 ```asm
-
-Footprints:
-	table_width LEN_1BPP_TILE * 4, Footprints
-
 INCBIN "gfx/footprints/bulbasaur.1bpp"
 INCBIN "gfx/footprints/ivysaur.1bpp"
 INCBIN "gfx/footprints/venusaur.1bpp"
@@ -202,17 +216,6 @@ INCBIN "gfx/footprints/wartortle.1bpp"
 Edit `Pokedex_LoadAnyFootprint`:
 
 ```diff
- 	ld a, [wTempSpecies]
- 	dec a
- 	and %111
- 	swap a ; * $10
-+	add a, a
- 	ld l, a
- 	ld h, 0
- 	add hl, de
- 	ld de, Footprints
- 	add hl, de
-
 -	push hl
  	ld e, l
  	ld d, h
@@ -329,7 +332,7 @@ Edit `GetMapMusic`:
 	add_tm PSYCHIC_M    ; dd
 	...
 	add_tm NIGHTMARE    ; f2
-DEF NUM_TMS EQU const_value - TM01 - 2 ; discount ITEM_C3 and ITEM_DC
+NUM_TMS EQU const_value - TM01 - 2 ; discount ITEM_C3 and ITEM_DC
 ```
 
 `GetTMHMNumber` and `GetNumberedTMHM` in [engine/items/items.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/items.asm) have to compensate for this.
@@ -347,12 +350,12 @@ DEF NUM_TMS EQU const_value - TM01 - 2 ; discount ITEM_C3 and ITEM_DC
 > - $AA = 170: `POLKADOT_BOW` is for Jigglypuff
 > - $B4 = 180: `BRICK_PIECE` is for Machop
 >
-> Yellow was also being developed then, and it did the reverse, altering some Pokémon's data after they're caught to correspond to appropriate Gen 2 items:
+> Yellow was also being developed then, and it did the reverse, altering some catch rates to correspond to appropriate Gen 2 items:
 >
-> - Starter Pikachu's catch rate byte is overwritten with 163 = $A3 for `LIGHT_BALL`
-> - Wild-caught Kadabra's catch rate byte is overwritten with 96 = $60 for `TWISTEDSPOON`
->
-> (Yellow also directly changed Dragonair's catch rate to 27 and Dragonite's to 9, but this seems to have been only for adjusting their difficulty, since those meaninglessly correspond to `PROTEIN` and `ANTIDOTE`.)
+> - Starter Pikachu's catch rate became 163 = $A3 for `LIGHT_BALL`
+> - Wild Kadabra's catch rate became 96 = $60 for `TWISTEDSPOON`
+> - Wild Dragonair's catch rate became 27 = $1B for `PROTEIN`
+> - Wild Dragonite's catch rate became 9 = $09 for `ANTIDOTE`
 >
 > Most catch rates were left as gaps in the item list, and transformed into held items via the `TimeCapsule_CatchRateItems` table in [data/items/catch_rate_items.asm](https://github.com/pret/pokecrystal/blob/master/data/items/catch_rate_items.asm). For example, the 52 Pokémon with catch rate 45 would hold the gap `ITEM_2D`, except that gets transformed into `BITTER_BERRY`.
 >
@@ -410,7 +413,7 @@ Edit [engine/items/items.asm](https://github.com/pret/pokecrystal/blob/master/en
 
 `PokedexDataPointerTable` in [data/pokemon/dex_entry_pointers.asm](https://github.com/pret/pokecrystal/blob/master/data/pokemon/dex_entry_pointers.asm) is a table of `dw`, not `dba`, yet there are four banks used for Pokédex entries. The correct bank is derived from the species ID at the beginning of each Pokémon's base stats. (This is the only use the base stat species ID has.)
 
-Three separate routines do the same derivation: `GetDexEntryPointer` in [engine/pokedex/pokedex_2.asm](https://github.com/pret/pokecrystal/blob/master/engine/pokedex/pokedex_2.asm):
+Three separate routines do the same derivation; `GetDexEntryPointer` in [engine/pokedex/pokedex_2.asm](https://github.com/pret/pokecrystal/blob/master/engine/pokedex/pokedex_2.asm):
 
 ```asm
 GetDexEntryPointer:
@@ -446,10 +449,10 @@ GetDexEntryPointer:
 	db BANK("Pokedex Entries 193-251")
 ```
 
-`HeavyBall_GetDexEntryBank` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
+`GetPokedexEntryBank` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
 
 ```asm
-HeavyBall_GetDexEntryBank:
+GetPokedexEntryBank:
 	push hl
 	push de
 	ld a, [wEnemyMonSpecies]
@@ -499,165 +502,7 @@ PokedexShow_GetDexEntryBank:
 	db BANK("Pokedex Entries 193-251")
 ```
 
-**Fix:**
-
-Use `dba` instead of `dw` in `PokedexDataPointerTable`. Make sure to edit the `table_width` line to specify a width of 3 instead of 2.
-
-Delete `HeavyBall_GetDexEntryBank` and `PokedexShow_GetDexEntryBank`. You can also delete `NUM_DEX_ENTRY_BANKS` from [constants/pokemon_data_constants.asm](https://github.com/pret/pokecrystal/blob/master/constants/pokemon_data_constants.asm).
-
-Edit [engine/pokedex/pokedex_2.asm](https://github.com/pret/pokecrystal/blob/master/engine/pokedex/pokedex_2.asm):
-
-```diff
- GetDexEntryPointer:
- ; return dex entry pointer b:de
- 	push hl
- 	ld hl, PokedexDataPointerTable
- 	ld a, b
- 	dec a
- 	ld d, 0
- 	ld e, a
- 	add hl, de
- 	add hl, de
--	ld e, [hl]
--	inc hl
--	ld d, [hl]
--	push de
--	rlca
--	rlca
--	maskbits NUM_DEX_ENTRY_BANKS
--	ld hl, .PokedexEntryBanks
--	ld d, 0
--	ld e, a
--	add hl, de
--	ld b, [hl]
--	pop de
-+	add hl, de
-+	; b = bank
-+	ld a, [hli]
-+	ld b, a
-+	; de = address
-+	ld a, [hli]
-+	ld e, a
-+	ld d, [hl]
- 	pop hl
- 	ret
--
--.PokedexEntryBanks:
--	db BANK("Pokedex Entries 001-064")
--	db BANK("Pokedex Entries 065-128")
--	db BANK("Pokedex Entries 129-192")
--	db BANK("Pokedex Entries 193-251")
-```
-
-Edit [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
-
-```diff
- HeavyBallMultiplier:
- ; subtract 20 from catch rate if weight < 102.4 kg
- ; else add 0 to catch rate if weight < 204.8 kg
- ; else add 20 to catch rate if weight < 307.2 kg
- ; else add 30 to catch rate if weight < 409.6 kg
- ; else add 40 to catch rate
- 	ld a, [wEnemyMonSpecies]
- 	ld hl, PokedexDataPointerTable
- 	dec a
- 	ld e, a
- 	ld d, 0
- 	add hl, de
- 	add hl, de
-+	add hl, de
-+	; d = bank, hl = address
-+	ld a, BANK(PokedexDataPointerTable)
-+	call GetFarByte
-+	push af
-+	inc hl
- 	ld a, BANK(PokedexDataPointerTable)
- 	call GetFarWord
-+	pop de
-
- .SkipText:
--	call HeavyBall_GetDexEntryBank
-+	ld a, d
- 	call GetFarByte
- 	inc hl
- 	cp "@"
- 	jr nz, .SkipText
-
--	call HeavyBall_GetDexEntryBank
-+	ld a, d
- 	push bc
- 	inc hl
- 	inc hl
- 	call GetFarWord
-```
-
-And edit [engine/pokegear/radio.asm](https://github.com/pret/pokecrystal/blob/master/engine/pokegear/radio.asm):
-
-```diff
- PokedexShow2:
- 	ld a, [wCurPartySpecies]
- 	dec a
- 	ld hl, PokedexDataPointerTable
- 	ld c, a
- 	ld b, 0
- 	add hl, bc
- 	add hl, bc
-+	add hl, bc
-+	; b = bank
-+	ld a, BANK(PokedexDataPointerTable)
-+	call GetFarByte
-+	ld b, a
-+	inc hl
-+	; hl = address
- 	ld a, BANK(PokedexDataPointerTable)
- 	call GetFarWord
--	call PokedexShow_GetDexEntryBank
-+	ld a, b
- 	push af
- 	push hl
- 	call CopyDexEntryPart1
-```
-
-
-## The 6-bit caught level can only record up to level 63
-
-Crystal added the Poké Seer, who tells you your Pokémon's caught data: where it was caught, what time, and at what level. The status screen also displays the gender of its Original Trainer, since Crystal added player genders. This data is packed into two previously-unused bytes in the `box_struct`; from [macros/wram.asm](https://github.com/pret/pokecrystal/blob/master/macros/wram.asm):
-
-```asm
-MACRO box_struct
-\1Species::        db
-...
-\1CaughtData::
-\1CaughtTime::
-\1CaughtLevel::    db
-\1CaughtGender::
-\1CaughtLocation:: db
-\1Level::          db
-\1BoxEnd::
-ENDM
-```
-
-These four pieces of data are packed into two bytes using the bitmasks in [constants/pokemon_data_constants.asm](https://github.com/pret/pokecrystal/blob/master/constants/pokemon_data_constants.asm):
-
-```asm
-DEF CAUGHT_TIME_MASK  EQU %11000000
-DEF CAUGHT_LEVEL_MASK EQU %00111111
-
-DEF CAUGHT_GENDER_MASK   EQU %10000000
-DEF CAUGHT_LOCATION_MASK EQU %01111111
-```
-
-The caught level only uses six bits, so it can only record levels as high as 2^6 − 1 = 63. If a Pokémon is caught at level 64 or higher, its level overflows into the two bits used for the caught time, before the actual caught time is stored in the same byte with a bitwise `or` operation. For example, a Pokémon caught at level 70 (`%01000110`) in the morning (`%00000000`) would be reported as caught at level 6 (`%000110` in the low six bits) during the day (`%01` in the high two bits).
-
-This limitation is probably why Lugia and Ho-Oh are both encountered at level 60 in Crystal, instead of level 70 in GS.
-
-**Possible fixes:**
-
-- Record any level higher than 63 as level 0, and have the Poké Seer report 0 as "very high".
-- Use seven bits for the level (which can store up to level 2^7 − 1 = 127) and one for the time, simply recording 0 for morning or day and 1 for night.
-- Move some data around into unused bits elsewhere in the `box_struct`, such as the high bit of `MON_LEVEL`, or the three high bits of `MON_EXP`.
-- Add another byte for more caught data, making the `box_struct` larger; this would affect PC Box storage.
-- Free up some other bytes in the `box_struct` (e.g. by [replacing](https://github.com/pret/pokecrystal/wiki/Replace-stat-experience-with-EVs) 2-byte stat experience with 1-byte EVs).
+**Fix:** Use `dba` instead of `dw` in `PokedexDataPointerTable`. Then edit [home.asm](https://github.com/pret/pokecrystal/blob/master/home.asm) to contain a single copy of the `PokedexDataPointerTable` lookup code, updated to work with 3-byte `dba` entries and get the bank from the first entry byte. Delete the three separate lookup routines and use the new one (placed in [home.asm](https://github.com/pret/pokecrystal/blob/master/home.asm) so it can be called from any bank.)
 
 
 ## Identical sine wave code and data is repeated five times
@@ -719,7 +564,7 @@ CelebiEvent_Cosine:
 They all rely on `calc_sine_wave` in [macros/code.asm](https://github.com/pret/pokecrystal/blob/master/macros/code.asm):
 
 ```asm
-MACRO calc_sine_wave
+calc_sine_wave: MACRO
 ; input: a = a signed 6-bit value
 ; output: a = d * sin(a * pi/32)
 	and %111111
@@ -770,13 +615,13 @@ ENDM
 And on `sine_table` in [macros/data.asm](https://github.com/pret/pokecrystal/blob/master/macros/data.asm):
 
 ```asm
-MACRO sine_table
+sine_table: MACRO
 ; \1 samples of sin(x) from x=0 to x<32768 (pi radians)
-	DEF x = 0
-	rept \1
-		dw (sin(x) + (sin(x) & $ff)) >> 8 ; round up
-		DEF x += DIV(32768, \1) ; a circle has 65536 "degrees"
-	endr
+x = 0
+rept \1
+	dw (sin(x) + (sin(x) & $ff)) >> 8 ; round up
+x = x + DIV(32768, \1) ; a circle has 65536 "degrees"
+endr
 ENDM
 ```
 

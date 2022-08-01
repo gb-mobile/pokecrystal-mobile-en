@@ -5,7 +5,7 @@ _Diploma:
 
 PlaceDiplomaOnScreen:
 	call ClearBGPalettes
-	call ClearTilemap
+	call ClearTileMap
 	call ClearSprites
 	call DisableLCD
 	ld hl, DiplomaGFX
@@ -52,7 +52,7 @@ PlaceDiplomaOnScreen:
 PrintDiplomaPage2:
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	ld a, " "
+	ld a, $7f
 	call ByteFill
 	ld hl, DiplomaPage2Tilemap
 	decoord 0, 0
@@ -86,6 +86,3 @@ INCBIN "gfx/diploma/page1.tilemap"
 
 DiplomaPage2Tilemap:
 INCBIN "gfx/diploma/page2.tilemap"
-
-Diploma_DummyFunction: ; unreferenced
-	ret

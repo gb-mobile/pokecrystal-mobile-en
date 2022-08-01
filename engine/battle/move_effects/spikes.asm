@@ -1,10 +1,12 @@
 BattleCommand_Spikes:
+; spikes
+
 	ld hl, wEnemyScreens
 	ldh a, [hBattleTurn]
 	and a
-	jr z, .got_screens
+	jr z, .asm_3768e
 	ld hl, wPlayerScreens
-.got_screens
+.asm_3768e
 
 ; Fails if spikes are already down!
 

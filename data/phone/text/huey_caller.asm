@@ -1,4 +1,4 @@
-HueyBattleRematchText:
+UnknownText_0x1748ea:
 	text "Hey, I challenge"
 	line "you to a battle!"
 
@@ -14,11 +14,11 @@ HueyBattleRematchText:
 	line "over here pronto!"
 	done
 
-HueyHangUpText:
+UnknownText_0x174962:
 	text "See ya!"
 	done
 
-HueyWeHaveToBattleAgainSometimeText:
+UnknownText_0x17496b:
 	text "We have to battle"
 	line "again sometime."
 
@@ -29,7 +29,7 @@ HueyWeHaveToBattleAgainSometimeText:
 	line "till I win."
 	done
 
-HueyReminderText:
+UnknownText_0x1749c7:
 	text "Hey, you'd better"
 	line "not have forgotten"
 	cont "about our battle!"

@@ -1,12 +1,12 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const OLIVINECAFE_SAILOR1
 	const OLIVINECAFE_FISHING_GURU
 	const OLIVINECAFE_SAILOR2
 
 OlivineCafe_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 OlivineCafeStrengthSailorScript:
 	faceplayer
@@ -14,7 +14,7 @@ OlivineCafeStrengthSailorScript:
 	checkevent EVENT_GOT_HM04_STRENGTH
 	iftrue .GotStrength
 	writetext OlivineCafeStrengthSailorText
-	promptbutton
+	buttonsound
 	verbosegiveitem HM_STRENGTH
 	setevent EVENT_GOT_HM04_STRENGTH
 .GotStrength:
@@ -79,15 +79,15 @@ OlivineCafeSailorText:
 OlivineCafe_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, OLIVINE_CITY, 7
 	warp_event  3,  7, OLIVINE_CITY, 7
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 3 ; object events
 	object_event  4,  3, SPRITE_SAILOR, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, OlivineCafeStrengthSailorScript, -1
 	object_event  7,  3, SPRITE_FISHING_GURU, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, OlivineCafeFishingGuruScript, -1
 	object_event  6,  6, SPRITE_SAILOR, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, OlivineCafeSailorScript, -1

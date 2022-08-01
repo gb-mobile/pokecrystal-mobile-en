@@ -1,19 +1,18 @@
 Music_TinTower:
-	channel_count 4
-	channel 1, Music_TinTower_Ch1
-	channel 2, Music_TinTower_Ch2
-	channel 3, Music_TinTower_Ch3
-	channel 4, Music_TinTower_Ch4
+	musicheader 4, 1, Music_TinTower_Ch1
+	musicheader 1, 2, Music_TinTower_Ch2
+	musicheader 1, 3, Music_TinTower_Ch3
+	musicheader 1, 4, Music_TinTower_Ch4
 
 Music_TinTower_Ch1:
 	tempo 208
-	volume 7, 7
-	duty_cycle 3
-	pitch_offset 4
-	vibrato 8, 4, 5
-.mainloop:
-	stereo_panning TRUE, FALSE
-	note_type 12, 10, 5
+	volume $77
+	dutycycle $3
+	tone $0004
+	vibrato $8, $45
+Music_TinTower_branch_f682a:
+	stereopanning $f0
+	notetype $c, $a5
 	octave 3
 	note G_, 4
 	note C_, 4
@@ -64,25 +63,25 @@ Music_TinTower_Ch1:
 	note G_, 4
 	octave 3
 	note G_, 8
-	volume_envelope 10, 2
+	intensity $a2
 	octave 2
 	note G_, 4
 	note G_, 12
 	note G_, 4
 	note G_, 8
-	volume_envelope 10, 7
+	intensity $a7
 	note G_, 4
-	volume_envelope 10, 2
+	intensity $a2
 	note G#, 4
 	note G#, 8
-	volume_envelope 10, 7
+	intensity $a7
 	note G_, 4
-	volume_envelope 10, 2
+	intensity $a2
 	note G#, 4
 	note G#, 8
-	volume_envelope 10, 7
+	intensity $a7
 	note A#, 4
-	volume_envelope 10, 2
+	intensity $a2
 	note G_, 4
 	note G_, 12
 	note G_, 4
@@ -91,19 +90,19 @@ Music_TinTower_Ch1:
 	note G_, 12
 	note G_, 4
 	note G_, 8
-	volume_envelope 10, 5
+	intensity $a5
 	octave 3
 	note A#, 4
-	sound_loop 0, .mainloop
+	loopchannel 0, Music_TinTower_branch_f682a
 
 Music_TinTower_Ch2:
-	duty_cycle 3
-	pitch_offset 2
-	vibrato 24, 4, 4
-.mainloop:
-	stereo_panning TRUE, TRUE
-.loop1:
-	note_type 12, 11, 5
+	dutycycle $3
+	tone $0002
+	vibrato $18, $44
+Music_TinTower_branch_f6893:
+	stereopanning $ff
+Music_TinTower_branch_f6895:
+	notetype $c, $b5
 	octave 4
 	note C_, 4
 	note C_, 4
@@ -132,28 +131,28 @@ Music_TinTower_Ch2:
 	note C_, 4
 	octave 4
 	note C_, 8
-	stereo_panning FALSE, TRUE
-	sound_loop 2, .loop1
-	volume_envelope 11, 2
+	stereopanning $f
+	loopchannel 2, Music_TinTower_branch_f6895
+	intensity $b2
 	octave 3
 	note C_, 4
 	note C_, 12
 	note C_, 4
 	note C_, 8
-	volume_envelope 11, 7
+	intensity $b7
 	note C_, 4
-	volume_envelope 11, 2
+	intensity $b2
 	note C#, 4
 	note C#, 8
-	volume_envelope 11, 7
+	intensity $b7
 	note C_, 4
-	volume_envelope 11, 2
+	intensity $b2
 	note C#, 4
 	note C#, 8
-	volume_envelope 11, 7
+	intensity $b7
 	note D#, 4
-	volume_envelope 9, 0
-	stereo_panning TRUE, TRUE
+	intensity $90
+	stereopanning $ff
 	note G_, 4
 	octave 4
 	note C_, 4
@@ -181,17 +180,17 @@ Music_TinTower_Ch2:
 	note C_, 4
 	octave 4
 	note C_, 6
-	volume_envelope 9, 5
+	intensity $95
 	note C#, 2
-	sound_loop 0, .mainloop
+	loopchannel 0, Music_TinTower_branch_f6893
 
 Music_TinTower_Ch3:
-	note_type 12, 1, 4
-.mainloop:
-	rest 16
-	rest 16
-	rest 16
-	rest 10
+	notetype $c, $14
+Music_TinTower_branch_f68fb:
+	note __, 16
+	note __, 16
+	note __, 16
+	note __, 10
 	octave 2
 	note G_, 2
 	note G#, 2
@@ -213,80 +212,80 @@ Music_TinTower_Ch3:
 	note C_, 8
 	octave 3
 	note C_, 1
-	rest 3
+	note __, 3
 	note C_, 1
-	rest 11
+	note __, 11
 	note C_, 1
-	rest 3
+	note __, 3
 	note C_, 1
-	rest 7
+	note __, 7
 	note C_, 4
 	note C#, 1
-	rest 3
+	note __, 3
 	note C#, 1
-	rest 7
+	note __, 7
 	note C_, 4
 	note C#, 1
-	rest 3
+	note __, 3
 	note C#, 1
-	rest 7
+	note __, 7
 	note D#, 4
-	stereo_panning FALSE, TRUE
+	stereopanning $f
 	note C_, 1
-	rest 3
+	note __, 3
 	note C_, 1
-	rest 11
+	note __, 11
 	note C_, 1
-	rest 3
+	note __, 3
 	note C_, 1
-	rest 3
-	stereo_panning TRUE, TRUE
+	note __, 3
+	stereopanning $ff
 	octave 2
 	note A#, 2
 	octave 3
 	note C_, 2
 	note C#, 2
 	note D#, 2
-	stereo_panning FALSE, TRUE
+	stereopanning $f
 	note C_, 1
-	rest 3
+	note __, 3
 	note C_, 1
-	rest 11
+	note __, 11
 	note C_, 1
-	rest 3
+	note __, 3
 	note C_, 1
-	rest 11
-	stereo_panning TRUE, TRUE
-	sound_loop 0, .mainloop
+	note __, 11
+	stereopanning $ff
+	loopchannel 0, Music_TinTower_branch_f68fb
 
 Music_TinTower_Ch4:
-	toggle_noise 0
-	drum_speed 12
-.mainloop:
-	stereo_panning FALSE, TRUE
-	drum_note 8, 2
-	stereo_panning TRUE, FALSE
-	drum_note 8, 1
-	drum_note 8, 1
-	stereo_panning FALSE, TRUE
-	drum_note 8, 2
-	stereo_panning TRUE, FALSE
-	drum_note 6, 4
-	stereo_panning FALSE, TRUE
-	drum_note 8, 2
-	drum_note 8, 2
-	drum_note 6, 2
-	stereo_panning TRUE, FALSE
-	drum_note 8, 2
-	stereo_panning FALSE, TRUE
-	drum_note 8, 1
-	drum_note 8, 1
-	stereo_panning TRUE, FALSE
-	drum_note 8, 2
-	stereo_panning FALSE, TRUE
-	drum_note 6, 4
-	stereo_panning TRUE, FALSE
-	drum_note 8, 2
-	drum_note 8, 2
-	drum_note 6, 2
-	sound_loop 0, .mainloop
+	togglenoise $0
+	notetype $c
+Music_TinTower_branch_f694c:
+	stereopanning $f
+	note G_, 2
+	stereopanning $f0
+	note G_, 1
+	note G_, 1
+	stereopanning $f
+	note G_, 2
+	stereopanning $f0
+	note F_, 4
+	stereopanning $f
+	note G_, 2
+	note G_, 2
+	note F_, 2
+	stereopanning $f0
+	note G_, 2
+	stereopanning $f
+	note G_, 1
+	note G_, 1
+	stereopanning $f0
+	note G_, 2
+	stereopanning $f
+	note F_, 4
+	stereopanning $f0
+	note G_, 2
+	note G_, 2
+	note F_, 2
+	loopchannel 0, Music_TinTower_branch_f694c

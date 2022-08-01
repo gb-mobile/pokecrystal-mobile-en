@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const BILLSHOUSE_GRAMPS
 
 BillsHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 BillsGrandpa:
 	faceplayer
@@ -16,7 +16,7 @@ BillsGrandpa:
 	checkevent EVENT_MET_BILLS_GRANDPA
 	iftrue .MetGrandpa
 	writetext BillsGrandpaIntroText
-	promptbutton
+	buttonsound
 	setevent EVENT_MET_BILLS_GRANDPA
 .MetGrandpa:
 	checkevent EVENT_SHOWED_PICHU_TO_BILLS_GRANDPA
@@ -30,7 +30,7 @@ BillsGrandpa:
 	checkevent EVENT_SHOWED_LICKITUNG_TO_BILLS_GRANDPA
 	iftrue .ShowedLickitung
 	writetext BillsGrandpaLickitungText
-	promptbutton
+	buttonsound
 	writetext BillsGrandpaAskToSeeMonText
 	yesorno
 	iffalse .SaidNo
@@ -44,7 +44,7 @@ BillsGrandpa:
 
 .GotEverstone:
 	writetext BillsGrandpaOddishText
-	promptbutton
+	buttonsound
 	writetext BillsGrandpaAskToSeeMonText
 	yesorno
 	iffalse .SaidNo
@@ -58,7 +58,7 @@ BillsGrandpa:
 
 .GotLeafStone:
 	writetext BillsGrandpaStaryuText
-	promptbutton
+	buttonsound
 	writetext BillsGrandpaAskToSeeMonText
 	yesorno
 	iffalse .SaidNo
@@ -74,7 +74,7 @@ BillsGrandpa:
 	checkver
 	iftrue .AskVulpix
 	writetext BillsGrandpaGrowlitheText
-	promptbutton
+	buttonsound
 	writetext BillsGrandpaAskToSeeMonText
 	yesorno
 	iffalse .SaidNo
@@ -88,7 +88,7 @@ BillsGrandpa:
 
 .AskVulpix:
 	writetext BillsGrandpaVulpixText
-	promptbutton
+	buttonsound
 	writetext BillsGrandpaAskToSeeMonText
 	yesorno
 	iffalse .SaidNo
@@ -102,7 +102,7 @@ BillsGrandpa:
 
 .GotFireStone:
 	writetext BillsGrandpaPichuText
-	promptbutton
+	buttonsound
 	writetext BillsGrandpaAskToSeeMonText
 	yesorno
 	iffalse .SaidNo
@@ -168,7 +168,7 @@ BillsGrandpa:
 
 .ExcitedToSee:
 	writetext BillsGrandpaExcitedToSeeText
-	promptbutton
+	buttonsound
 	end
 
 .SaidNo:
@@ -179,12 +179,12 @@ BillsGrandpa:
 
 .CorrectPokemon:
 	writetext BillsGrandpaShownPokemonText
-	promptbutton
+	buttonsound
 	end
 
 .ReceiveItem:
 	writetext BillsGrandpaTokenOfAppreciationText
-	promptbutton
+	buttonsound
 	end
 
 .JustShowedSomething:
@@ -354,13 +354,13 @@ BillsGrandpaPichuText:
 BillsHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, ROUTE_25, 1
 	warp_event  3,  7, ROUTE_25, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  2,  3, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_UP, 0, 2, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, BillsGrandpa, -1

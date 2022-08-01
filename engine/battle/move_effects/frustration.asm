@@ -1,12 +1,13 @@
 BattleCommand_FrustrationPower:
-; BUG: Return and Frustration deal no damage when the user's happiness is low or high, respectively (see docs/bugs_and_glitches.md)
+; frustrationpower
+
 	push bc
 	ld hl, wBattleMonHappiness
 	ldh a, [hBattleTurn]
 	and a
-	jr z, .ok
+	jr z, .got_happiness
 	ld hl, wEnemyMonHappiness
-.ok
+.got_happiness
 	ld a, $ff
 	sub [hl]
 	ldh [hMultiplicand + 2], a

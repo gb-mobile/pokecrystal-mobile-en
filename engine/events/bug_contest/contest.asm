@@ -1,7 +1,7 @@
 GiveParkBalls:
 	xor a
 	ld [wContestMon], a
-	ld a, BUG_CONTEST_BALLS
+	ld a, 20
 	ld [wParkBallsRemaining], a
 	farcall StartBugContestTimer
 	ret
@@ -18,24 +18,26 @@ BugCatchingContestBattleScript::
 BugCatchingContestOverScript::
 	playsound SFX_ELEVATOR_END
 	opentext
-	writetext BugCatchingContestTimeUpText
+	writetext BugCatchingContestText_BeeepTimesUp
 	waitbutton
 	sjump BugCatchingContestReturnToGateScript
 
 BugCatchingContestOutOfBallsScript:
 	playsound SFX_ELEVATOR_END
 	opentext
-	writetext BugCatchingContestIsOverText
+	writetext BugCatchingContestText_ContestIsOver
 	waitbutton
 
 BugCatchingContestReturnToGateScript:
 	closetext
-	jumpstd BugContestResultsWarpScript
+	jumpstd bugcontestresultswarp
 
-BugCatchingContestTimeUpText:
-	text_far _BugCatchingContestTimeUpText
+BugCatchingContestText_BeeepTimesUp:
+	; ANNOUNCER: BEEEP! Time's up!
+	text_far UnknownText_0x1bd2ca
 	text_end
 
-BugCatchingContestIsOverText:
-	text_far _BugCatchingContestIsOverText
+BugCatchingContestText_ContestIsOver:
+	; ANNOUNCER: The Contest is over!
+	text_far UnknownText_0x1bd2e7
 	text_end

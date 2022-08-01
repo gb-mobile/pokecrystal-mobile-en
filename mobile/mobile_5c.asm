@@ -3,27 +3,27 @@ Function170000:
 	ld [wPlayerTrademonSpecies], a
 	ld hl, $c62e
 	ld de, wPlayerTrademonSenderName
-	ld bc, $0005
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, $50
 	ld [de], a
-	ld hl, $c663
+	ld hl, $c62e + PLAYER_NAME_LENGTH - 1 + $30
 	ld de, wPlayerTrademonOTName
-	ld bc, $0005
+	ld bc, MON_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, $50
 	ld [de], a
-	ld hl, $c648
+	ld hl, $c62e + PLAYER_NAME_LENGTH - 1 + MON_DVS
 	ld a, [hli]
 	ld [wPlayerTrademonDVs], a
 	ld a, [hl]
 	ld [wPlayerTrademonDVs + 1], a
-	ld hl, $c639
+	ld hl, $c62e + PLAYER_NAME_LENGTH - 1 + MON_ID
 	ld a, [hli]
 	ld [wPlayerTrademonID], a
 	ld a, [hl]
 	ld [wPlayerTrademonID + 1], a
-	ld bc, $c633
+	ld bc, $c62e + PLAYER_NAME_LENGTH - 1
 	farcall GetCaughtGender
 	ld a, c
 	ld [wPlayerTrademonCaughtData], a
@@ -31,38 +31,38 @@ Function170000:
 	ld [wc74e], a
 	ld hl, $c608
 	ld de, $d800
-	ld bc, $008f
+	ld bc, $008f + 2 + 2 + 5
 	call CopyBytes
 	ret
 
 Function17005a:
 	ld a, $5
-	call OpenSRAM
-	ld a, [$a824]
+	call GetSRAMBank
+	ld a, [s5_a824]
 	ld [wOTTrademonSpecies], a
-	ld hl, $a827
+	ld hl, s5_a827
 	ld de, wOTTrademonSenderName
-	ld bc, NAME_LENGTH_JAPANESE - 1
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, "@"
 	ld [de], a
-	ld hl, $a85c
+	ld hl, s5_a85c
 	ld de, wOTTrademonOTName
-	ld bc, NAME_LENGTH_JAPANESE - 1
+	ld bc, MON_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, "@"
 	ld [de], a
-	ld hl, $a841
+	ld hl, s5_a82c + MON_DVS
 	ld a, [hli]
 	ld [wOTTrademonDVs], a
 	ld a, [hl]
 	ld [wOTTrademonDVs + 1], a
-	ld hl, $a832
+	ld hl, s5_a82c + MON_ID
 	ld a, [hli]
 	ld [wOTTrademonID], a
 	ld a, [hl]
 	ld [wOTTrademonID + 1], a
-	ld bc, $a82c
+	ld bc, s5_a82c
 	farcall GetCaughtGender
 	ld a, c
 	ld [wOTTrademonCaughtData], a
@@ -75,17 +75,17 @@ INCLUDE "engine/events/battle_tower/battle_tower.asm"
 
 Function170be4:
 	ld a, BANK(s5_a894)
-	call OpenSRAM
+	call GetSRAMBank
 	xor a
 	ld hl, s5_a894
-	ld bc, 6 + 2
+	ld bc, $0008
 	call ByteFill
 	call CloseSRAM
 	ret
 
 Clears5_a89a:
 	ld a, BANK(s5_a89a)
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, s5_a89a
 	xor a
 	ld [hli], a
@@ -93,9 +93,9 @@ Clears5_a89a:
 	call CloseSRAM
 	ret
 
-Function170c06: ; unreferenced
+Function170c06:
 	ld a, BANK(s5_a894)
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, s5_a894
 	ld a, [wBattleResult]
 	and a ; WIN?
@@ -196,7 +196,7 @@ Function170c06: ; unreferenced
 	ret
 
 Function170c8b:
-	ld hl, wLastEnemyCounterMove
+	ld hl, $d820 + $f1 + 17;$c608 + $f1 + 17
 	ld b, $5
 .asm_170c90
 	ld a, [hl]
@@ -278,9 +278,9 @@ Function170cc6:
 Function170d02:
 	ld a, $1
 	ldh [rVBK], a
-	ld de, PichuBorderMobileGFX
+	ld de, GFX_171848
 	ld hl, vTiles0 tile $c1
-	lb bc, BANK(PichuBorderMobileGFX), 24
+	lb bc, BANK(GFX_171848), 24
 	call Get2bpp
 	xor a
 	ldh [rVBK], a
@@ -292,8 +292,8 @@ INCBIN "gfx/mobile/pichu_animated.2bpp.lz"
 ElectroBallMobileGFX:
 INCBIN "gfx/mobile/electro_ball.2bpp.lz"
 
-PichuBorderMobileGFX:
-INCBIN "gfx/mobile/pichu_border.2bpp"
+GFX_171848:
+INCBIN "gfx/unknown/171848.2bpp"
 
 Function1719c8:
 	ldh a, [hInMenu]
@@ -346,7 +346,16 @@ Function171a11:
 	ret
 
 Function171a36:
-	jumptable Jumptable_171a45, wcd49
+	ld a, [wcd49]
+	ld e, a
+	ld d, 0
+	ld hl, Jumptable_171a45
+	add hl, de
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	jp hl
 
 Jumptable_171a45:
 	dw Function171a95
@@ -371,15 +380,15 @@ Function171a5d:
 	jp Function171c66
 
 .asm_171a6a
-	ld a, MOBILEAPI_00
-	call MobileAPI
-	ld [wMobileErrorCodeBuffer], a
+	ld a, $0
+	call Function3e32
+	ld [wc300], a
 	ld a, l
-	ld [wMobileErrorCodeBuffer + 1], a
+	ld [wc301], a
 	ld a, h
-	ld [wMobileErrorCodeBuffer + 2], a
-	ld a, MOBILEAPI_05
-	call MobileAPI
+	ld [wc302], a
+	ld a, $a
+	call Function3e32
 	ldh a, [rSVBK]
 	push af
 	ld a, $1
@@ -399,16 +408,16 @@ Function171a95:
 	jp Function171c66
 
 String_171aa7:
-	db   "モバイルアダプタに"
-	next "せつぞく　しています"
-	next "しばらく　おまちください"
+	db   "Connecting to";"モバイルアダプタに"
+	next "MOBILE ADAPTER…";"せつぞく　しています"
+	;next "しばらく　おまちください"
 	db   "@"
 
 Function171ac9:
 	ld de, wcd81
 	ld hl, $5c
-	ld a, MOBILEAPI_01
-	call MobileAPI
+	ld a, $2
+	call Function3e32
 	jp Function171c66
 
 Function171ad7:
@@ -417,8 +426,8 @@ Function171ad7:
 	ld bc, $66
 	call ByteFill
 	ld de, $c608
-	ld a, MOBILEAPI_06
-	call MobileAPI
+	ld a, $c
+	call Function3e32
 	jp Function171c66
 
 Function171aec:
@@ -484,24 +493,24 @@ Function171b42:
 Function171b4b:
 	depixel 8, 2
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	call _InitSpriteAnimStruct
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
 	ld a, $8
 	ld [hl], a
 
 	depixel 8, 19
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	call _InitSpriteAnimStruct
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
 	ld a, $9
 	ld [hl], a
 
 	depixel 17, 14, 2, 0
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
-	call InitSpriteAnimStruct
-	ld hl, SPRITEANIMSTRUCT_VAR1
+	call _InitSpriteAnimStruct
+	ld hl, SPRITEANIMSTRUCT_0C
 	add hl, bc
 	ld a, $a
 	ld [hl], a
@@ -579,10 +588,10 @@ Function171bdc:
 	ret
 
 Function171beb:
-	ld a, $5
-	call OpenSRAM
+	ld a, BANK(s5_aa4a)
+	call GetSRAMBank
 	ld a, [wcd4a]
-	ld [$aa4a], a
+	ld [s5_aa4a], a
 	call CloseSRAM
 	ld hl, MenuHeader_171c6b
 	call LoadMenuHeader
@@ -645,31 +654,31 @@ MenuHeader_171c6b:
 	db 0 ; default option
 
 String_171c73:
-	db   "モバイルセンターを　けってい"
-	next "しました@"
+	db   "MOBILE CENTER";"モバイルセンターを　けってい"
+	next "set.@";"しました@"
 
 Function171c87:
 	call DisableLCD
-	ld hl, AsciiFontGFX
+	ld hl, GFX_171db1
 	ld de, vTiles2 tile $00
 	ld bc, $6e0
 	call CopyBytes
-	ld hl, PasswordSlowpokeLZ
+	ld hl, LZ_172abd
 	ld de, vTiles0 tile $00
 	call Decompress
 	call EnableLCD
-	ld hl, PasswordTopTilemap
+	ld hl, Tilemap_172491
 	decoord 0, 0
 	ld bc, $168
 	call CopyBytes
-	ld hl, MobilePasswordAttrmap
-	decoord 0, 0, wAttrmap
+	ld hl, Attrmap_1727ed
+	decoord 0, 0, wAttrMap
 	ld bc, $168
 	call CopyBytes
 	hlcoord 3, 2
 	ld de, String_172e31
 	call PlaceString
-	hlcoord 3, 16
+	hlcoord 2, 16;3, 16
 	ld de, String_172e3f
 	call PlaceString
 	ret
@@ -679,7 +688,7 @@ Function171ccd:
 	push af
 	ld a, $5
 	ldh [rSVBK], a
-	ld hl, MobilePasswordPalettes
+	ld hl, Palette_171d71
 	ld de, wBGPals1
 	ld bc, 8 palettes
 	call CopyBytes
@@ -702,40 +711,40 @@ Function171cf0:
 	xor $1
 	ld [wcd4b], a
 	and a
-	jr nz, .shifted
-	ld hl, PasswordBottomTilemap
+	jr nz, .asm_171d16
+	ld hl, Tilemap_17251d
 	decoord 0, 7
 	ld bc, $8c
 	call CopyBytes
-	hlcoord 3, 16
+	hlcoord 2, 16;3, 16
 	ld de, String_172e3f
 	jp PlaceString
 
-.shifted
-	ld hl, PasswordShiftTilemap
+.asm_171d16
+	ld hl, Tilemap_1725f9
 	decoord 0, 7
 	ld bc, $8c
 	call CopyBytes
-	hlcoord 3, 16
+	hlcoord 2, 16;3, 16
 	ld de, String_172e4e
 	jp PlaceString
 
 Function171d2b:
 	call DisableLCD
-	ld hl, AsciiFontGFX
+	ld hl, GFX_171db1
 	ld de, vTiles2 tile $00
 	ld bc, $6e0
 	call CopyBytes
-	ld hl, PasswordSlowpokeLZ
+	ld hl, LZ_172abd
 	ld de, vTiles0 tile $00
 	call Decompress
 	call EnableLCD
-	ld hl, ChooseMobileCenterTilemap
+	ld hl, Tilemap_172685
 	decoord 0, 0
 	ld bc, $168
 	call CopyBytes
-	ld hl, ChooseMobileCenterAttrmap
-	decoord 0, 0, wAttrmap
+	ld hl, Attrmap_172955
+	decoord 0, 0, wAttrMap
 	ld bc, $168
 	call CopyBytes
 	hlcoord 2, 2
@@ -746,44 +755,70 @@ Function171d2b:
 	call PlaceString
 	ret
 
-MobilePasswordPalettes:
-INCLUDE "gfx/mobile/mobile_password.pal"
+Palette_171d71:
+	RGB  0,  0,  0
+	RGB  3,  0,  0
+	RGB  5,  0,  0
+	RGB 31, 31, 29
+	RGB  0,  2, 10
+	RGB  2, 10, 21
+	RGB  0,  0,  0
+	RGB 10, 26, 31
+	RGB  0,  0,  0
+	RGB  0,  7,  8
+	RGB 31,  8,  0
+	RGB  1, 17, 15
+	RGB 31, 16,  0
+	RGB 31, 22,  0
+	RGB 31, 27,  0
+	RGB 31, 31,  0
+	RGB 31, 18,  6
+	RGB  0,  3,  0
+	RGB  0,  9,  0
+	RGB  0, 12,  0
+	RGB  0, 16,  0
+	RGB  0, 22,  0
+	RGB  0, 25,  0
+	RGB  0, 27,  0
+	RGB  5,  5, 16
+	RGB  8, 19, 28
+	RGB  0,  0,  0
+	RGB 31, 31, 31
+	RGB 31, 31, 29
+	RGB 21, 21, 20
+	RGB 11, 11, 10
+	RGB  0,  0,  0
 
-AsciiFontGFX:
+GFX_171db1:
 INCBIN "gfx/mobile/ascii_font.2bpp"
 
-PasswordTopTilemap:
-INCBIN "gfx/mobile/password_top.tilemap"
+Tilemap_172491:
+INCBIN "gfx/unknown/172491.tilemap"
+Tilemap_17251d:
+INCBIN "gfx/unknown/17251d.tilemap"
+Tilemap_1725f9:
+INCBIN "gfx/unknown/1725f9.tilemap"
+Tilemap_172685:
+INCBIN "gfx/unknown/172685.tilemap"
+Attrmap_1727ed:
+INCBIN "gfx/unknown/1727ed.attrmap"
+Attrmap_172955:
+INCBIN "gfx/unknown/172955.attrmap"
 
-PasswordBottomTilemap:
-INCBIN "gfx/mobile/password_bottom.tilemap"
-
-PasswordShiftTilemap:
-INCBIN "gfx/mobile/password_shift.tilemap"
-
-ChooseMobileCenterTilemap:
-INCBIN "gfx/mobile/mobile_center.tilemap"
-
-MobilePasswordAttrmap:
-INCBIN "gfx/mobile/password.attrmap"
-
-ChooseMobileCenterAttrmap:
-INCBIN "gfx/mobile/mobile_center.attrmap"
-
-PasswordSlowpokeLZ:
-INCBIN "gfx/pokedex/slowpoke.2bpp.lz"
+LZ_172abd:
+INCBIN "gfx/pokedex/slowpoke_mobile.2bpp.lz"
 
 String_172e31:
-	db "パスワード<WO>いれてください@"
+	db "Enter PASSWORD@";"パスワード<WO>いれてください@"
 String_172e3f:
-	db "きりかえ　やめる　　けってい@"
+	db "SWITCH CANCEL OK@";"きりかえ　やめる　　けってい@"
 String_172e4e:
-	db "きりかえ　やめる　　"
+	db "SWITCH CANCEL";"きりかえ　やめる　　"
 String_172e58:
-	db "けってい@"
+	db "OK@";"けってい@"
 String_172e5d:
-	db "せつぞくする　モバイルセンターを"
-	next "えらんで　ください@"
+	db   "Select CENTER";"せつぞくする　モバイルセンターを"
+	next "to connect to@";"えらんで　ください@"
 
 Function172e78:
 	ld a, $7f
@@ -791,21 +826,21 @@ Function172e78:
 	ld bc, $168
 	call ByteFill
 	ld a, $7
-	hlcoord 0, 0, wAttrmap
+	hlcoord 0, 0, wAttrMap
 	ld bc, $168
 	call ByteFill
 	call DisableLCD
-	ld hl, Stadium2N64GFX
+	ld hl, GameBoyN64GFX
 	ld de, vTiles2 tile $00
 	ld bc, $610
 	call CopyBytes
 	call EnableLCD
-	ld hl, Stadium2N64Tilemap
+	ld hl, Tilemap_1733af
 	decoord 0, 0
 	ld bc, $168
 	call CopyBytes
-	ld hl, Stadium2N64Attrmap
-	decoord 0, 0, wAttrmap
+	ld hl, Attrmap_173517
+	decoord 0, 0, wAttrMap
 	ld bc, $168
 	call CopyBytes
 	ret
@@ -862,17 +897,15 @@ Palette_172edf:
 	RGB  0,  0,  0
 	RGB  0,  0,  0
 
-Stadium2N64GFX:
-INCBIN "gfx/mobile/stadium2_n64.2bpp"
+GameBoyN64GFX:
+INCBIN "gfx/trade/game_boy_n64.2bpp"
 
-Stadium2N64Tilemap:
-if DEF(_CRYSTAL11)
-; Crystal 1.1 corrupted this tilemap by treating $0a bytes as Unix newlines,
-; and converting them to $0d $0a Windows newlines.
-INCBIN "gfx/mobile/stadium2_n64_corrupt.tilemap"
-else
-INCBIN "gfx/mobile/stadium2_n64.tilemap"
-endc
+Tilemap_1733af:
+;if DEF(_CRYSTAL11)
+;INCBIN "gfx/unknown/1733af_corrupt.tilemap"
+;else
+INCBIN "gfx/unknown/1733af.tilemap"
+;endc
 
-Stadium2N64Attrmap:
-INCBIN "gfx/mobile/stadium2_n64.attrmap"
+Attrmap_173517:
+INCBIN "gfx/unknown/173517.attrmap"

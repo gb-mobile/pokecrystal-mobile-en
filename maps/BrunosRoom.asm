@@ -1,16 +1,16 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const BRUNOSROOM_BRUNO
 
 BrunosRoom_MapScripts:
-	def_scene_scripts
-	scene_script .LockDoor,   SCENE_BRUNOSROOM_LOCK_DOOR
-	scene_script .DummyScene, SCENE_BRUNOSROOM_NOOP
+	db 2 ; scene scripts
+	scene_script .LockDoor ; SCENE_DEFAULT
+	scene_script .DummyScene ; SCENE_FINISHED
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_TILES, .BrunosRoomDoors
 
 .LockDoor:
-	sdefer .BrunosDoorLocksBehindYou
+	prioritysjump .BrunosDoorLocksBehindYou
 	end
 
 .DummyScene:
@@ -25,7 +25,7 @@ BrunosRoom_MapScripts:
 	iffalse .KeepExitClosed
 	changeblock 4, 2, $16 ; open door
 .KeepExitClosed:
-	endcallback
+	return
 
 .BrunosDoorLocksBehindYou:
 	applymovement PLAYER, BrunosRoom_EnterMovement
@@ -35,7 +35,7 @@ BrunosRoom_MapScripts:
 	changeblock 4, 14, $2a ; wall
 	reloadmappart
 	closetext
-	setscene SCENE_BRUNOSROOM_NOOP
+	setscene SCENE_FINISHED
 	setevent EVENT_BRUNOS_ROOM_ENTRANCE_CLOSED
 	waitsfx
 	end
@@ -125,15 +125,15 @@ BrunoScript_BrunoDefeatText:
 BrunosRoom_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 4 ; warp events
 	warp_event  4, 17, KOGAS_ROOM, 3
 	warp_event  5, 17, KOGAS_ROOM, 4
 	warp_event  4,  2, KARENS_ROOM, 1
 	warp_event  5,  2, KARENS_ROOM, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  5,  7, SPRITE_BRUNO, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, BrunoScript_Battle, -1

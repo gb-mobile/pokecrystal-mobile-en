@@ -1,7 +1,6 @@
-MACRO rating
+rating: MACRO
 ; count, sfx, text
-	db \1
-	dw \2, \3
+	dbww \1, \2, \3
 ENDM
 
 OakRatings:

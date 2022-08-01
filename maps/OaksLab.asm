@@ -1,15 +1,15 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const OAKSLAB_OAK
 	const OAKSLAB_SCIENTIST1
 	const OAKSLAB_SCIENTIST2
 	const OAKSLAB_SCIENTIST3
 
 OaksLab_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
-.DummyScene: ; unreferenced
+.DummyScene:
 	end
 
 Oak:
@@ -20,7 +20,7 @@ Oak:
 	checkevent EVENT_TALKED_TO_OAK_IN_KANTO
 	iftrue .CheckBadges
 	writetext OakWelcomeKantoText
-	promptbutton
+	buttonsound
 	setevent EVENT_TALKED_TO_OAK_IN_KANTO
 .CheckBadges:
 	readvar VAR_BADGES
@@ -39,18 +39,18 @@ Oak:
 
 .OpenMtSilver:
 	writetext OakOpenMtSilverText
-	promptbutton
+	buttonsound
 	setevent EVENT_OPENED_MT_SILVER
 	sjump .CheckPokedex
 
 .Complain:
 	writetext OakNoKantoBadgesText
-	promptbutton
+	buttonsound
 	sjump .CheckPokedex
 
 .AhGood:
 	writetext OakYesKantoBadgesText
-	promptbutton
+	buttonsound
 	sjump .CheckPokedex
 
 OaksAssistant1Script:
@@ -63,7 +63,7 @@ OaksAssistant3Script:
 	jumptextfaceplayer OaksAssistant3Text
 
 OaksLabBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 OaksLabPoster1:
 	jumptext OaksLabPoster1Text
@@ -257,13 +257,13 @@ OaksLabPCText:
 OaksLab_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4, 11, PALLET_TOWN, 3
 	warp_event  5, 11, PALLET_TOWN, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 16 ; bg events
 	bg_event  6,  1, BGEVENT_READ, OaksLabBookshelf
 	bg_event  7,  1, BGEVENT_READ, OaksLabBookshelf
 	bg_event  8,  1, BGEVENT_READ, OaksLabBookshelf
@@ -281,7 +281,7 @@ OaksLab_MapEvents:
 	bg_event  9,  3, BGEVENT_READ, OaksLabTrashcan
 	bg_event  0,  1, BGEVENT_READ, OaksLabPC
 
-	def_object_events
+	db 4 ; object events
 	object_event  4,  2, SPRITE_OAK, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Oak, -1
 	object_event  1,  8, SPRITE_SCIENTIST, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, OaksAssistant1Script, -1
 	object_event  8,  9, SPRITE_SCIENTIST, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, OaksAssistant2Script, -1

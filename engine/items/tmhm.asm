@@ -15,7 +15,7 @@ TMHMPocket:
 	ld b, 0
 	add hl, bc
 	ld a, [hl]
-	ld [wItemQuantity], a
+	ld [wItemQuantityBuffer], a
 	call .ConvertItemToTMHMNumber
 	scf
 	ret
@@ -54,14 +54,14 @@ AskTeachTMHM:
 	ld [wPutativeTMHMMove], a
 	call GetMoveName
 	call CopyName1
-	ld hl, BootedTMText ; Booted up a TM
+	ld hl, Text_BootedTM ; Booted up a TM
 	ld a, [wCurItem]
 	cp HM01
 	jr c, .TM
-	ld hl, BootedHMText ; Booted up an HM
+	ld hl, Text_BootedHM ; Booted up an HM
 .TM:
 	call PrintText
-	ld hl, ContainedMoveText
+	ld hl, Text_ItContained
 	call PrintText
 	call YesNoBox
 .NotTMHM:
@@ -73,7 +73,7 @@ AskTeachTMHM:
 ChooseMonToLearnTMHM:
 	ld hl, wStringBuffer2
 	ld de, wTMHMMoveNameBackup
-	ld bc, MOVE_NAME_LENGTH - 1
+	ld bc, 12
 	call CopyBytes
 	call ClearBGPalettes
 ChooseMonToLearnTMHM_NoRefresh:
@@ -97,7 +97,7 @@ ChooseMonToLearnTMHM_NoRefresh:
 	push bc
 	ld hl, wTMHMMoveNameBackup
 	ld de, wStringBuffer2
-	ld bc, MOVE_NAME_LENGTH - 1
+	ld bc, 12
 	call CopyBytes
 	pop af ; now contains the original contents of af
 	ret
@@ -122,7 +122,7 @@ TeachTMHM:
 	push bc
 	ld a, [wCurPartyMon]
 	ld hl, wPartyMonNicknames
-	call GetNickname
+	call GetNick
 	pop bc
 
 	ld a, c
@@ -132,7 +132,7 @@ TeachTMHM:
 	ld de, SFX_WRONG
 	call PlaySFX
 	pop de
-	ld hl, TMHMNotCompatibleText
+	ld hl, Text_TMHMNotCompatible
 	call PrintText
 	jr .nope
 
@@ -159,27 +159,31 @@ TeachTMHM:
 	and a
 	ret
 
-.didnt_use ; unreferenced
+.unused
 	ld a, 2
 	ld [wItemEffectSucceeded], a
 .learned_move
 	scf
 	ret
 
-BootedTMText:
-	text_far _BootedTMText
+Text_BootedTM:
+	; Booted up a TM.
+	text_far UnknownText_0x1c0373
 	text_end
 
-BootedHMText:
-	text_far _BootedHMText
+Text_BootedHM:
+	; Booted up an HM.
+	text_far UnknownText_0x1c0384
 	text_end
 
-ContainedMoveText:
-	text_far _ContainedMoveText
+Text_ItContained:
+	; It contained @ . Teach @ to a #MON?
+	text_far UnknownText_0x1c0396
 	text_end
 
-TMHMNotCompatibleText:
-	text_far _TMHMNotCompatibleText
+Text_TMHMNotCompatible:
+	; is not compatible with @ . It can't learn @ .
+	text_far UnknownText_0x1c03c2
 	text_end
 
 TMHM_PocketLoop:
@@ -252,7 +256,7 @@ TMHM_ShowTMMoveDescription:
 	ld a, [wTempTMHM]
 	ld [wCurSpecies], a
 	hlcoord 1, 14
-	call PrintMoveDescription
+	call PrintMoveDesc
 	jp TMHM_JoypadLoop
 
 TMHM_ChooseTMorHM:
@@ -290,7 +294,7 @@ TMHM_CheckHoveringOverCancel:
 TMHM_ExitPack:
 	call TMHM_PlaySFX_ReadText2
 _TMHM_ExitPack:
-	ld a, B_BUTTON
+	ld a, $2
 	ld [wMenuJoypad], a
 	and a
 	ret
@@ -371,13 +375,13 @@ TMHM_DisplayPocketItems:
 	ld [hl], "H"
 	inc hl
 	ld de, wTempTMHM
-	lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	lb bc, PRINTNUM_RIGHTALIGN | 1, 2
 	call PrintNum
 	pop af
 	ld [wTempTMHM], a
 .okay
 	predef GetTMHMMove
-	ld a, [wNamedObjectIndex]
+	ld a, [wNamedObjectIndexBuffer]
 	ld [wPutativeTMHMMove], a
 	call GetMoveName
 	pop hl
@@ -417,7 +421,7 @@ TMHM_DisplayPocketItems:
 	inc hl
 	inc hl
 	push de
-	ld de, TMHM_CancelString
+	ld de, TMHM_String_Cancel
 	call PlaceString
 	pop de
 .done
@@ -436,8 +440,7 @@ TMHMPocket_GetCurrentLineCoord:
 	jr nz, .loop
 	ret
 
-PlaceMoveNameAfterTMHMName: ; unreferenced
-; Similar to a part of TMHM_DisplayPocketItems.
+Unreferenced_Function2ca95:
 	pop hl
 	ld bc, 3
 	add hl, bc
@@ -450,7 +453,7 @@ PlaceMoveNameAfterTMHMName: ; unreferenced
 	pop hl
 	ret
 
-TMHM_CancelString:
+TMHM_String_Cancel:
 	db "CANCEL@"
 
 TMHM_GetCurrentPocketPosition:
@@ -473,7 +476,7 @@ TMHM_GetCurrentPocketPosition:
 Tutorial_TMHMPocket:
 	hlcoord 9, 3
 	push de
-	ld de, TMHM_CancelString
+	ld de, TMHM_String_Cancel
 	call PlaceString
 	pop de
 	ret
@@ -485,21 +488,23 @@ TMHM_PlaySFX_ReadText2:
 	pop de
 	ret
 
-VerboseReceiveTMHM: ; unreferenced
+Unreferenced_Function2cadf:
 	call ConvertCurItemIntoCurTMHM
 	call .CheckHaveRoomForTMHM
-	ld hl, .NoRoomTMHMText
+	ld hl, .NoRoomText
 	jr nc, .print
-	ld hl, .ReceivedTMHMText
+	ld hl, .ReceivedText
 .print
 	jp PrintText
 
-.NoRoomTMHMText:
-	text_far _NoRoomTMHMText
+.NoRoomText:
+	; You have no room for any more @ S.
+	text_far UnknownText_0x1c03fa
 	text_end
 
-.ReceivedTMHMText:
-	text_far _ReceivedTMHMText
+.ReceivedText:
+	; You received @ !
+	text_far UnknownText_0x1c0421
 	text_end
 
 .CheckHaveRoomForTMHM:
@@ -511,7 +516,7 @@ VerboseReceiveTMHM: ; unreferenced
 	add hl, bc
 	ld a, [hl]
 	inc a
-	cp MAX_ITEM_STACK + 1
+	cp NUM_TMS * 2
 	ret nc
 	ld [hl], a
 	ret

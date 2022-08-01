@@ -1,11 +1,11 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const OLIVINELIGHTHOUSE4F_SAILOR
 	const OLIVINELIGHTHOUSE4F_LASS
 
 OlivineLighthouse4F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 TrainerLassConnie:
 	trainer LASS, CONNIE1, EVENT_BEAT_LASS_CONNIE, LassConnie1SeenText, LassConnie1BeatenText, 0, .Script
@@ -82,7 +82,7 @@ LassConnie1AfterBattleText:
 OlivineLighthouse4F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 10 ; warp events
 	warp_event 13,  3, OLIVINE_LIGHTHOUSE_3F, 1
 	warp_event  3,  5, OLIVINE_LIGHTHOUSE_5F, 2
 	warp_event  9,  7, OLIVINE_LIGHTHOUSE_5F, 3
@@ -94,10 +94,10 @@ OlivineLighthouse4F_MapEvents:
 	warp_event 16,  7, OLIVINE_LIGHTHOUSE_5F, 4
 	warp_event 17,  7, OLIVINE_LIGHTHOUSE_5F, 5
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 2 ; object events
 	object_event  7, 14, SPRITE_SAILOR, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerSailorKent, -1
 	object_event 11,  2, SPRITE_LASS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 1, TrainerLassConnie, -1

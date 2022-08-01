@@ -13,9 +13,9 @@ Special::
 	rst FarCall
 	ret
 
-INCLUDE "data/events/special_pointers.asm"
+INCLUDE "data/special_pointers.asm"
 
-UnusedDummySpecial:
+DummySpecial_c224:
 	ret
 
 SetPlayerPalette:
@@ -34,7 +34,7 @@ GameCornerPrizeMonCheckDex:
 	call SetSeenAndCaughtMon
 	call FadeToMenu
 	ld a, [wScriptVar]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	farcall NewPokedexEntry
 	call ExitAllMenus
 	ret
@@ -87,12 +87,13 @@ NameRival:
 	ld b, NAME_RIVAL
 	ld de, wRivalName
 	farcall _NamingScreen
+	; default to "SILVER"
 	ld hl, wRivalName
-	ld de, .DefaultName
+	ld de, .default
 	call InitName
 	ret
 
-.DefaultName:
+.default
 	db "SILVER@"
 
 NameRater:
@@ -127,7 +128,7 @@ PlayersHousePC:
 
 CheckMysteryGift:
 	ld a, BANK(sMysteryGiftItem)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [sMysteryGiftItem]
 	and a
 	jr z, .no
@@ -140,11 +141,11 @@ CheckMysteryGift:
 
 GetMysteryGiftItem:
 	ld a, BANK(sMysteryGiftItem)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [sMysteryGiftItem]
 	ld [wCurItem], a
 	ld a, 1
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	ld hl, wNumItems
 	call ReceiveItem
 	jr nc, .no_room
@@ -152,7 +153,7 @@ GetMysteryGiftItem:
 	ld [sMysteryGiftItem], a
 	call CloseSRAM
 	ld a, [wCurItem]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetItemName
 	ld hl, .ReceiveItemText
 	call PrintText
@@ -167,6 +168,7 @@ GetMysteryGiftItem:
 	ret
 
 .ReceiveItemText:
+	; received item
 	text_far _ReceiveItemText
 	text_end
 
@@ -206,11 +208,11 @@ CardFlip:
 	call StartGameCornerGame
 	ret
 
-UnusedMemoryGame:
+DummyNonfunctionalGameCornerGame:
 	call CheckCoinsAndCoinCase
 	ret c
-	ld a, BANK(_MemoryGame)
-	ld hl, _MemoryGame
+	ld a, BANK(_DummyGame)
+	ld hl, _DummyGame
 	call StartGameCornerGame
 	ret
 
@@ -254,10 +256,12 @@ CheckCoinsAndCoinCase:
 	ret
 
 .NoCoinsText:
+	; You have no coins.
 	text_far _NoCoinsText
 	text_end
 
 .NoCoinCaseText:
+	; You don't have a COIN CASE.
 	text_far _NoCoinCaseText
 	text_end
 
@@ -379,17 +383,17 @@ GameboyCheck:
 	ldh a, [hCGB]
 	and a
 	jr nz, .cgb
+
 	ldh a, [hSGB]
 	and a
 	jr nz, .sgb
-; gb
+
+.gb
 	xor a ; GBCHECK_GB
 	jr .done
-
 .sgb
 	ld a, GBCHECK_SGB
 	jr .done
-
 .cgb
 	ld a, GBCHECK_CGB
 .done
@@ -419,7 +423,7 @@ PrintDiploma:
 
 TrainerHouse:
 	ld a, BANK(sMysteryGiftTrainerHouseFlag)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [sMysteryGiftTrainerHouseFlag]
 	ld [wScriptVar], a
 	jp CloseSRAM

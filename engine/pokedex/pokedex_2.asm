@@ -41,7 +41,7 @@ AnimateDexSearchSlowpoke:
 DoDexSearchSlowpokeFrame:
 	ld a, [wDexSearchSlowpokeFrame]
 	ld hl, .SlowpokeSpriteData
-	ld de, wShadowOAMSprite00
+	ld de, wVirtualOAMSprite00
 .loop
 	ld a, [hli]
 	cp -1
@@ -65,15 +65,15 @@ DoDexSearchSlowpokeFrame:
 	jr .loop
 
 .SlowpokeSpriteData:
-	dbsprite  9, 11, 0, 0, $00, 0
-	dbsprite 10, 11, 0, 0, $01, 0
-	dbsprite 11, 11, 0, 0, $02, 0
-	dbsprite  9, 12, 0, 0, $10, 0
-	dbsprite 10, 12, 0, 0, $11, 0
-	dbsprite 11, 12, 0, 0, $12, 0
-	dbsprite  9, 13, 0, 0, $20, 0
-	dbsprite 10, 13, 0, 0, $21, 0
-	dbsprite 11, 13, 0, 0, $22, 0
+	dsprite 11, 0,  9, 0, $00, 0
+	dsprite 11, 0, 10, 0, $01, 0
+	dsprite 11, 0, 11, 0, $02, 0
+	dsprite 12, 0,  9, 0, $10, 0
+	dsprite 12, 0, 10, 0, $11, 0
+	dsprite 12, 0, 11, 0, $12, 0
+	dsprite 13, 0,  9, 0, $20, 0
+	dsprite 13, 0, 10, 0, $21, 0
+	dsprite 13, 0, 11, 0, $22, 0
 	db -1
 
 DisplayDexEntry:
@@ -86,7 +86,7 @@ DisplayDexEntry:
 	ld a, b
 	push af
 	hlcoord 9, 5
-	call PlaceFarString ; dex species
+	call FarString ; dex species
 	ld h, b
 	ld l, c
 	push de
@@ -113,7 +113,7 @@ DisplayDexEntry:
 	ld a, b
 	push af
 	push hl
-	call GetFarWord
+	call GetFarHalfword
 	ld d, l
 	ld e, h
 	pop hl
@@ -125,7 +125,7 @@ DisplayDexEntry:
 	push hl
 	push de
 ; Print the height, with two of the four digits in front of the decimal point
-	ld hl, sp+0
+	ld hl, sp+$0
 	ld d, h
 	ld e, l
 	hlcoord 12, 7
@@ -143,7 +143,7 @@ DisplayDexEntry:
 	inc hl
 	push hl
 	dec hl
-	call GetFarWord
+	call GetFarHalfword
 	ld d, l
 	ld e, h
 	ld a, e
@@ -151,7 +151,7 @@ DisplayDexEntry:
 	jr z, .skip_weight
 	push de
 ; Print the weight, with four of the five digits in front of the decimal point
-	ld hl, sp+0
+	ld hl, sp+$0
 	ld d, h
 	ld e, l
 	hlcoord 11, 9
@@ -182,7 +182,7 @@ DisplayDexEntry:
 	pop af
 	hlcoord 2, 11
 	push af
-	call PlaceFarString
+	call FarString
 	pop bc
 	ld a, [wPokedexStatus]
 	or a ; check for page 2
@@ -211,10 +211,11 @@ DisplayDexEntry:
 	inc de
 	pop af
 	hlcoord 2, 11
-	call PlaceFarString
+	call FarString
 	ret
 
-POKeString: ; unreferenced
+UnreferencedPOKeString:
+; unused
 	db "#@"
 
 GetDexEntryPointer:

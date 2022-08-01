@@ -1,4 +1,6 @@
 BattleCommand_MirrorCoat:
+; mirrorcoat
+
 	ld a, 1
 	ld [wAttackMissed], a
 
@@ -35,7 +37,7 @@ BattleCommand_MirrorCoat:
 	cp SPECIAL
 	ret c
 
-; BUG: Counter and Mirror Coat still work if the opponent uses an item (see docs/bugs_and_glitches.md)
+	; BUG: Move should fail with all non-damaging battle actions
 	ld hl, wCurDamage
 	ld a, [hli]
 	or [hl]

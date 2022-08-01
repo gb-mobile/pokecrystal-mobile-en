@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const LAKEOFRAGEMAGIKARPHOUSE_FISHING_GURU
 
 LakeOfRageMagikarpHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 MagikarpLengthRaterScript:
 	faceplayer
@@ -51,7 +51,7 @@ MagikarpLengthRaterScript:
 
 .GetReward:
 	writetext MagikarpLengthRaterText_Memento
-	promptbutton
+	buttonsound
 	verbosegiveitem ELIXER
 	iffalse .NoRoom
 	writetext MagikarpLengthRaterText_Bonus
@@ -83,11 +83,12 @@ MagikarpLengthRaterScript:
 	closetext
 	end
 
-LakeOfRageMagikarpHouseUnusedRecordSign: ; unreferenced
+LakeOfRageMagikarpHouseUnusedRecordSign:
+; unused
 	jumptext LakeOfRageMagikarpHouseUnusedRecordText
 
 MagikarpHouseBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 MagikarpLengthRaterText_LakeOfRageHistory:
 	text "LAKE OF RAGE is"
@@ -204,21 +205,20 @@ LakeOfRageMagikarpHouseUnusedRecordText:
 	text_ram wStringBuffer4
 	text_end
 
-LakeOfRageMagikarpHouseUnusedDummyText: ; unreferenced
-	text_end
+	text_end ; unused
 
 LakeOfRageMagikarpHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, LAKE_OF_RAGE, 2
 	warp_event  3,  7, LAKE_OF_RAGE, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  0,  1, BGEVENT_READ, MagikarpHouseBookshelf
 	bg_event  1,  1, BGEVENT_READ, MagikarpHouseBookshelf
 
-	def_object_events
+	db 1 ; object events
 	object_event  2,  3, SPRITE_FISHING_GURU, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MagikarpLengthRaterScript, -1

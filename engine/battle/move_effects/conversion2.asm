@@ -1,4 +1,6 @@
 BattleCommand_Conversion2:
+; conversion2
+
 	ld a, [wAttackMissed]
 	and a
 	jr nz, .failed
@@ -18,14 +20,14 @@ BattleCommand_Conversion2:
 	call GetMoveAttr
 	ld d, a
 	pop hl
-	cp CURSE_TYPE
+	cp CURSE_T
 	jr z, .failed
 	call AnimateCurrentMove
 	call BattleCommand_SwitchTurn
 
 .loop
 	call BattleRandom
-	maskbits TYPES_END
+	maskbits NUM_TYPES
 	cp UNUSED_TYPES
 	jr c, .okay
 	cp UNUSED_TYPES_END
@@ -53,7 +55,7 @@ BattleCommand_Conversion2:
 	call BattleCommand_SwitchTurn
 
 	ld a, [hl]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	predef GetTypeName
 	ld hl, TransformedTypeText
 	jp StdBattleTextbox

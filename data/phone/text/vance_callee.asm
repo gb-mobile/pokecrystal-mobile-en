@@ -1,4 +1,4 @@
-VanceAnswerPhoneText:
+UnknownText_0x1b7019:
 	text "Yes, hello?"
 	line "@"
 	text_ram wStringBuffer3
@@ -10,7 +10,7 @@ VanceAnswerPhoneText:
 	line "#MON?"
 	done
 
-VanceAnswerPhoneDayText:
+UnknownText_0x1b7057:
 	text "Yes, hello?"
 	line "@"
 	text_ram wStringBuffer3
@@ -22,7 +22,7 @@ VanceAnswerPhoneDayText:
 	line "#MON flying?"
 	done
 
-VanceAnswerPhoneNiteText:
+UnknownText_0x1b7092:
 	text "Yes, hello?"
 	line "@"
 	text_ram wStringBuffer3
@@ -35,7 +35,7 @@ VanceAnswerPhoneNiteText:
 	line "see some action?"
 	done
 
-VanceGreetText:
+UnknownText_0x1b70e7:
 	text "Good morning,"
 	line "<PLAY_G>!"
 
@@ -45,7 +45,7 @@ VanceGreetText:
 	line "Good morning!"
 	done
 
-VanceGreetDayText:
+UnknownText_0x1b7112:
 	text "Hi, <PLAY_G>!"
 
 	para "It's @"
@@ -54,7 +54,7 @@ VanceGreetDayText:
 	line "Remember me?"
 	done
 
-VanceGreetNiteText:
+UnknownText_0x1b7132:
 	text "Good evening,"
 	line "<PLAY_G>!"
 
@@ -64,7 +64,7 @@ VanceGreetNiteText:
 	line "Are you free now?"
 	done
 
-VanceGenericText:
+UnknownText_0x1b7161:
 	text "Are you and your"
 	line "#MON fine?"
 

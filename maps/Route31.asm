@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE31_FISHER
 	const ROUTE31_YOUNGSTER
 	const ROUTE31_BUG_CATCHER
@@ -8,19 +8,19 @@
 	const ROUTE31_POKE_BALL2
 
 Route31_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .CheckMomCall
 
 .CheckMomCall:
 	checkevent EVENT_TALKED_TO_MOM_AFTER_MYSTERY_EGG_QUEST
 	iffalse .DoMomCall
-	endcallback
+	return
 
 .DoMomCall:
 	specialphonecall SPECIALCALL_WORRIED
-	endcallback
+	return
 
 TrainerBugCatcherWade1:
 	trainer BUG_CATCHER, WADE1, EVENT_BEAT_BUG_CATCHER_WADE, BugCatcherWade1SeenText, BugCatcherWade1BeatenText, 0, .Script
@@ -29,7 +29,7 @@ TrainerBugCatcherWade1:
 	loadvar VAR_CALLERID, PHONE_BUG_CATCHER_WADE
 	endifjustbattled
 	opentext
-	checkflag ENGINE_WADE_READY_FOR_REMATCH
+	checkflag ENGINE_WADE
 	iftrue .WadeRematch
 	checkflag ENGINE_WADE_HAS_ITEM
 	iftrue .WadeItem
@@ -79,7 +79,7 @@ TrainerBugCatcherWade1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wWadeFightCount, 1
-	clearflag ENGINE_WADE_READY_FOR_REMATCH
+	clearflag ENGINE_WADE
 	end
 
 .LoadFight1:
@@ -87,7 +87,7 @@ TrainerBugCatcherWade1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wWadeFightCount, 2
-	clearflag ENGINE_WADE_READY_FOR_REMATCH
+	clearflag ENGINE_WADE
 	end
 
 .LoadFight2:
@@ -95,7 +95,7 @@ TrainerBugCatcherWade1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wWadeFightCount, 3
-	clearflag ENGINE_WADE_READY_FOR_REMATCH
+	clearflag ENGINE_WADE
 	end
 
 .LoadFight3:
@@ -103,14 +103,14 @@ TrainerBugCatcherWade1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wWadeFightCount, 4
-	clearflag ENGINE_WADE_READY_FOR_REMATCH
+	clearflag ENGINE_WADE
 	end
 
 .LoadFight4:
 	loadtrainer BUG_CATCHER, WADE5
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_WADE_READY_FOR_REMATCH
+	clearflag ENGINE_WADE
 	end
 
 .WadeItem:
@@ -145,39 +145,39 @@ TrainerBugCatcherWade1:
 	sjump .PackFullSTD
 
 .AskPhoneNumberSTD:
-	jumpstd AskNumber1MScript
+	jumpstd asknumber1m
 	end
 
 .AskAgainSTD:
-	jumpstd AskNumber2MScript
+	jumpstd asknumber2m
 	end
 
 .RegisterNumberSTD:
-	jumpstd RegisteredNumberMScript
+	jumpstd registerednumberm
 	end
 
 .AcceptedNumberSTD:
-	jumpstd NumberAcceptedMScript
+	jumpstd numberacceptedm
 	end
 
 .DeclinedNumberSTD:
-	jumpstd NumberDeclinedMScript
+	jumpstd numberdeclinedm
 	end
 
 .PhoneFullSTD:
-	jumpstd PhoneFullMScript
+	jumpstd phonefullm
 	end
 
 .RematchSTD:
-	jumpstd RematchMScript
+	jumpstd rematchm
 	end
 
 .ItemSTD:
-	jumpstd GiftMScript
+	jumpstd giftm
 	end
 
 .PackFullSTD:
-	jumpstd PackFullMScript
+	jumpstd packfullm
 	end
 
 Route31MailRecipientScript:
@@ -194,7 +194,7 @@ Route31MailRecipientScript:
 
 .TryGiveKenya:
 	writetext Text_Route31SleepyManGotMail
-	promptbutton
+	buttonsound
 	checkpokemail ReceivedSpearowMailText
 	ifequal POKEMAIL_WRONG_MAIL, .WrongMail
 	ifequal POKEMAIL_REFUSED, .Refused
@@ -202,9 +202,9 @@ Route31MailRecipientScript:
 	ifequal POKEMAIL_LAST_MON, .LastMon
 	; POKEMAIL_CORRECT
 	writetext Text_Route31HandOverMailMon
-	promptbutton
+	buttonsound
 	writetext Text_Route31ReadingMail
-	promptbutton
+	buttonsound
 	setevent EVENT_GAVE_KENYA
 	verbosegiveitem TM_NIGHTMARE
 	iffalse .NoRoomForItems
@@ -418,18 +418,18 @@ DarkCaveSignText:
 Route31_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  4,  6, ROUTE_31_VIOLET_GATE, 3
 	warp_event  4,  7, ROUTE_31_VIOLET_GATE, 4
 	warp_event 34,  5, DARK_CAVE_VIOLET_ENTRANCE, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  7,  5, BGEVENT_READ, Route31Sign
 	bg_event 31,  5, BGEVENT_READ, DarkCaveSign
 
-	def_object_events
+	db 7 ; object events
 	object_event 17,  7, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Route31MailRecipientScript, -1
 	object_event  9,  5, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Route31YoungsterScript, -1
 	object_event 21, 13, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 5, TrainerBugCatcherWade1, -1

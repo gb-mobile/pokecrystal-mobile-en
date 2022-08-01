@@ -164,7 +164,7 @@ GetCaughtLevel:
 	ld [wSeerCaughtLevel], a
 	ld hl, wSeerCaughtLevelString
 	ld de, wSeerCaughtLevel
-	lb bc, PRINTNUM_LEFTALIGN | 1, 3
+	lb bc, PRINTNUM_RIGHTALIGN | 1, 3
 	call PrintNum
 	ret
 
@@ -218,9 +218,9 @@ GetCaughtLocation:
 	ld a, [wSeerCaughtGender]
 	and CAUGHT_LOCATION_MASK
 	jr z, .Unknown
-	cp LANDMARK_EVENT
+	cp EVENT_LOCATION
 	jr z, .event
-	cp LANDMARK_GIFT
+	cp GIFT_LOCATION
 	jr z, .fail
 	ld e, a
 	farcall GetLandmarkName
@@ -249,10 +249,10 @@ GetCaughtLocation:
 
 GetCaughtOT:
 	ld a, [wCurPartyMon]
-	ld hl, wPartyMonOTs
+	ld hl, wPartyMonOT
 	ld bc, NAME_LENGTH
 	call AddNTimes
-	ld de, wSeerOT
+	ld de, wSeerOTName
 	ld bc, NAME_LENGTH
 	call CopyBytes
 
@@ -264,7 +264,7 @@ GetCaughtOT:
 	ld hl, .female
 
 .got_grammar
-	ld de, wSeerOTGrammar
+	ld de, wSeerOTNameGrammar
 	ld a, "@"
 	ld [de], a
 	ret
@@ -287,45 +287,53 @@ PrintSeerText:
 	ret
 
 SeerTexts:
-	dw SeerSeeAllText
-	dw SeerCantTellAThingText
-	dw SeerNameLocationText
+	dw SeerIntroText
+	dw SeerCantTellText
+	dw SeerMetAtText
 	dw SeerTimeLevelText
-	dw SeerTradeText
-	dw SeerDoNothingText
+	dw SeerTradedText
+	dw SeerCancelText
 	dw SeerEggText
-	dw SeerNoLocationText
+	dw SeerLevelOnlyText
 
-SeerSeeAllText:
-	text_far _SeerSeeAllText
+SeerIntroText:
+	; I see all. I know all… Certainly, I know of your #MON!
+	text_far UnknownText_0x1c475f
 	text_end
 
-SeerCantTellAThingText:
-	text_far _SeerCantTellAThingText
+SeerCantTellText:
+	; Whaaaat? I can't tell a thing! How could I not know of this?
+	text_far UnknownText_0x1c4797
 	text_end
 
-SeerNameLocationText:
-	text_far _SeerNameLocationText
+SeerMetAtText:
+	; Hm… I see you met @  here: @ !
+	text_far UnknownText_0x1c47d4
 	text_end
 
 SeerTimeLevelText:
-	text_far _SeerTimeLevelText
+	; The time was @ ! Its level was @ ! Am I good or what?
+	text_far UnknownText_0x1c47fa
 	text_end
 
-SeerTradeText:
-	text_far _SeerTradeText
+SeerTradedText:
+	; Hm… @ came from @ in a trade? @ was where @ met @ !
+	text_far UnknownText_0x1c4837
 	text_end
 
-SeerNoLocationText:
-	text_far _SeerNoLocationText
+SeerLevelOnlyText:
+	; What!? Incredible! I don't understand how, but it is incredible! You are special. I can't tell where you met it, but it was at level @ . Am I good or what?
+	text_far UnknownText_0x1c487f
 	text_end
 
 SeerEggText:
-	text_far _SeerEggText
+	; Hey! That's an EGG! You can't say that you've met it yet…
+	text_far UnknownText_0x1c491d
 	text_end
 
-SeerDoNothingText:
-	text_far _SeerDoNothingText
+SeerCancelText:
+	; Fufufu! I saw that you'd do nothing!
+	text_far UnknownText_0x1c4955
 	text_end
 
 SeerAdvice:
@@ -356,31 +364,36 @@ SeerAdvice:
 
 SeerAdviceTexts:
 ; level, text
-	dbw 9,   SeerMoreCareText
-	dbw 29,  SeerMoreConfidentText
-	dbw 59,  SeerMuchStrengthText
-	dbw 89,  SeerMightyText
-	dbw 100, SeerImpressedText
-	dbw 255, SeerMoreCareText
+	dbw 9,   SeerAdvice1
+	dbw 29,  SeerAdvice2
+	dbw 59,  SeerAdvice3
+	dbw 89,  SeerAdvice4
+	dbw 100, SeerAdvice5
+	dbw 255, SeerAdvice1
 
-SeerMoreCareText:
-	text_far _SeerMoreCareText
+SeerAdvice1:
+	; Incidentally… It would be wise to raise your #MON with a little more care.
+	text_far UnknownText_0x1c497a
 	text_end
 
-SeerMoreConfidentText:
-	text_far _SeerMoreConfidentText
+SeerAdvice2:
+	; Incidentally… It seems to have grown a little. @  seems to be becoming more confident.
+	text_far UnknownText_0x1c49c6
 	text_end
 
-SeerMuchStrengthText:
-	text_far _SeerMuchStrengthText
+SeerAdvice3:
+	; Incidentally… @  has grown. It's gained much strength.
+	text_far UnknownText_0x1c4a21
 	text_end
 
-SeerMightyText:
-	text_far _SeerMightyText
+SeerAdvice4:
+	; Incidentally… It certainly has grown mighty! This @ must have come through numerous #MON battles. It looks brimming with confidence.
+	text_far UnknownText_0x1c4a5b
 	text_end
 
-SeerImpressedText:
-	text_far _SeerImpressedText
+SeerAdvice5:
+	; Incidentally… I'm impressed by your dedication. It's been a long time since I've seen a #MON as mighty as this @ . I'm sure that seeing @ in battle would excite anyone.
+	text_far UnknownText_0x1c4ae5
 	text_end
 
 GetCaughtGender:
@@ -390,7 +403,7 @@ GetCaughtGender:
 	ld a, [hl]
 	and CAUGHT_LOCATION_MASK
 	jr z, .genderless
-	cp LANDMARK_EVENT
+	cp EVENT_LOCATION
 	jr z, .genderless
 
 	ld a, [hl]

@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const BLACKTHORNCITY_SUPER_NERD1
 	const BLACKTHORNCITY_SUPER_NERD2
 	const BLACKTHORNCITY_GRAMPS1
@@ -10,25 +10,25 @@
 	const BLACKTHORNCITY_COOLTRAINER_F2
 
 BlackthornCity_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 2 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPoint
 	callback MAPCALLBACK_OBJECTS, .Santos
 
 .FlyPoint:
 	setflag ENGINE_FLYPOINT_BLACKTHORN
-	endcallback
+	return
 
 .Santos:
 	readvar VAR_WEEKDAY
 	ifequal SATURDAY, .SantosAppears
 	disappear BLACKTHORNCITY_SANTOS
-	endcallback
+	return
 
 .SantosAppears:
 	appear BLACKTHORNCITY_SANTOS
-	endcallback
+	return
 
 BlackthornSuperNerdScript:
 	faceplayer
@@ -95,11 +95,11 @@ SantosScript:
 	checkevent EVENT_MET_SANTOS_OF_SATURDAY
 	iftrue .MetSantos
 	writetext MeetSantosText
-	promptbutton
+	buttonsound
 	setevent EVENT_MET_SANTOS_OF_SATURDAY
 .MetSantos:
 	writetext SantosGivesGiftText
-	promptbutton
+	buttonsound
 	verbosegiveitem SPELL_TAG
 	iffalse .Done
 	setevent EVENT_GOT_SPELL_TAG_FROM_SANTOS
@@ -137,10 +137,10 @@ BlackthornCityTrainerTips:
 	jumptext BlackthornCityTrainerTipsText
 
 BlackthornCityPokecenterSign:
-	jumpstd PokecenterSignScript
+	jumpstd pokecentersign
 
 BlackthornCityMartSign:
-	jumpstd MartSignScript
+	jumpstd martsign
 
 Text_ClairIsOut:
 	text "I am sorry."
@@ -313,7 +313,7 @@ BlackthornCityTrainerTipsText:
 BlackthornCity_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 8 ; warp events
 	warp_event 18, 11, BLACKTHORN_GYM_1F, 1
 	warp_event 13, 21, BLACKTHORN_DRAGON_SPEECH_HOUSE, 1
 	warp_event 29, 23, BLACKTHORN_EMYS_HOUSE, 1
@@ -323,9 +323,9 @@ BlackthornCity_MapEvents:
 	warp_event 36,  9, ICE_PATH_1F, 2
 	warp_event 20,  1, DRAGONS_DEN_1F, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 7 ; bg events
 	bg_event 34, 24, BGEVENT_READ, BlackthornCitySign
 	bg_event 17, 13, BGEVENT_READ, BlackthornGymSign
 	bg_event  7, 31, BGEVENT_READ, MoveDeletersHouseSign
@@ -334,7 +334,7 @@ BlackthornCity_MapEvents:
 	bg_event 16, 29, BGEVENT_READ, BlackthornCityMartSign
 	bg_event 22, 29, BGEVENT_READ, BlackthornCityPokecenterSign
 
-	def_object_events
+	db 9 ; object events
 	object_event 18, 12, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, BlackthornSuperNerdScript, EVENT_BLACKTHORN_CITY_SUPER_NERD_BLOCKS_GYM
 	object_event 19, 12, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, BlackthornSuperNerdScript, EVENT_BLACKTHORN_CITY_SUPER_NERD_DOES_NOT_BLOCK_GYM
 	object_event 20,  2, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BlackthornGramps1Script, EVENT_BLACKTHORN_CITY_GRAMPS_BLOCKS_DRAGONS_DEN

@@ -1,4 +1,4 @@
-LizMonAlwaysWantsToNuzzleText:
+UnknownText_0x175fda:
 	text "Oh, you have to"
 	line "hear this."
 
@@ -11,7 +11,7 @@ LizMonAlwaysWantsToNuzzleText:
 	line "nuzzle me!"
 	done
 
-LizDefeatedMonText:
+UnknownText_0x17602d:
 	text "And, and! Um…"
 
 	para "We beat a wild"
@@ -26,7 +26,7 @@ LizDefeatedMonText:
 	line "it, though."
 	done
 
-LizLostAMonText:
+UnknownText_0x176095:
 	text "And, and! Uh…"
 
 	para "We just saw a"
@@ -42,7 +42,7 @@ LizLostAMonText:
 	line "really angry!"
 	done
 
-LizBattleRematchText:
+UnknownText_0x17610a:
 	text "Hi! Do you have"
 	line "some free time?"
 
@@ -61,7 +61,7 @@ LizBattleRematchText:
 	line "you get here!"
 	done
 
-LizWrongNumberText:
+LizHiTaniaText:
 	text "Hi, TANIA. How are"
 	line "you? This is LIZ."
 
@@ -72,12 +72,12 @@ LizWrongNumberText:
 	line "Oops! Sorry!"
 	done
 
-LizHangUpText:
+UnknownText_0x17620a:
 	text "OK, I'll call you"
 	line "later!"
 	done
 
-LizRuinsOfAlphGossipText:
+UnknownText_0x176223:
 	text "Listen, listen!"
 
 	para "I was listening to"
@@ -93,7 +93,7 @@ LizRuinsOfAlphGossipText:
 	line "was. So strange!"
 	done
 
-LizFalknerGossipText:
+UnknownText_0x1762c3:
 	text "Listen, listen!"
 
 	para "Don't you think"
@@ -115,7 +115,7 @@ LizFalknerGossipText:
 	line "meet him!"
 	done
 
-LizEarlGossipText:
+UnknownText_0x17638a:
 	text "Listen, listen!"
 
 	para "Do you know EARL,"
@@ -131,7 +131,7 @@ LizEarlGossipText:
 	line "was wildly funny!"
 	done
 
-LizSurfPikachuGossipText:
+UnknownText_0x176424:
 	text "Listen, listen!"
 
 	para "I collect #MON"
@@ -151,7 +151,7 @@ LizSurfPikachuGossipText:
 	cont "you had one."
 	done
 
-LizMooMooMilkGossipText:
+UnknownText_0x1764eb:
 	text "Listen, listen!"
 
 	para "Do you know about"
@@ -170,7 +170,7 @@ LizMooMooMilkGossipText:
 	line "it's delicious!"
 	done
 
-LizSalonGossipText:
+UnknownText_0x176599:
 	text "Listen, listen!"
 
 	para "There's a #MON"
@@ -198,7 +198,7 @@ LizSalonGossipText:
 	line "whom I should use…"
 	done
 
-LizWhitneyGossipText:
+UnknownText_0x1766ac:
 	text "Listen, listen!"
 
 	para "GOLDENROD GYM's"
@@ -215,7 +215,7 @@ LizWhitneyGossipText:
 	line "totally talented."
 	done
 
-LizBugCatchingContestGossipText:
+UnknownText_0x17674f:
 	text "Listen, listen!"
 
 	para "Have you ever"
@@ -236,7 +236,7 @@ LizBugCatchingContestGossipText:
 	cont "that great?"
 	done
 
-LizBeautifulTrainerGossipText:
+UnknownText_0x176816:
 	text "Listen, listen!"
 
 	para "I saw a beautiful"
@@ -251,7 +251,7 @@ LizBeautifulTrainerGossipText:
 	text " too."
 	done
 
-LizForgotGossipText:
+UnknownText_0x17686d:
 	text "Listen, listen!"
 
 	para "Uh… Um… Whoops!"
@@ -260,7 +260,7 @@ LizForgotGossipText:
 	line "was going to say!"
 	done
 
-LizFawningOverMonText:
+UnknownText_0x1768b0:
 	text "Listen, listen!"
 
 	para "My @"
@@ -294,7 +294,7 @@ LizFawningOverMonText:
 	line "I love chatting!"
 	done
 
-LizReminderText:
+UnknownText_0x1769da:
 	text "I've got too much"
 	line "time on my hands!"
 

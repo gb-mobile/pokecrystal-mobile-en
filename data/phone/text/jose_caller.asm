@@ -1,4 +1,4 @@
-JoseMonsStickHasADeliciousAromaText:
+JoseAromaText:
 	text "Hey listen, my"
 	line "@"
 	text_ram wStringBuffer4
@@ -11,7 +11,7 @@ JoseMonsStickHasADeliciousAromaText:
 	line "appetite going!"
 	done
 
-JoseDefeatedMonText:
+UnknownText_0x174f90:
 	text "A while ago, my"
 	line "FARFETCH'D KO'd"
 	cont "this @"
@@ -25,7 +25,7 @@ JoseDefeatedMonText:
 	line "Amazing stuff!"
 	done
 
-JoseLostAMonText:
+UnknownText_0x174ffd:
 	text "I ran into a wild"
 	line "@"
 	text_ram wStringBuffer4
@@ -41,7 +41,7 @@ JoseLostAMonText:
 	line "bit disappointing."
 	done
 
-JoseBattleRematchText:
+UnknownText_0x17507d:
 	text "Want to battle"
 	line "again?"
 
@@ -60,11 +60,11 @@ JoseBattleRematchText:
 	line "for me, OK?"
 	done
 
-JoseHangUpText:
+UnknownText_0x175106:
 	text "Be seeing you!"
 	done
 
-JoseFoundItemText:
+JoseFoundSomethingText:
 	text "My FARFETCH'D had"
 	line "something pretty"
 	cont "in its beak."
@@ -81,7 +81,7 @@ JoseFoundItemText:
 	line "have it."
 	done
 
-JoseHaventGottenItemYetText:
+UnknownText_0x17519b:
 	text "I haven't gotten"
 	line "what I promised"
 	cont "you yet."
@@ -93,7 +93,7 @@ JoseHaventGottenItemYetText:
 	line "a little longer?"
 	done
 
-JoseReminderText:
+UnknownText_0x17520a:
 	text "<PLAY_G>, could you"
 	line "hurry over?"
 
@@ -114,7 +114,7 @@ JoseReminderText:
 	line "soon as you can!"
 	done
 
-JoseComePickUpText:
+UnknownText_0x17529c:
 	text "What's wrong?"
 
 	para "Don't you want"

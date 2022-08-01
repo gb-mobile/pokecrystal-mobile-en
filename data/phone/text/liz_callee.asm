@@ -1,4 +1,4 @@
-LizAnswerPhoneText:
+UnknownText_0x1b5d9f:
 	text "Hello, @"
 	text_ram wStringBuffer3
 	text_start
@@ -8,7 +8,7 @@ LizAnswerPhoneText:
 	line "Good morning."
 	done
 
-LizAnswerPhoneDayText:
+UnknownText_0x1b5dcc:
 	text "Hello, @"
 	text_ram wStringBuffer3
 	text_start
@@ -18,7 +18,7 @@ LizAnswerPhoneDayText:
 	line "How are you?"
 	done
 
-LizAnswerPhoneNiteText:
+UnknownText_0x1b5df8:
 	text "Hello, @"
 	text_ram wStringBuffer3
 	text_start
@@ -28,7 +28,7 @@ LizAnswerPhoneNiteText:
 	line "Good evening."
 	done
 
-LizGreetText:
+UnknownText_0x1b5e25:
 	text "Good morning,"
 	line "<PLAY_G>."
 
@@ -38,7 +38,7 @@ LizGreetText:
 	line "Were you sleeping?"
 	done
 
-LizGreetDayText:
+UnknownText_0x1b5e59:
 	text "Hi, <PLAY_G>."
 	line "This is @"
 	text_ram wStringBuffer3
@@ -48,7 +48,7 @@ LizGreetDayText:
 	line "going for you?"
 	done
 
-LizGreetNiteText:
+UnknownText_0x1b5e8e:
 	text "Good evening,"
 	line "<PLAY_G>."
 
@@ -58,7 +58,7 @@ LizGreetNiteText:
 	line "Are you awake?"
 	done
 
-LizGenericText:
+UnknownText_0x1b5ebe:
 	text "I had some time,"
 	line "so I called you."
 

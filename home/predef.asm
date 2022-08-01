@@ -8,7 +8,7 @@ Predef::
 
 	ld a, BANK(GetPredefPointer)
 	rst Bankswitch
-	call GetPredefPointer ; stores hl in wPredefHL
+	call GetPredefPointer ; stores hl in wPredefTemp
 
 ; Switch to the new function's bank
 	rst Bankswitch
@@ -27,9 +27,9 @@ Predef::
 	push hl
 
 ; Get hl back
-	ld a, [wPredefHL]
+	ld a, [wPredefTemp]
 	ld h, a
-	ld a, [wPredefHL + 1]
+	ld a, [wPredefTemp + 1]
 	ld l, a
 	ret
 
@@ -37,16 +37,16 @@ Predef::
 ; Clean up after the Predef call
 
 	ld a, h
-	ld [wPredefHL], a
+	ld [wPredefTemp], a
 	ld a, l
-	ld [wPredefHL + 1], a
+	ld [wPredefTemp + 1], a
 
 	pop hl
 	ld a, h
 	rst Bankswitch
 
-	ld a, [wPredefHL]
+	ld a, [wPredefTemp]
 	ld h, a
-	ld a, [wPredefHL + 1]
+	ld a, [wPredefTemp + 1]
 	ld l, a
 	ret

@@ -1,5 +1,8 @@
 BattleCommand_BellyDrum:
-; BUG: Belly Drum sharply boosts Attack even with under 50% HP (see docs/bugs_and_glitches.md)
+; bellydrum
+; This command is buggy because it raises the user's attack
+; before checking that it has enough HP to use the move.
+; Swap the order of these two blocks to fix.
 	call BattleCommand_AttackUp2
 	ld a, [wAttackMissed]
 	and a
@@ -14,7 +17,7 @@ BattleCommand_BellyDrum:
 	pop bc
 	callfar SubtractHPFromUser
 	call UpdateUserInParty
-	ld a, MAX_STAT_LEVEL - BASE_STAT_LEVEL - 1
+	ld a, 5
 
 .max_attack_loop
 	push af

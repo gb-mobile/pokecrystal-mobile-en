@@ -1,29 +1,13 @@
-MobileCardGFX::
-INCBIN "gfx/mobile/card.2bpp"
+MobileAdapterGFX::
+INCBIN "gfx/mobile/mobile_adapter.2bpp"
 
-ChrisSilhouetteGFX::
-INCBIN "gfx/mobile/chris_silhouette.2bpp"
-
-KrisSilhouetteGFX::
-INCBIN "gfx/mobile/kris_silhouette.2bpp"
-
-MobileCard2GFX::
-INCBIN "gfx/mobile/card_2.2bpp"
-
-CardLargeSpriteAndFolderGFX::
-INCBIN "gfx/mobile/card_large_sprite.2bpp"
-INCBIN "gfx/mobile/card_folder.2bpp"
-
-CardSpriteGFX::
-INCBIN "gfx/mobile/card_sprite.2bpp"
-
-Function17a68f::
+Function17a68f:: ; phone number entry screen
 	call Function17a6a8
 	call Function17a751
 	ld hl, $d088
 	bit 5, [hl]
 	jr z, .asm_17a6a6
-	ld de, wStringBuffer1
+	ld de, wStringBuffer1 ; $d073
 	push de
 	call Function17a721
 	pop de
@@ -37,11 +21,11 @@ Function17a68f::
 Function17a6a8:
 	push de
 	push bc
-	ld hl, wStringBuffer2
+	ld hl, wStringBuffer2 ; $d086
 	ld bc, $a
 	xor a
 	call ByteFill
-	ld hl, wd1ea
+	ld hl, wBuffer1
 	ld bc, $10
 	ld a, $ff
 	call ByteFill
@@ -57,7 +41,7 @@ Function17a6a8:
 	call Function17aba0
 	farcall Function106464
 	call Function17ac0c
-	farcall HDMATransferAttrmapAndTilemapToWRAMBank3
+	farcall HDMATransferAttrMapAndTileMapToWRAMBank3
 	call Function17abcf
 	farcall LoadOW_BGPal7
 	farcall Function49420
@@ -66,7 +50,7 @@ Function17a6a8:
 	ret
 
 Function17a6f5:
-	ld hl, wd1ea
+	ld hl, wBuffer1
 	ld c, $0
 	ld b, $8
 .asm_17a6fc
@@ -107,7 +91,7 @@ Function17a721:
 	ld a, $ff
 	call ByteFill
 	pop de
-	ld hl, wd1ea
+	ld hl, wBuffer1
 	ld b, $8
 .asm_17a732
 	ld c, $0
@@ -179,14 +163,14 @@ Function17a78f:
 	bit 7, [hl]
 	res 7, [hl]
 	jr nz, .asm_17a79f
-	farcall HDMATransferTilemapToWRAMBank3
+	farcall HDMATransferTileMapToWRAMBank3
 	ret
 
 .asm_17a79f
 	farcall ReloadMapPart
 	ret
 
-Function17a7a6: ; unreferenced
+Function17a7a6:
 	ld a, [$d087]
 	inc a
 	ld [$d087], a
@@ -456,8 +440,8 @@ Function17a943:
 	dec a
 	ld [$d08c], a
 	ld c, a
-	ld b, 0
-	ld hl, wd1ea
+	ld b, $0
+	ld hl, wBuffer1
 	add hl, bc
 	ld [hl], $ff
 	ld a, $2
@@ -476,10 +460,10 @@ Function17a964:
 	cp $10
 	jr nc, .asm_17a979
 	ld c, a
-	ld b, 0
+	ld b, $0
 	inc a
 	ld [$d08c], a
-	ld hl, wd1ea
+	ld hl, wBuffer1
 	add hl, bc
 	ld [hl], e
 	and a
@@ -494,7 +478,7 @@ Function17a97b:
 	lb bc, 2, 18
 	call ClearBox
 	hlcoord 3, 2
-	ld de, wd1ea
+	ld de, wBuffer1
 	ld a, [$d08c]
 	and a
 	ret z
@@ -524,12 +508,12 @@ Function17a99e:
 	ret
 
 String_17a9b2:
-	db   "でんわばんごうが　ただしく"
-	next "はいって　いません！"
+	db   "Invalid phone" ;"でんわばんごうが　ただしく"
+	next "number!" ;"はいって　いません！"
 	db   "@"
 
 Function17a9cb:
-	ld de, wShadowOAM
+	ld de, wVirtualOAM ; $c400
 	ld hl, $d088
 	bit 6, [hl]
 	jr nz, .bit_6_set
@@ -671,8 +655,8 @@ Function17aaa9:
 	ld a, $3
 	call Function17aae3
 	ld c, a
-	ld b, 0
-	hlcoord 0, 0, wAttrmap
+	ld b, $0
+	hlcoord 0, 0, wAttrMap
 	add hl, bc
 	push hl
 	ld a, $4
@@ -719,7 +703,7 @@ Function17aae3:
 	call AddNTimes
 	pop af
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [hl]
 	ret
@@ -746,21 +730,21 @@ Function17aba0:
 	ldh [rVBK], a
 
 	ld hl, vTiles5 tile $00
-	ld de, DialpadGFX
-	lb bc, BANK(DialpadGFX), $80 ; includes first 4 tiles of DialpadCursorGFX
+	ld de, GFX_friend_cards
+	lb bc, BANK(GFX_friend_cards), $80
 	call Get2bpp
 
 	pop af
 	ldh [rVBK], a
 
 	ld hl, vTiles0 tile $00
-	ld de, DialpadCursorGFX
-	lb bc, BANK(DialpadCursorGFX), 5
+	ld de, GFX_friend_cards + $4c0
+	lb bc, BANK(GFX_friend_cards), 5
 	call Get2bpp
 
 	ld hl, vTiles0 tile $05
-	ld de, MobileDialingGFX
-	lb bc, BANK(MobileDialingGFX), 4
+	ld de, GFX_11601a
+	lb bc, BANK(GFX_11601a), 4
 	call Get2bpp
 	ret
 
@@ -771,7 +755,7 @@ Function17abcf:
 	ldh [rSVBK], a
 
 	ld hl, Palette_17ac55
-	ld de, wBGPals1
+	ld de, wBGPals1 ; $d000
 	ld bc, 6 palettes
 	call CopyBytes
 
@@ -780,7 +764,7 @@ Function17abcf:
 	ld bc, 8 palettes
 	call CopyBytes
 
-	ld hl, Palette_17b4b5
+	ld hl, GFX_friend_cards + $510
 	ld de, wOBPals1 palette 1
 	ld bc, 2 palettes
 	call CopyBytes
@@ -805,18 +789,18 @@ Function17ac0c:
 	ret
 
 Function17ac1d:
-	ld hl, DialpadTilemap
+	ld hl, Tilemap_17acd5
 	decoord 0, 4
 	ld bc, (SCREEN_HEIGHT - 4) * SCREEN_WIDTH
 	call CopyBytes
 	ret
 
 Function17ac2a:
-	ld hl, DialpadAttrmap
-	decoord 0, 4, wAttrmap
+	ld hl, Tilemap_17ae3d
+	decoord 0, 4, wAttrMap
 	ld bc, (SCREEN_HEIGHT - 4) * SCREEN_WIDTH
 	call CopyBytes
-	hlcoord 0, 4, wAttrmap
+	hlcoord 0, 4, wAttrMap
 	ld bc, (SCREEN_HEIGHT - 4) * SCREEN_WIDTH
 .loop
 	ld a, [hl]
@@ -921,21 +905,11 @@ Palette_17ac95:
 	RGB 27, 31,  0
 	RGB 31, 31,  0
 
-DialpadTilemap:
-INCBIN "gfx/mobile/dialpad.tilemap"
+Tilemap_17acd5:
+INCBIN "gfx/unknown/17acd5.tilemap"
 
-DialpadAttrmap:
-INCBIN "gfx/mobile/dialpad.attrmap"
+Tilemap_17ae3d:
+INCBIN "gfx/unknown/17ae3d.tilemap"
 
-DialpadGFX:
-INCBIN "gfx/mobile/dialpad.2bpp"
-
-DialpadCursorGFX:
-INCBIN "gfx/mobile/dialpad_cursor.2bpp"
-
-Palette_17b4b5:
-	RGB  2,  6, 10
-	RGB 24, 30, 29
-
-MobileCardListGFX::
-INCBIN "gfx/mobile/card_list.2bpp"
+GFX_friend_cards::
+INCBIN "gfx/mobile/friend_cards.2bpp"

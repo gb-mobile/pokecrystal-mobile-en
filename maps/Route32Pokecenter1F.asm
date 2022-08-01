@@ -1,15 +1,15 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE32POKECENTER1F_NURSE
 	const ROUTE32POKECENTER1F_FISHING_GURU
 	const ROUTE32POKECENTER1F_COOLTRAINER_F
 
 Route32Pokecenter1F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 Route32Pokecenter1FNurseScript:
-	jumpstd PokecenterNurseScript
+	jumpstd pokecenternurse
 
 Route32Pokecenter1FFishingGuruScript:
 	faceplayer
@@ -20,7 +20,7 @@ Route32Pokecenter1FFishingGuruScript:
 	yesorno
 	iffalse .Refused
 	writetext Route32Pokecenter1FFishingGuruText_Yes
-	promptbutton
+	buttonsound
 	verbosegiveitem OLD_ROD
 	writetext Route32Pokecenter1FFishingGuruText_GiveOldRod
 	waitbutton
@@ -95,16 +95,16 @@ Route32Pokecenter1FCooltrainerFText:
 Route32Pokecenter1F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  3,  7, ROUTE_32, 1
 	warp_event  4,  7, ROUTE_32, 1
 	warp_event  0,  7, POKECENTER_2F, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 3 ; object events
 	object_event  3,  1, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Route32Pokecenter1FNurseScript, -1
 	object_event  1,  4, SPRITE_FISHING_GURU, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, Route32Pokecenter1FFishingGuruScript, -1
 	object_event  6,  2, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, Route32Pokecenter1FCooltrainerFScript, -1

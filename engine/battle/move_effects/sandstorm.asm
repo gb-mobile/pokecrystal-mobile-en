@@ -1,4 +1,6 @@
 BattleCommand_StartSandstorm:
+; startsandstorm
+
 	ld a, [wBattleWeather]
 	cp WEATHER_SANDSTORM
 	jr z, .failed

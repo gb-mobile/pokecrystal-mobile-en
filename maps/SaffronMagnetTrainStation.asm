@@ -1,14 +1,14 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const SAFFRONMAGNETTRAINSTATION_OFFICER
-	const SAFFRONMAGNETTRAINSTATION_GYM_GUIDE
+	const SAFFRONMAGNETTRAINSTATION_GYM_GUY
 	const SAFFRONMAGNETTRAINSTATION_TEACHER
 	const SAFFRONMAGNETTRAINSTATION_LASS
 
 SaffronMagnetTrainStation_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene, SCENE_SAFFRONMAGNETTRAINSTATION_ARRIVE_FROM_GOLDENROD
+	db 1 ; scene scripts
+	scene_script .DummyScene ; SCENE_DEFAULT
 
-	def_callbacks
+	db 0 ; callbacks
 
 .DummyScene:
 	end
@@ -68,18 +68,18 @@ Script_ArriveFromGoldenrod:
 	closetext
 	end
 
-SaffronMagnetTrainStationGymGuideScript:
+SaffronMagnetTrainStationGymGuyScript:
 	faceplayer
 	opentext
 	checkevent EVENT_RETURNED_MACHINE_PART
 	iftrue .ReturnedMachinePart
-	writetext SaffronMagnetTrainStationGymGuideText
+	writetext SaffronMagnetTrainStationGymGuyText
 	waitbutton
 	closetext
 	end
 
 .ReturnedMachinePart:
-	writetext SaffronMagnetTrainStationGymGuideText_ReturnedMachinePart
+	writetext SaffronMagnetTrainStationGymGuyText_ReturnedMachinePart
 	waitbutton
 	closetext
 	end
@@ -164,7 +164,7 @@ SaffronMagnetTrainStationOfficerArrivedInSaffronText:
 	line "again."
 	done
 
-SaffronMagnetTrainStationGymGuideText:
+SaffronMagnetTrainStationGymGuyText:
 	text "The MAGNET TRAIN"
 	line "is a super-modern"
 
@@ -180,7 +180,7 @@ SaffronMagnetTrainStationGymGuideText:
 	cont "tricity…"
 	done
 
-SaffronMagnetTrainStationGymGuideText_ReturnedMachinePart:
+SaffronMagnetTrainStationGymGuyText_ReturnedMachinePart:
 	text "Whew…"
 
 	para "How many times"
@@ -216,19 +216,19 @@ SaffronMagnetTrainStationLassText:
 SaffronMagnetTrainStation_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 4 ; warp events
 	warp_event  8, 17, SAFFRON_CITY, 6
 	warp_event  9, 17, SAFFRON_CITY, 6
 	warp_event  6,  5, GOLDENROD_MAGNET_TRAIN_STATION, 4
 	warp_event 11,  5, GOLDENROD_MAGNET_TRAIN_STATION, 3
 
-	def_coord_events
-	coord_event 11,  6, SCENE_SAFFRONMAGNETTRAINSTATION_ARRIVE_FROM_GOLDENROD, Script_ArriveFromGoldenrod
+	db 1 ; coord events
+	coord_event 11,  6, SCENE_DEFAULT, Script_ArriveFromGoldenrod
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 4 ; object events
 	object_event  9,  9, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, SaffronMagnetTrainStationOfficerScript, -1
-	object_event 10, 14, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, SaffronMagnetTrainStationGymGuideScript, -1
+	object_event 10, 14, SPRITE_GYM_GUY, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, SaffronMagnetTrainStationGymGuyScript, -1
 	object_event  6, 11, SPRITE_TEACHER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, SaffronMagnetTrainStationTeacherScript, EVENT_SAFFRON_TRAIN_STATION_POPULATION
 	object_event  6, 10, SPRITE_LASS, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, SaffronMagnetTrainStationLassScript, EVENT_SAFFRON_TRAIN_STATION_POPULATION

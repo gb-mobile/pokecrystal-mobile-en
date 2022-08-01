@@ -1,15 +1,15 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const HALLOFFAME_LANCE
 
 HallOfFame_MapScripts:
-	def_scene_scripts
-	scene_script .EnterHallOfFame, SCENE_HALLOFFAME_ENTER
-	scene_script .DummyScene,      SCENE_HALLOFFAME_NOOP
+	db 2 ; scene scripts
+	scene_script .EnterHallOfFame ; SCENE_DEFAULT
+	scene_script .DummyScene ; SCENE_FINISHED
 
-	def_callbacks
+	db 0 ; callbacks
 
 .EnterHallOfFame:
-	sdefer .EnterHallOfFameScript
+	prioritysjump .EnterHallOfFameScript
 	end
 
 .DummyScene:
@@ -26,7 +26,7 @@ HallOfFame_MapScripts:
 	closetext
 	turnobject HALLOFFAME_LANCE, UP
 	applymovement PLAYER, HallOfFame_SlowlyApproachMachine
-	setscene SCENE_HALLOFFAME_NOOP
+	setscene SCENE_FINISHED
 	pause 15
 	setval HEALMACHINE_HALL_OF_FAME
 	special HealMachineAnim
@@ -36,7 +36,7 @@ HallOfFame_MapScripts:
 	clearevent EVENT_RED_IN_MT_SILVER
 	setevent EVENT_OLIVINE_PORT_SPRITES_BEFORE_HALL_OF_FAME
 	clearevent EVENT_OLIVINE_PORT_SPRITES_AFTER_HALL_OF_FAME
-	setmapscene SPROUT_TOWER_3F, SCENE_SPROUTTOWER3F_NOOP
+	setmapscene SPROUT_TOWER_3F, SCENE_FINISHED
 	special HealParty
 	checkevent EVENT_GOT_SS_TICKET_FROM_ELM
 	iftrue .SkipPhoneCall
@@ -111,13 +111,13 @@ HallOfFame_LanceText:
 HallOfFame_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4, 13, LANCES_ROOM, 3
 	warp_event  5, 13, LANCES_ROOM, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  4, 12, SPRITE_LANCE, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, -1

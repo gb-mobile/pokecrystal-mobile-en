@@ -1,3 +1,4 @@
+
 HandleNewMap:
 	call ClearUnusedMapBuffer
 	call ResetMapBufferEventFlags
@@ -6,7 +7,7 @@ HandleNewMap:
 	call ResetBikeFlags
 	ld a, MAPCALLBACK_NEWMAP
 	call RunMapCallback
-HandleContinueMap:
+InitCommandQueue:
 	farcall ClearCmdQueue
 	ld a, MAPCALLBACK_CMDQUEUE
 	call RunMapCallback
@@ -149,7 +150,7 @@ EnterMapConnection:
 	scf
 	ret
 
-EnterMapWarp:
+LoadWarpData:
 	call .SaveDigWarp
 	call .SetSpawn
 	ld a, [wNextWarp]
@@ -175,15 +176,14 @@ EnterMapWarp:
 ; MOUNT_MOON_SQUARE and TIN_TOWER_ROOF are outdoor maps within indoor maps.
 ; Dig and Escape Rope should not take you to them.
 	ld a, [wPrevMapGroup]
-	cp GROUP_MOUNT_MOON_SQUARE
-	jr nz, .not_mt_moon_square_or_tin_tower_roof
-	assert GROUP_MOUNT_MOON_SQUARE == GROUP_TIN_TOWER_ROOF
+	cp GROUP_MOUNT_MOON_SQUARE ; aka GROUP_TIN_TOWER_ROOF
+	jr nz, .not_mt_moon_or_tin_tower
 	ld a, [wPrevMapNumber]
 	cp MAP_MOUNT_MOON_SQUARE
 	ret z
 	cp MAP_TIN_TOWER_ROOF
 	ret z
-.not_mt_moon_square_or_tin_tower_roof
+.not_mt_moon_or_tin_tower
 
 	ld a, [wPrevWarp]
 	ld [wDigWarpNumber], a
@@ -234,7 +234,7 @@ LoadMapTimeOfDay:
 	farcall UpdateTimeOfDayPal
 	call OverworldTextModeSwitch
 	call .ClearBGMap
-	call .PushAttrmap
+	call .PushAttrMap
 	ret
 
 .ClearBGMap:
@@ -265,14 +265,14 @@ LoadMapTimeOfDay:
 	call ByteFill
 	ret
 
-.PushAttrmap:
+.PushAttrMap:
 	decoord 0, 0
 	call .copy
 	ldh a, [hCGB]
 	and a
 	ret z
 
-	decoord 0, 0, wAttrmap
+	decoord 0, 0, wAttrMap
 	ld a, $1
 	ldh [rVBK], a
 .copy
@@ -296,8 +296,8 @@ LoadMapTimeOfDay:
 	ldh [rVBK], a
 	ret
 
-LoadMapGraphics:
-	call LoadMapTileset
+LoadGraphics:
+	call LoadTileset
 	call LoadTilesetGFX
 	xor a
 	ldh [hMapAnims], a
@@ -314,10 +314,10 @@ LoadMapPalettes:
 
 RefreshMapSprites:
 	call ClearSprites
-	farcall InitMapNameSign
+	farcall ReturnFromMapSetupScript
 	call GetMovementPermissions
 	farcall RefreshPlayerSprite
-	farcall CheckUpdatePlayerSprite
+	farcall CheckReplaceKrisSprite
 	ld hl, wPlayerSpriteSetupFlags
 	bit PLAYERSPRITESETUP_SKIP_RELOAD_GFX_F, [hl]
 	jr nz, .skip
@@ -326,7 +326,7 @@ RefreshMapSprites:
 	call SafeUpdateSprites
 .skip
 	ld a, [wPlayerSpriteSetupFlags]
-	and (1 << PLAYERSPRITESETUP_FEMALE_TO_MALE_F) | (1 << 3) | (1 << 4)
+	and %00011100
 	ld [wPlayerSpriteSetupFlags], a
 	ret
 
@@ -387,46 +387,48 @@ CheckMovingOffEdgeOfMap::
 	scf
 	ret
 
-GetMapScreenCoords::
+GetCoordOfUpperLeftCorner::
 	ld hl, wOverworldMapBlocks
 	ld a, [wXCoord]
 	bit 0, a
-	jr nz, .odd_x
-; even x
+	jr nz, .increment_then_halve1
 	srl a
-	add 1
-	jr .got_block_x
-.odd_x
-	add 1
+	add $1
+	jr .resume
+
+.increment_then_halve1
+	add $1
 	srl a
-.got_block_x
+
+.resume
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [wMapWidth]
-	add MAP_CONNECTION_PADDING_WIDTH * 2
+	add $6
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld a, [wYCoord]
 	bit 0, a
-	jr nz, .odd_y
-; even y
+	jr nz, .increment_then_halve2
 	srl a
-	add 1
-	jr .got_block_y
-.odd_y
-	add 1
+	add $1
+	jr .resume2
+
+.increment_then_halve2
+	add $1
 	srl a
-.got_block_y
+
+.resume2
 	call AddNTimes
 	ld a, l
 	ld [wOverworldMapAnchor], a
 	ld a, h
 	ld [wOverworldMapAnchor + 1], a
 	ld a, [wYCoord]
-	and 1
+	and $1
 	ld [wMetatileStandingY], a
 	ld a, [wXCoord]
-	and 1
+	and $1
 	ld [wMetatileStandingX], a
 	ret

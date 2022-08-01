@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const CELADONGAMECORNER_CLERK
 	const CELADONGAMECORNER_RECEPTIONIST
 	const CELADONGAMECORNER_POKEFAN_M
@@ -6,16 +6,16 @@
 	const CELADONGAMECORNER_FISHING_GURU
 	const CELADONGAMECORNER_FISHER1
 	const CELADONGAMECORNER_FISHER2
-	const CELADONGAMECORNER_GYM_GUIDE
+	const CELADONGAMECORNER_GYM_GUY
 	const CELADONGAMECORNER_GRAMPS
 
 CeladonGameCorner_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 CeladonGameCornerClerkScript:
-	jumpstd GameCornerCoinVendorScript
+	jumpstd gamecornercoinvendor
 
 CeladonGameCornerReceptionistScript:
 	jumptextfaceplayer CeladonGameCornerReceptionistText
@@ -53,7 +53,7 @@ CeladonGameCornerFisherScript:
 	checkevent EVENT_GOT_COINS_FROM_GAMBLER_AT_CELADON
 	iftrue .GotCoins
 	writetext CeladonGameCornerFisherText1
-	promptbutton
+	buttonsound
 	checkitem COIN_CASE
 	iffalse .NoCoinCase
 	checkcoins MAX_COINS - 1
@@ -70,7 +70,7 @@ CeladonGameCornerFisherScript:
 	end
 
 .GiveCoins:
-	jumpstd ReceiveItemScript
+	jumpstd receiveitem
 	end
 
 .coinname
@@ -90,8 +90,8 @@ CeladonGameCornerFisherScript:
 	turnobject LAST_TALKED, LEFT
 	end
 
-CeladonGymGuideScript:
-	jumptextfaceplayer CeladonGymGuideText
+CeladonGymGuyScript:
+	jumptextfaceplayer CeladonGymGuyText
 
 CeladonGameCornerGrampsScript:
 	faceplayer
@@ -141,7 +141,8 @@ CeladonGameCornerSodaCanScript:
 	closetext
 	end
 
-CeladonGameCornerUnusedMovementData: ; unreferenced
+CeladonGameCornerUnusedMovementData:
+; unreferenced
 	step RIGHT
 	turn_head LEFT
 	step_end
@@ -254,7 +255,7 @@ else
 	done
 endc
 
-CeladonGymGuideText:
+CeladonGymGuyText:
 	text "Hey! CHAMP in"
 	line "making!"
 
@@ -323,13 +324,13 @@ CeladonGameCornerSodaCanText:
 CeladonGameCorner_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event 14, 13, CELADON_CITY, 6
 	warp_event 15, 13, CELADON_CITY, 6
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 38 ; bg events
 	bg_event  1,  6, BGEVENT_READ, CeladonGameCornerCardFlipScript
 	bg_event  1,  7, BGEVENT_READ, CeladonGameCornerCardFlipScript
 	bg_event  1,  8, BGEVENT_READ, CeladonGameCornerCardFlipScript
@@ -369,7 +370,7 @@ CeladonGameCorner_MapEvents:
 	bg_event 15,  0, BGEVENT_READ, CeladonGameCornerPoster1Script
 	bg_event  9,  0, BGEVENT_READ, CeladonGameCornerPoster2Script
 
-	def_object_events
+	db 9 ; object events
 	object_event  5,  2, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, CeladonGameCornerClerkScript, -1
 	object_event  3,  2, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, CeladonGameCornerReceptionistScript, -1
 	object_event 14, 10, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CeladonGameCornerPokefanMScript, -1
@@ -377,5 +378,5 @@ CeladonGameCorner_MapEvents:
 	object_event 11,  7, SPRITE_FISHING_GURU, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, CeladonGameCornerFishingGuruScript, -1
 	object_event  8, 10, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, DAY, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CeladonGameCornerFisherScript, -1
 	object_event  8, 10, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, NITE, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CeladonGameCornerFisherScript, -1
-	object_event 11,  3, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CeladonGymGuideScript, -1
+	object_event 11,  3, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CeladonGymGuyScript, -1
 	object_event  2,  8, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, CeladonGameCornerGrampsScript, -1

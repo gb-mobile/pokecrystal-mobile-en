@@ -1,26 +1,26 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const SILVERCAVEROOM3_RED
 
 SilverCaveRoom3_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 Red:
 	special FadeOutMusic
 	faceplayer
 	opentext
-	writetext RedSeenText
+	writetext .Text1
 	waitbutton
 	closetext
-	winlosstext RedWinLossText, RedWinLossText
+	winlosstext .Text2, .Text2
 	loadtrainer RED, RED1
 	startbattle
 	dontrestartmapmusic
 	reloadmapafterbattle
 	special FadeOutMusic
 	opentext
-	writetext RedLeavesText
+	writetext .Text3
 	waitbutton
 	closetext
 	special FadeBlackQuickly
@@ -34,16 +34,16 @@ Red:
 	credits
 	end
 
-RedSeenText:
+.Text1:
 	text "<……>"
 	line "<……>"
 	done
 
-RedWinLossText:
+.Text2:
 	text "…"
 	done
 
-RedLeavesText:
+.Text3:
 	text "<……>"
 	line "<……>"
 	done
@@ -51,12 +51,12 @@ RedLeavesText:
 SilverCaveRoom3_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 1 ; warp events
 	warp_event  9, 33, SILVER_CAVE_ROOM_2, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  9, 10, SPRITE_RED, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, Red, EVENT_RED_IN_MT_SILVER

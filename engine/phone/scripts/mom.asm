@@ -1,6 +1,6 @@
 MomPhoneCalleeScript:
 	checkevent EVENT_TALKED_TO_MOM_AFTER_MYSTERY_EGG_QUEST
-	iftrue .started_quest
+	iftrue .bcec5
 	checkevent EVENT_DUDE_TALKED_TO_YOU
 	iftrue MomPhoneLectureScript
 	checkevent EVENT_GAVE_MYSTERY_EGG_TO_ELM
@@ -9,23 +9,23 @@ MomPhoneCalleeScript:
 	iftrue MomPhoneNoPokedexScript
 	sjump MomPhoneNoPokemonScript
 
-.started_quest
+.bcec5
 	checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_8
 	iftrue MomPhoneHangUpScript
 	farwritetext MomPhoneGreetingText
-	promptbutton
+	buttonsound
 	getcurlandmarkname STRING_BUFFER_3
-	readvar VAR_ENVIRONMENT
-	ifequal TOWN, MomPhoneInTown
-	ifequal ROUTE, MomPhoneOnRoute
+	readvar VAR_ROOFPALETTE
+	ifequal 1, MomPhonePalette1
+	ifequal 2, MomPhonePalette2
 	sjump MomPhoneOther
 
 MomPhoneLandmark:
 	farwritetext MomPhoneLandmarkText
-	promptbutton
+	buttonsound
 	sjump MomSavingMoney
 
-MomPhoneInTown:
+MomPhonePalette1:
 	readvar VAR_MAPGROUP
 	ifequal GROUP_NEW_BARK_TOWN, .newbark
 	ifequal GROUP_CHERRYGROVE_CITY, .cherrygrove
@@ -33,37 +33,37 @@ MomPhoneInTown:
 	ifequal GROUP_AZALEA_TOWN, .azalea
 	ifequal GROUP_GOLDENROD_CITY, .goldenrod
 	farwritetext MomPhoneGenericAreaText
-	promptbutton
+	buttonsound
 	sjump MomSavingMoney
 
 .newbark
 	farwritetext MomPhoneNewBarkText
-	promptbutton
+	buttonsound
 	sjump MomSavingMoney
 
 .cherrygrove
 	farwritetext MomPhoneCherrygroveText
-	promptbutton
+	buttonsound
 	sjump MomSavingMoney
 
 .violet
-	getlandmarkname STRING_BUFFER_4, LANDMARK_SPROUT_TOWER
+	getlandmarkname STRING_BUFFER_4, SPROUT_TOWER
 	sjump MomPhoneLandmark
 .azalea
-	getlandmarkname STRING_BUFFER_4, LANDMARK_SLOWPOKE_WELL
+	getlandmarkname STRING_BUFFER_4, SLOWPOKE_WELL
 	sjump MomPhoneLandmark
 .goldenrod
-	getlandmarkname STRING_BUFFER_4, LANDMARK_RADIO_TOWER
+	getlandmarkname STRING_BUFFER_4, RADIO_TOWER
 	sjump MomPhoneLandmark
 
-MomPhoneOnRoute:
+MomPhonePalette2:
 	farwritetext MomOtherAreaText
-	promptbutton
+	buttonsound
 	sjump MomSavingMoney
 
 MomPhoneOther:
 	farwritetext MomDeterminedText
-	promptbutton
+	buttonsound
 	sjump MomSavingMoney
 
 MomSavingMoney:
@@ -107,13 +107,13 @@ MomSavingMoney:
 MomPhoneSaveMoneyScript:
 	setflag ENGINE_MOM_SAVING_MONEY
 	farwritetext MomOKIllSaveText
-	promptbutton
+	buttonsound
 	sjump MomPhoneHangUpScript
 
 MomPhoneWontSaveMoneyScript:
 	clearflag ENGINE_MOM_SAVING_MONEY
 	farwritetext MomPhoneWontSaveMoneyText
-	promptbutton
+	buttonsound
 	sjump MomPhoneHangUpScript
 
 MomPhoneHangUpScript:

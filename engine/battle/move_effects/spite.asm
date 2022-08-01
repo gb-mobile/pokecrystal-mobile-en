@@ -1,8 +1,10 @@
 BattleCommand_Spite:
+; spite
+
 	ld a, [wAttackMissed]
 	and a
 	jp nz, .failed
-	ld bc, PARTYMON_STRUCT_LENGTH ; unused
+	ld bc, PARTYMON_STRUCT_LENGTH ; ????
 	ld hl, wEnemyMonMoves
 	ldh a, [hBattleTurn]
 	and a
@@ -22,7 +24,7 @@ BattleCommand_Spite:
 	ld a, [hli]
 	cp b
 	jr nz, .loop
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	dec hl
 	ld b, 0
 	push bc
@@ -76,7 +78,7 @@ BattleCommand_Spite:
 	call AnimateCurrentMove
 	pop de
 	ld a, d
-	ld [wTextDecimalByte], a
+	ld [wDeciramBuffer], a
 	ld hl, SpiteEffectText
 	jp StdBattleTextbox
 

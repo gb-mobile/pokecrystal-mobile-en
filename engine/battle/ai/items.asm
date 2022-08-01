@@ -20,9 +20,8 @@ AI_SwitchOrTryItem:
 	and a
 	jr nz, DontSwitch
 
-	; always load the first trainer class in wTrainerClass for Battle Tower trainers
 	ld hl, TrainerClassAttributes + TRNATTR_AI_ITEM_SWITCH
-	ld a, [wInBattleTowerBattle]
+	ld a, [wInBattleTowerBattle] ; always load the first trainer class in wTrainerClass for BattleTower-Trainers
 	and a
 	jr nz, .ok
 
@@ -30,7 +29,6 @@ AI_SwitchOrTryItem:
 	dec a
 	ld bc, NUM_TRAINER_ATTRIBUTES
 	call AddNTimes
-
 .ok
 	bit SWITCH_OFTEN_F, [hl]
 	jp nz, SwitchOften
@@ -147,13 +145,13 @@ SwitchSometimes:
 	ld [wEnemySwitchMonIndex], a
 	jp AI_TrySwitch
 
-CheckSubstatusCantRun: ; unreferenced
+CheckSubstatusCantRun:
 	ld a, [wEnemySubStatus5]
 	bit SUBSTATUS_CANT_RUN, a
 	ret
 
 AI_TryItem:
-	; items are not allowed in the Battle Tower
+	; items are not allowed in the BattleTower
 	ld a, [wInBattleTowerBattle]
 	and a
 	ret nz
@@ -215,7 +213,7 @@ AI_TryItem:
 	inc hl
 	jr c, .loop
 
-; used item
+.used_item
 	xor a
 	ld [de], a
 	inc a
@@ -261,7 +259,7 @@ AI_TryItem:
 	cp e
 	jr nc, .yes
 
-.no ; unreferenced
+.no
 	and a
 	ret
 
@@ -319,7 +317,7 @@ AI_Items:
 	jp c, .Use
 .FailToxicCheck:
 	ld a, [wEnemyMonStatus]
-	and 1 << FRZ | SLP_MASK
+	and 1 << FRZ | SLP
 	jp z, .DontUse
 	jp .Use
 
@@ -399,10 +397,7 @@ AI_Items:
 	call EnemyUsedPotion
 	jp .Use
 
-; Everything up to "End unused" is unused
-
-.UnusedHealItem: ; unreferenced
-; This has similar conditions to .HealItem
+.asm_382ae ; This appears to be unused
 	callfar AICheckEnemyMaxHP
 	jr c, .dont_use
 	push bc
@@ -444,8 +439,6 @@ AI_Items:
 	cp 39 percent + 1
 	jp c, .Use
 	jp .DontUse
-
-; End unused
 
 .XAccuracy:
 	call .XItem
@@ -552,7 +545,6 @@ EnemyUsedMaxPotion:
 	jr FullRestoreContinue
 
 EnemyUsedFullRestore:
-; BUG: AI use of Full Heal does not cure confusion status (see docs/bugs_and_glitches.md)
 	call AI_HealStatus
 	ld a, FULL_RESTORE
 	ld [wCurEnemyItem], a
@@ -560,7 +552,6 @@ EnemyUsedFullRestore:
 	res SUBSTATUS_CONFUSED, [hl]
 	xor a
 	ld [wEnemyConfuseCount], a
-	; fallthrough
 
 FullRestoreContinue:
 	ld de, wCurHPAnimOldHP
@@ -696,7 +687,7 @@ AI_Switch:
 	pop af
 
 	jr c, .skiptext
-	ld hl, EnemyWithdrewText
+	ld hl, TextJump_EnemyWithdrew
 	call PrintText
 
 .skiptext
@@ -716,18 +707,17 @@ AI_Switch:
 	scf
 	ret
 
-EnemyWithdrewText:
-	text_far _EnemyWithdrewText
+TextJump_EnemyWithdrew:
+	text_far Text_EnemyWithdrew
 	text_end
 
-EnemyUsedFullHealRed: ; unreferenced
+Function384d5: ; This appears to be unused
 	call AIUsedItemSound
 	call AI_HealStatus
 	ld a, FULL_HEAL_RED ; X_SPEED
 	jp PrintText_UsedItemOn_AND_AIUpdateHUD
 
 AI_HealStatus:
-; BUG: AI use of Full Heal or Full Restore does not cure Nightmare status (see docs/bugs_and_glitches.md)
 	ld a, [wCurOTMon]
 	ld hl, wOTPartyMon1Status
 	ld bc, PARTYMON_STRUCT_LENGTH
@@ -735,6 +725,10 @@ AI_HealStatus:
 	xor a
 	ld [hl], a
 	ld [wEnemyMonStatus], a
+	; Bug: this should reset SUBSTATUS_NIGHTMARE too
+	; Uncomment the lines below to fix
+	; ld hl, wEnemySubStatus1
+	; res SUBSTATUS_NIGHTMARE, [hl]
 	ld hl, wEnemySubStatus5
 	res SUBSTATUS_TOXIC, [hl]
 	ret
@@ -760,14 +754,7 @@ EnemyUsedDireHit:
 	ld a, DIRE_HIT
 	jp PrintText_UsedItemOn_AND_AIUpdateHUD
 
-AICheckEnemyFractionMaxHP: ; unreferenced
-; Input: a = divisor
-; Work: bc = [wEnemyMonMaxHP] / a
-; Work: de = [wEnemyMonHP]
-; Output:
-; -  c, nz if [wEnemyMonHP] > [wEnemyMonMaxHP] / a
-; - nc,  z if [wEnemyMonHP] = [wEnemyMonMaxHP] / a
-; - nc, nz if [wEnemyMonHP] < [wEnemyMonMaxHP] / a
+Function3851e: ; This appears to be unused
 	ldh [hDivisor], a
 	ld hl, wEnemyMonMaxHP
 	ld a, [hli]
@@ -831,15 +818,15 @@ PrintText_UsedItemOn_AND_AIUpdateHUD:
 
 PrintText_UsedItemOn:
 	ld a, [wCurEnemyItem]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetItemName
 	ld hl, wStringBuffer1
 	ld de, wMonOrItemNameBuffer
 	ld bc, ITEM_NAME_LENGTH
 	call CopyBytes
-	ld hl, EnemyUsedOnText
+	ld hl, TextJump_EnemyUsedOn
 	jp PrintText
 
-EnemyUsedOnText:
-	text_far _EnemyUsedOnText
+TextJump_EnemyUsedOn:
+	text_far Text_EnemyUsedOn
 	text_end

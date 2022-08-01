@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const CHERRYGROVECITY_GRAMPS
 	const CHERRYGROVECITY_SILVER
 	const CHERRYGROVECITY_TEACHER
@@ -6,11 +6,11 @@
 	const CHERRYGROVECITY_FISHER
 
 CherrygroveCity_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene0, SCENE_CHERRYGROVECITY_NOOP
-	scene_script .DummyScene1, SCENE_CHERRYGROVECITY_MEET_RIVAL
+	db 2 ; scene scripts
+	scene_script .DummyScene0 ; SCENE_CHERRYGROVECITY_NOTHING
+	scene_script .DummyScene1 ; SCENE_CHERRYGROVECITY_MEET_RIVAL
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPoint
 
 .DummyScene0:
@@ -21,7 +21,7 @@ CherrygroveCity_MapScripts:
 
 .FlyPoint:
 	setflag ENGINE_FLYPOINT_CHERRYGROVE
-	endcallback
+	return
 
 CherrygroveCityGuideGent:
 	faceplayer
@@ -66,12 +66,12 @@ CherrygroveCityGuideGent:
 	turnobject PLAYER, RIGHT
 	opentext
 	writetext GuideGentGiftText
-	promptbutton
+	buttonsound
 	getstring STRING_BUFFER_4, .mapcardname
 	scall .JumpstdReceiveItem
 	setflag ENGINE_MAP_CARD
 	writetext GotMapCardText
-	promptbutton
+	buttonsound
 	writetext GuideGentPokegearText
 	waitbutton
 	closetext
@@ -86,7 +86,7 @@ CherrygroveCityGuideGent:
 	end
 
 .JumpstdReceiveItem:
-	jumpstd ReceiveItemScript
+	jumpstd receiveitem
 	end
 
 .mapcardname
@@ -169,7 +169,7 @@ CherrygroveSilverSceneNorth:
 	turnobject PLAYER, LEFT
 	applymovement CHERRYGROVECITY_SILVER, CherrygroveCity_RivalExitsStageLeft
 	disappear CHERRYGROVECITY_SILVER
-	setscene SCENE_CHERRYGROVECITY_NOOP
+	setscene SCENE_CHERRYGROVECITY_NOTHING
 	special HealParty
 	playmapmusic
 	end
@@ -212,7 +212,7 @@ MysticWaterGuy:
 	checkevent EVENT_GOT_MYSTIC_WATER_IN_CHERRYGROVE
 	iftrue .After
 	writetext MysticWaterGuyTextBefore
-	promptbutton
+	buttonsound
 	verbosegiveitem MYSTIC_WATER
 	iffalse .Exit
 	setevent EVENT_GOT_MYSTIC_WATER_IN_CHERRYGROVE
@@ -230,10 +230,10 @@ GuideGentsHouseSign:
 	jumptext GuideGentsHouseSignText
 
 CherrygroveCityPokecenterSign:
-	jumpstd PokecenterSignScript
+	jumpstd pokecentersign
 
 CherrygroveCityMartSign:
-	jumpstd MartSignScript
+	jumpstd martsign
 
 GuideGentMovement1:
 	step LEFT
@@ -317,7 +317,7 @@ CherrygroveCity_RivalPushesYouOutOfTheWay:
 	turn_head UP
 	step_end
 
-CherrygroveCity_UnusedMovementData: ; unreferenced
+CherrygroveCity_UnusedMovementData:
 	step LEFT
 	turn_head DOWN
 	step_end
@@ -547,24 +547,24 @@ GuideGentsHouseSignText:
 CherrygroveCity_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 5 ; warp events
 	warp_event 23,  3, CHERRYGROVE_MART, 2
 	warp_event 29,  3, CHERRYGROVE_POKECENTER_1F, 1
 	warp_event 17,  7, CHERRYGROVE_GYM_SPEECH_HOUSE, 1
 	warp_event 25,  9, GUIDE_GENTS_HOUSE, 1
 	warp_event 31, 11, CHERRYGROVE_EVOLUTION_SPEECH_HOUSE, 1
 
-	def_coord_events
+	db 2 ; coord events
 	coord_event 33,  6, SCENE_CHERRYGROVECITY_MEET_RIVAL, CherrygroveSilverSceneNorth
 	coord_event 33,  7, SCENE_CHERRYGROVECITY_MEET_RIVAL, CherrygroveSilverSceneSouth
 
-	def_bg_events
+	db 4 ; bg events
 	bg_event 30,  8, BGEVENT_READ, CherrygroveCitySign
 	bg_event 23,  9, BGEVENT_READ, GuideGentsHouseSign
 	bg_event 24,  3, BGEVENT_READ, CherrygroveCityMartSign
 	bg_event 30,  3, BGEVENT_READ, CherrygroveCityPokecenterSign
 
-	def_object_events
+	db 5 ; object events
 	object_event 32,  6, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, CherrygroveCityGuideGent, EVENT_GUIDE_GENT_IN_HIS_HOUSE
 	object_event 39,  6, SPRITE_SILVER, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_RIVAL_CHERRYGROVE_CITY
 	object_event 27, 12, SPRITE_TEACHER, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, CherrygroveTeacherScript, -1

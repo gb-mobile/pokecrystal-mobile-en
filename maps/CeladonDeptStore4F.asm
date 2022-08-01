@@ -1,12 +1,12 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const CELADONDEPTSTORE4F_CLERK
 	const CELADONDEPTSTORE4F_SUPER_NERD
 	const CELADONDEPTSTORE4F_YOUNGSTER
 
 CeladonDeptStore4F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 CeladonDeptStore4FClerkScript:
 	faceplayer
@@ -25,7 +25,7 @@ CeladonDeptStore4FDirectory:
 	jumptext CeladonDeptStore4FDirectoryText
 
 CeladonDeptStore4FElevatorButton:
-	jumpstd ElevatorButtonScript
+	jumpstd elevatorbutton
 
 CeladonDeptStore4FSuperNerdText:
 	text "I'm here to buy"
@@ -51,18 +51,18 @@ CeladonDeptStore4FDirectoryText:
 CeladonDeptStore4F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event 12,  0, CELADON_DEPT_STORE_5F, 1
 	warp_event 15,  0, CELADON_DEPT_STORE_3F, 2
 	warp_event  2,  0, CELADON_DEPT_STORE_ELEVATOR, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event 14,  0, BGEVENT_READ, CeladonDeptStore4FDirectory
 	bg_event  3,  0, BGEVENT_READ, CeladonDeptStore4FElevatorButton
 
-	def_object_events
+	db 3 ; object events
 	object_event 13,  5, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, CeladonDeptStore4FClerkScript, -1
 	object_event  7,  6, SPRITE_SUPER_NERD, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, CeladonDeptStore4FSuperNerdScript, -1
 	object_event  8,  2, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, CeladonDeptStore4FYoungsterScript, -1

@@ -1,4 +1,4 @@
-BuenaPhoneMorningAnswerText:
+UnknownText_0xa0c28:
 	text "Hi, this is BUENA…"
 
 	para "Oh! Good morning,"
@@ -8,7 +8,7 @@ BuenaPhoneMorningAnswerText:
 	line "in the morning…"
 	done
 
-BuenaPhoneDayAnswerText:
+UnknownText_0xa0c72:
 	text "Hi, this is BUENA…"
 	line "Oh! Hi, <PLAY_G>!"
 
@@ -16,7 +16,7 @@ BuenaPhoneDayAnswerText:
 	line "BUENA's show?"
 	done
 
-BuenaPhoneMidnightAnswerText:
+UnknownText_0xa0caf:
 	text "This is BUENA."
 	line "I can't come to"
 
@@ -33,7 +33,7 @@ BuenaPhoneMidnightAnswerText:
 	line "after midnight!"
 	done
 
-BuenaPhoneNiteAnswerText:
+UnknownText_0xa0d42:
 	text "Hi, this is BUENA…"
 	line "Oh! Hi, <PLAY_G>!"
 
@@ -44,7 +44,7 @@ BuenaPhoneNiteAnswerText:
 	line "I'm exhausted!"
 	done
 
-BuenaPhoneMorningText:
+UnknownText_0xa0d96:
 	text "<PLAY_G>!"
 	line "Hi, it's BUENA!"
 
@@ -52,7 +52,7 @@ BuenaPhoneMorningText:
 	line "I decided to call!"
 	done
 
-BuenaPhoneDayText:
+UnknownText_0xa0dcf:
 	text "<PLAY_G>!"
 	line "Hi, it's BUENA!"
 
@@ -60,7 +60,7 @@ BuenaPhoneDayText:
 	line "to chat with!"
 	done
 
-BuenaPhoneMidnightText:
+UnknownText_0xa0e01:
 	text "<PLAY_G>!"
 	line "Hi, it's BUENA!"
 
@@ -68,7 +68,7 @@ BuenaPhoneMidnightText:
 	line "break."
 	done
 
-BuenaPhoneNiteText:
+UnknownText_0xa0e29:
 	text "<PLAY_G>!"
 	line "Hi, it's BUENA!"
 
@@ -76,7 +76,7 @@ BuenaPhoneNiteText:
 	line "so I called you."
 	done
 
-BuenaPhoneRocketText:
+UnknownText_0xa0e5e:
 	text "Oh. Hi, <PLAY_G>!"
 
 	para "You are how?"
@@ -94,7 +94,7 @@ BuenaPhoneRocketText:
 	line "better be careful!"
 	done
 
-BuenaPhoneWentOutWithBenText:
+UnknownText_0xa0efb:
 	text "The other day, I"
 	line "went out to eat"
 
@@ -117,7 +117,7 @@ BuenaPhoneWentOutWithBenText:
 	line "you later!"
 	done
 
-BuenaPhoneReceptionistText:
+UnknownText_0xa0fcf:
 	text "You know the"
 	line "receptionist at"
 	cont "the RADIO TOWER?"
@@ -140,7 +140,7 @@ BuenaPhoneReceptionistText:
 	para "Catch you later!"
 	done
 
-BuenaPhoneLuckyNumberShowText:
+UnknownText_0xa109d:
 	text "Tell me, <PLAY_G>."
 	line "Have you ever won"
 
@@ -157,7 +157,7 @@ BuenaPhoneLuckyNumberShowText:
 	para "Let's chat again!"
 	done
 
-BuenaPhoneStressedFromWorkText:
+UnknownText_0xa1143:
 	text "You know, last"
 	line "night…"
 
@@ -187,7 +187,7 @@ BuenaPhoneStressedFromWorkText:
 	line "wrong number!"
 	done
 
-BuenaPhoneProfessorOakText:
+UnknownText_0xa1244:
 	text "Yesterday, PROF."
 	line "OAK was in the"
 
@@ -209,7 +209,7 @@ BuenaPhoneProfessorOakText:
 	para "Catch you later!"
 	done
 
-BuenaPhoneGotAColdText:
+UnknownText_0xa1318:
 	text "…Cough, cough!"
 
 	para "Uhm sorry uh got"
@@ -229,7 +229,7 @@ BuenaPhoneGotAColdText:
 	cont "been BUENA!"
 	done
 
-BuenaPhoneRadioCardQuestionsText:
+UnknownText_0xa13d8:
 	text "Hey, <PLAY_G>."
 	line "You won that RADIO"
 
@@ -249,7 +249,7 @@ BuenaPhoneRadioCardQuestionsText:
 	line "again!"
 	done
 
-BuenaPhonePikachuFanClubText:
+UnknownText_0xa1488:
 	text "I'm elated that"
 	line "more people are"
 
@@ -283,7 +283,7 @@ BuenaPhonePikachuFanClubText:
 	para "Let's chat again!"
 	done
 
-BuenaPhoneRadioTowerDirectorText:
+UnknownText_0xa15de:
 	text "Guess what?"
 	line "The RADIO TOWER's"
 
@@ -315,7 +315,7 @@ BuenaPhoneRadioTowerDirectorText:
 	line "my show!"
 	done
 
-BuenaPhoneWhenDoYouRelaxText:
+UnknownText_0xa1717:
 	text "<PLAY_G>, tell me."
 
 	para "When do you relax"
@@ -347,7 +347,7 @@ BuenaPhoneWhenDoYouRelaxText:
 	line "happened! Later!"
 	done
 
-BuenaPhoneStarterPokemonText:
+UnknownText_0xa183d:
 	text "<PLAY_G>, what was"
 	line "the first #MON"
 	cont "you ever caught?"
@@ -387,7 +387,7 @@ BuenaPhoneStarterPokemonText:
 	para "Bye-bye!"
 	done
 
-BuenaPhoneCompanyVacationText:
+UnknownText_0xa19b1:
 	text "Guess what? All of"
 	line "us from the RADIO"
 
@@ -415,7 +415,7 @@ BuenaPhoneCompanyVacationText:
 	para "Bye-bye!"
 	done
 
-BuenaPhoneBenAndFernText:
+UnknownText_0xa1ac0:
 	text "Did you know…?"
 
 	para "BEN and FERN talk"
@@ -445,7 +445,7 @@ BuenaPhoneBenAndFernText:
 	para "Let's chat again!"
 	done
 
-BuenaPhoneGoingShoppingText:
+UnknownText_0xa1bed:
 	text "I'm going shopping"
 	line "with MARY and LILY"
 	cont "soon."
@@ -462,7 +462,7 @@ BuenaPhoneGoingShoppingText:
 	para "Catch you later!"
 	done
 
-BuenaPhoneFavoriteSlotMachineAnswerText:
+UnknownText_0xa1c88:
 	text "I'm thinking of"
 	line "going to the GAME"
 
@@ -489,7 +489,7 @@ endc
 	para "Catch you later!"
 	done
 
-BuenaPhonePokegearAnswerText:
+UnknownText_0xa1d5f:
 	text "Hey, <PLAY_G>. You"
 	line "use your #GEAR"
 
@@ -512,7 +512,7 @@ BuenaPhonePokegearAnswerText:
 	line "calling! Later!"
 	done
 
-BuenaPhoneCoopedUpInRadioTowerAnswerText:
+UnknownText_0xa1e2f:
 	text "Is it sunny"
 	line "outside today?"
 

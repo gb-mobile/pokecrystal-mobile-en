@@ -1,4 +1,4 @@
-TullyAnswerPhoneText:
+UnknownText_0x1b6b39:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -8,7 +8,7 @@ TullyAnswerPhoneText:
 	line "<PLAY_G>."
 	done
 
-TullyAnswerPhoneDayText:
+UnknownText_0x1b6b65:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -18,7 +18,7 @@ TullyAnswerPhoneDayText:
 	line "<PLAY_G>, right?"
 	done
 
-TullyAnswerPhoneNiteText:
+UnknownText_0x1b6b92:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -28,7 +28,7 @@ TullyAnswerPhoneNiteText:
 	line "<PLAY_G>!"
 	done
 
-TullyGreetText:
+UnknownText_0x1b6bb9:
 	text "Hello!"
 	line "@"
 	text_ram wStringBuffer3
@@ -38,7 +38,7 @@ TullyGreetText:
 	line "weather's great!"
 	done
 
-TullyGreetDayText:
+UnknownText_0x1b6bef:
 	text "Hello!"
 	line "@"
 	text_ram wStringBuffer3
@@ -48,7 +48,7 @@ TullyGreetDayText:
 	line "for fishing!"
 	done
 
-TullyGreetNiteText:
+UnknownText_0x1b6c23:
 	text "Hello!"
 	line "@"
 	text_ram wStringBuffer3
@@ -58,7 +58,7 @@ TullyGreetNiteText:
 	line "for fishing!"
 	done
 
-TullyGenericText:
+UnknownText_0x1b6c56:
 	text "How's your trip"
 	line "coming along?"
 

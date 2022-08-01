@@ -45,8 +45,8 @@ InitMobileProfile:
 	ld [wMusicFadeID + 1], a
 	ld c, 20
 	call DelayFrames
-	ld b, CRYSTAL_CGB_MOBILE_1
-	call GetCrystalCGBLayout
+	ld b, $1
+	call GetMysteryGift_MobileAdapterLayout
 	call ClearBGPalettes
 	hlcoord 0, 0
 	ld b,  2
@@ -144,7 +144,7 @@ asm_4815f:
 	call ClearBGPalettes
 	call Function48d30
 	pop bc
-	call ClearTilemap
+	call ClearTileMap
 	ld a, $ff
 	ret
 
@@ -209,7 +209,7 @@ Function48187:
 	ret
 
 .String_TellLater:
-	db "Tell Later@"
+	db "LATER   @"
 
 Function4820d:
 	call PlaceHollowCursor
@@ -254,7 +254,7 @@ Function4820d:
 	call ClearBGPalettes
 	call Function48d30
 	pop bc
-	call ClearTilemap
+	call ClearTileMap
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
 	ld hl, wd479
@@ -295,7 +295,7 @@ asm_4828d:
 	call WaitBGMap
 	ld a, [wPlayerGender]
 	inc a
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	call StaticMenuJoypad
 	call PlayClickSFX
 	call ExitMenu
@@ -339,7 +339,7 @@ Function48304:
 	ld b, $c
 	ld c, $8
 	call Function48cdc
-	ld a, [wMenuCursorPosition]
+	ld a, [wMenuCursorBuffer]
 	ld b, a
 	ld a, [wMenuScrollPosition]
 	ld c, a
@@ -350,11 +350,11 @@ Function48304:
 	jr c, .asm_4833f
 	sub $29
 	inc a
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	ld a, $29
 .asm_4833f
 	ld [wMenuScrollPosition], a
-	farcall Mobile_OpenAndCloseMenu_HDMATransferTilemapAndAttrmap
+	farcall Mobile_OpenAndCloseMenu_HDMATransferTileMapAndAttrMap
 .asm_48348
 	call ScrollingMenu
 	ld de, $629
@@ -363,7 +363,7 @@ Function48304:
 	ld d, a
 	pop bc
 	ld a, b
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	ld a, c
 	ld [wMenuScrollPosition], a
 	ld a, d
@@ -380,7 +380,7 @@ Function48304:
 	ld [wd003], a
 .asm_48377
 	call Function48187
-	farcall Mobile_OpenAndCloseMenu_HDMATransferTilemapAndAttrmap
+	farcall Mobile_OpenAndCloseMenu_HDMATransferTileMapAndAttrMap
 	jp Function4840c
 
 Function48383:
@@ -412,7 +412,7 @@ Function48383:
 .asm_483af
 	ld hl, wMenuCursorY
 	ld a, [hl]
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	scf
 .asm_483b7
 	pop bc
@@ -539,11 +539,11 @@ Mobile12_Bin2Dec:
 	db "8@"
 	db "9@"
 
-MobileProfileString:         db "  Mobile Profile@"
-MobileString_Gender:         db "Gender@"
-MobileString_Age:            db "Age@"
-MobileString_Address:        db "Address@"
-MobileString_ZipCode:        db "Zip Code@"
+MobileProfileString:         db "  MOBILE PROFILE@"
+MobileString_Gender:         db "GENDER@"
+MobileString_Age:            db "AGE@"
+MobileString_Address:        db "ADDRESS@"
+MobileString_ZipCode:        db "ZIP CODE@"
 MobileString_OK:             db "OK@"
 MobileString_ProfileChanged: db "Profile Changed@"
 MobileDesc_Gender:           db "Boy or girl?@"
@@ -593,65 +593,67 @@ MenuData_0x4851b:
 
 .Items:
 	db 46
-for x, 46
+x = 0
+rept 46
 	db x
+x = x + 1
 endr
 	db -1
 
-Prefectures:
-Aichi:     db "あいちけん@"   ; Aichi
-Aomori:    db "あおもりけん@" ; Aomori
-Akita:     db "あきたけん@"   ; Akita
-Ishikawa:  db "いしかわけん@" ; Ishikawa
-Ibaraki:   db "いばらきけん@" ; Ibaraki
-Iwate:     db "いわてけん@"   ; Iwate
-Ehime:     db "えひめけん@"   ; Ehime
-Oita:      db "おおいたけん@" ; Oita
-Osakafu:   db "おおさかふ@"   ; Osakafu
-Okayama:   db "おかやまけん@" ; Okayama
-Okinawa:   db "おきなわけん@" ; Okinawa
-Kagawa:    db "かがわけん@"   ; Kagawa
-Kagoshima: db "かごしまけん@" ; Kagoshima
-Kanagawa:  db "かながわけん@" ; Kanagawa
-Gifu:      db "ぎふけん@"     ; Gifu
-Kyotofu:   db "きょうとふ@"   ; Kyotofu
-Kumamoto:  db "くまもとけん@" ; Kumamoto
-Gunma:     db "ぐんまけん@"   ; Gunma
-Kochi:     db "こうちけん@"   ; Kochi
-Saitama:   db "さいたまけん@" ; Saitama
-Saga:      db "さがけん@"     ; Saga
-Shiga:     db "しがけん@"     ; Shiga
-Shizuoka:  db "しずおかけん@" ; Shizuoka
-Shimane:   db "しまねけん@"   ; Shimane
-Chiba:     db "ちばけん@"     ; Chiba
-Tokyo:     db "とうきょうと@" ; Tokyo
-Tokushima: db "とくしまけん@" ; Tokushima
-Tochigi:   db "とちぎけん@"   ; Tochigi
-Tottori:   db "とっとりけん@" ; Tottori
-Toyama:    db "とやまけん@"   ; Toyama
-Nagasaki:  db "ながさきけん@" ; Nagasaki
-Nagano:    db "ながのけん@"   ; Nagano
-Naraken:   db "ならけん@"     ; Naraken
-Niigata:   db "にいがたけん@" ; Niigata
-Hyogo:     db "ひょうごけん@" ; Hyogo
-Hiroshima: db "ひろしまけん@" ; Hiroshima
-Fukui:     db "ふくいけん@"   ; Fukui
-Fukuoka:   db "ふくおかけん@" ; Fukuoka
-Fukushima: db "ふくしまけん@" ; Fukushima
-Hokkaido:  db "ほっかいどう@" ; Hokkaido
-Mie:       db "みえけん@"     ; Mie
-Miyagi:    db "みやぎけん@"   ; Miyagi
-Miyazaki:  db "みやざきけん@" ; Miyazaki
-Yamagata:  db "やまがたけん@" ; Yamagata
-Yamaguchi: db "やまぐちけん@" ; Yamaguchi
-Yamanashi: db "やまなしけん@" ; Yamanashi
-Wakayama:  db "わかやまけん@" ; Wakayama
+Prefectures: ; Some names shortened to fit, check for official initials later.
+Aichi:		db	"Aichi@" 	; "あいちけん@"
+Aomori:		db	"Aomori@" 	; "あおもりけん@"
+Akita:		db	"Akita@" 	; "あきたけん@"
+Ishikawa:	db	"Ishika-@"  ; "いしかわけん@"
+Ibaraki:	db	"Ibaraki@" 	; "いばらきけん@"
+Iwate:		db	"Iwate@" 	; "いわてけん@"
+Ehime:		db	"Ehime@" 	; "えひめけん@"
+Oita:		db	"Oita@" 	; "おおいたけん@"
+Osakafu:	db	"Osakafu@" 	; "おおさかふ@"
+Okayama:	db	"Okayama@" 	; "おかやまけん@"
+Okinawa:	db	"Okinawa@" 	; "おきなわけん@"
+Kagawa:		db	"Kagawa@" 	; "かがわけん@"
+Kagoshima:	db	"Kagosh-@"  ; "かごしまけん@"
+Kanagawa:	db	"Kanaga-@"  ; "かながわけん@"
+Gifu:		db	"Gifu@" 	; "ぎふけん@"
+Kyotofu:	db	"Kyotofu@" 	; "きょうとふ@"
+Kumamoto:	db	"Kumamo-@"  ; "くまもとけん@"
+Gunma:		db	"Gunma@" 	; "ぐんまけん@"
+Kochi:		db	"Kochi@" 	; "こうちけん@"
+Saitama:	db	"Saitama@" 	; "さいたまけん@"
+Saga:		db	"Saga@" 	; "さがけん@"
+Shiga:		db	"Shiga@" 	; "しがけん@"
+Shizuoka:	db	"Shizuo-@"  ; "しずおかけん@"
+Shimane:	db	"Shimane@" 	; "しまねけん@"
+Chiba:		db	"Chiba@" 	; "ちばけん@"
+Tokyo:		db	"Tokyo@" 	; "とうきょうと@"
+Tokushima:	db	"Tokush-@"  ; "とくしまけん@"
+Tochigi:	db	"Tochigi@" 	; "とちぎけん@"
+Tottori:	db	"Tottori@" 	; "とっとりけん@"
+Toyama:		db	"Toyama@" 	; "とやまけん@"
+Nagasaki:	db	"Nagasa-@"  ; "ながさきけん@"
+Nagano:		db	"Nagano@" 	; "ながのけん@"
+Naraken:	db	"Naraken@" 	; "ならけん@"
+Niigata:	db	"Niigata@" 	; "にいがたけん@"
+Hyogo:		db	"Hyogo@" 	; "ひょうごけん@"
+Hiroshima:	db	"Hirosh-@"  ; "ひろしまけん@"
+Fukui:		db	"Fukui@" 	; "ふくいけん@"
+Fukuoka:	db	"Fukuoka@" 	; "ふくおかけん@"
+Fukushima:	db	"Fukush-@"  ; "ふくしまけん@"
+Hokkaido:	db	"Hokkai-@"  ; "ほっかいどう@"
+Mie:		db	"Mie@" 		; "みえけん@"
+Miyagi:		db	"Miyagi@" 	; "みやぎけん@"
+Miyazaki:	db	"Miyaza-@"  ; "みやざきけん@"
+Yamagata:	db	"Yamaga-@"	; "やまがたけん@"
+Yamaguchi:	db	"Yamagu-@"	; "やまぐちけん@"
+Yamanashi:	db	"Yamana-@"	; "やまなしけん@"
+Wakayama:	db	"Wakaya-@"	; "わかやまけん@"
 
 Function48689:
 	ld c, 7
 	call DelayFrames
-	ld b, CRYSTAL_CGB_MOBILE_1
-	call GetCrystalCGBLayout
+	ld b, $1
+	call GetMysteryGift_MobileAdapterLayout
 	call ClearBGPalettes
 	hlcoord 0, 0
 	ld b, 4
@@ -1004,10 +1006,10 @@ Function488b9:
 	ret
 
 MobileUpArrowGFX:
-INCBIN "gfx/mobile/up_arrow.1bpp"
+INCBIN "gfx/mobile/up_arrow.2bpp"
 
 MobileDownArrowGFX:
-INCBIN "gfx/mobile/down_arrow.1bpp"
+INCBIN "gfx/mobile/down_arrow.2bpp"
 
 Function488d3:
 	call Function48283
@@ -1078,7 +1080,7 @@ asm_48922:
 	call DelayFrames
 	jr asm_48972
 
-Function4895a: ; unreferenced
+Function4895a:
 	ldh a, [hJoyPressed]
 	and a
 	jr z, .asm_48965
@@ -1260,8 +1262,8 @@ MenuHeader_0x48a9c:
 	menu_coords 10, 8, SCREEN_WIDTH - 1, 13
 
 String_48aa1:
-	db   "Tell Now"
-	next "Tell Later@"
+	db   "NOW"
+	next "LATER@"
 
 Function48ab5:
 	ldh a, [hJoyPressed]
@@ -1596,7 +1598,7 @@ Function48c63:
 	scf
 	ret
 
-Function48c8e: ; unreferenced
+Unreferenced_Function48c8e:
 	ld hl, wd019 + $11
 	ld d, h
 	ld e, l
@@ -1606,7 +1608,7 @@ Function48c8e: ; unreferenced
 	call WaitBGMap
 	ret
 
-Function48ca3: ; unreferenced
+Function48ca3:
 	push af
 	push bc
 	push de
@@ -1660,7 +1662,7 @@ Function48cdc:
 	call Function48cfd
 	pop hl
 	pop bc
-	ld de, wAttrmap - wTilemap
+	ld de, wAttrMap - wTileMap
 	add hl, de
 	inc b
 	inc b

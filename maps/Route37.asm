@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE37_WEIRD_TREE1
 	const ROUTE37_WEIRD_TREE2
 	const ROUTE37_YOUNGSTER
@@ -8,20 +8,20 @@
 	const ROUTE37_FRUIT_TREE3
 
 Route37_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .Sunny
 
 .Sunny:
 	readvar VAR_WEEKDAY
 	ifequal SUNDAY, .SunnyAppears
 	disappear ROUTE37_SUNNY
-	endcallback
+	return
 
 .SunnyAppears:
 	appear ROUTE37_SUNNY
-	endcallback
+	return
 
 TrainerTwinsAnnandanne1:
 	trainer TWINS, ANNANDANNE1, EVENT_BEAT_TWINS_ANN_AND_ANNE, TwinsAnnandanne1SeenText, TwinsAnnandanne1BeatenText, 0, .Script
@@ -66,17 +66,17 @@ SunnyScript:
 	checkevent EVENT_MET_SUNNY_OF_SUNDAY
 	iftrue .MetSunny
 	writetext MeetSunnyText
-	promptbutton
+	buttonsound
 	setevent EVENT_MET_SUNNY_OF_SUNDAY
 .MetSunny:
 	checkflag ENGINE_PLAYER_IS_FEMALE
 	iftrue .Kris
 	writetext SunnyGivesGiftText1
-	promptbutton
+	buttonsound
 	sjump .next
 .Kris:
 	writetext SunnyGivesGiftText2
-	promptbutton
+	buttonsound
 .next
 	verbosegiveitem MAGNET
 	iffalse SunnyDoneScript
@@ -238,15 +238,15 @@ Route37SignText:
 Route37_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 0 ; warp events
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  5,  3, BGEVENT_READ, Route37Sign
 	bg_event  4,  2, BGEVENT_ITEM, Route37HiddenEther
 
-	def_object_events
+	db 7 ; object events
 	object_event  6, 12, SPRITE_WEIRD_TREE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 1, TrainerTwinsAnnandanne1, -1
 	object_event  7, 12, SPRITE_WEIRD_TREE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 1, TrainerTwinsAnnandanne2, -1
 	object_event  6,  6, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 1, TrainerPsychicGreg, -1

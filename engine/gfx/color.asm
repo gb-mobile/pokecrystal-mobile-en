@@ -1,9 +1,9 @@
 INCLUDE "engine/gfx/sgb_layouts.asm"
 
-DEF SHINY_ATK_BIT EQU 5
-DEF SHINY_DEF_VAL EQU 10
-DEF SHINY_SPD_VAL EQU 10
-DEF SHINY_SPC_VAL EQU 10
+SHINY_ATK_BIT EQU 5
+SHINY_DEF_VAL EQU 10
+SHINY_SPD_VAL EQU 10
+SHINY_SPC_VAL EQU 10
 
 CheckShininess:
 ; Check if a mon is shiny by DVs at bc.
@@ -15,31 +15,31 @@ CheckShininess:
 ; Attack
 	ld a, [hl]
 	and 1 << SHINY_ATK_BIT
-	jr z, .not_shiny
+	jr z, .NotShiny
 
 ; Defense
 	ld a, [hli]
 	and $f
 	cp  SHINY_DEF_VAL
-	jr nz, .not_shiny
+	jr nz, .NotShiny
 
 ; Speed
 	ld a, [hl]
 	and $f0
 	cp  SHINY_SPD_VAL << 4
-	jr nz, .not_shiny
+	jr nz, .NotShiny
 
 ; Special
 	ld a, [hl]
 	and $f
 	cp  SHINY_SPC_VAL
-	jr nz, .not_shiny
+	jr nz, .NotShiny
 
-; shiny
+.Shiny:
 	scf
 	ret
 
-.not_shiny
+.NotShiny:
 	and a
 	ret
 
@@ -49,37 +49,37 @@ Unused_CheckShininess:
 ; Attack
 	ld a, [hl]
 	cp 10 << 4
-	jr c, .not_shiny
+	jr c, .NotShiny
 
 ; Defense
 	ld a, [hli]
 	and $f
 	cp 10
-	jr c, .not_shiny
+	jr c, .NotShiny
 
 ; Speed
 	ld a, [hl]
 	cp 10 << 4
-	jr c, .not_shiny
+	jr c, .NotShiny
 
 ; Special
 	ld a, [hl]
 	and $f
 	cp 10
-	jr c, .not_shiny
+	jr c, .NotShiny
 
-; shiny
+.Shiny:
 	scf
 	ret
 
-.not_shiny
+.NotShiny:
 	and a
 	ret
 
-SGB_ApplyCreditsPals: ; unreferenced
+Unreferenced_Function8aa4:
 	push de
 	push bc
-	ld hl, PalPacket_Pal01
+	ld hl, PalPacket_9ce6
 	ld de, wSGBPals
 	ld bc, PALPACKET_LENGTH
 	call CopyBytes
@@ -95,7 +95,7 @@ SGB_ApplyCreditsPals: ; unreferenced
 	ld [wSGBPals + 6], a
 	ld hl, wSGBPals
 	call PushSGBPals
-	ld hl, BlkPacket_AllPal0
+	ld hl, BlkPacket_9a86
 	call PushSGBPals
 	ret
 
@@ -103,15 +103,15 @@ InitPartyMenuPalettes:
 	ld hl, PalPacket_PartyMenu + 1
 	call CopyFourPalettes
 	call InitPartyMenuOBPals
-	call WipeAttrmap
+	call WipeAttrMap
 	ret
 
-; SGB layout for SCGB_PARTY_MENU_HP_BARS
+; SGB layout for SCGB_PARTY_MENU_HP_PALS
 SGB_ApplyPartyMenuHPPals:
 	ld hl, wHPPals
 	ld a, [wSGBPals]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	ld e, l
 	ld d, h
@@ -133,44 +133,49 @@ SGB_ApplyPartyMenuHPPals:
 	ld [hl], e
 	ret
 
-Intro_LoadMagikarpPalettes: ; unreferenced
+Unreferenced_Function8b07:
 	call CheckCGB
 	ret z
-
 ; CGB only
-	ld hl, .MagikarpBGPal
+	ld hl, .BGPal
 	ld de, wBGPals1
 	ld bc, 1 palettes
 	ld a, BANK(wBGPals1)
 	call FarCopyWRAM
 
-	ld hl, .MagikarpOBPal
+	ld hl, .OBPal
 	ld de, wOBPals1
 	ld bc, 1 palettes
 	ld a, BANK(wOBPals1)
 	call FarCopyWRAM
 
 	call ApplyPals
-	ld a, TRUE
+	ld a, $1
 	ldh [hCGBPalUpdate], a
 	ret
 
-.MagikarpBGPal:
-INCLUDE "gfx/intro/gs_magikarp_bg.pal"
+.BGPal:
+	RGB 31, 31, 31
+	RGB 18, 23, 31
+	RGB 15, 20, 31
+	RGB 00, 00, 00
 
-.MagikarpOBPal:
-INCLUDE "gfx/intro/gs_magikarp_ob.pal"
+.OBPal:
+	RGB 31, 31, 31
+	RGB 31, 31, 12
+	RGB 08, 16, 28
+	RGB 00, 00, 00
 
-Intro_LoadAllPal0: ; unreferenced
+Unreferenced_Function8b3f:
 	call CheckCGB
 	ret nz
 	ldh a, [hSGB]
 	and a
 	ret z
-	ld hl, BlkPacket_AllPal0
+	ld hl, BlkPacket_9a86
 	jp PushSGBPals
 
-Intro_LoadBetaIntroVenusaurPalettes: ; unreferenced
+Unreferenced_Function8b4d:
 	call CheckCGB
 	jr nz, .cgb
 	ldh a, [hSGB]
@@ -185,7 +190,7 @@ Intro_LoadBetaIntroVenusaurPalettes: ; unreferenced
 	call GetPredefPal
 	jp LoadHLPaletteIntoDE
 
-Intro_LoadPackPalettes: ; unreferenced
+Unreferenced_Function8b67:
 	call CheckCGB
 	jr nz, .cgb
 	ldh a, [hSGB]
@@ -200,7 +205,7 @@ Intro_LoadPackPalettes: ; unreferenced
 	call GetPredefPal
 	jp LoadHLPaletteIntoDE
 
-GSIntro_LoadMonPalette: ; unreferenced
+Unreferenced_Function8b81:
 	call CheckCGB
 	jr nz, .cgb
 	ldh a, [hSGB]
@@ -208,7 +213,7 @@ GSIntro_LoadMonPalette: ; unreferenced
 	ret z
 	ld a, c
 	push af
-	ld hl, PalPacket_Pal01
+	ld hl, PalPacket_9ce6
 	ld de, wSGBPals
 	ld bc, PALPACKET_LENGTH
 	call CopyBytes
@@ -236,21 +241,21 @@ LoadTrainerClassPaletteAsNthBGPal:
 	ld a, [wTrainerClass]
 	call GetTrainerPalettePointer
 	ld a, e
-	jr LoadNthMiddleBGPal
+	jr got_palette_pointer_8bd7
 
 LoadMonPaletteAsNthBGPal:
 	ld a, [wCurPartySpecies]
 	call _GetMonPalettePointer
 	ld a, e
 	bit 7, a
-	jr z, LoadNthMiddleBGPal
+	jr z, got_palette_pointer_8bd7
 	and $7f
 	inc hl
 	inc hl
 	inc hl
 	inc hl
 
-LoadNthMiddleBGPal:
+got_palette_pointer_8bd7
 	push hl
 	ld hl, wBGPals1
 	ld de, 1 palettes
@@ -268,18 +273,18 @@ LoadNthMiddleBGPal:
 	call LoadPalette_White_Col1_Col2_Black
 	ret
 
-LoadBetaPokerPalettes: ; unreferenced
+Unreferenced_Function8bec:
 	ldh a, [hCGB]
 	and a
 	jr nz, .cgb
-	ld hl, wBetaPokerSGBPals
+	ld hl, wPlayerLightScreenCount
 	jp PushSGBPals
 
 .cgb
-	ld a, [wBetaPokerSGBCol]
+	ld a, [wEnemyLightScreenCount] ; col
 	ld c, a
-	ld a, [wBetaPokerSGBRow]
-	hlcoord 0, 0, wAttrmap
+	ld a, [wEnemyReflectCount] ; row
+	hlcoord 0, 0, wAttrMap
 	ld de, SCREEN_WIDTH
 .loop
 	and a
@@ -289,10 +294,10 @@ LoadBetaPokerPalettes: ; unreferenced
 	jr .loop
 
 .done
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	lb bc, 6, 4
-	ld a, [wBetaPokerSGBAttr]
+	ld a, [wEnemySafeguardCount] ; value
 	and $3
 	call FillBoxCGB
 	call CopyTilemapAtOnce
@@ -315,8 +320,8 @@ ApplyMonOrTrainerPals:
 .load_palettes
 	ld de, wBGPals1
 	call LoadPalette_White_Col1_Col2_Black
-	call WipeAttrmap
-	call ApplyAttrmap
+	call WipeAttrMap
+	call ApplyAttrMap
 	call ApplyPals
 	ret
 
@@ -347,14 +352,14 @@ ApplyHPBarPals:
 	ld bc, 4
 	ld a, BANK(wBGPals2)
 	call FarCopyWRAM
-	ld a, TRUE
+	ld a, $1
 	ldh [hCGBPalUpdate], a
 	ret
 
 .PartyMenu:
 	ld e, c
 	inc e
-	hlcoord 11, 1, wAttrmap
+	hlcoord 11, 1, wAttrMap
 	ld bc, 2 * SCREEN_WIDTH
 	ld a, [wCurPartyMon]
 .loop
@@ -405,7 +410,7 @@ LoadMailPalettes:
 	call CheckCGB
 	jr nz, .cgb
 	push hl
-	ld hl, PalPacket_Pal01
+	ld hl, PalPacket_9ce6
 	ld de, wSGBPals
 	ld bc, PALPACKET_LENGTH
 	call CopyBytes
@@ -422,7 +427,7 @@ LoadMailPalettes:
 	ld [wSGBPals + 6], a
 	ld hl, wSGBPals
 	call PushSGBPals
-	ld hl, BlkPacket_AllPal0
+	ld hl, BlkPacket_9a86
 	call PushSGBPals
 	ret
 
@@ -432,14 +437,31 @@ LoadMailPalettes:
 	ld a, BANK(wBGPals1)
 	call FarCopyWRAM
 	call ApplyPals
-	call WipeAttrmap
-	call ApplyAttrmap
+	call WipeAttrMap
+	call ApplyAttrMap
 	ret
 
 .MailPals:
 INCLUDE "gfx/mail/mail.pal"
 
 INCLUDE "engine/gfx/cgb_layouts.asm"
+
+Unreferenced_Function95f0:
+	ld hl, .Palette
+	ld de, wBGPals1
+	ld bc, 1 palettes
+	ld a, BANK(wBGPals1)
+	call FarCopyWRAM
+	call ApplyPals
+	call WipeAttrMap
+	call ApplyAttrMap
+	ret
+
+.Palette:
+	RGB 31, 31, 31
+	RGB 09, 31, 31
+	RGB 10, 12, 31
+	RGB 00, 03, 19
 
 CopyFourPalettes:
 	ld de, wBGPals1
@@ -461,7 +483,7 @@ CopyPalettes:
 
 GetPredefPal:
 	ld l, a
-	ld h, 0
+	ld h, $0
 	add hl, hl
 	add hl, hl
 	add hl, hl
@@ -568,8 +590,8 @@ ResetBGPals:
 	pop af
 	ret
 
-WipeAttrmap:
-	hlcoord 0, 0, wAttrmap
+WipeAttrMap:
+	hlcoord 0, 0, wAttrMap
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
 	xor a
 	call ByteFill
@@ -583,7 +605,7 @@ ApplyPals:
 	call FarCopyWRAM
 	ret
 
-ApplyAttrmap:
+ApplyAttrMap:
 	ldh a, [rLCDC]
 	bit rLCDC_ENABLE, a
 	jr z, .UpdateVBank1
@@ -600,7 +622,7 @@ ApplyAttrmap:
 	ret
 
 .UpdateVBank1:
-	hlcoord 0, 0, wAttrmap
+	hlcoord 0, 0, wAttrMap
 	debgcoord 0, 0
 	ld b, SCREEN_HEIGHT
 	ld a, $1
@@ -625,19 +647,19 @@ ApplyAttrmap:
 	ldh [rVBK], a
 	ret
 
-; CGB layout for SCGB_PARTY_MENU_HP_BARS
+; CGB layout for SCGB_PARTY_MENU_HP_PALS
 CGB_ApplyPartyMenuHPPals:
 	ld hl, wHPPals
 	ld a, [wSGBPals]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	ld e, l
 	ld d, h
 	ld a, [de]
 	inc a
 	ld e, a
-	hlcoord 11, 2, wAttrmap
+	hlcoord 11, 2, wAttrMap
 	ld bc, 2 * SCREEN_WIDTH
 	ld a, [wSGBPals]
 .loop
@@ -714,13 +736,12 @@ GetMonPalettePointer:
 	call _GetMonPalettePointer
 	ret
 
-CGBCopyBattleObjectPals: ; unreferenced
-; dummied out
+Unreferenced_Function9779:
 	ret
 	call CheckCGB
 	ret z
 	ld hl, BattleObjectPals
-	ld a, (1 << rOBPI_AUTO_INCREMENT) | $10
+	ld a, $90
 	ldh [rOBPI], a
 	ld c, 6 palettes
 .loop
@@ -738,10 +759,10 @@ CGBCopyBattleObjectPals: ; unreferenced
 BattleObjectPals:
 INCLUDE "gfx/battle_anims/battle_anims.pal"
 
-CGBCopyTwoPredefObjectPals: ; unreferenced
+Unreferenced_Function97cc:
 	call CheckCGB
 	ret z
-	ld a, (1 << rOBPI_AUTO_INCREMENT) | $10
+	ld a, $90
 	ldh [rOBPI], a
 	ld a, PREDEFPAL_TRADE_TUBE
 	call GetPredefPal
@@ -762,7 +783,7 @@ CGBCopyTwoPredefObjectPals: ; unreferenced
 
 _GetMonPalettePointer:
 	ld l, a
-	ld h, 0
+	ld h, $0
 	add hl, hl
 	add hl, hl
 	add hl, hl
@@ -784,13 +805,13 @@ endr
 	ret
 
 PushSGBPals:
-	ld a, [wJoypadDisable]
+	ld a, [wcfbe]
 	push af
-	set JOYPAD_DISABLE_SGB_TRANSFER_F, a
-	ld [wJoypadDisable], a
+	set 7, a
+	ld [wcfbe], a
 	call _PushSGBPals
 	pop af
-	ld [wJoypadDisable], a
+	ld [wcfbe], a
 	ret
 
 _PushSGBPals:
@@ -836,14 +857,12 @@ _PushSGBPals:
 InitSGBBorder:
 	call CheckCGB
 	ret nz
-
 ; SGB/DMG only
 	di
-	ld a, [wJoypadDisable]
+	ld a, [wcfbe]
 	push af
-	set JOYPAD_DISABLE_SGB_TRANSFER_F, a
-	ld [wJoypadDisable], a
-
+	set 7, a
+	ld [wcfbe], a
 	xor a
 	ldh [rJOYP], a
 	ldh [hSGB], a
@@ -863,14 +882,13 @@ InitSGBBorder:
 
 .skip
 	pop af
-	ld [wJoypadDisable], a
+	ld [wcfbe], a
 	ei
 	ret
 
 InitCGBPals::
 	call CheckCGB
 	ret z
-
 ; CGB only
 	ld a, BANK(vTiles3)
 	ldh [rVBK], a
@@ -951,7 +969,7 @@ _InitSGBBorderPals:
 	dw DataSndPacket7
 	dw DataSndPacket8
 
-UpdateSGBBorder: ; unreferenced
+Unreferenced_Function9911:
 	di
 	xor a
 	ldh [rJOYP], a
@@ -974,8 +992,8 @@ PushSGBBorder:
 	ret
 
 .LoadSGBBorderPointers:
-	ld hl, SGBBorderGFX
-	ld de, SGBBorderMapAndPalettes
+	ld hl, SGBBorder
+	ld de, SGBBorderMap
 	ret
 
 SGB_ClearVRAM:
@@ -1033,7 +1051,6 @@ endr
 .FinalPush:
 	ld hl, MltReq1Packet
 	call _PushSGBPals
-	vc_hook Unknown_network_reset ; Unknown why this hook is here, doesn't seem to be needed
 	jp SGBDelayCycles
 
 SGBBorder_PushBGPals:
@@ -1058,21 +1075,21 @@ SGBBorder_MorePalPushing:
 	ld a, $e4
 	ldh [rBGP], a
 	ld de, vTiles1
-	ld bc, (6 + SCREEN_WIDTH + 6) * 5 * 2
+	ld bc, 20 tiles
 	call CopyData
-	ld b, SCREEN_HEIGHT
+	ld b, 18
 .loop
 	push bc
-	ld bc, 6 * 2
+	ld bc, $c
 	call CopyData
-	ld bc, SCREEN_WIDTH * 2
+	ld bc, $28
 	call ClearBytes
-	ld bc, 6 * 2
+	ld bc, $c
 	call CopyData
 	pop bc
 	dec b
 	jr nz, .loop
-	ld bc, (6 + SCREEN_WIDTH + 6) * 5 * 2
+	ld bc, $140
 	call CopyData
 	ld bc, $100
 	call ClearBytes
@@ -1171,17 +1188,16 @@ INCLUDE "gfx/sgb/pal_packets.asm"
 INCLUDE "data/sgb_ctrl_packets.asm"
 
 PredefPals:
-	table_width PALETTE_SIZE, PredefPals
 INCLUDE "gfx/sgb/predef.pal"
-	assert_table_length NUM_PREDEF_PALS
 
-SGBBorderMapAndPalettes:
-; interleaved tile ids and palette ids, without the center 20x18 screen area
-INCBIN "gfx/sgb/sgb_border.sgb.tilemap"
-; four SGB palettes of 16 colors each; only the first 4 colors are used
+SGBBorderMap:
+; interleaved tile ids and palette ids
+INCBIN "gfx/sgb/sgb_border.bin"
+
+SGBBorderPalettes:
 INCLUDE "gfx/sgb/sgb_border.pal"
 
-SGBBorderGFX:
+SGBBorder:
 INCBIN "gfx/sgb/sgb_border.2bpp"
 
 HPBarPals:
@@ -1220,6 +1236,7 @@ LoadMapPals:
 	add hl, de
 	ld e, l
 	ld d, h
+	; Switch to palettes WRAM bank
 	ldh a, [rSVBK]
 	push af
 	ld a, BANK(wBGPals1)
@@ -1308,18 +1325,13 @@ MapObjectPals::
 INCLUDE "gfx/overworld/npc_sprites.pal"
 
 RoofPals:
-	table_width PAL_COLOR_SIZE * 2 * 2, RoofPals
 INCLUDE "gfx/tilesets/roofs.pal"
-	assert_table_length NUM_MAP_GROUPS + 1
 
 DiplomaPalettes:
 INCLUDE "gfx/diploma/diploma.pal"
 
 PartyMenuOBPals:
 INCLUDE "gfx/stats/party_menu_ob.pal"
-
-UnusedBattleObjectPals: ; unreferenced
-INCLUDE "gfx/battle_anims/unused_battle_anims.pal"
 
 UnusedGSTitleBGPals:
 INCLUDE "gfx/title/unused_gs_bg.pal"

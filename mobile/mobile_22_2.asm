@@ -22,17 +22,55 @@ Function8b342::
 	dw .zero
 	dw .one
 	dw .two
-
+	
 .zero
-	ret
+    ld hl, BattleTowerOutside_MapAttributes
+    call Function8b35d
+    ret nz
+
+    call Function8b363
+    ret c
+
+    ld c, MUSIC_ROUTE_36
+    ret
 
 .one
-	ret
+    ld hl, GoldenrodPokecenter1F_MapAttributes
+    call Function8b35d
+    jr z, .not_pcc
+
+    ld hl, PokecomCenterAdminOfficeMobile_MapAttributes
+    call Function8b35d
+    ret nz
+
+.not_pcc
+    call Function8b363
+    ret c
+
+    ld c, MUSIC_POKEMON_CENTER
+    ret
 
 .two
-	ret
+    ld hl, Pokecenter2F_MapAttributes
+    call Function8b35d
+    ret nz
 
-Function8b35d: ; unreferenced
+    ld hl, wBackupMapGroup
+    ld a, [hli]
+    cp $0b
+    ret nz
+
+    ld a, [hl]
+    cp $14
+    ret nz
+
+    call Function8b363
+    ret nc
+
+    ld c, MUSIC_MOBILE_CENTER
+    ret
+
+Function8b35d:
 	ld a, h
 	cp d
 	ret nz
@@ -40,7 +78,7 @@ Function8b35d: ; unreferenced
 	cp e
 	ret
 
-Function8b363: ; unreferenced
+Function8b363:
 	push bc
 	farcall Mobile_AlwaysReturnNotCarry
 	pop bc
@@ -118,7 +156,7 @@ Function8b3a4:
 	ret
 
 Function8b3b0:
-	ld bc, s4_a037
+	ld bc, sCardFolderPasscode ; 4:a037
 	ld a, [s4_a60b]
 	and a
 	jr z, .asm_8b3c2
@@ -406,7 +444,7 @@ Function8b539:
 
 Function8b555:
 .loop
-	ld hl, EnterNewPasscodeText
+	ld hl, UnknownText_0x8b5ce
 	call PrintText
 	ld bc, wd017
 	call Function8b45c
@@ -417,12 +455,12 @@ Function8b555:
 	ld bc, wd017
 	call Function8b664
 	jr nz, .asm_8b57c
-	ld hl, FourZerosInvalidText
+	ld hl, UnknownText_0x8b5e2
 	call PrintText
 	jr .loop
 
 .asm_8b57c
-	ld hl, ConfirmPasscodeText
+	ld hl, UnknownText_0x8b5d3
 	call PrintText
 	ld bc, wd013
 	call Function8b45c
@@ -434,21 +472,21 @@ Function8b555:
 	call Function89448
 	ld bc, wd013
 	call Function8b493
-	ld hl, PasscodesNotSameText
+	ld hl, UnknownText_0x8b5d8
 	call PrintText
 	jr .asm_8b57c
 
 .strings_equal
 	call OpenSRAMBank4
 	ld hl, wd013
-	ld de, s4_a037
+	ld de, sCardFolderPasscode ; 4:a037
 	ld bc, $4
 	call CopyBytes
 	call CloseSRAM
 	call Function89448
 	ld bc, wd013
 	call Function8b493
-	ld hl, PasscodeSetText
+	ld hl, UnknownText_0x8b5dd
 	call PrintText
 	and a
 .asm_8b5c8
@@ -457,23 +495,28 @@ Function8b555:
 	pop af
 	ret
 
-EnterNewPasscodeText:
+UnknownText_0x8b5ce:
+	; Please enter any four-digit number.
 	text_far _EnterNewPasscodeText
 	text_end
 
-ConfirmPasscodeText:
+UnknownText_0x8b5d3:
+	; Enter the same number to confirm.
 	text_far _ConfirmPasscodeText
 	text_end
 
-PasscodesNotSameText:
+UnknownText_0x8b5d8:
+	; That's not the same number.
 	text_far _PasscodesNotSameText
 	text_end
 
-PasscodeSetText:
+UnknownText_0x8b5dd:
+	; Your PASSCODE has been set. Enter this number next time to open the CARD FOLDER.
 	text_far _PasscodeSetText
 	text_end
 
-FourZerosInvalidText:
+UnknownText_0x8b5e2:
+	; 0000 is invalid!
 	text_far _FourZerosInvalidText
 	text_end
 
@@ -489,7 +532,7 @@ Function8b5e7:
 	ld e, $0
 	call Function89c44
 .asm_8b602
-	ld hl, EnterPasscodeText
+	ld hl, UnknownText_0x8b642
 	call PrintText
 	ld bc, wd013
 	call Function8b45c
@@ -498,11 +541,11 @@ Function8b5e7:
 	ld bc, wd013
 	call Function8b493
 	call OpenSRAMBank4
-	ld hl, s4_a037
+	ld hl, sCardFolderPasscode ; 4:a037
 	call Function8b3a4
 	call CloseSRAM
 	jr z, .asm_8b635
-	ld hl, IncorrectPasscodeText
+	ld hl, UnknownText_0x8b647
 	call PrintText
 	ld bc, wd013
 	call Function8b36c
@@ -517,11 +560,13 @@ Function8b5e7:
 	pop af
 	ret
 
-EnterPasscodeText:
+UnknownText_0x8b642:
+	; Enter the CARD FOLDER PASSCODE.
 	text_far _EnterPasscodeText
 	text_end
 
-IncorrectPasscodeText:
+UnknownText_0x8b647:
+	; Incorrect PASSCODE!
 	text_far _IncorrectPasscodeText
 	text_end
 
@@ -569,20 +614,20 @@ Function8b677:
 	ret
 
 Function8b690:
-	ld hl, MobileCardListGFX
+	ld hl, GFX_friend_cards + $514
 	ld de, vTiles2
-	ld bc, $16 tiles
-	ld a, BANK(MobileCardListGFX)
+	ld bc, $160
+	ld a, BANK(GFX_friend_cards)
 	call FarCopyBytes
-	ld hl, MobileCardListGFX tile $15
+	ld hl, GFX_friend_cards + $514 + $160 - $10
 	ld de, vTiles2 tile $61
-	ld bc, 1 tiles
-	ld a, BANK(MobileCardListGFX)
+	ld bc, $10
+	ld a, BANK(GFX_friend_cards)
 	call FarCopyBytes
-	ld hl, MobileCardListGFX tile $16
+	ld hl, GFX_friend_cards + $514 + $160
 	ld de, vTiles0 tile $ee
-	ld bc, 1 tiles
-	ld a, BANK(MobileCardListGFX)
+	ld bc, $10
+	ld a, BANK(GFX_friend_cards)
 	call FarCopyBytes
 	ret
 
@@ -615,11 +660,11 @@ Palette_8b6d5:
 	RGB 00, 00, 00
 
 Function8b6ed:
-	hlcoord 0, 0, wAttrmap
+	hlcoord 0, 0, wAttrMap
 	ld bc, $012c
 	xor a
 	call ByteFill
-	hlcoord 0, 14, wAttrmap
+	hlcoord 0, 14, wAttrMap
 	ld bc, $0050
 	ld a, $7
 	call ByteFill
@@ -675,7 +720,7 @@ Function8b73e:
 	ret
 
 Function8b744:
-	ld de, wAttrmap - wTilemap
+	ld de, wAttrMap - wTileMap
 	add hl, de
 	inc b
 	inc b
@@ -719,7 +764,7 @@ Function8b75d:
 	jr nz, .asm_8b780
 	jr Function8b79e
 
-Function8b787: ; unreferenced
+Function8b787:
 	ret
 
 Function8b788:
@@ -743,10 +788,10 @@ Function8b788:
 	ret
 
 Function8b79e:
-	hlcoord 0, 1, wAttrmap
+	hlcoord 0, 1, wAttrMap
 	ld a, $1
 	ld [hli], a
-	hlcoord 9, 1, wAttrmap
+	hlcoord 9, 1, wAttrMap
 	ld e, $b
 .asm_8b7a9
 	ld a, $2
@@ -772,7 +817,7 @@ Function8b7bd:
 	ld hl, MenuHeader_0x8b867
 	call CopyMenuHeader
 	ld a, [wd030]
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	ld a, [wd031]
 	ld [wMenuScrollPosition], a
 	ld a, [wd032]
@@ -796,19 +841,19 @@ Function8b7bd:
 	call Function8b703
 	call Function8b75d
 	call UpdateSprites
-	call Mobile_EnableSpriteUpdates
+	call Function89209
 	call ScrollingMenu
-	call Mobile_DisableSpriteUpdates
+	call Function8920f
 	ld a, [wMenuJoypad]
-	cp B_BUTTON
+	cp $2
 	jr z, .asm_8b823
-	cp D_LEFT
+	cp $20
 	jr nz, .asm_8b813
 	call Function8b832
 	jr .asm_8b7ea
 
 .asm_8b813
-	cp D_RIGHT
+	cp $10
 	jr nz, .asm_8b81c
 	call Function8b83e
 	jr .asm_8b7ea
@@ -848,14 +893,14 @@ Function8b83e:
 Function8b84b:
 	ld [wMenuScrollPosition], a
 	ld a, [wMenuCursorY]
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	ret
 
 Function8b855:
-	ld a, $28
+	ld a, NUM_CARD_FOLDER_ENTRIES
 	ld hl, wd002
 	ld [hli], a
-	ld c, $28
+	ld c, NUM_CARD_FOLDER_ENTRIES
 	xor a
 .asm_8b85e
 	inc a
@@ -911,14 +956,14 @@ Function8b88c:
 	call PlaceString
 	pop hl
 	ld d, $0
-	ld e, $6
+	ld e, PLAYER_NAME_LENGTH + 14 ;$6
 	add hl, de
 	push hl
 	ld de, String_89116
 	call Function8931b
 	call Function8934a
 	jr c, .asm_8b8c0
-	ld hl, $0006
+	ld hl, PLAYER_NAME_LENGTH ;$0006
 	add hl, bc
 	ld d, h
 	ld e, l
@@ -967,10 +1012,10 @@ Unknown_8b903:
 	dw String_8b92a
 	dw String_8b938
 
-String_8b90b: db "めいしを　えらんでください@"        ; Please select a noun.
-String_8b919: db "どの　めいしと　いれかえますか？@"    ; OK to swap with any noun?
-String_8b92a: db "あいてを　えらんでください@"        ; Please select an opponent.
-String_8b938: db "いれる　ところを　えらんでください@" ; Please select a location.
+String_8b90b: db "Choose a CARD.@"        ; Please select a noun.
+String_8b919: db "Move to where?@"    ; OK to swap with any noun?
+String_8b92a: db "Choose a friend.@"        ; Please select an opponent.
+String_8b938: db "Put to where?@" ; Please select a location.
 
 Function8b94a:
 	ld [wd033], a
@@ -1019,7 +1064,7 @@ Function8b99f:
 	ld hl, wd002
 	dec a
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [hl]
 	cp $ff
@@ -1041,9 +1086,9 @@ MenuHeader_0x8b9b1:
 MenuData_0x8b9b9:
 	db STATICMENU_CURSOR | STATICMENU_WRAP ; flags
 	db 3 ; items
-	db "へんしゅう@" ; EDIT
-	db "いれかえ@"   ; REPLACE
-	db "やめる@"     ; QUIT
+	db "EDIT@" ; EDIT
+	db "SWITCH@"   ; REPLACE
+	db "CANCEL@"     ; QUIT
 
 MenuHeader_0x8b9ca:
 	db MENU_BACKUP_TILES ; flags
@@ -1054,22 +1099,22 @@ MenuHeader_0x8b9ca:
 MenuData_0x8b9d2:
 	db STATICMENU_CURSOR | STATICMENU_WRAP ; flags
 	db 5 ; items
-	db "みる@"       ; VIEW
-	db "へんしゅう@" ; EDIT
-	db "いれかえ@"   ; REPLACE
-	db "けす@"       ; ERASE
-	db "やめる@"     ; QUIT
+	db "VIEW@"       ; VIEW
+	db "EDIT@" ; EDIT
+	db "SWITCH@"   ; REPLACE
+	db "ERASE@"       ; ERASE
+	db "CANCEL@"     ; QUIT
 
-Function8b9e9:
+Function8b9e9 ; check if entry is filled out?
 	call OpenSRAMBank4
 	call Function8931b
 	call Function8932d
 	jr nc, .asm_8b9f6
 	jr .asm_8b9ff
 .asm_8b9f6
-	ld hl, $11
+	ld hl, $11 + 4
 	add hl, bc
-	call Function89b45
+	call Function89b45 ; decode number?
 	jr c, .asm_8ba08
 .asm_8b9ff
 	call Function892b4

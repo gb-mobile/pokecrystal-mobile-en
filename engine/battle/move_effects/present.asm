@@ -1,5 +1,6 @@
 BattleCommand_Present:
-; BUG: Present damage is incorrect in link battles (see docs/bugs_and_glitches.md)
+; present
+
 	ld a, [wLinkMode]
 	cp LINK_COLOSSEUM
 	jr z, .colosseum_skippush
@@ -40,7 +41,7 @@ BattleCommand_Present:
 
 .got_power
 	ld a, c
-	ld [wBattleAnimParam], a
+	ld [wPresentPower], a
 	call AnimateCurrentMoveEitherSide
 	ld d, [hl]
 	pop bc
@@ -48,8 +49,8 @@ BattleCommand_Present:
 
 .heal_effect
 	pop bc
-	ld a, $3 ; heal animation
-	ld [wBattleAnimParam], a
+	ld a, 3
+	ld [wPresentPower], a
 	call AnimateCurrentMove
 	call BattleCommand_SwitchTurn
 	ld hl, AICheckPlayerMaxHP
@@ -79,7 +80,7 @@ BattleCommand_Present:
 	call _CheckBattleScene
 	jr nc, .do_animation
 	call AnimateFailedMove
-	ld hl, PresentFailedText
+	ld hl, RefusedGiftText
 	call StdBattleTextbox
 .do_animation
 	jp EndMoveEffect

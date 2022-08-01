@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE24_ROCKET
 
 Route24_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 Route24RocketScript:
 	faceplayer
@@ -21,7 +21,7 @@ Route24RocketScript:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	opentext
 	writetext Route24RocketAfterBattleText
-	promptbutton
+	buttonsound
 	special FadeOutMusic
 	writetext Route24RocketDisappearsText
 	waitbutton
@@ -119,11 +119,11 @@ Route24RocketDisappearsText:
 Route24_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 0 ; warp events
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  8,  7, SPRITE_ROCKET, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Route24RocketScript, EVENT_ROUTE_24_ROCKET

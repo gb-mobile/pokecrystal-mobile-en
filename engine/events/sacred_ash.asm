@@ -1,3 +1,4 @@
+
 _SacredAsh:
 	ld a, $0
 	ld [wItemEffectSucceeded], a
@@ -56,13 +57,14 @@ SacredAshScript:
 	special FadeOutPalettes
 	special FadeInPalettes
 	waitsfx
-	writetext .UseSacredAshText
+	writetext UnknownText_0x50845
 	playsound SFX_CAUGHT_MON
 	waitsfx
 	waitbutton
 	closetext
 	end
 
-.UseSacredAshText:
-	text_far _UseSacredAshText
+UnknownText_0x50845:
+	; 's #MON were all healed!
+	text_far UnknownText_0x1c0b65
 	text_end

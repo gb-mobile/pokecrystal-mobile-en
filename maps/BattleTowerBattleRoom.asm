@@ -1,25 +1,25 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const BATTLETOWERBATTLEROOM_YOUNGSTER
 	const BATTLETOWERBATTLEROOM_RECEPTIONIST
 
-BattleTowerBattleRoom_MapScripts:
-	def_scene_scripts
-	scene_script .EnterBattleRoom, SCENE_BATTLETOWERBATTLEROOM_ENTER
-	scene_script .DummyScene,      SCENE_BATTLETOWERBATTLEROOM_NOOP
+BattleTowerBattleRoom_MapScripts: ; 67989 in jp rom
+	db 2 ; scene scripts
+	scene_script .EnterBattleRoom ; SCENE_DEFAULT
+	scene_script .DummyScene ; SCENE_FINISHED
 
-	def_callbacks
+	db 0 ; callbacks
 
 .EnterBattleRoom:
 	disappear BATTLETOWERBATTLEROOM_YOUNGSTER
-	sdefer Script_BattleRoom
-	setscene SCENE_BATTLETOWERBATTLEROOM_NOOP
+	prioritysjump Script_BattleRoom
+	setscene SCENE_FINISHED
 .DummyScene:
 	end
 
-Script_BattleRoom:
+Script_BattleRoom: ; 799b
 	applymovement PLAYER, MovementData_BattleTowerBattleRoomPlayerWalksIn
 ; beat all 7 opponents in a row
-Script_BattleRoomLoop:
+Script_BattleRoomLoop: ; 799f
 	setval BATTLETOWERBATTLEROOM_YOUNGSTER
 	special LoadOpponentTrainerAndPokemonWithOTSprite
 	appear BATTLETOWERBATTLEROOM_YOUNGSTER
@@ -28,9 +28,9 @@ Script_BattleRoomLoop:
 	applymovement BATTLETOWERBATTLEROOM_YOUNGSTER, MovementData_BattleTowerBattleRoomOpponentWalksIn
 	opentext
 	battletowertext BATTLETOWERTEXT_INTRO
-	promptbutton
+	buttonsound
 	closetext
-	special BattleTowerBattle ; predef StartBattle
+	special BattleTowerBattle ; calls predef startbattle
 	special FadeOutPalettes
 	reloadmap
 	ifnotequal $0, Script_FailedBattleTowerChallenge
@@ -61,21 +61,21 @@ Script_ContinueAndBattleNextOpponent:
 	applymovement BATTLETOWERBATTLEROOM_RECEPTIONIST, MovementData_BattleTowerBattleRoomReceptionistWalksAway
 	sjump Script_BattleRoomLoop
 
-Script_DontBattleNextOpponent:
+Script_DontBattleNextOpponent: ; 79fd
 	writetext Text_SaveAndEndTheSession
 	yesorno
 	iffalse Script_DontSaveAndEndTheSession
-	setval BATTLETOWERACTION_SAVELEVELGROUP ; save level group
-	special BattleTowerAction
-	setval BATTLETOWERACTION_SAVEOPTIONS ; choose reward
-	special BattleTowerAction
+;	setval BATTLETOWERACTION_SAVELEVELGROUP ; save level group
+;	special BattleTowerAction
+;	setval BATTLETOWERACTION_SAVEOPTIONS ; choose reward
+;	special BattleTowerAction
 	setval BATTLETOWERACTION_SAVE_AND_QUIT ; quicksave
 	special BattleTowerAction
 	playsound SFX_SAVE
 	waitsfx
 	special FadeOutPalettes
 	special Reset
-Script_DontSaveAndEndTheSession:
+Script_DontSaveAndEndTheSession: ; 7a13
 	writetext Text_CancelYourBattleRoomChallenge
 	yesorno
 	iffalse Script_ContinueAndBattleNextOpponent
@@ -89,28 +89,49 @@ Script_DontSaveAndEndTheSession:
 	opentext
 	sjump Script_BattleTowerHopeToServeYouAgain
 
-Script_FailedBattleTowerChallenge:
+Script_FailedBattleTowerChallenge: ; 7a32
 	pause 60
 	special BattleTowerFade
 	warpfacing UP, BATTLE_TOWER_1F, 7, 7
+
+	setval BATTLETOWERACTION_13
+	special BattleTowerAction
+	ifequal 1, UnreferencedScript_0x9f4f7;$7a90
+	setval BATTLETOWERACTION_05
+	special BattleTowerAction
+	ifequal 8, UnreferencedScript_0x9f4eb;$7a84
+	
 	setval BATTLETOWERACTION_CHALLENGECANCELED
 	special BattleTowerAction
 	opentext
-	writetext Text_ThanksForVisiting
-	waitbutton
-	closetext
-	end
+;	writetext Text_ThanksForVisiting
+;	waitbutton
+;	closetext
+;	end
+	writetext Text_ThankYou;$74be
+	sjump Idk3;$71b4
 
-Script_BeatenAllTrainers:
+Script_BeatenAllTrainers: ; 7a5b
 	pause 60
 	special BattleTowerFade
 	warpfacing UP, BATTLE_TOWER_1F, 7, 7
-Script_BeatenAllTrainers2:
+;Script_BeatenAllTrainers2: ; no longer referenced from BattleTower1F.asm
+;	opentext
+;	writetext Text_CongratulationsYouveBeatenAllTheTrainers
+;	sjump Script_GivePlayerHisPrize
+	setval BATTLETOWERACTION_13
+	special BattleTowerAction
+	ifequal 1, UnreferencedScript_0x9f4f7;$7a90
+	setval BATTLETOWERACTION_05
+	special BattleTowerAction
+	ifequal 8, UnreferencedScript_0x9f4eb;$7a84
+	setval BATTLETOWERACTION_CHALLENGECANCELED
+	special BattleTowerAction
 	opentext
-	writetext Text_CongratulationsYouveBeatenAllTheTrainers
-	sjump Script_GivePlayerHisPrize
+	writetext Text_BeatenAllTheTrainers_Mobile;$74ca
+	sjump Idk3;$71b4
 
-Script_TooMuchTimeElapsedNoRegister: ; unreferenced
+UnreferencedScript_0x9f4eb: ; 7a84
 	setval BATTLETOWERACTION_CHALLENGECANCELED
 	special BattleTowerAction
 	opentext
@@ -119,19 +140,20 @@ Script_TooMuchTimeElapsedNoRegister: ; unreferenced
 	closetext
 	end
 
-Script_ChallengeCanceled: ; unreferenced
+UnreferencedScript_0x9f4f7: ; 7a90
 	setval BATTLETOWERACTION_CHALLENGECANCELED
 	special BattleTowerAction
 	setval BATTLETOWERACTION_06
 	special BattleTowerAction
 	opentext
-	writetext Text_ThanksForVisiting
+;	writetext Text_ThanksForVisiting
+	writetext Text_ThankYou;$74be
 	writetext Text_WeHopeToServeYouAgain
 	waitbutton
 	closetext
 	end
 
-Text_ReturnedAfterSave_Mobile: ; unreferenced
+Text_ReturnedAfterSave_Mobile:
 	text "You'll be returned"
 	line "after you SAVE."
 	done
@@ -139,14 +161,14 @@ Text_ReturnedAfterSave_Mobile: ; unreferenced
 BattleTowerBattleRoom_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  3,  7, BATTLE_TOWER_HALLWAY, 4
 	warp_event  4,  7, BATTLE_TOWER_HALLWAY, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 2 ; object events
 	object_event  4,  0, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_BATTLE_TOWER_BATTLE_ROOM_YOUNGSTER
 	object_event  1,  6, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, -1

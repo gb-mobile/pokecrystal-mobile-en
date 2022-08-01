@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const SAFARIZONEWARDENSHOME_LASS
 
 SafariZoneWardensHome_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 WardensGranddaughter:
 	faceplayer
@@ -29,7 +29,7 @@ SafariZonePhoto:
 	jumptext SafariZonePhotoText
 
 WardensHomeBookshelf:
-	jumpstd PictureBookshelfScript
+	jumpstd picturebookshelf
 
 WardensGranddaughterText1:
 	text "My grandpa is the"
@@ -77,17 +77,17 @@ SafariZonePhotoText:
 SafariZoneWardensHome_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, FUCHSIA_CITY, 6
 	warp_event  3,  7, FUCHSIA_CITY, 6
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 4 ; bg events
 	bg_event  0,  1, BGEVENT_READ, WardensHomeBookshelf
 	bg_event  1,  1, BGEVENT_READ, WardensHomeBookshelf
 	bg_event  7,  0, BGEVENT_READ, WardenPhoto
 	bg_event  9,  0, BGEVENT_READ, SafariZonePhoto
 
-	def_object_events
+	db 1 ; object events
 	object_event  2,  4, SPRITE_LASS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, WardensGranddaughter, -1

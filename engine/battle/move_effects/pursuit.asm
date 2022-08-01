@@ -1,4 +1,5 @@
 BattleCommand_Pursuit:
+; pursuit
 ; Double damage if the opponent is switching.
 
 	ld hl, wEnemyIsSwitching

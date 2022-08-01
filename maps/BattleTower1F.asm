@@ -1,18 +1,18 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const BATTLETOWER1F_RECEPTIONIST
 	const BATTLETOWER1F_YOUNGSTER
 	const BATTLETOWER1F_COOLTRAINER_F
 	const BATTLETOWER1F_BUG_CATCHER
 	const BATTLETOWER1F_GRANNY
 
-BattleTower1F_MapScripts:
-	def_scene_scripts
-	scene_script .Scene0, SCENE_BATTLETOWER1F_CHECKSTATE
-	scene_script .Scene1, SCENE_BATTLETOWER1F_NOOP
+BattleTower1F_MapScripts: ; offset 67096 in jp crystal
+	db 2 ; scene scripts
+	scene_script .Scene0 ; SCENE_DEFAULT
+	scene_script .Scene1 ; SCENE_FINISHED
 
-	def_callbacks
+	db 0 ; callbacks
 
-.Scene0:
+.Scene0: ; 70A0
 	setval BATTLETOWERACTION_CHECKSAVEFILEISYOURS
 	special BattleTowerAction
 	iffalse .SkipEverything
@@ -20,92 +20,137 @@ BattleTower1F_MapScripts:
 	special BattleTowerAction
 	ifequal $0, .SkipEverything
 	ifequal $2, .LeftWithoutSaving
-	ifequal $3, .SkipEverything
-	ifequal $4, .SkipEverything
+;	ifequal $3, .SkipEverything
+;	ifequal $4, .SkipEverything
 	opentext
 	writetext Text_WeveBeenWaitingForYou
 	waitbutton
 	closetext
-	sdefer Script_ResumeBattleTowerChallenge
+	prioritysjump Script_ResumeBattleTowerChallenge
 	end
 
-.LeftWithoutSaving
-	sdefer BattleTower_LeftWithoutSaving
+.LeftWithoutSaving ; 70BF
+	setval BATTLETOWERACTION_13
+	special BattleTowerAction
+	ifnotequal $00, .skip;$70CB
+	prioritysjump BattleTower_LeftWithoutSaving
+.skip
 	setval BATTLETOWERACTION_CHALLENGECANCELED
 	special BattleTowerAction
 	setval BATTLETOWERACTION_06
 	special BattleTowerAction
 .SkipEverything:
-	setscene SCENE_BATTLETOWER1F_NOOP
+	setscene SCENE_FINISHED
 .Scene1:
 	end
 
-BattleTower1FRulesSign:
+; checking the honor roll
+BattleTower1FRulesSign: ; 70D8
 	opentext
-	writetext Text_ReadBattleTowerRules
+	writetext Text_CheckTheLeaderHonorRoll;Text_ReadBattleTowerRules
 	yesorno
 	iffalse .skip
-	writetext Text_BattleTowerRules
-	waitbutton
+	;writetext Text_BattleTowerRules
+	;waitbutton
+	db $0F, $78, $00
+	
 .skip:
 	closetext
 	end
 
-BattleTower1FReceptionistScript:
-	setval BATTLETOWERACTION_GET_CHALLENGE_STATE ; readmem sBattleTowerChallengeState
-	special BattleTowerAction
-	ifequal $3, Script_BeatenAllTrainers2 ; maps/BattleTowerBattleRoom.asm
+BattleTower1FReceptionistScript: ;70E5
+	;setval BATTLETOWERACTION_GET_CHALLENGE_STATE ; readmem sBattleTowerChallengeState
+	;special BattleTowerAction
+	;ifequal $3, Script_BeatenAllTrainers2 ; maps/BattleTowerBattleRoom.asm
 	opentext
-	writetext Text_BattleTowerWelcomesYou
-	promptbutton
+
+	setval BATTLETOWERACTION_CHECKSAVEFILEISYOURS
+	special BattleTowerAction
+	iffalse .idk2;$711F
+	setval BATTLETOWERACTION_13
+	special BattleTowerAction
+	ifnotequal $00, .idk2;$711F
+	setval BATTLETOWERACTION_05
+	special BattleTowerAction
+	ifequal $00, .idk2;$711F
+	ifequal $08, .idk1;$711B
+	writetext Text_RegisterRecordOnFile_Mobile;$7709 ???
+	yesorno
+	iffalse .idk2;$711F
+	writetext Text_SaveBeforeConnecting_Mobile; $76A1
+	yesorno
+	iffalse Script_BattleTowerHopeToServeYouAgain;$71E3
+	special TryQuickSave
+	iffalse Script_BattleTowerHopeToServeYouAgain;$71E3
+	sjump Idk4;$71BB
+
+.idk1
+	writetext Text_BattleTowerWelcomesYou;???$77DC
+	waitbutton
+
+.idk2
+	writetext Text_BattleTowerWelcomesYou;$72DE
+	buttonsound
 	setval BATTLETOWERACTION_CHECK_EXPLANATION_READ ; if new save file: bit 1, [sBattleTowerSaveFileFlags]
 	special BattleTowerAction
 	ifnotequal $0, Script_Menu_ChallengeExplanationCancel
-	sjump Script_BattleTowerIntroductionYesNo
+	jump Script_BattleTowerIntroductionYesNo
 
-Script_Menu_ChallengeExplanationCancel:
+Script_Menu_ChallengeExplanationCancel: ; $712F
 	writetext Text_WantToGoIntoABattleRoom
 	setval TRUE
 	special Menu_ChallengeExplanationCancel
-	ifequal 1, Script_ChooseChallenge
-	ifequal 2, Script_BattleTowerExplanation
-	sjump Script_BattleTowerHopeToServeYouAgain
+	ifequal 1, Script_ChooseChallenge ; 714A
+	ifequal 2, UnreferencedScript_0x9e4be ; 71F1
+	ifequal 3, Script_BattleTowerExplanation ; 71D8
+	ifequal 5, UnreferencedScript_0x9e4ea ; $721D
+	sjump Script_BattleTowerHopeToServeYouAgain ; 71E3
 
 Script_ChooseChallenge:
-	setval BATTLETOWERACTION_RESETDATA ; ResetBattleTowerTrainerSRAM
+	setval BATTLETOWERACTION_0D
 	special BattleTowerAction
+	iftrue UnreferencedScript_0x9e53b;$726E
+	
+;	setval BATTLETOWERACTION_RESETDATA ; ResetBattleTowerTrainerSRAM
+;	special BattleTowerAction
 	special CheckForBattleTowerRules
 	ifnotequal FALSE, Script_WaitButton
-	writetext Text_SaveBeforeEnteringBattleRoom
+	writetext Text_SaveBeforeConnecting_Mobile
 	yesorno
 	iffalse Script_Menu_ChallengeExplanationCancel
-	setscene SCENE_BATTLETOWER1F_CHECKSTATE
+	setscene SCENE_DEFAULT
 	special TryQuickSave
 	iffalse Script_Menu_ChallengeExplanationCancel
-	setscene SCENE_BATTLETOWER1F_NOOP
+	setscene SCENE_FINISHED
 	setval BATTLETOWERACTION_SET_EXPLANATION_READ ; set 1, [sBattleTowerSaveFileFlags]
 	special BattleTowerAction
 	special BattleTowerRoomMenu
 	ifequal $a, Script_Menu_ChallengeExplanationCancel
-	ifnotequal $0, Script_MobileError
+	ifnotequal $0, Script_MobileError ; 7283
 	setval BATTLETOWERACTION_11
 	special BattleTowerAction
 	writetext Text_RightThisWayToYourBattleRoom
 	waitbutton
-	closetext
-	setval BATTLETOWERACTION_CHOOSEREWARD
+	
+	setval BATTLETOWERACTION_SAVELEVELGROUP
 	special BattleTowerAction
-	sjump Script_WalkToBattleTowerElevator
+	setval BATTLETOWERACTION_0C ; start timer?
+	special BattleTowerAction
+	
+;	closetext
+;	setval BATTLETOWERACTION_CHOOSEREWARD
+;	special BattleTowerAction
+;	sjump Script_WalkToBattleTowerElevator
 
 Script_ResumeBattleTowerChallenge:
 	closetext
-	setval BATTLETOWERACTION_LOADLEVELGROUP ; load choice of level group
-	special BattleTowerAction
+;	setval BATTLETOWERACTION_LOADLEVELGROUP ; load choice of level group
+;	special BattleTowerAction
 Script_WalkToBattleTowerElevator:
 	musicfadeout MUSIC_NONE, 8
-	setmapscene BATTLE_TOWER_BATTLE_ROOM, SCENE_BATTLETOWERBATTLEROOM_ENTER
-	setmapscene BATTLE_TOWER_ELEVATOR, SCENE_BATTLETOWERELEVATOR_ENTER
-	setmapscene BATTLE_TOWER_HALLWAY, SCENE_BATTLETOWERHALLWAY_ENTER
+	setmapscene BATTLE_TOWER_BATTLE_ROOM, SCENE_DEFAULT
+	setmapscene BATTLE_TOWER_ELEVATOR, SCENE_DEFAULT
+	setmapscene BATTLE_TOWER_HALLWAY, SCENE_DEFAULT
 	follow BATTLETOWER1F_RECEPTIONIST, PLAYER
 	applymovement BATTLETOWER1F_RECEPTIONIST, MovementData_BattleTower1FWalkToElevator
 	setval BATTLETOWERACTION_0A
@@ -117,55 +162,71 @@ Script_WalkToBattleTowerElevator:
 	warpcheck
 	end
 
-Script_GivePlayerHisPrize:
-	setval BATTLETOWERACTION_1C
-	special BattleTowerAction
-	setval BATTLETOWERACTION_GIVEREWARD
-	special BattleTowerAction
-	ifequal POTION, Script_YourPackIsStuffedFull
-	getitemname STRING_BUFFER_4, USE_SCRIPT_VAR
-	giveitem ITEM_FROM_MEM, 5
-	writetext Text_PlayerGotFive
-	setval BATTLETOWERACTION_1D
-	special BattleTowerAction
-	closetext
-	end
+Idk3: ; 71B4
+	writetext Text_AskRegisterRecord_Mobile;$7523
+	yesorno
+	iffalse Script_BattleTowerHopeToServeYouAgain;$71E3
 
-Script_YourPackIsStuffedFull:
-	writetext Text_YourPackIsStuffedFull
+Idk4:
+	special Function170114 ; 76
+	ifequal $0A, Script_BattleTowerHopeToServeYouAgain;$71E3
+	ifnotequal $00, Script_MobileError;$7283
+	setval BATTLETOWERACTION_06
+	special BattleTowerAction
+	writetext Text_YourRegistrationIsComplete;$753F
 	waitbutton
 	closetext
 	end
 
-Script_BattleTowerIntroductionYesNo:
+;	setval BATTLETOWERACTION_1C
+;	special BattleTowerAction
+;	setval BATTLETOWERACTION_GIVEREWARD
+;	special BattleTowerAction
+;	ifequal POTION, Script_YourPackIsStuffedFull
+;	getitemname STRING_BUFFER_4, USE_SCRIPT_VAR
+;	giveitem ITEM_FROM_MEM, 5
+;	writetext Text_PlayerGotFive
+;	setval BATTLETOWERACTION_1D
+;	special BattleTowerAction
+;	closetext
+;	end
+
+;Script_YourPackIsStuffedFull:
+;	writetext Text_YourPackIsStuffedFull
+;	waitbutton
+;	closetext
+;	end
+
+Script_BattleTowerIntroductionYesNo: ; 71D1
 	writetext Text_WouldYouLikeToHearAboutTheBattleTower
 	yesorno
 	iffalse Script_BattleTowerSkipExplanation
 Script_BattleTowerExplanation:
-	writetext Text_BattleTowerIntroduction_2
+	writetext Text_BattleTowerIntroduction_1
 Script_BattleTowerSkipExplanation:
 	setval BATTLETOWERACTION_SET_EXPLANATION_READ
 	special BattleTowerAction
 	sjump Script_Menu_ChallengeExplanationCancel
 
-Script_BattleTowerHopeToServeYouAgain:
+Script_BattleTowerHopeToServeYouAgain: ; 71E3
 	writetext Text_WeHopeToServeYouAgain
 	waitbutton
 	closetext
 	end
 
-Script_MobileError2: ; unreferenced
+UnreferencedScript_0x9e4b6: ; 71E9
 	special BattleTowerMobileError
 	closetext
 	end
 
-Script_WaitButton:
+Script_WaitButton: ; 71EE
 	waitbutton
 	closetext
 	end
 
-Script_ChooseChallenge2: ; unreferenced
-	writetext Text_SaveBeforeEnteringBattleRoom
+; honor roll download
+UnreferencedScript_0x9e4be: ; 71F1
+	writetext Text_SaveBeforeConnecting_Mobile; 76A1
 	yesorno
 	iffalse Script_Menu_ChallengeExplanationCancel
 	special TryQuickSave
@@ -183,7 +244,7 @@ Script_ChooseChallenge2: ; unreferenced
 	closetext
 	end
 
-Script_StartChallenge: ; unreferenced
+UnreferencedScript_0x9e4ea: ; 721D
 	setval BATTLETOWERACTION_LEVEL_CHECK
 	special BattleTowerAction
 	ifnotequal $0, Script_AMonLevelExceeds
@@ -196,20 +257,20 @@ Script_StartChallenge: ; unreferenced
 	special BattleTowerAction
 	ifequal $0, .zero
 	writetext Text_CantBeRegistered_PreviousRecordDeleted
-	sjump .continue
+	sjump continue
 
 .zero
 	writetext Text_CantBeRegistered
-.continue
+continue:
 	yesorno
 	iffalse Script_Menu_ChallengeExplanationCancel
 	writetext Text_SaveBeforeReentry
 	yesorno
 	iffalse Script_Menu_ChallengeExplanationCancel
-	setscene SCENE_BATTLETOWER1F_CHECKSTATE
+	setscene SCENE_DEFAULT
 	special TryQuickSave
 	iffalse Script_Menu_ChallengeExplanationCancel
-	setscene SCENE_BATTLETOWER1F_NOOP
+	setscene SCENE_FINISHED
 	setval BATTLETOWERACTION_06
 	special BattleTowerAction
 	setval BATTLETOWERACTION_12
@@ -218,7 +279,7 @@ Script_StartChallenge: ; unreferenced
 	waitbutton
 	sjump Script_ResumeBattleTowerChallenge
 
-Script_ReachedBattleLimit: ; unreferenced
+UnreferencedScript_0x9e53b: ; 726E
 	writetext Text_FiveDayBattleLimit_Mobile
 	waitbutton
 	sjump Script_BattleTowerHopeToServeYouAgain
@@ -233,7 +294,7 @@ Script_MayNotEnterABattleRoomUnderL70:
 	waitbutton
 	sjump Script_Menu_ChallengeExplanationCancel
 
-Script_MobileError:
+Script_MobileError: ; 7283
 	special BattleTowerMobileError
 	closetext
 	end
@@ -364,7 +425,7 @@ Text_RightThisWayToYourBattleRoom:
 	line "your BATTLE ROOM."
 	done
 
-Text_BattleTowerIntroduction_1: ; unreferenced
+Text_BattleTowerIntroduction_1:
 	text "BATTLE TOWER is a"
 	line "facility made for"
 	cont "#MON battles."
@@ -473,7 +534,7 @@ Text_PleaseConfirmOnThisMonitor:
 	line "this monitor."
 	done
 
-Text_ThankYou: ; unreferenced
+Text_ThankYou:
 	text "Thank you!"
 
 	para ""
@@ -484,7 +545,7 @@ Text_ThanksForVisiting:
 	line "visiting!"
 	done
 
-Text_BeatenAllTheTrainers_Mobile: ; unreferenced
+Text_BeatenAllTheTrainers_Mobile:
 	text "Congratulations!"
 
 	para "You've beaten all"
@@ -514,7 +575,7 @@ Text_CongratulationsYouveBeatenAllTheTrainers:
 	para ""
 	done
 
-Text_AskRegisterRecord_Mobile: ; unreferenced
+Text_AskRegisterRecord_Mobile:
 	text "Would you like to"
 	line "register your"
 
@@ -528,7 +589,7 @@ Text_PlayerGotFive:
 	text_ram wStringBuffer4
 	text "!@"
 	sound_item
-	text_promptbutton
+	text_waitbutton
 	text_end
 
 Text_YourPackIsStuffedFull:
@@ -539,7 +600,7 @@ Text_YourPackIsStuffedFull:
 	line "and come back."
 	done
 
-Text_YourRegistrationIsComplete: ; unreferenced
+Text_YourRegistrationIsComplete:
 	text "Your registration"
 	line "is complete."
 
@@ -582,7 +643,7 @@ Text_CantBeRegistered_PreviousRecordDeleted:
 	cont "deleted. OK?"
 	done
 
-Text_CheckTheLeaderHonorRoll: ; unreferenced
+Text_CheckTheLeaderHonorRoll:
 	text "Check the LEADER"
 	line "HONOR ROLL?"
 	done
@@ -639,7 +700,7 @@ Text_NextUpOpponentNo:
 	text ". Ready?"
 	done
 
-Text_SaveBeforeConnecting_Mobile: ; unreferenced
+Text_SaveBeforeConnecting_Mobile:
 	text "Your session will"
 	line "be SAVED before"
 
@@ -673,7 +734,7 @@ Text_CancelYourBattleRoomChallenge:
 	line "ROOM challenge?"
 	done
 
-Text_RegisterRecordOnFile_Mobile: ; unreferenced
+Text_RegisterRecordOnFile_Mobile:
 	text "We have your"
 	line "previous record on"
 
@@ -714,8 +775,8 @@ Text_TooMuchTimeElapsedNoRegister:
 	cont "challenge."
 	done
 
-Text_RegisterRecordTimedOut_Mobile: ; unreferenced
-; duplicate of Text_TooMuchTimeElapsedNoRegister
+; a dupe?
+Text_RegisterRecordTimedOut_Mobile:
 	text "Sorry, but it's"
 	line "not possible to"
 
@@ -794,17 +855,17 @@ Text_BattleTowerBugCatcher:
 BattleTower1F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  7,  9, BATTLE_TOWER_OUTSIDE, 3
 	warp_event  8,  9, BATTLE_TOWER_OUTSIDE, 4
 	warp_event  7,  0, BATTLE_TOWER_ELEVATOR, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 1 ; bg events
 	bg_event  6,  6, BGEVENT_READ, BattleTower1FRulesSign
 
-	def_object_events
+	db 5 ; object events
 	object_event  7,  6, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, BattleTower1FReceptionistScript, -1
 	object_event 14,  9, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, BattleTower1FYoungsterScript, -1
 	object_event  4,  9, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, BattleTower1FCooltrainerFScript, -1

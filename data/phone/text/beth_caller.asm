@@ -1,4 +1,4 @@
-BethExhilaratingRideText:
+UnknownText_0x174c7f:
 	text "Do you remember my"
 	line "sweet @"
 	text_ram wStringBuffer4
@@ -16,7 +16,7 @@ BethExhilaratingRideText:
 	line "really gets going."
 	done
 
-BethDefeatedMonText:
+UnknownText_0x174cf6:
 	text "Oh, have you ever"
 	line "seen a @"
 	text_ram wStringBuffer4
@@ -36,7 +36,7 @@ BethDefeatedMonText:
 	line "course."
 	done
 
-BethLostAMonText:
+UnknownText_0x174d86:
 	text "Oh, I just saw a"
 	line "wild @"
 	text_ram wStringBuffer4
@@ -59,7 +59,7 @@ BethLostAMonText:
 	line "from my mistake."
 	done
 
-BethBattleRematchText:
+UnknownText_0x174e4e:
 	text "Do you want to"
 	line "battle? I'm going"
 	cont "to win this time!"
@@ -73,16 +73,16 @@ BethBattleRematchText:
 	line "Look for me, OK?"
 	done
 
-BethHangUpText:
+UnknownText_0x174eb7:
 	text "OK, bye-bye!"
 	done
 
-BethLetsBattleAgainSometimeText:
+UnknownText_0x174ec5:
 	text "Let's battle again"
 	line "sometime!"
 	done
 
-BethReminderText:
+BethForgetDealText:
 	text "Um… <PLAY_G>?"
 	line "What's wrong?"
 

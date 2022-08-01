@@ -1,6 +1,6 @@
-UnusedTitleScreen: ; unreferenced
+UnusedTitleScreen:
 	call ClearBGPalettes
-	call ClearTilemap
+	call ClearTileMap
 	call DisableLCD
 
 ; Turn BG Map update off
@@ -48,7 +48,7 @@ UnusedTitleScreen: ; unreferenced
 	jr nz, .copy
 
 	ld hl, UnusedTitleFG_OAM
-	ld de, wShadowOAMSprite00
+	ld de, wVirtualOAMSprite00
 	ld bc, SPRITEOAMSTRUCT_LENGTH * NUM_SPRITE_OAM_STRUCTS
 	call CopyBytes
 
@@ -88,7 +88,7 @@ UnusedTitleScreen: ; unreferenced
 	pop af
 	ldh [rSVBK], a
 
-	ld a, TRUE
+	ld a, $1
 	ldh [hCGBPalUpdate], a
 
 	ld de, MUSIC_TITLE
@@ -113,56 +113,54 @@ UnusedTitleFG_Palettes:
 INCLUDE "gfx/title/old_fg.pal"
 
 UnusedTitleFG_OAM:
-	dbsprite  7,  3,  0,  0, $00, 1
-	dbsprite  8,  3,  0,  0, $02, 1
-	dbsprite  9,  3,  0,  0, $04, 1
-	dbsprite 10,  3,  0,  0, $06, 1
-	dbsprite 11,  3,  0,  0, $08, 1
-	dbsprite 12,  3,  0,  0, $0a, 1
-	dbsprite 13,  3,  0,  0, $0c, 1
-	dbsprite 14,  3,  0,  0, $0e, 1
-	dbsprite  7,  5,  0,  0, $10, 0
-	dbsprite  8,  5,  0,  0, $12, 0
-	dbsprite  9,  5,  0,  0, $14, 0
-	dbsprite 10,  5,  0,  0, $16, 0
-	dbsprite 11,  5,  0,  0, $18, 0
-	dbsprite 12,  5,  0,  0, $1a, 0
-	dbsprite 13,  5,  0,  0, $1c, 0
-	dbsprite 14,  5,  0,  0, $1e, 0
-	dbsprite  7,  7,  0,  0, $20, 0
-	dbsprite  8,  7,  0,  0, $22, 0
-	dbsprite  9,  7,  0,  0, $24, 0
-	dbsprite 10,  7,  0,  0, $26, 0
-	dbsprite 11,  7,  0,  0, $28, 0
-	dbsprite 12,  7,  0,  0, $2a, 0
-	dbsprite 13,  7,  0,  0, $2c, 0
-	dbsprite 14,  7,  0,  0, $2e, 0
-	dbsprite  7,  9,  0,  0, $30, 2
-	dbsprite  8,  9,  0,  0, $32, 2
-	dbsprite  9,  9,  0,  0, $34, 2
-	dbsprite 10,  9,  0,  0, $36, 2
-	dbsprite 11,  9,  0,  0, $38, 2
-	dbsprite 12,  9,  0,  0, $3a, 2
-	dbsprite 13,  9,  0,  0, $3c, 2
-	dbsprite 14,  9,  0,  0, $3e, 2
-	dbsprite  7, 11,  0,  0, $40, 1
-	dbsprite  8, 11,  0,  0, $42, 1
-	dbsprite  9, 11,  0,  0, $44, 1
-	dbsprite 10, 11,  0,  0, $46, 1
-	dbsprite 11, 11,  0,  0, $48, 1
-	dbsprite 12, 11,  0,  0, $4a, 1
-	dbsprite 13, 11,  0,  0, $4c, 1
-	dbsprite 14, 11,  0,  0, $4e, 1
+	dsprite  3,  0,  7,  0, $00, 1
+	dsprite  3,  0,  8,  0, $02, 1
+	dsprite  3,  0,  9,  0, $04, 1
+	dsprite  3,  0, 10,  0, $06, 1
+	dsprite  3,  0, 11,  0, $08, 1
+	dsprite  3,  0, 12,  0, $0a, 1
+	dsprite  3,  0, 13,  0, $0c, 1
+	dsprite  3,  0, 14,  0, $0e, 1
+	dsprite  5,  0,  7,  0, $10, 0
+	dsprite  5,  0,  8,  0, $12, 0
+	dsprite  5,  0,  9,  0, $14, 0
+	dsprite  5,  0, 10,  0, $16, 0
+	dsprite  5,  0, 11,  0, $18, 0
+	dsprite  5,  0, 12,  0, $1a, 0
+	dsprite  5,  0, 13,  0, $1c, 0
+	dsprite  5,  0, 14,  0, $1e, 0
+	dsprite  7,  0,  7,  0, $20, 0
+	dsprite  7,  0,  8,  0, $22, 0
+	dsprite  7,  0,  9,  0, $24, 0
+	dsprite  7,  0, 10,  0, $26, 0
+	dsprite  7,  0, 11,  0, $28, 0
+	dsprite  7,  0, 12,  0, $2a, 0
+	dsprite  7,  0, 13,  0, $2c, 0
+	dsprite  7,  0, 14,  0, $2e, 0
+	dsprite  9,  0,  7,  0, $30, 2
+	dsprite  9,  0,  8,  0, $32, 2
+	dsprite  9,  0,  9,  0, $34, 2
+	dsprite  9,  0, 10,  0, $36, 2
+	dsprite  9,  0, 11,  0, $38, 2
+	dsprite  9,  0, 12,  0, $3a, 2
+	dsprite  9,  0, 13,  0, $3c, 2
+	dsprite  9,  0, 14,  0, $3e, 2
+	dsprite 11,  0,  7,  0, $40, 1
+	dsprite 11,  0,  8,  0, $42, 1
+	dsprite 11,  0,  9,  0, $44, 1
+	dsprite 11,  0, 10,  0, $46, 1
+	dsprite 11,  0, 11,  0, $48, 1
+	dsprite 11,  0, 12,  0, $4a, 1
+	dsprite 11,  0, 13,  0, $4c, 1
+	dsprite 11,  0, 14,  0, $4e, 1
 
-TestCrystalTitleScreen: ; unreferenced
-; Runs the title screen until A is pressed.
-; Possibly used for testing.
+Function10ed51:
 	call _TitleScreen
 .loop
 	call JoyTextDelay
 	ldh a, [hJoyLast]
 	ld b, a
-	and A_BUTTON
+	and 1
 	jr nz, .done
 	call SuicuneFrameIterator
 	call DelayFrame

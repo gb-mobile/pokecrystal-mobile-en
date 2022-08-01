@@ -11,7 +11,7 @@ RalphNeglectingKidsText:
 	line "actually."
 	done
 
-RalphDefeatedMonText:
+UnknownText_0x175c24:
 	text "I just beat a wild"
 	line "@"
 	text_ram wStringBuffer4
@@ -27,7 +27,7 @@ RalphDefeatedMonText:
 	line "cocky…"
 	done
 
-RalphLostAMonText:
+UnknownText_0x175c9f:
 	text "Yesterday a wild"
 	line "@"
 	text_ram wStringBuffer4
@@ -46,7 +46,7 @@ RalphLostAMonText:
 	line "made my day!"
 	done
 
-RalphBattleRematchText:
+UnknownText_0x175d40:
 	text "What do you say to"
 	line "a battle with me?"
 
@@ -62,12 +62,12 @@ RalphBattleRematchText:
 	line "the spot!"
 	done
 
-RalphHangUpText:
+UnknownText_0x175db7:
 	text "You call your mom"
 	line "sometimes too!"
 	done
 
-RalphItemText:
+UnknownText_0x175dd9:
 	text "Listen, I… Yowch!"
 
 	para "Uh, sorry! See,"
@@ -96,7 +96,7 @@ RalphItemText:
 	line "to fish!"
 	done
 
-RalphNoItemText:
+UnknownText_0x175eaf:
 	text "Yeah, I know."
 
 	para "You're looking for"
@@ -107,7 +107,7 @@ RalphNoItemText:
 	cont "MAGIKARP, though…"
 	done
 
-RalphReminderText:
+UnknownText_0x175f11:
 	text "So where are you?"
 	line "I'm waiting for"
 
@@ -120,7 +120,7 @@ RalphReminderText:
 	line "your elders wait!"
 	done
 
-RalphHurryText:
+UnknownText_0x175f70:
 	text "Hey, what's the"
 	line "matter with you?"
 

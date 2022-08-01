@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const UNIONCAVEB2F_ROCKER
 	const UNIONCAVEB2F_COOLTRAINER_F1
 	const UNIONCAVEB2F_COOLTRAINER_F2
@@ -7,9 +7,9 @@
 	const UNIONCAVEB2F_LAPRAS
 
 UnionCaveB2F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .Lapras
 
 .Lapras:
@@ -19,11 +19,11 @@ UnionCaveB2F_MapScripts:
 	ifequal FRIDAY, .Appear
 .NoAppear:
 	disappear UNIONCAVEB2F_LAPRAS
-	endcallback
+	return
 
 .Appear:
 	appear UNIONCAVEB2F_LAPRAS
-	endcallback
+	return
 
 UnionCaveLapras:
 	faceplayer
@@ -142,14 +142,14 @@ CooltrainerfEmmaAfterBattleText:
 UnionCaveB2F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 1 ; warp events
 	warp_event  5,  3, UNION_CAVE_B1F, 5
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 6 ; object events
 	object_event 15, 19, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerCooltrainermNick, -1
 	object_event  5, 13, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 1, TrainerCooltrainerfGwen, -1
 	object_event  3, 30, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerCooltrainerfEmma, -1

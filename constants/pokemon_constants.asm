@@ -10,14 +10,14 @@
 ; - PokemonPalettes (see data/pokemon/palettes.asm)
 ; - PokedexDataPointerTable (see data/pokemon/dex_entry_pointers.asm)
 ; - AlphabeticalPokedexOrder (see data/pokemon/dex_order_alpha.asm)
+; - EZChat_SortedPokemon (see data/pokemon/ezchat_order.asm)
 ; - NewPokedexOrder (see data/pokemon/dex_order_new.asm)
 ; - Pokered_MonIndices (see data/pokemon/gen1_order.asm)
-; - Footprints (see gfx/footprints.asm)
 ; - AnimationPointers (see gfx/pokemon/anim_pointers.asm)
 ; - AnimationIdlePointers (see gfx/pokemon/idle_pointers.asm)
 ; - BitmasksPointers (see gfx/pokemon/bitmask_pointers.asm)
 ; - FramesPointers (see gfx/pokemon/frame_pointers.asm)
-; - EZChat_SortedPokemon (see data/pokemon/ezchat_order.asm)
+; - Footprints (see gfx/footprints.asm)
 	const_def 1
 	const BULBASAUR  ; 01
 	const IVYSAUR    ; 02
@@ -170,7 +170,7 @@
 	const DRAGONITE  ; 95
 	const MEWTWO     ; 96
 	const MEW        ; 97
-DEF JOHTO_POKEMON EQU const_value
+JOHTO_POKEMON EQU const_value
 	const CHIKORITA  ; 98
 	const BAYLEEF    ; 99
 	const MEGANIUM   ; 9a
@@ -271,9 +271,10 @@ DEF JOHTO_POKEMON EQU const_value
 	const LUGIA      ; f9
 	const HO_OH      ; fa
 	const CELEBI     ; fb
-DEF NUM_POKEMON EQU const_value - 1
-	const_skip       ; fc
+NUM_POKEMON EQU const_value + -1
+	const MON_FC     ; fc
 	const EGG        ; fd
+	const MON_FE     ; fe
 
 ; Unown forms
 ; indexes for:
@@ -310,4 +311,4 @@ DEF NUM_POKEMON EQU const_value - 1
 	const UNOWN_X ; 24
 	const UNOWN_Y ; 25
 	const UNOWN_Z ; 26
-DEF NUM_UNOWN EQU const_value - 1 ; 26
+NUM_UNOWN EQU const_value + -1 ; 26

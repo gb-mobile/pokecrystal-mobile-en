@@ -102,7 +102,7 @@ AI_Redundant:
 .Snore:
 .SleepTalk:
 	ld a, [wEnemyMonStatus]
-	and SLP_MASK
+	and SLP
 	jr z, .Redundant
 	jr .NotRedundant
 
@@ -166,7 +166,7 @@ AI_Redundant:
 
 .DreamEater:
 	ld a, [wBattleMonStatus]
-	and SLP_MASK
+	and SLP
 	jr z, .Redundant
 	jr .NotRedundant
 
@@ -176,7 +176,6 @@ AI_Redundant:
 	ret
 
 .FutureSight:
-; BUG: AI does not discourage Future Sight when it's already been used (see docs/bugs_and_glitches.md)
 	ld a, [wEnemyScreens]
 	bit 5, a
 	ret

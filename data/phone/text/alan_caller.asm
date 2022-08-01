@@ -8,7 +8,7 @@ AlanGettingStrongerText:
 	line "calculated!"
 	done
 
-AlanDefeatedMonText:
+UnknownText_0x64cf3:
 	text "By the way, we"
 	line "knocked out a wild"
 
@@ -21,7 +21,7 @@ AlanDefeatedMonText:
 	line "advance worked!"
 	done
 
-AlanLostAMonText:
+UnknownText_0x64d4f:
 	text "By the way, a wild"
 	line "@"
 	text_ram wStringBuffer4
@@ -32,7 +32,7 @@ AlanLostAMonText:
 	line "error on my part…"
 	done
 
-AlanBattleRematchText:
+UnknownText_0x64da4:
 	text "I've studied quite"
 	line "a bit since then,"
 
@@ -48,11 +48,11 @@ AlanBattleRematchText:
 	line "for a battle?"
 	done
 
-AlanHangUpText:
+UnknownText_0x64e1f:
 	text "See you later!"
 	done
 
-AlanFoundItemText:
+UnknownText_0x64e2f:
 	text "Hehehe, I picked"
 	line "up something nice!"
 
@@ -65,7 +65,7 @@ AlanFoundItemText:
 	line "and pick it up?"
 	done
 
-AlanHaventPickedUpAnythingText:
+UnknownText_0x64e90:
 	text "I haven't picked"
 	line "up anything yet."
 
@@ -73,7 +73,7 @@ AlanHaventPickedUpAnythingText:
 	line "find something."
 	done
 
-AlanReminderText:
+UnknownText_0x64ed4:
 	text "If we don't battle"
 	line "soon, I'll forget"
 	cont "my strategy!"
@@ -84,7 +84,7 @@ AlanReminderText:
 	text "!"
 	done
 
-AlanComePickUpGiftText:
+UnknownText_0x64f1a:
 	text "I have to do my"
 	line "homework, so can"
 

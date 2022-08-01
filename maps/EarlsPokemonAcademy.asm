@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const EARLSPOKEMONACADEMY_EARL
 	const EARLSPOKEMONACADEMY_YOUNGSTER1
 	const EARLSPOKEMONACADEMY_GAMEBOY_KID1
@@ -7,9 +7,9 @@
 	const EARLSPOKEMONACADEMY_POKEDEX
 
 EarlsPokemonAcademy_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 AcademyEarl:
 	applymovement EARLSPOKEMONACADEMY_EARL, AcademyEarlSpinMovement
@@ -111,7 +111,7 @@ AcademyBlackboard:
 	dn 3, 2 ; rows, columns
 	db 5 ; spacing
 	dba .Text
-	dbw BANK(@), NULL
+	dbw BANK(AcademyBlackboard), 0
 
 .Text:
 	db "PSN@"
@@ -138,11 +138,12 @@ AcademyNotebook:
 	closetext
 	end
 
-AcademyStickerMachine: ; unreferenced
+AcademyStickerMachine:
+; unused
 	jumptext AcademyStickerMachineText
 
 AcademyBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 AcademyEarlSpinMovement:
 	turn_head DOWN
@@ -270,7 +271,8 @@ AcademyBlackboardText:
 	line "battle."
 	done
 
-AcademyBlackboardText2: ; unreferenced
+AcademyBlackboardText2:
+; unused
 	text "Read which topic?"
 	done
 
@@ -410,19 +412,19 @@ AcademyStickerMachineText:
 EarlsPokemonAcademy_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  3, 15, VIOLET_CITY, 3
 	warp_event  4, 15, VIOLET_CITY, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 4 ; bg events
 	bg_event  0,  1, BGEVENT_READ, AcademyBookshelf
 	bg_event  1,  1, BGEVENT_READ, AcademyBookshelf
 	bg_event  3,  0, BGEVENT_READ, AcademyBlackboard
 	bg_event  4,  0, BGEVENT_READ, AcademyBlackboard
 
-	def_object_events
+	db 6 ; object events
 	object_event  4,  2, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, AcademyEarl, EVENT_EARLS_ACADEMY_EARL
 	object_event  2,  5, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, EarlsPokemonAcademyYoungster1Script, -1
 	object_event  3, 11, SPRITE_GAMEBOY_KID, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, EarlsPokemonAcademyGameboyKid1Script, -1

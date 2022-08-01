@@ -1,11 +1,11 @@
-ParryNothingCanMatchText:
+ParryNoMatchText:
 	text "Nothing can match"
 	line "my @"
 	text_ram wStringBuffer4
 	text " now."
 	done
 
-ParryDefeatedMonText:
+UnknownText_0x66fc0:
 	text "Yeah, we KO'd a"
 	line "wild @"
 	text_ram wStringBuffer4
@@ -15,7 +15,7 @@ ParryDefeatedMonText:
 	line "wanted to get it…"
 	done
 
-ParryLostAMonText:
+UnknownText_0x67001:
 	text "And yesterday, we"
 	line "spotted a wild"
 
@@ -34,7 +34,7 @@ ParryLostAMonText:
 	line "How about that!"
 	done
 
-ParryBattleRematchText:
+UnknownText_0x67096:
 	text "You're thinking"
 	line "you'd like to"
 
@@ -47,7 +47,7 @@ ParryBattleRematchText:
 	text "!"
 	done
 
-ParryHangUpText:
+UnknownText_0x670eb:
 	text "OK, give me a call"
 	line "again!"
 	done

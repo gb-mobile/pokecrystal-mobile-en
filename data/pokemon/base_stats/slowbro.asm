@@ -3,7 +3,7 @@
 	db  95,  75, 110,  30, 100,  80
 	;   hp  atk  def  spd  sat  sdf
 
-	db WATER, PSYCHIC_TYPE ; type
+	db WATER, PSYCHIC ; type
 	db 75 ; catch rate
 	db 164 ; base exp
 	db NO_ITEM, KINGS_ROCK ; items
@@ -12,7 +12,7 @@
 	db 20 ; step cycles to hatch
 	db 5 ; unknown 2
 	INCBIN "gfx/pokemon/slowbro/front.dimensions"
-	dw NULL, NULL ; unused (beta front/back pics)
+	db 0, 0, 0, 0 ; padding
 	db GROWTH_MEDIUM_FAST ; growth rate
 	dn EGG_MONSTER, EGG_WATER_1 ; egg groups
 

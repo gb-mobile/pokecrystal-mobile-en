@@ -1,4 +1,4 @@
-WadeAnswerPhoneText:
+UnknownText_0x1b5a3b:
 	text "Hello? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -8,7 +8,7 @@ WadeAnswerPhoneText:
 	line "Good morning!"
 	done
 
-WadeAnswerPhoneDayText:
+UnknownText_0x1b5a74:
 	text "Hello? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -17,7 +17,7 @@ WadeAnswerPhoneDayText:
 	para "Oh, hi, <PLAY_G>!"
 	done
 
-WadeAnswerPhoneNiteText:
+UnknownText_0x1b5a9f:
 	text "Hello? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -27,7 +27,7 @@ WadeAnswerPhoneNiteText:
 	line "Good evening!"
 	done
 
-WadeGreetText:
+UnknownText_0x1b5ad8:
 	text "<PLAY_G>, good"
 	line "morning!"
 
@@ -37,7 +37,7 @@ WadeGreetText:
 	line "Isn't it nice out?"
 	done
 
-WadeGreetDayText:
+UnknownText_0x1b5b0b:
 	text "<PLAY_G>, howdy!"
 
 	para "It's me, @"
@@ -46,7 +46,7 @@ WadeGreetDayText:
 	line "Isn't it nice out?"
 	done
 
-WadeGreetNiteText:
+UnknownText_0x1b5b37:
 	text "Good evening,"
 	line "<PLAY_G>!"
 
@@ -56,7 +56,7 @@ WadeGreetNiteText:
 	line "Were you awake?"
 	done
 
-WadeGenericText:
+UnknownText_0x1b5b68:
 	text "How are your"
 	line "#MON doing?"
 

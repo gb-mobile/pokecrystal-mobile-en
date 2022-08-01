@@ -1,7 +1,7 @@
-DEF GOLDENRODUNDERGROUND_OLDER_HAIRCUT_PRICE   EQU 500
-DEF GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_PRICE EQU 300
+GOLDENRODUNDERGROUND_OLDER_HAIRCUT_PRICE   EQU 500
+GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_PRICE EQU 300
 
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODUNDERGROUND_SUPER_NERD1
 	const GOLDENRODUNDERGROUND_SUPER_NERD2
 	const GOLDENRODUNDERGROUND_SUPER_NERD3
@@ -13,9 +13,9 @@ DEF GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_PRICE EQU 300
 	const GOLDENRODUNDERGROUND_GRANNY
 
 GoldenrodUnderground_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 3 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .ResetSwitches
 	callback MAPCALLBACK_TILES, .CheckBasementKey
 	callback MAPCALLBACK_OBJECTS, .CheckDayOfWeek
@@ -38,16 +38,16 @@ GoldenrodUnderground_MapScripts:
 	clearevent EVENT_SWITCH_14
 	setval 0
 	writemem wUndergroundSwitchPositions
-	endcallback
+	return
 
 .CheckBasementKey:
 	checkevent EVENT_USED_BASEMENT_KEY
 	iffalse .LockBasementDoor
-	endcallback
+	return
 
 .LockBasementDoor:
 	changeblock 18, 6, $3d ; locked door
-	endcallback
+	return
 
 .CheckDayOfWeek:
 	readvar VAR_WEEKDAY
@@ -58,12 +58,12 @@ GoldenrodUnderground_MapScripts:
 	ifequal FRIDAY, .Friday
 	ifequal SATURDAY, .Saturday
 
-; Sunday
+.Sunday:
 	disappear GOLDENRODUNDERGROUND_GRAMPS
 	disappear GOLDENRODUNDERGROUND_OLDER_HAIRCUT_BROTHER
 	appear GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_BROTHER
 	appear GOLDENRODUNDERGROUND_GRANNY
-	endcallback
+	return
 
 .Monday:
 	disappear GOLDENRODUNDERGROUND_GRAMPS
@@ -74,42 +74,42 @@ GoldenrodUnderground_MapScripts:
 	disappear GOLDENRODUNDERGROUND_OLDER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_GRANNY
-	endcallback
+	return
 
 .Tuesday:
 	disappear GOLDENRODUNDERGROUND_GRAMPS
 	appear GOLDENRODUNDERGROUND_OLDER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_GRANNY
-	endcallback
+	return
 
 .Wednesday:
 	disappear GOLDENRODUNDERGROUND_GRAMPS
 	disappear GOLDENRODUNDERGROUND_OLDER_HAIRCUT_BROTHER
 	appear GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_GRANNY
-	endcallback
+	return
 
 .Thursday:
 	disappear GOLDENRODUNDERGROUND_GRAMPS
 	appear GOLDENRODUNDERGROUND_OLDER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_GRANNY
-	endcallback
+	return
 
 .Friday:
 	disappear GOLDENRODUNDERGROUND_GRAMPS
 	disappear GOLDENRODUNDERGROUND_OLDER_HAIRCUT_BROTHER
 	appear GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_GRANNY
-	endcallback
+	return
 
 .Saturday:
 	disappear GOLDENRODUNDERGROUND_GRAMPS
 	appear GOLDENRODUNDERGROUND_OLDER_HAIRCUT_BROTHER
 	disappear GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_BROTHER
 	appear GOLDENRODUNDERGROUND_GRANNY
-	endcallback
+	return
 
 TrainerSupernerdEric:
 	trainer SUPER_NERD, ERIC, EVENT_BEAT_SUPER_NERD_ERIC, SupernerdEricSeenText, SupernerdEricBeatenText, 0, .Script
@@ -200,7 +200,7 @@ OlderHaircutBrotherScript:
 	checkmoney YOUR_MONEY, GOLDENRODUNDERGROUND_OLDER_HAIRCUT_PRICE
 	ifequal HAVE_LESS, .NotEnoughMoney
 	writetext GoldenrodUndergroundOlderHaircutBrotherAskWhichMonText
-	promptbutton
+	buttonsound
 	special OlderHaircutBrother
 	ifequal $0, .Refused
 	ifequal $1, .Refused
@@ -283,7 +283,7 @@ YoungerHaircutBrotherScript:
 	checkmoney YOUR_MONEY, GOLDENRODUNDERGROUND_YOUNGER_HAIRCUT_PRICE
 	ifequal HAVE_LESS, .NotEnoughMoney
 	writetext GoldenrodUndergroundYoungerHaircutBrotherAskWhichMonText
-	promptbutton
+	buttonsound
 	special YoungerHaircutBrother
 	ifequal $0, .Refused
 	ifequal $1, .Refused
@@ -650,7 +650,7 @@ GoldenrodUndergroundNoEntryText:
 GoldenrodUnderground_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 6 ; warp events
 	warp_event  3,  2, GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES, 7
 	warp_event  3, 34, GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES, 4
 	warp_event 18,  6, GOLDENROD_UNDERGROUND, 4
@@ -658,16 +658,16 @@ GoldenrodUnderground_MapEvents:
 	warp_event 22, 31, GOLDENROD_UNDERGROUND, 3
 	warp_event 22, 27, GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 5 ; bg events
 	bg_event 18,  6, BGEVENT_READ, BasementDoorScript
 	bg_event 19,  6, BGEVENT_READ, GoldenrodUndergroundNoEntrySign
 	bg_event  6, 13, BGEVENT_ITEM, GoldenrodUndergroundHiddenParlyzHeal
 	bg_event  4, 18, BGEVENT_ITEM, GoldenrodUndergroundHiddenSuperPotion
 	bg_event 17,  8, BGEVENT_ITEM, GoldenrodUndergroundHiddenAntidote
 
-	def_object_events
+	db 9 ; object events
 	object_event  5, 31, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 3, TrainerSupernerdEric, -1
 	object_event  6,  9, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 2, TrainerSupernerdTeru, -1
 	object_event  3, 27, SPRITE_SUPER_NERD, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 2, TrainerPokemaniacIssac, -1

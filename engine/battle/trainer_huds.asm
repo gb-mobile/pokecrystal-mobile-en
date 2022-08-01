@@ -26,7 +26,7 @@ ShowPlayerMonsRemaining:
 	ld [hl], a
 	ld a, 8
 	ld [wPlaceBallsDirection], a
-	ld hl, wShadowOAMSprite00
+	ld hl, wVirtualOAMSprite00
 	jp LoadTrainerHudOAM
 
 ShowOTTrainerMonsRemaining:
@@ -41,13 +41,13 @@ ShowOTTrainerMonsRemaining:
 	ld [hl], 4 * 8
 	ld a, -8
 	ld [wPlaceBallsDirection], a
-	ld hl, wShadowOAMSprite00 + PARTY_LENGTH * SPRITEOAMSTRUCT_LENGTH
+	ld hl, wVirtualOAMSprite00 + PARTY_LENGTH * SPRITEOAMSTRUCT_LENGTH
 	jp LoadTrainerHudOAM
 
 StageBallTilesData:
 	ld a, [de]
 	push af
-	ld de, wBattleHUDTiles
+	ld de, wBuffer1
 	ld c, PARTY_LENGTH
 	ld a, $34 ; empty slot
 .loop1
@@ -56,8 +56,7 @@ StageBallTilesData:
 	dec c
 	jr nz, .loop1
 	pop af
-
-	ld de, wBattleHUDTiles
+	ld de, wBuffer1
 .loop2
 	push af
 	call .GetHUDTile
@@ -187,7 +186,7 @@ LinkBattle_TrainerHuds:
 	ld [hl], 8 * 8
 	ld a, 8
 	ld [wPlaceBallsDirection], a
-	ld hl, wShadowOAMSprite00
+	ld hl, wVirtualOAMSprite00
 	call LoadTrainerHudOAM
 
 	ld hl, wOTPartyMon1HP
@@ -197,11 +196,11 @@ LinkBattle_TrainerHuds:
 	ld a, 10 * 8
 	ld [hli], a
 	ld [hl], 13 * 8
-	ld hl, wShadowOAMSprite00 + PARTY_LENGTH * SPRITEOAMSTRUCT_LENGTH
+	ld hl, wVirtualOAMSprite00 + PARTY_LENGTH * SPRITEOAMSTRUCT_LENGTH
 	jp LoadTrainerHudOAM
 
 LoadTrainerHudOAM:
-	ld de, wBattleHUDTiles
+	ld de, wBuffer1
 	ld c, PARTY_LENGTH
 .loop
 	ld a, [wPlaceBallsY]
@@ -226,7 +225,7 @@ LoadBallIconGFX:
 	ld de, .gfx
 	ld hl, vTiles0 tile $31
 	lb bc, BANK(LoadBallIconGFX), 4
-	call Get2bppViaHDMA
+	call Get2bpp_2
 	ret
 
 .gfx

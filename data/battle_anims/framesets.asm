@@ -1,6 +1,5 @@
 BattleAnimFrameData:
 ; entries correspond to BATTLEANIMFRAMESET_* constants
-	table_width 2, BattleAnimFrameData
 	dw .Frameset_00 ; BATTLEANIMFRAMESET_00
 	dw .Frameset_01 ; BATTLEANIMFRAMESET_01
 	dw .Frameset_02 ; BATTLEANIMFRAMESET_02
@@ -186,1085 +185,1084 @@ BattleAnimFrameData:
 	dw .Frameset_b6 ; BATTLEANIMFRAMESET_B6
 	dw .Frameset_b7 ; BATTLEANIMFRAMESET_B7
 	dw .Frameset_b8 ; BATTLEANIMFRAMESET_B8
-	assert_table_length NUM_BATTLEANIMFRAMESETS
 
 .Frameset_00:
-	oamframe BATTLEANIMOAMSET_00,  6
-	oamdelete
+	frame BATTLEANIMOAMSET_00,  6
+	delanim
 
 .Frameset_01:
-	oamframe BATTLEANIMOAMSET_01,  6
-	oamdelete
+	frame BATTLEANIMOAMSET_01,  6
+	delanim
 
 .Frameset_02:
-	oamframe BATTLEANIMOAMSET_02,  6
-	oamdelete
+	frame BATTLEANIMOAMSET_02,  6
+	delanim
 
 .Frameset_03:
-	oamframe BATTLEANIMOAMSET_03,  6
-	oamdelete
+	frame BATTLEANIMOAMSET_03,  6
+	delanim
 
 .Frameset_04:
-	oamframe BATTLEANIMOAMSET_04,  6
-	oamdelete
+	frame BATTLEANIMOAMSET_04,  6
+	delanim
 
 .Frameset_05:
-	oamframe BATTLEANIMOAMSET_05,  6
-	oamdelete
+	frame BATTLEANIMOAMSET_05,  6
+	delanim
 
 .Frameset_06:
-	oamframe BATTLEANIMOAMSET_06,  6
-	oamdelete
+	frame BATTLEANIMOAMSET_06,  6
+	delanim
 
 .Frameset_07:
-	oamframe BATTLEANIMOAMSET_03,  4
-	oamframe BATTLEANIMOAMSET_01,  1
-	oamframe BATTLEANIMOAMSET_03,  4
-	oamframe BATTLEANIMOAMSET_01,  1
-	oamframe BATTLEANIMOAMSET_03,  4
-	oamframe BATTLEANIMOAMSET_01,  1
-	oamframe BATTLEANIMOAMSET_03,  4
-	oamframe BATTLEANIMOAMSET_01,  1
-	oamdelete
+	frame BATTLEANIMOAMSET_03,  4
+	frame BATTLEANIMOAMSET_01,  1
+	frame BATTLEANIMOAMSET_03,  4
+	frame BATTLEANIMOAMSET_01,  1
+	frame BATTLEANIMOAMSET_03,  4
+	frame BATTLEANIMOAMSET_01,  1
+	frame BATTLEANIMOAMSET_03,  4
+	frame BATTLEANIMOAMSET_01,  1
+	delanim
 
 .Frameset_3e:
-	oamframe BATTLEANIMOAMSET_4B,  2
-	oamframe BATTLEANIMOAMSET_4C,  2
-	oamframe BATTLEANIMOAMSET_4D,  4
-	oamframe BATTLEANIMOAMSET_4E,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2
-	oamdelete
+	frame BATTLEANIMOAMSET_4B,  2
+	frame BATTLEANIMOAMSET_4C,  2
+	frame BATTLEANIMOAMSET_4D,  4
+	frame BATTLEANIMOAMSET_4E,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2
+	delanim
 
 .Frameset_3f:
-	oamframe BATTLEANIMOAMSET_4B,  2, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_4C,  2, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_4D,  4, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP
-	oamdelete
+	frame BATTLEANIMOAMSET_4B,  2, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_4C,  2, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_4D,  4, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP
+	delanim
 
 .Frameset_40:
-	oamframe BATTLEANIMOAMSET_4B,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_4C,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_4D,  4, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamdelete
+	frame BATTLEANIMOAMSET_4B,  2, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_4C,  2, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_4D,  4, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP, OAM_Y_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP, OAM_Y_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP, OAM_Y_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_4E,  2, OAM_X_FLIP, OAM_Y_FLIP
+	delanim
 
 .Frameset_41:
-	oamframe BATTLEANIMOAMSET_4B,  1
-	oamframe BATTLEANIMOAMSET_4C,  1
-	oamframe BATTLEANIMOAMSET_4D,  1
-	oamframe BATTLEANIMOAMSET_4F,  1
-	oamframe BATTLEANIMOAMSET_50,  1
-	oamframe BATTLEANIMOAMSET_51,  1
-	oamframe BATTLEANIMOAMSET_52,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2
-	oamdelete
+	frame BATTLEANIMOAMSET_4B,  1
+	frame BATTLEANIMOAMSET_4C,  1
+	frame BATTLEANIMOAMSET_4D,  1
+	frame BATTLEANIMOAMSET_4F,  1
+	frame BATTLEANIMOAMSET_50,  1
+	frame BATTLEANIMOAMSET_51,  1
+	frame BATTLEANIMOAMSET_52,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2
+	delanim
 
 .Frameset_42:
-	oamframe BATTLEANIMOAMSET_4B,  1, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_4C,  1, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_4D,  1, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_4F,  1, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_50,  1, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_51,  1, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_52,  2, OAM_X_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2, OAM_X_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2, OAM_X_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2, OAM_X_FLIP
-	oamdelete
+	frame BATTLEANIMOAMSET_4B,  1, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_4C,  1, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_4D,  1, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_4F,  1, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_50,  1, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_51,  1, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_52,  2, OAM_X_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2, OAM_X_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2, OAM_X_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2, OAM_X_FLIP
+	delanim
 
 .Frameset_08:
-	oamframe BATTLEANIMOAMSET_00,  3
-	oamframe BATTLEANIMOAMSET_07,  3
-	oamframe BATTLEANIMOAMSET_08,  3
-	oamframe BATTLEANIMOAMSET_09,  3
-	oamdelete
+	frame BATTLEANIMOAMSET_00,  3
+	frame BATTLEANIMOAMSET_07,  3
+	frame BATTLEANIMOAMSET_08,  3
+	frame BATTLEANIMOAMSET_09,  3
+	delanim
 
 .Frameset_09:
-	oamframe BATTLEANIMOAMSET_0A,  7
-	oamframe BATTLEANIMOAMSET_0B,  7
-	oamframe BATTLEANIMOAMSET_0A,  7
-	oamframe BATTLEANIMOAMSET_0B,  7, OAM_X_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_0A,  7
+	frame BATTLEANIMOAMSET_0B,  7
+	frame BATTLEANIMOAMSET_0A,  7
+	frame BATTLEANIMOAMSET_0B,  7, OAM_X_FLIP
+	dorestart
 
 .Frameset_0a:
-	oamframe BATTLEANIMOAMSET_0C,  8
-	oamend
+	frame BATTLEANIMOAMSET_0C,  8
+	endanim
 
 .Frameset_0b:
-	oamframe BATTLEANIMOAMSET_0D,  8
-	oamend
+	frame BATTLEANIMOAMSET_0D,  8
+	endanim
 
 .Frameset_0c:
-	oamframe BATTLEANIMOAMSET_0A,  8
-	oamend
+	frame BATTLEANIMOAMSET_0A,  8
+	endanim
 
 .Frameset_0d:
-	oamframe BATTLEANIMOAMSET_0A,  7
-	oamframe BATTLEANIMOAMSET_0B,  7
-	oamframe BATTLEANIMOAMSET_0A,  7
-	oamframe BATTLEANIMOAMSET_0B,  7, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_0A,  7
-	oamend
+	frame BATTLEANIMOAMSET_0A,  7
+	frame BATTLEANIMOAMSET_0B,  7
+	frame BATTLEANIMOAMSET_0A,  7
+	frame BATTLEANIMOAMSET_0B,  7, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_0A,  7
+	endanim
 
 .Frameset_0e:
-	oamframe BATTLEANIMOAMSET_0A,  8
-	oamend
+	frame BATTLEANIMOAMSET_0A,  8
+	endanim
 
 .Frameset_0f:
-	oamframe BATTLEANIMOAMSET_0A,  4
-	oamframe BATTLEANIMOAMSET_0E,  4
-	oamrestart
+	frame BATTLEANIMOAMSET_0A,  4
+	frame BATTLEANIMOAMSET_0E,  4
+	dorestart
 
 .Frameset_10:
-	oamframe BATTLEANIMOAMSET_0F,  4
-	oamframe BATTLEANIMOAMSET_10,  4
-	oamrestart
+	frame BATTLEANIMOAMSET_0F,  4
+	frame BATTLEANIMOAMSET_10,  4
+	dorestart
 
 .Frameset_11:
-	oamframe BATTLEANIMOAMSET_10,  4
-	oamframe BATTLEANIMOAMSET_0F,  4
-	oamframe BATTLEANIMOAMSET_0E,  4
-	oamframe BATTLEANIMOAMSET_0A,  4
-	oamframe BATTLEANIMOAMSET_0E,  4
-	oamframe BATTLEANIMOAMSET_0A,  4
-	oamframe BATTLEANIMOAMSET_0E,  4
-	oamframe BATTLEANIMOAMSET_0A,  4
-	oamdelete
+	frame BATTLEANIMOAMSET_10,  4
+	frame BATTLEANIMOAMSET_0F,  4
+	frame BATTLEANIMOAMSET_0E,  4
+	frame BATTLEANIMOAMSET_0A,  4
+	frame BATTLEANIMOAMSET_0E,  4
+	frame BATTLEANIMOAMSET_0A,  4
+	frame BATTLEANIMOAMSET_0E,  4
+	frame BATTLEANIMOAMSET_0A,  4
+	delanim
 
 .Frameset_12:
-	oamframe BATTLEANIMOAMSET_10,  1
-	oamframe BATTLEANIMOAMSET_0F,  1
-	oamframe BATTLEANIMOAMSET_12,  1
-	oamframe BATTLEANIMOAMSET_11,  1
-	oamframe BATTLEANIMOAMSET_12,  1
-	oamframe BATTLEANIMOAMSET_0F,  1
-	oamrestart
+	frame BATTLEANIMOAMSET_10,  1
+	frame BATTLEANIMOAMSET_0F,  1
+	frame BATTLEANIMOAMSET_12,  1
+	frame BATTLEANIMOAMSET_11,  1
+	frame BATTLEANIMOAMSET_12,  1
+	frame BATTLEANIMOAMSET_0F,  1
+	dorestart
 
 .Frameset_13:
-	oamframe BATTLEANIMOAMSET_10,  3
-	oamframe BATTLEANIMOAMSET_0F,  3
-	oamframe BATTLEANIMOAMSET_12,  1
-	oamwait 1
-	oamframe BATTLEANIMOAMSET_12,  1
-	oamwait 1
-	oamframe BATTLEANIMOAMSET_12,  1
-	oamwait 1
-	oamframe BATTLEANIMOAMSET_12,  1
-	oamwait 1
-	oamframe BATTLEANIMOAMSET_12,  3
-	oamdelete
+	frame BATTLEANIMOAMSET_10,  3
+	frame BATTLEANIMOAMSET_0F,  3
+	frame BATTLEANIMOAMSET_12,  1
+	dowait 1
+	frame BATTLEANIMOAMSET_12,  1
+	dowait 1
+	frame BATTLEANIMOAMSET_12,  1
+	dowait 1
+	frame BATTLEANIMOAMSET_12,  1
+	dowait 1
+	frame BATTLEANIMOAMSET_12,  3
+	delanim
 
 .Frameset_14:
-	oamframe BATTLEANIMOAMSET_13, 20
-	oamdelete
+	frame BATTLEANIMOAMSET_13, 20
+	delanim
 
 .Frameset_15:
-	oamframe BATTLEANIMOAMSET_10,  1
-	oamframe BATTLEANIMOAMSET_0F,  1
-	oamrestart
+	frame BATTLEANIMOAMSET_10,  1
+	frame BATTLEANIMOAMSET_0F,  1
+	dorestart
 
 .Frameset_16:
-	oamframe BATTLEANIMOAMSET_14,  8
-	oamend
+	frame BATTLEANIMOAMSET_14,  8
+	endanim
 
 .Frameset_17:
-	oamframe BATTLEANIMOAMSET_17,  4
-	oamframe BATTLEANIMOAMSET_16,  8
-	oamframe BATTLEANIMOAMSET_15,  8
-	oamframe BATTLEANIMOAMSET_16,  8
-	oamframe BATTLEANIMOAMSET_17,  4
-	oamframe BATTLEANIMOAMSET_17,  4
-	oamframe BATTLEANIMOAMSET_16,  8, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_15,  8, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_16,  8, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_17,  4
-	oamrestart
+	frame BATTLEANIMOAMSET_17,  4
+	frame BATTLEANIMOAMSET_16,  8
+	frame BATTLEANIMOAMSET_15,  8
+	frame BATTLEANIMOAMSET_16,  8
+	frame BATTLEANIMOAMSET_17,  4
+	frame BATTLEANIMOAMSET_17,  4
+	frame BATTLEANIMOAMSET_16,  8, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_15,  8, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_16,  8, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_17,  4
+	dorestart
 
 .Frameset_56:
-	oamframe BATTLEANIMOAMSET_69,  8
-	oamend
+	frame BATTLEANIMOAMSET_69,  8
+	endanim
 
 .Frameset_57:
-	oamframe BATTLEANIMOAMSET_69, 32
-	oamframe BATTLEANIMOAMSET_6A,  4
-	oamframe BATTLEANIMOAMSET_6B,  4
-	oamframe BATTLEANIMOAMSET_6D,  4
-	oamframe BATTLEANIMOAMSET_6C,  4
-	oamend
+	frame BATTLEANIMOAMSET_69, 32
+	frame BATTLEANIMOAMSET_6A,  4
+	frame BATTLEANIMOAMSET_6B,  4
+	frame BATTLEANIMOAMSET_6D,  4
+	frame BATTLEANIMOAMSET_6C,  4
+	endanim
 
 .Frameset_58:
-	oamframe BATTLEANIMOAMSET_6C,  8
-	oamframe BATTLEANIMOAMSET_6D,  8
-	oamrestart
+	frame BATTLEANIMOAMSET_6C,  8
+	frame BATTLEANIMOAMSET_6D,  8
+	dorestart
 
 .Frameset_18:
-	oamframe BATTLEANIMOAMSET_18,  4
-	oamframe BATTLEANIMOAMSET_19,  4
-	oamframe BATTLEANIMOAMSET_1A,  4
-	oamdelete
+	frame BATTLEANIMOAMSET_18,  4
+	frame BATTLEANIMOAMSET_19,  4
+	frame BATTLEANIMOAMSET_1A,  4
+	delanim
 
 .Frameset_19:
-	oamframe BATTLEANIMOAMSET_1B,  8
-	oamend
+	frame BATTLEANIMOAMSET_1B,  8
+	endanim
 
 .Frameset_1a:
-	oamframe BATTLEANIMOAMSET_0F,  8
-	oamend
+	frame BATTLEANIMOAMSET_0F,  8
+	endanim
 
 .Frameset_1b:
-	oamframe BATTLEANIMOAMSET_1C,  8
-	oamend
+	frame BATTLEANIMOAMSET_1C,  8
+	endanim
 
 .Frameset_1c:
-	oamframe BATTLEANIMOAMSET_0A,  8
-	oamdelete
+	frame BATTLEANIMOAMSET_0A,  8
+	delanim
 
 .Frameset_1d:
-	oamframe BATTLEANIMOAMSET_1D,  8
-	oamend
+	frame BATTLEANIMOAMSET_1D,  8
+	endanim
 
 .Frameset_1e:
-	oamframe BATTLEANIMOAMSET_17,  8
-	oamend
+	frame BATTLEANIMOAMSET_17,  8
+	endanim
 
 .Frameset_1f:
-	oamframe BATTLEANIMOAMSET_0F,  3
-	oamframe BATTLEANIMOAMSET_10,  3
-	oamframe BATTLEANIMOAMSET_1E,  3
-	oamend
+	frame BATTLEANIMOAMSET_0F,  3
+	frame BATTLEANIMOAMSET_10,  3
+	frame BATTLEANIMOAMSET_1E,  3
+	endanim
 
 .Frameset_20:
-	oamframe BATTLEANIMOAMSET_1F, 16
-	oamframe BATTLEANIMOAMSET_20,  3
-	oamdelete
+	frame BATTLEANIMOAMSET_1F, 16
+	frame BATTLEANIMOAMSET_20,  3
+	delanim
 
 .Frameset_21:
-	oamframe BATTLEANIMOAMSET_20,  8
-	oamend
+	frame BATTLEANIMOAMSET_20,  8
+	endanim
 
 .Frameset_22:
-	oamframe BATTLEANIMOAMSET_20,  8
-	oamframe BATTLEANIMOAMSET_21,  8
-	oamframe BATTLEANIMOAMSET_1B,  8
-	oamframe BATTLEANIMOAMSET_21,  8
-	oamrestart
+	frame BATTLEANIMOAMSET_20,  8
+	frame BATTLEANIMOAMSET_21,  8
+	frame BATTLEANIMOAMSET_1B,  8
+	frame BATTLEANIMOAMSET_21,  8
+	dorestart
 
 .Frameset_23:
-	oamframe BATTLEANIMOAMSET_22,  8
-	oamend
+	frame BATTLEANIMOAMSET_22,  8
+	endanim
 
 .Frameset_24:
-	oamframe BATTLEANIMOAMSET_1B,  8
-	oamend
+	frame BATTLEANIMOAMSET_1B,  8
+	endanim
 
 .Frameset_25:
-	oamframe BATTLEANIMOAMSET_23,  8
-	oamend
+	frame BATTLEANIMOAMSET_23,  8
+	endanim
 
 .Frameset_26:
-	oamframe BATTLEANIMOAMSET_24,  8
-	oamend
+	frame BATTLEANIMOAMSET_24,  8
+	endanim
 
 .Frameset_27:
-	oamframe BATTLEANIMOAMSET_25,  8
-	oamend
+	frame BATTLEANIMOAMSET_25,  8
+	endanim
 
 .Frameset_28:
-	oamframe BATTLEANIMOAMSET_26,  8
-	oamframe BATTLEANIMOAMSET_27,  8
-	oamend
+	frame BATTLEANIMOAMSET_26,  8
+	frame BATTLEANIMOAMSET_27,  8
+	endanim
 
 .Frameset_29:
-	oamframe BATTLEANIMOAMSET_28,  8
-	oamframe BATTLEANIMOAMSET_29,  8
-	oamdelete
+	frame BATTLEANIMOAMSET_28,  8
+	frame BATTLEANIMOAMSET_29,  8
+	delanim
 
 .Frameset_2a:
-	oamframe BATTLEANIMOAMSET_2A,  1
-	oamframe BATTLEANIMOAMSET_2B,  1
-	oamframe BATTLEANIMOAMSET_2C,  1
-	oamframe BATTLEANIMOAMSET_2D,  1
-	oamframe BATTLEANIMOAMSET_2E,  1
-	oamframe BATTLEANIMOAMSET_2D,  1
-	oamframe BATTLEANIMOAMSET_2C,  1
-	oamframe BATTLEANIMOAMSET_2B,  1
-	oamframe BATTLEANIMOAMSET_2A,  1
-	oamdelete
+	frame BATTLEANIMOAMSET_2A,  1
+	frame BATTLEANIMOAMSET_2B,  1
+	frame BATTLEANIMOAMSET_2C,  1
+	frame BATTLEANIMOAMSET_2D,  1
+	frame BATTLEANIMOAMSET_2E,  1
+	frame BATTLEANIMOAMSET_2D,  1
+	frame BATTLEANIMOAMSET_2C,  1
+	frame BATTLEANIMOAMSET_2B,  1
+	frame BATTLEANIMOAMSET_2A,  1
+	delanim
 
 .Frameset_2b:
-	oamframe BATTLEANIMOAMSET_14,  1
-	oamframe BATTLEANIMOAMSET_15,  1
-	oamrestart
+	frame BATTLEANIMOAMSET_14,  1
+	frame BATTLEANIMOAMSET_15,  1
+	dorestart
 
 .Frameset_2c:
-	oamframe BATTLEANIMOAMSET_2F,  4
-	oamframe BATTLEANIMOAMSET_30, 40
-	oamdelete
+	frame BATTLEANIMOAMSET_2F,  4
+	frame BATTLEANIMOAMSET_30, 40
+	delanim
 
 .Frameset_2d:
-	oamframe BATTLEANIMOAMSET_31,  8
-	oamend
+	frame BATTLEANIMOAMSET_31,  8
+	endanim
 
 .Frameset_2e:
-	oamframe BATTLEANIMOAMSET_32, 32
-	oamframe BATTLEANIMOAMSET_33, 32
-	oamframe BATTLEANIMOAMSET_34, 32
-	oamframe BATTLEANIMOAMSET_35, 32 ; fallthrough
+	frame BATTLEANIMOAMSET_32, 32
+	frame BATTLEANIMOAMSET_33, 32
+	frame BATTLEANIMOAMSET_34, 32
+	frame BATTLEANIMOAMSET_35, 32 ; fallthrough
 .Frameset_2f:
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_35,  4
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_35,  4
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_35,  4
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_35,  4
-	oamdelete
+	dowait 2
+	frame BATTLEANIMOAMSET_35,  4
+	dowait 2
+	frame BATTLEANIMOAMSET_35,  4
+	dowait 2
+	frame BATTLEANIMOAMSET_35,  4
+	dowait 2
+	frame BATTLEANIMOAMSET_35,  4
+	delanim
 
 .Frameset_30:
-	oamframe BATTLEANIMOAMSET_14,  4
-	oamframe BATTLEANIMOAMSET_15,  4
-	oamrestart
+	frame BATTLEANIMOAMSET_14,  4
+	frame BATTLEANIMOAMSET_15,  4
+	dorestart
 
 .Frameset_31:
-	oamframe BATTLEANIMOAMSET_36,  2
-	oamframe BATTLEANIMOAMSET_37,  2
-	oamframe BATTLEANIMOAMSET_38,  2
-	oamframe BATTLEANIMOAMSET_39, 32
-	oamdelete
+	frame BATTLEANIMOAMSET_36,  2
+	frame BATTLEANIMOAMSET_37,  2
+	frame BATTLEANIMOAMSET_38,  2
+	frame BATTLEANIMOAMSET_39, 32
+	delanim
 
 .Frameset_32:
-	oamframe BATTLEANIMOAMSET_3A,  2
-	oamframe BATTLEANIMOAMSET_3B,  2
-	oamframe BATTLEANIMOAMSET_3C,  2
-	oamframe BATTLEANIMOAMSET_3D, 32
-	oamdelete
+	frame BATTLEANIMOAMSET_3A,  2
+	frame BATTLEANIMOAMSET_3B,  2
+	frame BATTLEANIMOAMSET_3C,  2
+	frame BATTLEANIMOAMSET_3D, 32
+	delanim
 
 .Frameset_33:
-	oamframe BATTLEANIMOAMSET_3A,  2, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_3B,  2, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_3C,  2, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_3D, 32, OAM_X_FLIP
-	oamdelete
+	frame BATTLEANIMOAMSET_3A,  2, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_3B,  2, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_3C,  2, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_3D, 32, OAM_X_FLIP
+	delanim
 
 .Frameset_34:
-	oamframe BATTLEANIMOAMSET_3E,  8
-	oamframe BATTLEANIMOAMSET_3F,  8
-	oamframe BATTLEANIMOAMSET_40,  8
-	oamend
+	frame BATTLEANIMOAMSET_3E,  8
+	frame BATTLEANIMOAMSET_3F,  8
+	frame BATTLEANIMOAMSET_40,  8
+	endanim
 
 .Frameset_35:
-	oamframe BATTLEANIMOAMSET_40,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_40,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_41,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_41,  2
-	oamwait 2
-	oamrestart
+	frame BATTLEANIMOAMSET_40,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_40,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_41,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_41,  2
+	dowait 2
+	dorestart
 
 .Frameset_36:
-	oamframe BATTLEANIMOAMSET_42,  2
-	oamframe BATTLEANIMOAMSET_43,  2
-	oamframe BATTLEANIMOAMSET_44,  2
-	oamframe BATTLEANIMOAMSET_45,  2
-	oamrestart
+	frame BATTLEANIMOAMSET_42,  2
+	frame BATTLEANIMOAMSET_43,  2
+	frame BATTLEANIMOAMSET_44,  2
+	frame BATTLEANIMOAMSET_45,  2
+	dorestart
 
 .Frameset_37:
-	oamframe BATTLEANIMOAMSET_19,  2
-	oamwait 2
-	oamrestart
+	frame BATTLEANIMOAMSET_19,  2
+	dowait 2
+	dorestart
 
 .Frameset_38:
-	oamframe BATTLEANIMOAMSET_46,  4
-	oamframe BATTLEANIMOAMSET_47,  4
-	oamrestart
+	frame BATTLEANIMOAMSET_46,  4
+	frame BATTLEANIMOAMSET_47,  4
+	dorestart
 
 .Frameset_39:
-	oamframe BATTLEANIMOAMSET_18,  2
-	oamwait 2
-	oamrestart
+	frame BATTLEANIMOAMSET_18,  2
+	dowait 2
+	dorestart
 
 .Frameset_3a:
-	oamframe BATTLEANIMOAMSET_48,  8
-	oamend
+	frame BATTLEANIMOAMSET_48,  8
+	endanim
 
 .Frameset_3b:
-	oamframe BATTLEANIMOAMSET_48,  8, OAM_X_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_48,  8, OAM_X_FLIP
+	endanim
 
 .Frameset_3c:
-	oamframe BATTLEANIMOAMSET_49,  8
-	oamend
+	frame BATTLEANIMOAMSET_49,  8
+	endanim
 
 .Frameset_3d:
-	oamframe BATTLEANIMOAMSET_4A,  8
-	oamend
+	frame BATTLEANIMOAMSET_4A,  8
+	endanim
 
 .Frameset_43:
-	oamframe BATTLEANIMOAMSET_20, 16
-	oamframe BATTLEANIMOAMSET_1F, 16
-	oamframe BATTLEANIMOAMSET_1E, 16
-	oamend
+	frame BATTLEANIMOAMSET_20, 16
+	frame BATTLEANIMOAMSET_1F, 16
+	frame BATTLEANIMOAMSET_1E, 16
+	endanim
 
 .Frameset_4c:
-	oamframe BATTLEANIMOAMSET_20,  8
-	oamframe BATTLEANIMOAMSET_1F,  8
-	oamframe BATTLEANIMOAMSET_1E,  8
-	oamend
+	frame BATTLEANIMOAMSET_20,  8
+	frame BATTLEANIMOAMSET_1F,  8
+	frame BATTLEANIMOAMSET_1E,  8
+	endanim
 
 .Frameset_44:
-	oamwait 20
-	oamframe BATTLEANIMOAMSET_55, 40
-	oamframe BATTLEANIMOAMSET_54, 40
-	oamframe BATTLEANIMOAMSET_53, 20
-	oamwait 4
-	oamframe BATTLEANIMOAMSET_53,  4
-	oamwait 4
-	oamframe BATTLEANIMOAMSET_53,  4
-	oamwait 4
-	oamframe BATTLEANIMOAMSET_53,  4
-	oamdelete
+	dowait 20
+	frame BATTLEANIMOAMSET_55, 40
+	frame BATTLEANIMOAMSET_54, 40
+	frame BATTLEANIMOAMSET_53, 20
+	dowait 4
+	frame BATTLEANIMOAMSET_53,  4
+	dowait 4
+	frame BATTLEANIMOAMSET_53,  4
+	dowait 4
+	frame BATTLEANIMOAMSET_53,  4
+	delanim
 
 .Frameset_7e:
-	oamframe BATTLEANIMOAMSET_1E,  8
-	oamframe BATTLEANIMOAMSET_1F,  8
-	oamframe BATTLEANIMOAMSET_20,  8
-	oamdelete
+	frame BATTLEANIMOAMSET_1E,  8
+	frame BATTLEANIMOAMSET_1F,  8
+	frame BATTLEANIMOAMSET_20,  8
+	delanim
 
 .Frameset_45:
-	oamwait 0
-	oamframe BATTLEANIMOAMSET_14,  0
-	oamframe BATTLEANIMOAMSET_15,  0
-	oamframe BATTLEANIMOAMSET_14,  0, OAM_X_FLIP
-	oamwait 0
-	oamframe BATTLEANIMOAMSET_16,  0, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_15,  0
-	oamframe BATTLEANIMOAMSET_16,  0
-	oamrestart
+	dowait 0
+	frame BATTLEANIMOAMSET_14,  0
+	frame BATTLEANIMOAMSET_15,  0
+	frame BATTLEANIMOAMSET_14,  0, OAM_X_FLIP
+	dowait 0
+	frame BATTLEANIMOAMSET_16,  0, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_15,  0
+	frame BATTLEANIMOAMSET_16,  0
+	dorestart
 
 .Frameset_46:
-	oamframe BATTLEANIMOAMSET_56,  2
-	oamframe BATTLEANIMOAMSET_57,  4
-	oamdelete
+	frame BATTLEANIMOAMSET_56,  2
+	frame BATTLEANIMOAMSET_57,  4
+	delanim
 
 .Frameset_47:
-	oamframe BATTLEANIMOAMSET_56,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_57,  4, OAM_X_FLIP, OAM_Y_FLIP
-	oamdelete
+	frame BATTLEANIMOAMSET_56,  2, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_57,  4, OAM_X_FLIP, OAM_Y_FLIP
+	delanim
 
 .Frameset_48:
-	oamframe BATTLEANIMOAMSET_56,  1
-	oamframe BATTLEANIMOAMSET_57,  1
-	oamframe BATTLEANIMOAMSET_58,  1
-	oamframe BATTLEANIMOAMSET_57,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_58,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_57,  2
-	oamdelete
+	frame BATTLEANIMOAMSET_56,  1
+	frame BATTLEANIMOAMSET_57,  1
+	frame BATTLEANIMOAMSET_58,  1
+	frame BATTLEANIMOAMSET_57,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_58,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_57,  2
+	delanim
 
 .Frameset_49:
-	oamframe BATTLEANIMOAMSET_56,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_57,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_58,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_57,  1
-	oamframe BATTLEANIMOAMSET_58,  1
-	oamframe BATTLEANIMOAMSET_57,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamdelete
+	frame BATTLEANIMOAMSET_56,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_57,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_58,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_57,  1
+	frame BATTLEANIMOAMSET_58,  1
+	frame BATTLEANIMOAMSET_57,  2, OAM_X_FLIP, OAM_Y_FLIP
+	delanim
 
 .Frameset_4a:
-	oamframe BATTLEANIMOAMSET_57,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_58,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_57,  1
-	oamframe BATTLEANIMOAMSET_58,  1
-	oamrestart
+	frame BATTLEANIMOAMSET_57,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_58,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_57,  1
+	frame BATTLEANIMOAMSET_58,  1
+	dorestart
 
 .Frameset_4b:
-	oamframe BATTLEANIMOAMSET_59,  1
-	oamframe BATTLEANIMOAMSET_5A,  1
-	oamframe BATTLEANIMOAMSET_5B,  1
-	oamframe BATTLEANIMOAMSET_5C,  2
-	oamdelete
+	frame BATTLEANIMOAMSET_59,  1
+	frame BATTLEANIMOAMSET_5A,  1
+	frame BATTLEANIMOAMSET_5B,  1
+	frame BATTLEANIMOAMSET_5C,  2
+	delanim
 
 .Frameset_4d:
-	oamframe BATTLEANIMOAMSET_0A, 10
-	oamframe BATTLEANIMOAMSET_0B,  3, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_5D,  3, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_0B,  3, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_0A,  2, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_0B,  1, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_5D,  1
-	oamframe BATTLEANIMOAMSET_0B,  1
-	oamrestart
+	frame BATTLEANIMOAMSET_0A, 10
+	frame BATTLEANIMOAMSET_0B,  3, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_5D,  3, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_0B,  3, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_0A,  2, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_0B,  1, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_5D,  1
+	frame BATTLEANIMOAMSET_0B,  1
+	dorestart
 
 .Frameset_4e:
-	oamframe BATTLEANIMOAMSET_0A,  3
-	oamframe BATTLEANIMOAMSET_0B,  7, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_0A,  7
-	oamframe BATTLEANIMOAMSET_0B,  7
-	oamframe BATTLEANIMOAMSET_0A,  3
-	oamrestart
+	frame BATTLEANIMOAMSET_0A,  3
+	frame BATTLEANIMOAMSET_0B,  7, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_0A,  7
+	frame BATTLEANIMOAMSET_0B,  7
+	frame BATTLEANIMOAMSET_0A,  3
+	dorestart
 
 .Frameset_4f:
-	oamframe BATTLEANIMOAMSET_5E, 32
-	oamframe BATTLEANIMOAMSET_5E, 32
-	oamdelete
+	frame BATTLEANIMOAMSET_5E, 32
+	frame BATTLEANIMOAMSET_5E, 32
+	delanim
 
 .Frameset_50:
-	oamframe BATTLEANIMOAMSET_5F, 32
-	oamframe BATTLEANIMOAMSET_5F, 32
-	oamdelete
+	frame BATTLEANIMOAMSET_5F, 32
+	frame BATTLEANIMOAMSET_5F, 32
+	delanim
 
 .Frameset_51:
-	oamframe BATTLEANIMOAMSET_60,  8
-	oamend
+	frame BATTLEANIMOAMSET_60,  8
+	endanim
 
 .Frameset_52:
-	oamframe BATTLEANIMOAMSET_61,  1
-	oamframe BATTLEANIMOAMSET_62,  1
-	oamframe BATTLEANIMOAMSET_63,  1
-	oamend
+	frame BATTLEANIMOAMSET_61,  1
+	frame BATTLEANIMOAMSET_62,  1
+	frame BATTLEANIMOAMSET_63,  1
+	endanim
 
 .Frameset_53:
-	oamframe BATTLEANIMOAMSET_63,  7
-	oamframe BATTLEANIMOAMSET_64,  7
-	oamrestart
+	frame BATTLEANIMOAMSET_63,  7
+	frame BATTLEANIMOAMSET_64,  7
+	dorestart
 
 .Frameset_54:
-	oamframe BATTLEANIMOAMSET_65,  1
-	oamframe BATTLEANIMOAMSET_66,  1
-	oamframe BATTLEANIMOAMSET_67,  1
-	oamend
+	frame BATTLEANIMOAMSET_65,  1
+	frame BATTLEANIMOAMSET_66,  1
+	frame BATTLEANIMOAMSET_67,  1
+	endanim
 
 .Frameset_55:
-	oamframe BATTLEANIMOAMSET_67,  7
-	oamframe BATTLEANIMOAMSET_68,  7
-	oamrestart
+	frame BATTLEANIMOAMSET_67,  7
+	frame BATTLEANIMOAMSET_68,  7
+	dorestart
 
 .Frameset_59:
-	oamframe BATTLEANIMOAMSET_6E,  8
-	oamend
+	frame BATTLEANIMOAMSET_6E,  8
+	endanim
 
 .Frameset_5a:
-	oamframe BATTLEANIMOAMSET_6F,  8
-	oamend
+	frame BATTLEANIMOAMSET_6F,  8
+	endanim
 
 .Frameset_5b:
-	oamframe BATTLEANIMOAMSET_6E,  8, OAM_Y_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_6E,  8, OAM_Y_FLIP
+	endanim
 
 .Frameset_5c:
-	oamframe BATTLEANIMOAMSET_18,  4
-	oamframe BATTLEANIMOAMSET_70,  4
-	oamframe BATTLEANIMOAMSET_71,  4
-	oamframe BATTLEANIMOAMSET_72,  4
-	oamframe BATTLEANIMOAMSET_73,  4
-	oamdelete
+	frame BATTLEANIMOAMSET_18,  4
+	frame BATTLEANIMOAMSET_70,  4
+	frame BATTLEANIMOAMSET_71,  4
+	frame BATTLEANIMOAMSET_72,  4
+	frame BATTLEANIMOAMSET_73,  4
+	delanim
 
 .Frameset_5d:
-	oamframe BATTLEANIMOAMSET_74,  4
-	oamframe BATTLEANIMOAMSET_75,  4
-	oamrestart
+	frame BATTLEANIMOAMSET_74,  4
+	frame BATTLEANIMOAMSET_75,  4
+	dorestart
 
 .Frameset_5e:
-	oamframe BATTLEANIMOAMSET_14,  8
-	oamend
+	frame BATTLEANIMOAMSET_14,  8
+	endanim
 
 .Frameset_7a:
-	oamframe BATTLEANIMOAMSET_74,  3
-	oamframe BATTLEANIMOAMSET_14,  3
-	oamframe BATTLEANIMOAMSET_15,  3
-	oamframe BATTLEANIMOAMSET_14,  3
-	oamframe BATTLEANIMOAMSET_15,  3
-	oamdelete
+	frame BATTLEANIMOAMSET_74,  3
+	frame BATTLEANIMOAMSET_14,  3
+	frame BATTLEANIMOAMSET_15,  3
+	frame BATTLEANIMOAMSET_14,  3
+	frame BATTLEANIMOAMSET_15,  3
+	delanim
 
 .Frameset_af:
-	oamframe BATTLEANIMOAMSET_14,  0
-	oamframe BATTLEANIMOAMSET_15,  0
-	oamframe BATTLEANIMOAMSET_14,  0
-	oamframe BATTLEANIMOAMSET_15,  0
-	oamframe BATTLEANIMOAMSET_74, 12
-	oamdelete
+	frame BATTLEANIMOAMSET_14,  0
+	frame BATTLEANIMOAMSET_15,  0
+	frame BATTLEANIMOAMSET_14,  0
+	frame BATTLEANIMOAMSET_15,  0
+	frame BATTLEANIMOAMSET_74, 12
+	delanim
 
 .Frameset_5f:
-	oamframe BATTLEANIMOAMSET_76,  8
-	oamend
+	frame BATTLEANIMOAMSET_76,  8
+	endanim
 
 .Frameset_60:
-	oamframe BATTLEANIMOAMSET_77,  1
-	oamframe BATTLEANIMOAMSET_78,  1
-	oamframe BATTLEANIMOAMSET_79,  1
-	oamframe BATTLEANIMOAMSET_7A,  1
-	oamframe BATTLEANIMOAMSET_7B,  1
-	oamframe BATTLEANIMOAMSET_7C,  1
-	oamframe BATTLEANIMOAMSET_7D,  1
-	oamframe BATTLEANIMOAMSET_7C,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_7B,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_7A,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_79,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_78,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_77,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamdelete
+	frame BATTLEANIMOAMSET_77,  1
+	frame BATTLEANIMOAMSET_78,  1
+	frame BATTLEANIMOAMSET_79,  1
+	frame BATTLEANIMOAMSET_7A,  1
+	frame BATTLEANIMOAMSET_7B,  1
+	frame BATTLEANIMOAMSET_7C,  1
+	frame BATTLEANIMOAMSET_7D,  1
+	frame BATTLEANIMOAMSET_7C,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_7B,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_7A,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_79,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_78,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_77,  1, OAM_X_FLIP, OAM_Y_FLIP
+	delanim
 
 .Frameset_61:
-	oamframe BATTLEANIMOAMSET_1B,  4
-	oamframe BATTLEANIMOAMSET_7E,  4
-	oamrestart
+	frame BATTLEANIMOAMSET_1B,  4
+	frame BATTLEANIMOAMSET_7E,  4
+	dorestart
 
 .Frameset_62:
-	oamframe BATTLEANIMOAMSET_1B,  4, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_7E,  4, OAM_X_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_1B,  4, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_7E,  4, OAM_X_FLIP
+	dorestart
 
 .Frameset_63:
-	oamframe BATTLEANIMOAMSET_7F,  8
-	oamend
+	frame BATTLEANIMOAMSET_7F,  8
+	endanim
 
 .Frameset_64:
-	oamframe BATTLEANIMOAMSET_25,  8
-	oamend
+	frame BATTLEANIMOAMSET_25,  8
+	endanim
 
 .Frameset_65:
-	oamframe BATTLEANIMOAMSET_80,  8
-	oamend
+	frame BATTLEANIMOAMSET_80,  8
+	endanim
 
 .Frameset_66:
-	oamframe BATTLEANIMOAMSET_83,  7
-	oamframe BATTLEANIMOAMSET_82,  7
-	oamframe BATTLEANIMOAMSET_81,  7
-	oamframe BATTLEANIMOAMSET_82,  7
-	oamframe BATTLEANIMOAMSET_83,  7
-	oamframe BATTLEANIMOAMSET_82,  7
-	oamframe BATTLEANIMOAMSET_81,  7
-	oamdelete
+	frame BATTLEANIMOAMSET_83,  7
+	frame BATTLEANIMOAMSET_82,  7
+	frame BATTLEANIMOAMSET_81,  7
+	frame BATTLEANIMOAMSET_82,  7
+	frame BATTLEANIMOAMSET_83,  7
+	frame BATTLEANIMOAMSET_82,  7
+	frame BATTLEANIMOAMSET_81,  7
+	delanim
 
 .Frameset_67:
-	oamframe BATTLEANIMOAMSET_1B, 16
-	oamdelete
+	frame BATTLEANIMOAMSET_1B, 16
+	delanim
 
 .Frameset_68:
-	oamwait 15
-	oamframe BATTLEANIMOAMSET_84, 15
-	oamframe BATTLEANIMOAMSET_85, 15
-	oamframe BATTLEANIMOAMSET_29, 15
-	oamframe BATTLEANIMOAMSET_28, 15
-	oamframe BATTLEANIMOAMSET_86, 32
-	oamdelete
+	dowait 15
+	frame BATTLEANIMOAMSET_84, 15
+	frame BATTLEANIMOAMSET_85, 15
+	frame BATTLEANIMOAMSET_29, 15
+	frame BATTLEANIMOAMSET_28, 15
+	frame BATTLEANIMOAMSET_86, 32
+	delanim
 
 .Frameset_69:
-	oamframe BATTLEANIMOAMSET_1B,  3
-	oamframe BATTLEANIMOAMSET_87,  3
-	oamframe BATTLEANIMOAMSET_88,  3
-	oamframe BATTLEANIMOAMSET_89,  3
-	oamdelete
+	frame BATTLEANIMOAMSET_1B,  3
+	frame BATTLEANIMOAMSET_87,  3
+	frame BATTLEANIMOAMSET_88,  3
+	frame BATTLEANIMOAMSET_89,  3
+	delanim
 
 .Frameset_6a:
-	oamframe BATTLEANIMOAMSET_8A,  2
-	oamframe BATTLEANIMOAMSET_8B,  2
-	oamframe BATTLEANIMOAMSET_8C,  2
-	oamframe BATTLEANIMOAMSET_8D,  2
-	oamdelete
+	frame BATTLEANIMOAMSET_8A,  2
+	frame BATTLEANIMOAMSET_8B,  2
+	frame BATTLEANIMOAMSET_8C,  2
+	frame BATTLEANIMOAMSET_8D,  2
+	delanim
 
 .Frameset_6b:
-	oamframe BATTLEANIMOAMSET_61,  2
-	oamframe BATTLEANIMOAMSET_62,  2
-	oamframe BATTLEANIMOAMSET_63,  2
-	oamend
+	frame BATTLEANIMOAMSET_61,  2
+	frame BATTLEANIMOAMSET_62,  2
+	frame BATTLEANIMOAMSET_63,  2
+	endanim
 
 .Frameset_6c:
-	oamframe BATTLEANIMOAMSET_65,  2
-	oamframe BATTLEANIMOAMSET_66,  2
-	oamframe BATTLEANIMOAMSET_67,  2
-	oamend
+	frame BATTLEANIMOAMSET_65,  2
+	frame BATTLEANIMOAMSET_66,  2
+	frame BATTLEANIMOAMSET_67,  2
+	endanim
 
 .Frameset_6d:
-	oamframe BATTLEANIMOAMSET_8E,  8
-	oamend
+	frame BATTLEANIMOAMSET_8E,  8
+	endanim
 
 .Frameset_6e:
-	oamframe BATTLEANIMOAMSET_8E,  8, OAM_X_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_8E,  8, OAM_X_FLIP
+	endanim
 
 .Frameset_6f:
-	oamframe BATTLEANIMOAMSET_8F, 16
-	oamframe BATTLEANIMOAMSET_90, 16
-	oamrestart
+	frame BATTLEANIMOAMSET_8F, 16
+	frame BATTLEANIMOAMSET_90, 16
+	dorestart
 
 .Frameset_70:
-	oamframe BATTLEANIMOAMSET_91, 16
-	oamframe BATTLEANIMOAMSET_92, 16
-	oamrestart
+	frame BATTLEANIMOAMSET_91, 16
+	frame BATTLEANIMOAMSET_92, 16
+	dorestart
 
 .Frameset_71:
-	oamframe BATTLEANIMOAMSET_93,  8
-	oamend
+	frame BATTLEANIMOAMSET_93,  8
+	endanim
 
 .Frameset_72:
-	oamframe BATTLEANIMOAMSET_1E,  8
-	oamend
+	frame BATTLEANIMOAMSET_1E,  8
+	endanim
 
 .Frameset_73:
-	oamframe BATTLEANIMOAMSET_1B,  7
-	oamframe BATTLEANIMOAMSET_94,  7
-	oamrestart
+	frame BATTLEANIMOAMSET_1B,  7
+	frame BATTLEANIMOAMSET_94,  7
+	dorestart
 
 .Frameset_74:
-	oamframe BATTLEANIMOAMSET_95,  8
-	oamend
+	frame BATTLEANIMOAMSET_95,  8
+	endanim
 
 .Frameset_75:
-	oamframe BATTLEANIMOAMSET_96,  8
-	oamend
+	frame BATTLEANIMOAMSET_96,  8
+	endanim
 
 .Frameset_76:
-	oamframe BATTLEANIMOAMSET_95,  8
-	oamend
+	frame BATTLEANIMOAMSET_95,  8
+	endanim
 
 .Frameset_77:
-	oamframe BATTLEANIMOAMSET_97,  1
-	oamframe BATTLEANIMOAMSET_97,  1, OAM_X_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_97,  1
+	frame BATTLEANIMOAMSET_97,  1, OAM_X_FLIP
+	dorestart
 
 .Frameset_78:
-	oamframe BATTLEANIMOAMSET_98,  8
-	oamend
+	frame BATTLEANIMOAMSET_98,  8
+	endanim
 
 .Frameset_79:
-	oamframe BATTLEANIMOAMSET_99, 32
-	oamframe BATTLEANIMOAMSET_99, 32
-	oamframe BATTLEANIMOAMSET_99, 32
-	oamframe BATTLEANIMOAMSET_99, 32
-	oamframe BATTLEANIMOAMSET_99, 32
-	oamframe BATTLEANIMOAMSET_9A,  8
-	oamend
+	frame BATTLEANIMOAMSET_99, 32
+	frame BATTLEANIMOAMSET_99, 32
+	frame BATTLEANIMOAMSET_99, 32
+	frame BATTLEANIMOAMSET_99, 32
+	frame BATTLEANIMOAMSET_99, 32
+	frame BATTLEANIMOAMSET_9A,  8
+	endanim
 
 .Frameset_7b:
-	oamframe BATTLEANIMOAMSET_9B,  8
-	oamend
+	frame BATTLEANIMOAMSET_9B,  8
+	endanim
 
 .Frameset_7c:
-	oamframe BATTLEANIMOAMSET_9C,  2
-	oamframe BATTLEANIMOAMSET_9D,  2
-	oamframe BATTLEANIMOAMSET_9E,  8
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_9E,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_9E,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_9E,  2
-	oamdelete
+	frame BATTLEANIMOAMSET_9C,  2
+	frame BATTLEANIMOAMSET_9D,  2
+	frame BATTLEANIMOAMSET_9E,  8
+	dowait 2
+	frame BATTLEANIMOAMSET_9E,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_9E,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_9E,  2
+	delanim
 
 .Frameset_7d:
-	oamframe BATTLEANIMOAMSET_9F,  8
-	oamend
+	frame BATTLEANIMOAMSET_9F,  8
+	endanim
 
 .Frameset_7f:
-	oamframe BATTLEANIMOAMSET_0F,  8
-	oamend
+	frame BATTLEANIMOAMSET_0F,  8
+	endanim
 
 .Frameset_80:
-	oamframe BATTLEANIMOAMSET_6B, 24
-	oamdelete
+	frame BATTLEANIMOAMSET_6B, 24
+	delanim
 
 .Frameset_81:
-	oamframe BATTLEANIMOAMSET_A0,  1 ; fallthrough
+	frame BATTLEANIMOAMSET_A0,  1 ; fallthrough
 .Frameset_82:
-	oamframe BATTLEANIMOAMSET_A1,  1 ; fallthrough
+	frame BATTLEANIMOAMSET_A1,  1 ; fallthrough
 .Frameset_83:
-	oamframe BATTLEANIMOAMSET_A2,  1
-	oamdelete
+	frame BATTLEANIMOAMSET_A2,  1
+	delanim
 
 .Frameset_84:
-	oamframe BATTLEANIMOAMSET_A3,  8
-	oamend
+	frame BATTLEANIMOAMSET_A3,  8
+	endanim
 
 .Frameset_85:
-	oamframe BATTLEANIMOAMSET_A4,  4
-	oamframe BATTLEANIMOAMSET_A5,  4
-	oamframe BATTLEANIMOAMSET_A6,  4
-	oamframe BATTLEANIMOAMSET_A7,  4
-	oamframe BATTLEANIMOAMSET_A6,  4, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_A5,  4, OAM_X_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_A4,  4
+	frame BATTLEANIMOAMSET_A5,  4
+	frame BATTLEANIMOAMSET_A6,  4
+	frame BATTLEANIMOAMSET_A7,  4
+	frame BATTLEANIMOAMSET_A6,  4, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_A5,  4, OAM_X_FLIP
+	dorestart
 
 .Frameset_86:
-	oamframe BATTLEANIMOAMSET_A8,  4
-	oamframe BATTLEANIMOAMSET_A9,  4
-	oamframe BATTLEANIMOAMSET_AA,  4
-	oamframe BATTLEANIMOAMSET_AB,  4
-	oamframe BATTLEANIMOAMSET_AA,  4, OAM_X_FLIP
-	oamframe BATTLEANIMOAMSET_A9,  4, OAM_X_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_A8,  4
+	frame BATTLEANIMOAMSET_A9,  4
+	frame BATTLEANIMOAMSET_AA,  4
+	frame BATTLEANIMOAMSET_AB,  4
+	frame BATTLEANIMOAMSET_AA,  4, OAM_X_FLIP
+	frame BATTLEANIMOAMSET_A9,  4, OAM_X_FLIP
+	dorestart
 
 .Frameset_87:
-	oamframe BATTLEANIMOAMSET_1B,  8
-	oamend
+	frame BATTLEANIMOAMSET_1B,  8
+	endanim
 
 .Frameset_88:
-	oamframe BATTLEANIMOAMSET_AC,  8
-	oamend
+	frame BATTLEANIMOAMSET_AC,  8
+	endanim
 
 .Frameset_89:
-	oamframe BATTLEANIMOAMSET_AD,  8
-	oamend
+	frame BATTLEANIMOAMSET_AD,  8
+	endanim
 
 .Frameset_8a:
-	oamframe BATTLEANIMOAMSET_AE,  8
-	oamend
+	frame BATTLEANIMOAMSET_AE,  8
+	endanim
 
 .Frameset_8b:
-	oamframe BATTLEANIMOAMSET_AF,  8
-	oamend
+	frame BATTLEANIMOAMSET_AF,  8
+	endanim
 
 .Frameset_8c:
-	oamframe BATTLEANIMOAMSET_B0, 32
-	oamdelete
+	frame BATTLEANIMOAMSET_B0, 32
+	delanim
 
 .Frameset_8d:
-	oamframe BATTLEANIMOAMSET_B1,  7
-	oamframe BATTLEANIMOAMSET_B1,  7, OAM_X_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_B1,  7
+	frame BATTLEANIMOAMSET_B1,  7, OAM_X_FLIP
+	dorestart
 
 .Frameset_8e:
-	oamframe BATTLEANIMOAMSET_B2,  8
-	oamend
+	frame BATTLEANIMOAMSET_B2,  8
+	endanim
 
 .Frameset_8f:
-	oamframe BATTLEANIMOAMSET_B3,  8
-	oamend
+	frame BATTLEANIMOAMSET_B3,  8
+	endanim
 
 .Frameset_90:
-	oamframe BATTLEANIMOAMSET_B3,  8, OAM_X_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_B3,  8, OAM_X_FLIP
+	endanim
 
 .Frameset_91:
-	oamframe BATTLEANIMOAMSET_B3,  8, OAM_Y_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_B3,  8, OAM_Y_FLIP
+	endanim
 
 .Frameset_92:
-	oamframe BATTLEANIMOAMSET_B3,  8, OAM_X_FLIP, OAM_Y_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_B3,  8, OAM_X_FLIP, OAM_Y_FLIP
+	endanim
 
 .Frameset_93:
-	oamframe BATTLEANIMOAMSET_B5,  8
-	oamend
+	frame BATTLEANIMOAMSET_B5,  8
+	endanim
 
 .Frameset_94:
-	oamframe BATTLEANIMOAMSET_B5,  8, OAM_X_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_B5,  8, OAM_X_FLIP
+	endanim
 
 .Frameset_95:
-	oamframe BATTLEANIMOAMSET_B5,  8, OAM_Y_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_B5,  8, OAM_Y_FLIP
+	endanim
 
 .Frameset_96:
-	oamframe BATTLEANIMOAMSET_B5,  8, OAM_X_FLIP, OAM_Y_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_B5,  8, OAM_X_FLIP, OAM_Y_FLIP
+	endanim
 
 .Frameset_97:
-	oamframe BATTLEANIMOAMSET_B4,  8
-	oamend
+	frame BATTLEANIMOAMSET_B4,  8
+	endanim
 
 .Frameset_98:
-	oamframe BATTLEANIMOAMSET_6B,  8
-	oamend
+	frame BATTLEANIMOAMSET_6B,  8
+	endanim
 
 .Frameset_99:
-	oamframe BATTLEANIMOAMSET_B6,  8
-	oamend
+	frame BATTLEANIMOAMSET_B6,  8
+	endanim
 
 .Frameset_9a:
-	oamframe BATTLEANIMOAMSET_B7, 32
-	oamend
+	frame BATTLEANIMOAMSET_B7, 32
+	endanim
 
 .Frameset_9b:
-	oamframe BATTLEANIMOAMSET_1B, 32
-	oamend
+	frame BATTLEANIMOAMSET_1B, 32
+	endanim
 
 .Frameset_9c:
-	oamframe BATTLEANIMOAMSET_B8, 32
-	oamend
+	frame BATTLEANIMOAMSET_B8, 32
+	endanim
 
 .Frameset_9d:
-	oamframe BATTLEANIMOAMSET_B8, 32, OAM_X_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_B8, 32, OAM_X_FLIP
+	endanim
 
 .Frameset_9e:
-	oamframe BATTLEANIMOAMSET_B9, 32
-	oamend
+	frame BATTLEANIMOAMSET_B9, 32
+	endanim
 
 .Frameset_9f:
-	oamframe BATTLEANIMOAMSET_BA, 32
-	oamend
+	frame BATTLEANIMOAMSET_BA, 32
+	endanim
 
 .Frameset_a0:
-	oamframe BATTLEANIMOAMSET_BB, 32, OAM_X_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_BB, 32, OAM_X_FLIP
+	endanim
 
 .Frameset_a1:
-	oamframe BATTLEANIMOAMSET_BB, 32
-	oamend
+	frame BATTLEANIMOAMSET_BB, 32
+	endanim
 
 .Frameset_a2:
-	oamframe BATTLEANIMOAMSET_BC, 32
-	oamend
+	frame BATTLEANIMOAMSET_BC, 32
+	endanim
 
 .Frameset_a3:
-	oamframe BATTLEANIMOAMSET_BD, 11
-	oamframe BATTLEANIMOAMSET_BE, 11
-	oamframe BATTLEANIMOAMSET_1B, 11
-	oamdelete
+	frame BATTLEANIMOAMSET_BD, 11
+	frame BATTLEANIMOAMSET_BE, 11
+	frame BATTLEANIMOAMSET_1B, 11
+	delanim
 
 .Frameset_a4:
-	oamframe BATTLEANIMOAMSET_BF,  4
-	oamframe BATTLEANIMOAMSET_C0,  4
-	oamframe BATTLEANIMOAMSET_C1,  4
-	oamdelete
+	frame BATTLEANIMOAMSET_BF,  4
+	frame BATTLEANIMOAMSET_C0,  4
+	frame BATTLEANIMOAMSET_C1,  4
+	delanim
 
 .Frameset_a5:
-	oamframe BATTLEANIMOAMSET_C2, 32
-	oamframe BATTLEANIMOAMSET_C2, 32
-	oamdelete
+	frame BATTLEANIMOAMSET_C2, 32
+	frame BATTLEANIMOAMSET_C2, 32
+	delanim
 
 .Frameset_a6:
-	oamframe BATTLEANIMOAMSET_4B,  2
-	oamframe BATTLEANIMOAMSET_4C,  2
-	oamframe BATTLEANIMOAMSET_4D, 32
-	oamframe BATTLEANIMOAMSET_4D, 32
-	oamframe BATTLEANIMOAMSET_4D, 32
-	oamframe BATTLEANIMOAMSET_4F,  1
-	oamframe BATTLEANIMOAMSET_50,  1
-	oamframe BATTLEANIMOAMSET_51,  1
-	oamframe BATTLEANIMOAMSET_52,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2
-	oamdelete
+	frame BATTLEANIMOAMSET_4B,  2
+	frame BATTLEANIMOAMSET_4C,  2
+	frame BATTLEANIMOAMSET_4D, 32
+	frame BATTLEANIMOAMSET_4D, 32
+	frame BATTLEANIMOAMSET_4D, 32
+	frame BATTLEANIMOAMSET_4F,  1
+	frame BATTLEANIMOAMSET_50,  1
+	frame BATTLEANIMOAMSET_51,  1
+	frame BATTLEANIMOAMSET_52,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2
+	delanim
 
 .Frameset_a7:
-	oamframe BATTLEANIMOAMSET_4B,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_4C,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_4D, 32, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_4D, 32, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_4D, 32, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_4F,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_50,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_51,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_52,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamwait 2
-	oamframe BATTLEANIMOAMSET_52,  2, OAM_X_FLIP, OAM_Y_FLIP
-	oamdelete
+	frame BATTLEANIMOAMSET_4B,  2, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_4C,  2, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_4D, 32, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_4D, 32, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_4D, 32, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_4F,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_50,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_51,  1, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_52,  2, OAM_X_FLIP, OAM_Y_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2, OAM_X_FLIP, OAM_Y_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2, OAM_X_FLIP, OAM_Y_FLIP
+	dowait 2
+	frame BATTLEANIMOAMSET_52,  2, OAM_X_FLIP, OAM_Y_FLIP
+	delanim
 
 .Frameset_a8:
-	oamframe BATTLEANIMOAMSET_C3,  1
-	oamframe BATTLEANIMOAMSET_C3,  1, OAM_X_FLIP, OAM_Y_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_C3,  1
+	frame BATTLEANIMOAMSET_C3,  1, OAM_X_FLIP, OAM_Y_FLIP
+	dorestart
 
 .Frameset_a9:
-	oamframe BATTLEANIMOAMSET_C4, 32
-	oamend
+	frame BATTLEANIMOAMSET_C4, 32
+	endanim
 
 .Frameset_aa:
-	oamframe BATTLEANIMOAMSET_C5,  4
-	oamframe BATTLEANIMOAMSET_C6,  4
-	oamframe BATTLEANIMOAMSET_C7,  4
-	oamdelete
+	frame BATTLEANIMOAMSET_C5,  4
+	frame BATTLEANIMOAMSET_C6,  4
+	frame BATTLEANIMOAMSET_C7,  4
+	delanim
 
 .Frameset_ab:
-	oamframe BATTLEANIMOAMSET_C8,  1
-	oamframe BATTLEANIMOAMSET_C8,  1, OAM_X_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_C8,  1
+	frame BATTLEANIMOAMSET_C8,  1, OAM_X_FLIP
+	dorestart
 
 .Frameset_ac:
-	oamframe BATTLEANIMOAMSET_C9,  3
-	oamframe BATTLEANIMOAMSET_05,  3
-	oamdelete
+	frame BATTLEANIMOAMSET_C9,  3
+	frame BATTLEANIMOAMSET_05,  3
+	delanim
 
 .Frameset_ad:
-	oamframe BATTLEANIMOAMSET_CA, 32
-	oamframe BATTLEANIMOAMSET_CB,  3
-	oamframe BATTLEANIMOAMSET_CA,  3
-	oamframe BATTLEANIMOAMSET_CB,  3
-	oamrestart
+	frame BATTLEANIMOAMSET_CA, 32
+	frame BATTLEANIMOAMSET_CB,  3
+	frame BATTLEANIMOAMSET_CA,  3
+	frame BATTLEANIMOAMSET_CB,  3
+	dorestart
 
 .Frameset_ae:
-	oamframe BATTLEANIMOAMSET_03, 32, OAM_Y_FLIP
-	oamend
+	frame BATTLEANIMOAMSET_03, 32, OAM_Y_FLIP
+	endanim
 
 .Frameset_b0:
-	oamframe BATTLEANIMOAMSET_CC, 32
-	oamend
+	frame BATTLEANIMOAMSET_CC, 32
+	endanim
 
 .Frameset_b1:
-	oamframe BATTLEANIMOAMSET_7F,  2
-	oamframe BATTLEANIMOAMSET_25,  2
-	oamframe BATTLEANIMOAMSET_80,  2
-	oamframe BATTLEANIMOAMSET_25,  2
-	oamrestart
+	frame BATTLEANIMOAMSET_7F,  2
+	frame BATTLEANIMOAMSET_25,  2
+	frame BATTLEANIMOAMSET_80,  2
+	frame BATTLEANIMOAMSET_25,  2
+	dorestart
 
 .Frameset_b2:
-	oamframe BATTLEANIMOAMSET_CD,  4
-	oamframe BATTLEANIMOAMSET_CE,  4
-	oamframe BATTLEANIMOAMSET_CD,  4, OAM_X_FLIP, OAM_Y_FLIP
-	oamframe BATTLEANIMOAMSET_CE,  4, OAM_X_FLIP, OAM_Y_FLIP
-	oamrestart
+	frame BATTLEANIMOAMSET_CD,  4
+	frame BATTLEANIMOAMSET_CE,  4
+	frame BATTLEANIMOAMSET_CD,  4, OAM_X_FLIP, OAM_Y_FLIP
+	frame BATTLEANIMOAMSET_CE,  4, OAM_X_FLIP, OAM_Y_FLIP
+	dorestart
 
 .Frameset_b3:
-	oamframe BATTLEANIMOAMSET_CF,  4
-	oamframe BATTLEANIMOAMSET_D0,  4
-	oamframe BATTLEANIMOAMSET_D1,  4
-	oamframe BATTLEANIMOAMSET_D2,  4
-	oamdelete
+	frame BATTLEANIMOAMSET_CF,  4
+	frame BATTLEANIMOAMSET_D0,  4
+	frame BATTLEANIMOAMSET_D1,  4
+	frame BATTLEANIMOAMSET_D2,  4
+	delanim
 
 .Frameset_b4:
-	oamframe BATTLEANIMOAMSET_D3, 32
-	oamend
+	frame BATTLEANIMOAMSET_D3, 32
+	endanim
 
 .Frameset_b5:
-	oamframe BATTLEANIMOAMSET_D4,  8
-	oamend
+	frame BATTLEANIMOAMSET_D4,  8
+	endanim
 
 .Frameset_b6:
-	oamframe BATTLEANIMOAMSET_D5,  8
-	oamend
+	frame BATTLEANIMOAMSET_D5,  8
+	endanim
 
 .Frameset_b7:
-	oamframe BATTLEANIMOAMSET_D6,  8
-	oamend
+	frame BATTLEANIMOAMSET_D6,  8
+	endanim
 
 .Frameset_b8:
-	oamframe BATTLEANIMOAMSET_D7,  8
-	oamend
+	frame BATTLEANIMOAMSET_D7,  8
+	endanim

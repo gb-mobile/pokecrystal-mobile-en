@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const LAVRADIOTOWER1F_RECEPTIONIST
 	const LAVRADIOTOWER1F_OFFICER
 	const LAVRADIOTOWER1F_SUPER_NERD1
@@ -6,9 +6,9 @@
 	const LAVRADIOTOWER1F_SUPER_NERD2
 
 LavRadioTower1F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 LavRadioTower1FReceptionistScript:
 	jumptextfaceplayer LavRadioTower1FReceptionistText
@@ -33,7 +33,7 @@ LavRadioTower1FGentlemanScript:
 
 .ReturnedMachinePart:
 	writetext LavRadioTower1FGentlemanText_ReturnedMachinePart
-	promptbutton
+	buttonsound
 	getstring STRING_BUFFER_4, .expncardname
 	scall .receiveitem
 	setflag ENGINE_EXPN_CARD
@@ -44,7 +44,7 @@ LavRadioTower1FGentlemanScript:
 	end
 
 .receiveitem:
-	jumpstd ReceiveItemScript
+	jumpstd receiveitem
 	end
 
 .expncardname
@@ -72,7 +72,8 @@ LavRadioTower1FDirectory:
 LavRadioTower1FPokeFluteSign:
 	jumptext LavRadioTower1FPokeFluteSignText
 
-LavRadioTower1FReferenceLibrary: ; unreferenced
+LavRadioTower1FReferenceLibrary:
+; unreferenced
 	jumptext LavRadioTower1FReferenceLibraryText
 
 LavRadioTower1FReceptionistText:
@@ -222,17 +223,17 @@ LavRadioTower1FReferenceLibraryText:
 LavRadioTower1F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, LAVENDER_TOWN, 7
 	warp_event  3,  7, LAVENDER_TOWN, 7
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event 11,  0, BGEVENT_READ, LavRadioTower1FDirectory
 	bg_event  5,  0, BGEVENT_READ, LavRadioTower1FPokeFluteSign
 
-	def_object_events
+	db 5 ; object events
 	object_event  6,  6, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, LavRadioTower1FReceptionistScript, -1
 	object_event 15,  1, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, LavRadioTower1FOfficerScript, -1
 	object_event  1,  3, SPRITE_SUPER_NERD, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, LavRadioTower1FSuperNerd1Script, -1

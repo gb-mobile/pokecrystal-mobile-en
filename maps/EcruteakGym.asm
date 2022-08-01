@@ -1,21 +1,21 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ECRUTEAKGYM_MORTY
 	const ECRUTEAKGYM_SAGE1
 	const ECRUTEAKGYM_SAGE2
 	const ECRUTEAKGYM_GRANNY1
 	const ECRUTEAKGYM_GRANNY2
-	const ECRUTEAKGYM_GYM_GUIDE
+	const ECRUTEAKGYM_GYM_GUY
 	const ECRUTEAKGYM_GRAMPS
 
 EcruteakGym_MapScripts:
-	def_scene_scripts
-	scene_script .ForcedToLeave, SCENE_ECRUTEAKGYM_FORCED_TO_LEAVE
-	scene_script .DummyScene,    SCENE_ECRUTEAKGYM_NOOP
+	db 2 ; scene scripts
+	scene_script .ForcedToLeave ; SCENE_DEFAULT
+	scene_script .DummyScene ; SCENE_FINISHED
 
-	def_callbacks
+	db 0 ; callbacks
 
 .ForcedToLeave:
-	sdefer EcruteakGymClosed
+	prioritysjump EcruteakGymClosed
 	end
 
 .DummyScene:
@@ -41,7 +41,7 @@ EcruteakGymMortyScript:
 	setflag ENGINE_FOGBADGE
 	readvar VAR_BADGES
 	scall EcruteakGymActivateRockets
-	setmapscene ECRUTEAK_TIN_TOWER_ENTRANCE, SCENE_ECRUTEAKTINTOWERENTRANCE_NOOP
+	setmapscene ECRUTEAK_TIN_TOWER_ENTRANCE, SCENE_FINISHED
 	setevent EVENT_RANG_CLEAR_BELL_1
 	setevent EVENT_RANG_CLEAR_BELL_2
 .FightDone:
@@ -52,7 +52,7 @@ EcruteakGymMortyScript:
 	setevent EVENT_BEAT_MEDIUM_MARTHA
 	setevent EVENT_BEAT_MEDIUM_GRACE
 	writetext MortyText_FogBadgeSpeech
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_SHADOW_BALL
 	iffalse .NoRoomForShadowBall
 	setevent EVENT_GOT_TM30_SHADOW_BALL
@@ -74,10 +74,10 @@ EcruteakGymActivateRockets:
 	end
 
 .GoldenrodRockets:
-	jumpstd GoldenrodRocketsScript
+	jumpstd goldenrodrockets
 
 .RadioTowerRockets:
-	jumpstd RadioTowerRocketsScript
+	jumpstd radiotowerrockets
 
 EcruteakGymClosed:
 	applymovement PLAYER, EcruteakGymPlayerStepUpMovement
@@ -139,18 +139,18 @@ TrainerMediumGrace:
 	closetext
 	end
 
-EcruteakGymGuideScript:
+EcruteakGymGuyScript:
 	faceplayer
 	opentext
 	checkevent EVENT_BEAT_MORTY
-	iftrue .EcruteakGymGuideWinScript
-	writetext EcruteakGymGuideText
+	iftrue .EcruteakGymGuyWinScript
+	writetext EcruteakGymGuyText
 	waitbutton
 	closetext
 	end
 
-.EcruteakGymGuideWinScript:
-	writetext EcruteakGymGuideWinText
+.EcruteakGymGuyWinScript:
+	writetext EcruteakGymGuyWinText
 	waitbutton
 	closetext
 	end
@@ -158,10 +158,10 @@ EcruteakGymGuideScript:
 EcruteakGymStatue:
 	checkflag ENGINE_FOGBADGE
 	iftrue .Beaten
-	jumpstd GymStatue1Script
+	jumpstd gymstatue1
 .Beaten:
 	gettrainername STRING_BUFFER_4, MORTY, MORTY1
-	jumpstd GymStatue2Script
+	jumpstd gymstatue2
 
 EcruteakGymPlayerStepUpMovement:
 	step UP
@@ -353,7 +353,7 @@ MediumGraceAfterBattleText:
 	line "before our eyes!"
 	done
 
-EcruteakGymGuideText:
+EcruteakGymGuyText:
 	text "The trainers here"
 	line "have secret mo-"
 	cont "tives."
@@ -365,7 +365,7 @@ EcruteakGymGuideText:
 	line "ECRUTEAK."
 	done
 
-EcruteakGymGuideWinText:
+EcruteakGymGuyWinText:
 	text "Whew, <PLAYER>."
 	line "You did great!"
 
@@ -387,7 +387,7 @@ EcruteakGymClosedText:
 EcruteakGym_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 33 ; warp events
 	warp_event  4, 17, ECRUTEAK_CITY, 10
 	warp_event  5, 17, ECRUTEAK_CITY, 10
 	warp_event  4, 14, ECRUTEAK_GYM, 4
@@ -422,17 +422,17 @@ EcruteakGym_MapEvents:
 	warp_event  7, 12, ECRUTEAK_GYM, 3
 	warp_event  7, 13, ECRUTEAK_GYM, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  3, 15, BGEVENT_READ, EcruteakGymStatue
 	bg_event  6, 15, BGEVENT_READ, EcruteakGymStatue
 
-	def_object_events
+	db 7 ; object events
 	object_event  5,  1, SPRITE_MORTY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, EcruteakGymMortyScript, -1
 	object_event  2,  7, SPRITE_SAGE, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 1, TrainerSageJeffrey, -1
 	object_event  3, 13, SPRITE_SAGE, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerSagePing, -1
 	object_event  7,  5, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 1, TrainerMediumMartha, -1
 	object_event  7,  9, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 1, TrainerMediumGrace, -1
-	object_event  7, 15, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, EcruteakGymGuideScript, -1
+	object_event  7, 15, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, EcruteakGymGuyScript, -1
 	object_event  4, 14, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_ECRUTEAK_GYM_GRAMPS

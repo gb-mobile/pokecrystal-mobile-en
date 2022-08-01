@@ -1,10 +1,10 @@
-MACRO command
-	const \1_command
-	DEF \1 EQUS "db \1_command"
+command: MACRO
+	enum \1_command
+\1 EQUS "db \1_command"
 ENDM
 
 ; BattleCommandPointers indexes (see data/battle/effect_command_pointers.asm)
-	const_def 1
+	enum_start 1
 	command checkturn               ; 01
 	command checkobedience          ; 02
 	command usedmovetext            ; 03
@@ -180,8 +180,7 @@ ENDM
 	command supereffectivelooptext  ; ad
 	command startloop               ; ae
 	command curl                    ; af
-DEF NUM_EFFECT_COMMANDS EQU const_value - 1
 
-	const_def -1, -1
-	command endmove                 ; ff
+	enum_start $fe
 	command endturn                 ; fe
+	command endmove                 ; ff

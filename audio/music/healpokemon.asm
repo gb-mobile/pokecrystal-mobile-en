@@ -1,51 +1,50 @@
 Music_HealPokemon:
-	channel_count 3
-	channel 1, Music_HealPokemon_Ch1
-	channel 2, Music_HealPokemon_Ch2
-	channel 3, Music_HealPokemon_Ch3
+	musicheader 3, 1, Music_HealPokemon_Ch1
+	musicheader 1, 2, Music_HealPokemon_Ch2
+	musicheader 1, 3, Music_HealPokemon_Ch3
 
 Music_HealPokemon_Ch1:
 	tempo 144
-	volume 7, 7
-	duty_cycle 2
-	pitch_offset 1
-	note_type 12, 8, 1
-	rest 2
-	pitch_slide 1, 4, B_
+	volume $77
+	dutycycle $2
+	tone $0001
+	notetype $c, $81
+	note __, 2
+	slidepitchto 1, 4, __
 	note B_, 2
-	pitch_slide 1, 3, E_
+	slidepitchto 1, 5, E_
 	note B_, 2
-	pitch_slide 1, 4, E_
+	slidepitchto 1, 4, E_
 	note E_, 2
-	rest 4
-	pitch_slide 1, 5, B_
+	note __, 4
+	slidepitchto 1, 3, __
 	note E_, 4
-	pitch_slide 1, 4, B_
+	slidepitchto 1, 4, __
 	note B_, 4
-	sound_ret
+	endchannel
 
 Music_HealPokemon_Ch2:
-	duty_cycle 2
-	note_type 12, 12, 3
+	dutycycle $2
+	notetype $c, $c3
 	octave 4
 	note B_, 4
 	note B_, 4
 	note B_, 2
 	note G#, 2
-	note_type 12, 12, 4
+	notetype $c, $c4
 	octave 5
 	note E_, 8
-	sound_ret
+	endchannel
 
 Music_HealPokemon_Ch3:
-	note_type 12, 1, 0
+	notetype $c, $10
 	octave 4
 	note E_, 2
-	rest 2
+	note __, 2
 	note E_, 2
-	rest 2
+	note __, 2
 	note E_, 2
 	note G#, 2
 	note E_, 6
-	rest 2
-	sound_ret
+	note __, 2
+	endchannel

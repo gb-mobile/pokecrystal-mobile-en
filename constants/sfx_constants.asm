@@ -1,5 +1,6 @@
 ; SFX indexes (see audio/sfx_pointers.asm)
 	const_def
+
 	const SFX_DEX_FANFARE_50_79           ; 00
 	const SFX_ITEM                        ; 01
 	const SFX_CAUGHT_MON                  ; 02
@@ -149,8 +150,8 @@
 	const SFX_FANFARE_2                   ; 92
 	const SFX_REGISTER_PHONE_NUMBER       ; 93
 	const SFX_3RD_PLACE                   ; 94
-	const SFX_GET_EGG_UNUSED              ; 95
-	const SFX_GET_EGG                     ; 96
+	const SFX_GET_EGG_FROM_DAY_CARE_MAN   ; 95
+	const SFX_GET_EGG_FROM_DAY_CARE_LADY  ; 96
 	const SFX_MOVE_DELETED                ; 97
 	const SFX_2ND_PLACE                   ; 98
 	const SFX_1ST_PLACE                   ; 99
@@ -188,6 +189,7 @@
 	const SFX_TRAIN_ARRIVED               ; b9
 	const SFX_STOP_SLOT                   ; ba
 	const SFX_2_BOOPS                     ; bb
+
 ; new to Crystal
 	const SFX_GLASS_TING                  ; bc
 	const SFX_GLASS_TING_2                ; bd
@@ -208,4 +210,3 @@
 	const SFX_TWO_PC_BEEPS                ; cc
 	const SFX_4_NOTE_DITTY                ; cd
 	const SFX_TWINKLE                     ; ce
-DEF NUM_SFX EQU const_value

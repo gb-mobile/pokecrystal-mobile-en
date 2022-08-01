@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODCITY_POKEFAN_M1
 	const GOLDENRODCITY_YOUNGSTER1
 	const GOLDENRODCITY_COOLTRAINER_F1
@@ -16,9 +16,9 @@
 	const GOLDENRODCITY_MOVETUTOR
 
 GoldenrodCity_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 2 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPointAndFloria
 	callback MAPCALLBACK_OBJECTS, .MoveTutor
 
@@ -29,7 +29,7 @@ GoldenrodCity_MapScripts:
 	iftrue .FloriaDone
 	clearevent EVENT_FLORIA_AT_SUDOWOODO
 .FloriaDone:
-	endcallback
+	return
 
 .MoveTutor:
 	checkevent EVENT_BEAT_ELITE_FOUR
@@ -41,14 +41,14 @@ GoldenrodCity_MapScripts:
 	ifequal SATURDAY, .MoveTutorAppear
 .MoveTutorDisappear:
 	disappear GOLDENRODCITY_MOVETUTOR
-	endcallback
+	return
 
 .MoveTutorAppear:
 	checkflag ENGINE_DAILY_MOVE_TUTOR
 	iftrue .MoveTutorDone
 	appear GOLDENRODCITY_MOVETUTOR
 .MoveTutorDone:
-	endcallback
+	return
 
 MoveTutorScript:
 	faceplayer
@@ -73,21 +73,21 @@ MoveTutorScript:
 
 .Flamethrower:
 	setval MOVETUTOR_FLAMETHROWER
-	writetext GoldenrodCityMoveTutorMoveText
+	writetext UnknownText_0x1991cf
 	special MoveTutor
 	ifequal FALSE, .TeachMove
 	sjump .Incompatible
 
 .Thunderbolt:
 	setval MOVETUTOR_THUNDERBOLT
-	writetext GoldenrodCityMoveTutorMoveText
+	writetext UnknownText_0x1991cf
 	special MoveTutor
 	ifequal FALSE, .TeachMove
 	sjump .Incompatible
 
 .IceBeam:
 	setval MOVETUTOR_ICE_BEAM
-	writetext GoldenrodCityMoveTutorMoveText
+	writetext UnknownText_0x1991cf
 	special MoveTutor
 	ifequal FALSE, .TeachMove
 	sjump .Incompatible
@@ -120,7 +120,7 @@ MoveTutorScript:
 
 .TeachMove:
 	writetext GoldenrodCityMoveTutorIfYouUnderstandYouveMadeItText
-	promptbutton
+	buttonsound
 	takecoins 4000
 	waitsfx
 	playsound SFX_TRANSACTION
@@ -205,7 +205,7 @@ GoldenrodCityGrampsScript:
 GoldenrodCityRocketScoutScript:
 	opentext
 	writetext GoldenrodCityRocketScoutText1
-	promptbutton
+	buttonsound
 	faceplayer
 	writetext GoldenrodCityRocketScoutText2
 	waitbutton
@@ -262,7 +262,7 @@ GoldenrodCityUndergroundSignSouth:
 	jumptext GoldenrodCityUndergroundSignSouthText
 
 GoldenrodCityPokecenterSign:
-	jumpstd PokecenterSignScript
+	jumptext GoldenrodCityPokeComCenterSignText
 
 GoldenrodCityFlowerShopSign:
 	jumptext GoldenrodCityFlowerShopSignText
@@ -476,7 +476,8 @@ GoldenrodCityUndergroundSignSouthText:
 	line "ENTRANCE"
 	done
 
-GoldenrodCityPokeComCenterSignText: ; unreferenced
+GoldenrodCityPokeComCenterSignText:
+; unused
 	text "For Mobile Tips!"
 	line "#COM CENTER"
 	done
@@ -544,14 +545,14 @@ GoldenrodCityMoveTutorYouDontHaveEnoughCoinsText:
 	line "enough coins here…"
 	done
 
-GoldenrodCityMoveTutorMoveText:
+UnknownText_0x1991cf:
 	text_start
 	done
 
 GoldenrodCity_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 15 ; warp events
 	warp_event 24,  7, GOLDENROD_GYM, 1
 	warp_event 29, 29, GOLDENROD_BIKE_SHOP, 1
 	warp_event 31, 21, GOLDENROD_HAPPINESS_RATER, 1
@@ -566,11 +567,11 @@ GoldenrodCity_MapEvents:
 	warp_event 19,  1, ROUTE_35_GOLDENROD_GATE, 3
 	warp_event  9,  5, GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES, 8
 	warp_event 11, 29, GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES, 5
-	warp_event 15, 27, GOLDENROD_POKECENTER_1F, 1
+	warp_event 14, 27, GOLDENROD_POKECENTER_1F, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 12 ; bg events
 	bg_event 10, 14, BGEVENT_READ, GoldenrodCityStationSign
 	bg_event  4, 17, BGEVENT_READ, GoldenrodCityRadioTowerSign
 	bg_event 26, 27, BGEVENT_READ, GoldenrodDeptStoreSign
@@ -581,10 +582,10 @@ GoldenrodCity_MapEvents:
 	bg_event 12,  7, BGEVENT_READ, GoldenrodCityNameRaterSign
 	bg_event  8,  6, BGEVENT_READ, GoldenrodCityUndergroundSignNorth
 	bg_event 12, 30, BGEVENT_READ, GoldenrodCityUndergroundSignSouth
-	bg_event 16, 27, BGEVENT_UP, GoldenrodCityPokecenterSign
+	bg_event 17, 27, BGEVENT_UP, GoldenrodCityPokecenterSign
 	bg_event 30,  6, BGEVENT_READ, GoldenrodCityFlowerShopSign
 
-	def_object_events
+	db 15 ; object events
 	object_event  7, 18, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, GoldenrodCityPokefanMScript, EVENT_GOLDENROD_CITY_CIVILIANS
 	object_event 30, 17, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, GoldenrodCityYoungster1Script, EVENT_GOLDENROD_CITY_CIVILIANS
 	object_event 12, 16, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, GoldenrodCityCooltrainerF1Script, EVENT_GOLDENROD_CITY_CIVILIANS

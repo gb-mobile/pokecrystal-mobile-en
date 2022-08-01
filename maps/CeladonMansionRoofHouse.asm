@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const CELADONMANSIONROOFHOUSE_PHARMACIST
 
 CeladonMansionRoofHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 CeladonMansionRoofHousePharmacistScript:
 	faceplayer
@@ -12,7 +12,7 @@ CeladonMansionRoofHousePharmacistScript:
 	checkevent EVENT_GOT_TM03_CURSE
 	iftrue .GotCurse
 	writetext CeladonMansionRoofHousePharmacistIntroText
-	promptbutton
+	buttonsound
 	checktime NITE
 	iftrue .Night
 	writetext CeladonMansionRoofHousePharmacistNotNightText
@@ -22,7 +22,7 @@ CeladonMansionRoofHousePharmacistScript:
 
 .Night:
 	writetext CeladonMansionRoofHousePharmacistStoryText
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_CURSE
 	iffalse .NoRoom
 	setevent EVENT_GOT_TM03_CURSE
@@ -117,13 +117,13 @@ CeladonMansionRoofHousePharmacistCurseText:
 CeladonMansionRoofHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, CELADON_MANSION_ROOF, 3
 	warp_event  3,  7, CELADON_MANSION_ROOF, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  3,  2, SPRITE_PHARMACIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 2, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, CeladonMansionRoofHousePharmacistScript, -1

@@ -1,4 +1,6 @@
 BattleCommand_Nightmare:
+; nightmare
+
 ; Can't hit an absent opponent.
 
 	call CheckHiddenOpponent
@@ -13,7 +15,7 @@ BattleCommand_Nightmare:
 
 	ld a, BATTLE_VARS_STATUS_OPP
 	call GetBattleVarAddr
-	and SLP_MASK
+	and SLP
 	jr z, .failed
 
 ; Bail if the opponent is already having a nightmare.

@@ -1,6 +1,5 @@
 MovementPointers:
-; entries correspond to movement_* constants (see macros/scripts/movement.asm)
-	table_width 2, MovementPointers
+; entries correspond to macros/scripts/movement.asm enumeration
 	dw Movement_turn_head_down        ; 00
 	dw Movement_turn_head_up          ; 01
 	dw Movement_turn_head_left        ; 02
@@ -91,7 +90,6 @@ MovementPointers:
 	dw Movement_rock_smash            ; 57
 	dw Movement_return_dig            ; 58
 	dw Movement_skyfall_top           ; 59
-	assert_table_length NUM_MOVEMENT_CMDS
 
 Movement_teleport_from:
 	ld hl, OBJECT_STEP_TYPE
@@ -133,7 +131,7 @@ Movement_step_dig:
 	ld [hl], a
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_SLEEP
+	ld [hl], STEP_TYPE_03
 	ld hl, OBJECT_DIRECTION_WALKING
 	add hl, bc
 	ld [hl], STANDING
@@ -186,7 +184,7 @@ Movement_fish_cast_rod:
 	ld [hl], OBJECT_ACTION_FISHING
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_FROM_MOVEMENT
+	ld [hl], STEP_TYPE_SLEEP
 	ret
 
 Movement_step_loop:
@@ -210,7 +208,7 @@ Movement_step_end:
 
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_FROM_MOVEMENT
+	ld [hl], STEP_TYPE_SLEEP
 	ret
 
 Movement_48:
@@ -230,7 +228,7 @@ Movement_48:
 
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_SLEEP
+	ld [hl], STEP_TYPE_03
 
 	ld hl, wVramState
 	res 7, [hl]
@@ -239,7 +237,7 @@ Movement_48:
 Movement_remove_object:
 	call DeleteMapObject
 	ld hl, wObjectFollow_Leader
-	ldh a, [hMapObjectIndex]
+	ldh a, [hMapObjectIndexBuffer]
 	cp [hl]
 	jr nz, .not_leading
 	ld [hl], -1
@@ -256,7 +254,7 @@ Movement_4b:
 
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_STANDING
+	ld [hl], STEP_TYPE_04
 
 	ld hl, wVramState
 	res 7, [hl]
@@ -308,7 +306,7 @@ Movement_step_sleep_common:
 
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_SLEEP
+	ld [hl], STEP_TYPE_03
 
 	ld hl, OBJECT_ACTION
 	add hl, bc
@@ -346,7 +344,7 @@ Movement_tree_shake:
 
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_SLEEP
+	ld [hl], STEP_TYPE_03
 
 	ld hl, OBJECT_ACTION
 	add hl, bc
@@ -658,7 +656,7 @@ TurnStep:
 
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_TURN
+	ld [hl], STEP_TYPE_HALF_STEP
 	ret
 
 NormalStep:
@@ -682,7 +680,7 @@ NormalStep:
 
 .skip_grass
 	ld hl, wCenteredObject
-	ldh a, [hMapObjectIndex]
+	ldh a, [hMapObjectIndexBuffer]
 	cp [hl]
 	jr z, .player
 
@@ -706,7 +704,7 @@ TurningStep:
 	ld [hl], OBJECT_ACTION_SPIN
 
 	ld hl, wCenteredObject
-	ldh a, [hMapObjectIndex]
+	ldh a, [hMapObjectIndexBuffer]
 	cp [hl]
 	jr z, .player
 
@@ -730,7 +728,7 @@ SlideStep:
 	ld [hl], OBJECT_ACTION_STAND
 
 	ld hl, wCenteredObject
-	ldh a, [hMapObjectIndex]
+	ldh a, [hMapObjectIndexBuffer]
 	cp [hl]
 	jr z, .player
 
@@ -762,7 +760,7 @@ JumpStep:
 	call SpawnShadow
 
 	ld hl, wCenteredObject
-	ldh a, [hMapObjectIndex]
+	ldh a, [hMapObjectIndexBuffer]
 	cp [hl]
 	jr z, .player
 

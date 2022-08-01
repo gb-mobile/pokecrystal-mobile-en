@@ -1,4 +1,4 @@
-VanceMonHasBecomeTougherText:
+VanceLiftoffText:
 	text "My @"
 	text_ram wStringBuffer4
 	text "'s"
@@ -8,7 +8,7 @@ VanceMonHasBecomeTougherText:
 	line "liftoff!"
 	done
 
-VanceDefeatedMonText:
+UnknownText_0x669b2:
 	text "We can easily beat"
 	line "@"
 	text_ram wStringBuffer4
@@ -18,7 +18,7 @@ VanceDefeatedMonText:
 	line "Isn't that great?"
 	done
 
-VanceLostAMonText:
+UnknownText_0x669ed:
 	text "But get this, a"
 	line "wild @"
 	text_ram wStringBuffer4
@@ -30,7 +30,7 @@ VanceLostAMonText:
 	line "after it…"
 	done
 
-VanceBattleRematchText:
+UnknownText_0x66a3a:
 	text "Right now, I'm on"
 	line "@"
 	text_ram wStringBuffer5
@@ -43,7 +43,7 @@ VanceBattleRematchText:
 	line "I'll wait here."
 	done
 
-VanceHangUpText:
+UnknownText_0x66a93:
 	text "OK, bye for now!"
 	done
 

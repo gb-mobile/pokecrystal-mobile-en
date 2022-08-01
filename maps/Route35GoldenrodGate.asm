@@ -1,12 +1,12 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE35GOLDENRODGATE_RANDY
 	const ROUTE35GOLDENRODGATE_POKEFAN_F
 	const ROUTE35GOLDENRODGATE_FISHER
 
 Route35GoldenrodGate_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 RandyScript:
 	faceplayer
@@ -20,15 +20,15 @@ RandyScript:
 	writetext Route35GoldenrodGateRandyAskTakeThisMonToMyFriendText
 	yesorno
 	iffalse .refused
-	writetext Route35GoldenrodGateRandyThanksText
-	promptbutton
+	writetext Route35GoldenrodGateRandyThanksKidText
+	buttonsound
 	waitsfx
 	readvar VAR_PARTYCOUNT
 	ifequal PARTY_LENGTH, .partyfull
 	writetext Route35GoldenrodGatePlayerReceivedAMonWithMailText
 	playsound SFX_KEY_ITEM
 	waitsfx
-	givepoke SPEAROW, 10, NO_ITEM, GiftSpearowName, GiftSpearowOTName
+	givepoke SPEAROW, 10, NO_ITEM, TRUE, GiftSpearowName, GiftSpearowOTName
 	givepokemail GiftSpearowMail
 	setevent EVENT_GOT_KENYA
 .alreadyhavekenya
@@ -51,7 +51,7 @@ RandyScript:
 
 .questcomplete
 	writetext Route35GoldenrodGateRandySomethingForYourTroubleText
-	promptbutton
+	buttonsound
 	verbosegiveitem HP_UP
 	iffalse .bagfull
 	setevent EVENT_GOT_HP_UP_FROM_RANDY
@@ -73,7 +73,7 @@ GiftSpearowName:
 GiftSpearowOTName:
 	db "RANDY@"
 
-	db 0 ; unused
+	db 0 ; filler
 
 Route35GoldenrodGatePokefanFScript:
 	faceplayer
@@ -106,7 +106,7 @@ Route35GoldenrodGateRandyAskTakeThisMonToMyFriendText:
 	para "He's on ROUTE 31."
 	done
 
-Route35GoldenrodGateRandyThanksText:
+Route35GoldenrodGateRandyThanksKidText:
 	text "You will? Perfect!"
 	line "Thanks, kid!"
 
@@ -198,17 +198,17 @@ Route35GoldenrodGateFisherText:
 Route35GoldenrodGate_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 4 ; warp events
 	warp_event  4,  0, ROUTE_35, 1
 	warp_event  5,  0, ROUTE_35, 2
 	warp_event  4,  7, GOLDENROD_CITY, 12
 	warp_event  5,  7, GOLDENROD_CITY, 12
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 3 ; object events
 	object_event  0,  4, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, RandyScript, -1
 	object_event  6,  4, SPRITE_POKEFAN_F, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, Route35GoldenrodGatePokefanFScript, -1
 	object_event  3,  2, SPRITE_FISHER, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, Route35GoldenrodGateFisherScript, -1

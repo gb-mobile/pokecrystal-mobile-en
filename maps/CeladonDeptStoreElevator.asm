@@ -1,7 +1,7 @@
 CeladonDeptStoreElevator_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 CeladonDeptStoreElevatorScript:
 	opentext
@@ -28,13 +28,13 @@ CeladonDeptStoreElevatorData:
 CeladonDeptStoreElevator_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  1,  3, CELADON_DEPT_STORE_1F, -1
 	warp_event  2,  3, CELADON_DEPT_STORE_1F, -1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 1 ; bg events
 	bg_event  3,  0, BGEVENT_READ, CeladonDeptStoreElevatorScript
 
-	def_object_events
+	db 0 ; object events

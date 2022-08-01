@@ -1,4 +1,4 @@
-GavenMonGreaterThanImaginedText:
+GavenGreaterText:
 	text "My @"
 	text_ram wStringBuffer4
 	text_start
@@ -12,7 +12,7 @@ GavenMonGreaterThanImaginedText:
 	cont "better than mine."
 	done
 
-GavenDefeatedMonText:
+UnknownText_0x174a80:
 	text "Oh, and I managed"
 	line "to barely defeat"
 
@@ -35,7 +35,7 @@ GavenDefeatedMonText:
 	cont "used to seeing."
 	done
 
-GavenLostAMonText:
+UnknownText_0x174b2d:
 	text "And a while back,"
 	line "I tried to catch a"
 	cont "wild @"
@@ -52,7 +52,7 @@ GavenLostAMonText:
 	line "to be careful too."
 	done
 
-GavenBattleRematchText:
+UnknownText_0x174bc5:
 	text "Let's battle!"
 
 	para "I'll be waiting on"
@@ -64,17 +64,17 @@ GavenBattleRematchText:
 	line "when you're close."
 	done
 
-GavenHangUpText:
+UnknownText_0x174c0e:
 	text "OK, I'll talk to"
 	line "you soon!"
 	done
 
-GavenHangUpNotThursdayText:
+UnknownText_0x174c29:
 	text "I obsess over how"
 	line "to beat you."
 	done
 
-GavenReminderText:
+UnknownText_0x174c49:
 	text "<PLAY_G>, why"
 	line "aren't you here?"
 

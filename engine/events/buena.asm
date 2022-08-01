@@ -43,8 +43,10 @@ BuenasPassword:
 
 .PasswordIndices:
 	db NUM_PASSWORDS_PER_CATEGORY
-for x, NUM_PASSWORDS_PER_CATEGORY
+x = 0
+rept NUM_PASSWORDS_PER_CATEGORY
 	db x
+x = x + 1
 endr
 	db -1
 
@@ -68,12 +70,12 @@ BuenaPrize:
 	ld [wMenuSelection], a
 	call Buena_PlacePrizeMenuBox
 	call Buena_DisplayBlueCardBalance
-	ld hl, .BuenaAskWhichPrizeText
+	ld hl, .Text_AskWhichPrize
 	call PrintText
 	jr .okay
 
 .loop
-	ld hl, .BuenaAskWhichPrizeText
+	ld hl, .Text_AskWhichPrize
 	call BuenaPrintText
 
 .okay
@@ -83,17 +85,17 @@ BuenaPrize:
 	call Buena_PrizeMenu
 	jr z, .done
 	ld [wMenuSelectionQuantity], a
-	call Buena_GetPrize
+	call Buena_getprize
 	ld a, [hl]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetItemName
-	ld hl, .BuenaIsThatRightText
+	ld hl, .Text_IsThatRight
 	call BuenaPrintText
 	call YesNoBox
 	jr c, .loop
 
 	ld a, [wMenuSelectionQuantity]
-	call Buena_GetPrize
+	call Buena_getprize
 	inc hl
 	ld a, [hld]
 	ld c, a
@@ -105,7 +107,7 @@ BuenaPrize:
 	push hl
 	ld [wCurItem], a
 	ld a, $1
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	ld hl, wNumItems
 	call ReceiveItem
 	pop hl
@@ -119,17 +121,17 @@ BuenaPrize:
 	jr .Purchase
 
 .InsufficientBalance:
-	ld hl, .BuenaNotEnoughPointsText
+	ld hl, .Text_NotEnoughPoints
 	jr .print
 
 .BagFull:
-	ld hl, .BuenaNoRoomText
+	ld hl, .Text_NoRoom
 	jr .print
 
 .Purchase:
 	ld de, SFX_TRANSACTION
 	call PlaySFX
-	ld hl, .BuenaHereYouGoText
+	ld hl, .Text_HereYouGo
 
 .print
 	call BuenaPrintText
@@ -138,34 +140,40 @@ BuenaPrize:
 .done
 	call CloseWindow
 	call CloseWindow
-	ld hl, .BuenaComeAgainText
+	ld hl, .Text_PleaseComeBackAgain
 	call PrintText
 	call JoyWaitAorB
 	call PlayClickSFX
 	ret
 
-.BuenaAskWhichPrizeText:
-	text_far _BuenaAskWhichPrizeText
+.Text_AskWhichPrize:
+	; Which prize would you like?
+	text_far UnknownText_0x1c589f
 	text_end
 
-.BuenaIsThatRightText:
-	text_far _BuenaIsThatRightText
+.Text_IsThatRight:
+	; ? Is that right?
+	text_far UnknownText_0x1c58bc
 	text_end
 
-.BuenaHereYouGoText:
-	text_far _BuenaHereYouGoText
+.Text_HereYouGo:
+	; Here you go!
+	text_far UnknownText_0x1c58d1
 	text_end
 
-.BuenaNotEnoughPointsText:
-	text_far _BuenaNotEnoughPointsText
+.Text_NotEnoughPoints:
+	; You don't have enough points.
+	text_far UnknownText_0x1c58e0
 	text_end
 
-.BuenaNoRoomText:
-	text_far _BuenaNoRoomText
+.Text_NoRoom:
+	; You have no room for it.
+	text_far UnknownText_0x1c58ff
 	text_end
 
-.BuenaComeAgainText:
-	text_far _BuenaComeAgainText
+.Text_PleaseComeBackAgain:
+	; Oh. Please come back again!
+	text_far UnknownText_0x1c591a
 	text_end
 
 Buena_DisplayBlueCardBalance:
@@ -222,7 +230,7 @@ Buena_PrizeMenu:
 	ld hl, .MenuHeader
 	call CopyMenuHeader
 	ld a, [wMenuSelection]
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	xor a
 	ld [wWhichIndexSet], a
 	ldh [hBGMapMode], a
@@ -234,7 +242,7 @@ Buena_PrizeMenu:
 	ld a, [wMenuCursorY]
 	ld [wMenuSelection], a
 	ld a, [wMenuJoypad]
-	cp B_BUTTON
+	cp $2
 	jr z, .cancel
 	ld a, c
 	and a
@@ -256,31 +264,35 @@ Buena_PrizeMenu:
 	db SCROLLINGMENU_DISPLAY_ARROWS ; flags
 	db 4, 13 ; rows, columns
 	db SCROLLINGMENU_ITEMS_NORMAL ; item format
-	dba .Prizes
-	dba .PrintPrizeItem
-	dba .PrintPrizePoints
+	dba .indices
+	dba .prizeitem
+	dba .prizepoints
 
-.Prizes:
+NUM_BUENA_PRIZES EQU 9 ; ((BuenaPrizeItems.End - BuenaPrizeItems) / 2)
+
+.indices
 	db NUM_BUENA_PRIZES
-for x, NUM_BUENA_PRIZES
-	db x + 1
+x = 1
+rept NUM_BUENA_PRIZES
+	db x
+x = x + 1
 endr
 	db -1
 
-.PrintPrizeItem:
+.prizeitem
 	ld a, [wMenuSelection]
-	call Buena_GetPrize
+	call Buena_getprize
 	ld a, [hl]
 	push de
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetItemName
 	pop hl
 	call PlaceString
 	ret
 
-.PrintPrizePoints:
+.prizepoints
 	ld a, [wMenuSelection]
-	call Buena_GetPrize
+	call Buena_getprize
 	inc hl
 	ld a, [hl]
 	ld c, "0"
@@ -288,7 +300,7 @@ endr
 	ld [de], a
 	ret
 
-Buena_GetPrize:
+Buena_getprize:
 	dec a
 	ld hl, BuenaPrizeItems
 	ld b, 0

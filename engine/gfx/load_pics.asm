@@ -109,13 +109,13 @@ GetFrontpicPointer:
 	ld a, [wCurPartySpecies]
 	ld d, BANK(PokemonPicPointers)
 	jr .ok
+
 .unown
 	ld a, [wUnownLetter]
 	ld d, BANK(UnownPicPointers)
+
 .ok
-	; These are assumed to be at the same address in their respective banks.
-	assert PokemonPicPointers == UnownPicPointers
-	ld hl, PokemonPicPointers
+	ld hl, PokemonPicPointers ; UnownPicPointers
 	dec a
 	ld bc, 6
 	call AddNTimes
@@ -125,7 +125,7 @@ GetFrontpicPointer:
 	push af
 	inc hl
 	ld a, d
-	call GetFarWord
+	call GetFarHalfword
 	pop bc
 	ret
 
@@ -208,8 +208,7 @@ GetMonBackpic:
 	push de
 
 	; These are assumed to be at the same address in their respective banks.
-	assert PokemonPicPointers == UnownPicPointers
-	ld hl, PokemonPicPointers
+	ld hl, PokemonPicPointers ; UnownPicPointers
 	ld a, b
 	ld d, BANK(PokemonPicPointers)
 	cp UNOWN
@@ -228,7 +227,7 @@ GetMonBackpic:
 	push af
 	inc hl
 	ld a, d
-	call GetFarWord
+	call GetFarHalfword
 	ld de, wDecompressScratch
 	pop af
 	call FarDecompress
@@ -247,8 +246,8 @@ GetMonBackpic:
 FixPicBank:
 ; This is a thing for some reason.
 
-DEF PICS_FIX EQU $36
-EXPORT PICS_FIX
+PICS_FIX EQU $36
+GLOBAL PICS_FIX
 
 	push hl
 	push bc
@@ -288,7 +287,7 @@ EXPORT PICS_FIX
 	db BANK("Pics 23") ; BANK("Pics 1") + 22
 	db BANK("Pics 24") ; BANK("Pics 1") + 23
 
-GSIntro_GetMonFrontpic: ; unreferenced
+Function511ec:
 	ld a, c
 	push de
 	ld hl, PokemonPicPointers
@@ -301,7 +300,7 @@ GSIntro_GetMonFrontpic: ; unreferenced
 	push af
 	inc hl
 	ld a, BANK(PokemonPicPointers)
-	call GetFarWord
+	call GetFarHalfword
 	pop af
 	pop de
 	call FarDecompress
@@ -311,7 +310,7 @@ GetTrainerPic:
 	ld a, [wTrainerClass]
 	and a
 	ret z
-	cp NUM_TRAINER_CLASSES + 1
+	cp NUM_TRAINER_CLASSES
 	ret nc
 	call WaitBGMap
 	xor a
@@ -332,7 +331,7 @@ GetTrainerPic:
 	push af
 	inc hl
 	ld a, BANK(TrainerPicPointers)
-	call GetFarWord
+	call GetFarHalfword
 	pop af
 	ld de, wDecompressScratch
 	call FarDecompress
@@ -345,12 +344,12 @@ GetTrainerPic:
 	pop af
 	ldh [rSVBK], a
 	call WaitBGMap
-	ld a, 1
+	ld a, $1
 	ldh [hBGMapMode], a
 	ret
 
 DecompressGet2bpp:
-; Decompress lz data from b:hl to wDecompressScratch, then copy it to address de.
+; Decompress lz data from b:hl to scratch space at 6:d000, then copy it to address de.
 
 	ldh a, [rSVBK]
 	push af

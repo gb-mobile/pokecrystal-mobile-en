@@ -1,6 +1,6 @@
 _ReturnToBattle_UseBall:
 	call ClearBGPalettes
-	call ClearTilemap
+	call ClearTileMap
 	ld a, [wBattleType]
 	cp BATTLETYPE_TUTORIAL
 	jr z, .gettutorialbackpic

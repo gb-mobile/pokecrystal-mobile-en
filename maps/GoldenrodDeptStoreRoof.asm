@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODDEPTSTOREROOF_CLERK
 	const GOLDENRODDEPTSTOREROOF_POKEFAN_F
 	const GOLDENRODDEPTSTOREROOF_FISHER
@@ -9,33 +9,33 @@
 	const GOLDENRODDEPTSTOREROOF_BUG_CATCHER
 
 GoldenrodDeptStoreRoof_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 2 ; callbacks
 	callback MAPCALLBACK_TILES, .CheckSaleChangeBlock
 	callback MAPCALLBACK_OBJECTS, .CheckSaleChangeClerk
 
 .CheckSaleChangeBlock:
 	checkflag ENGINE_GOLDENROD_DEPT_STORE_SALE_IS_ON
 	iftrue .SaleIsOn
-	endcallback
+	return
 
 .SaleIsOn:
 	changeblock 0, 2, $3f ; cardboard boxes
 	changeblock 0, 4, $0f ; vendor booth
-	endcallback
+	return
 
 .CheckSaleChangeClerk:
 	checkflag ENGINE_GOLDENROD_DEPT_STORE_SALE_IS_ON
 	iftrue .ChangeClerk
 	setevent EVENT_GOLDENROD_SALE_OFF
 	clearevent EVENT_GOLDENROD_SALE_ON
-	endcallback
+	return
 
 .ChangeClerk:
 	clearevent EVENT_GOLDENROD_SALE_OFF
 	setevent EVENT_GOLDENROD_SALE_ON
-	endcallback
+	return
 
 GoldenrodDeptStoreRoofClerkScript:
 	opentext
@@ -212,18 +212,18 @@ PokeDollVendingMachineText:
 GoldenrodDeptStoreRoof_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 1 ; warp events
 	warp_event 13,  1, GOLDENROD_DEPT_STORE_6F, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 4 ; bg events
 	bg_event 15,  3, BGEVENT_RIGHT, Binoculars1
 	bg_event 15,  5, BGEVENT_RIGHT, Binoculars2
 	bg_event 15,  6, BGEVENT_RIGHT, Binoculars3
 	bg_event  3,  0, BGEVENT_UP, PokeDollVendingMachine
 
-	def_object_events
+	db 8 ; object events
 	object_event  1,  4, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, GoldenrodDeptStoreRoofClerkScript, EVENT_GOLDENROD_SALE_OFF
 	object_event 10,  3, SPRITE_POKEFAN_F, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, GoldenrodDeptStoreRoofPokefanFScript, -1
 	object_event  2,  1, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, GoldenrodDeptStoreRoofFisherScript, -1

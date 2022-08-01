@@ -1,13 +1,13 @@
-DEF ROUTE39FARMHOUSE_MILK_PRICE EQU 500
+ROUTE39FARMHOUSE_MILK_PRICE EQU 500
 
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE39FARMHOUSE_POKEFAN_M
 	const ROUTE39FARMHOUSE_POKEFAN_F
 
 Route39Farmhouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 PokefanM_DairyFarmer:
 	faceplayer
@@ -36,7 +36,7 @@ FarmerMScript_SellMilk:
 	waitsfx
 	playsound SFX_TRANSACTION
 	writetext FarmerMText_GotMilk
-	promptbutton
+	buttonsound
 	itemnotify
 	closetext
 	end
@@ -79,7 +79,7 @@ PokefanF_SnoreFarmer:
 
 FarmerFScript_GiveSnore:
 	writetext FarmerFText_HealedMiltank
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_SNORE
 	iffalse FarmerFScript_NoRoomForSnore
 	setevent EVENT_GOT_TM13_SNORE_FROM_MOOMOO_FARM
@@ -91,7 +91,7 @@ FarmerFScript_NoRoomForSnore:
 	end
 
 FarmhouseBookshelf:
-	jumpstd PictureBookshelfScript
+	jumpstd picturebookshelf
 
 FarmerMText_SickCow:
 	text "My MILTANK ain't"
@@ -122,7 +122,7 @@ FarmerMText_BuyMilk:
 	line "to restore HP!"
 
 	para "I'll give it to ya"
-	line "fer just ¥{d:ROUTE39FARMHOUSE_MILK_PRICE}."
+	line "fer just ¥500."
 	done
 
 FarmerMText_GotMilk:
@@ -172,7 +172,7 @@ FarmerFText_HealedMiltank:
 	line "fer your trouble."
 	done
 
-Text_ReceivedTM13: ; unreferenced
+Text_ReceivedTM13:
 	text "<PLAYER> received"
 	line "TM13."
 	done
@@ -195,16 +195,16 @@ FarmerFText_SnoreSpeech:
 Route39Farmhouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, ROUTE_39, 2
 	warp_event  3,  7, ROUTE_39, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  0,  1, BGEVENT_READ, FarmhouseBookshelf
 	bg_event  1,  1, BGEVENT_READ, FarmhouseBookshelf
 
-	def_object_events
+	db 2 ; object events
 	object_event  3,  2, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, PokefanM_DairyFarmer, -1
 	object_event  5,  4, SPRITE_POKEFAN_F, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, PokefanF_SnoreFarmer, -1

@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const COPYCATSHOUSE2F_COPYCAT1 ; if player is male
 	const COPYCATSHOUSE2F_DODRIO
 	const COPYCATSHOUSE2F_FAIRYDOLL ; lost item
@@ -7,9 +7,9 @@
 	const COPYCATSHOUSE2F_COPYCAT2 ; if player is female
 
 CopycatsHouse2F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .Callback
 
 .Callback:
@@ -22,7 +22,7 @@ CopycatsHouse2F_MapScripts:
 	disappear COPYCATSHOUSE2F_COPYCAT1
 	appear COPYCATSHOUSE2F_COPYCAT2
 .Done:
-	endcallback
+	return
 
 Copycat:
 	faceplayer
@@ -108,7 +108,7 @@ Copycat:
 .ReturnLostItem:
 	opentext
 	writetext CopycatText_GiveDoll
-	promptbutton
+	buttonsound
 	takeitem LOST_ITEM
 	setevent EVENT_RETURNED_LOST_ITEM_TO_COPYCAT
 	clearevent EVENT_COPYCATS_HOUSE_2F_DOLL
@@ -118,7 +118,7 @@ Copycat:
 	opentext
 .GivePass:
 	writetext CopycatText_GivePass
-	promptbutton
+	buttonsound
 	verbosegiveitem PASS
 	iffalse .Cancel
 	setevent EVENT_GOT_PASS_FROM_COPYCAT
@@ -174,7 +174,7 @@ CopycatsDodrio:
 	opentext
 	writetext CopycatsDodrioText1
 	cry DODRIO
-	promptbutton
+	buttonsound
 	writetext CopycatsDodrioText2
 	waitbutton
 	closetext
@@ -184,7 +184,7 @@ CopycatsHouse2FDoll:
 	jumptext CopycatsHouse2FDollText
 
 CopycatsHouse2FBookshelf:
-	jumpstd PictureBookshelfScript
+	jumpstd picturebookshelf
 
 CopycatSpinAroundMovementData:
 	turn_head DOWN
@@ -361,16 +361,16 @@ CopycatsHouse2FDollText:
 CopycatsHouse2F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 1 ; warp events
 	warp_event  3,  0, COPYCATS_HOUSE_1F, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  0,  1, BGEVENT_READ, CopycatsHouse2FBookshelf
 	bg_event  1,  1, BGEVENT_READ, CopycatsHouse2FBookshelf
 
-	def_object_events
+	db 6 ; object events
 	object_event  4,  3, SPRITE_COPYCAT, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, Copycat, EVENT_COPYCAT_1
 	object_event  6,  4, SPRITE_MOLTRES, SPRITEMOVEDATA_POKEMON, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, CopycatsDodrio, -1
 	object_event  6,  1, SPRITE_FAIRY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CopycatsHouse2FDoll, EVENT_COPYCATS_HOUSE_2F_DOLL

@@ -74,9 +74,9 @@ PrintType:
 	jp PlaceString
 
 GetTypeName:
-; Copy the name of type [wNamedObjectIndex] to wStringBuffer1.
+; Copy the name of type [wNamedObjectIndexBuffer] to wStringBuffer1.
 
-	ld a, [wNamedObjectIndex]
+	ld a, [wNamedObjectIndexBuffer]
 	ld hl, TypeNames
 	ld e, a
 	ld d, 0

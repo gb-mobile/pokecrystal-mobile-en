@@ -3,7 +3,7 @@
 	db  65,  75,  70,  95,  95,  70
 	;   hp  atk  def  spd  sat  sdf
 
-	db PSYCHIC_TYPE, FLYING ; type
+	db PSYCHIC, FLYING ; type
 	db 75 ; catch rate
 	db 171 ; base exp
 	db NO_ITEM, NO_ITEM ; items
@@ -12,7 +12,7 @@
 	db 20 ; step cycles to hatch
 	db 5 ; unknown 2
 	INCBIN "gfx/pokemon/xatu/front.dimensions"
-	dw NULL, NULL ; unused (beta front/back pics)
+	db 0, 0, 0, 0 ; padding
 	db GROWTH_MEDIUM_FAST ; growth rate
 	dn EGG_FLYING, EGG_FLYING ; egg groups
 

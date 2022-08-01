@@ -9,13 +9,14 @@ _BillsPC:
 	ld a, [wPartyCount]
 	and a
 	ret nz
-	ld hl, .PCGottaHavePokemonText
+	ld hl, .Text_GottaHavePokemon
 	call MenuTextboxBackup
 	scf
 	ret
 
-.PCGottaHavePokemonText:
-	text_far _PCGottaHavePokemonText
+.Text_GottaHavePokemon:
+	; You gotta have #MON to call!
+	text_far UnknownText_0x1c1006
 	text_end
 
 .LogIn:
@@ -27,15 +28,16 @@ _BillsPC:
 	ld a, [hl]
 	push af
 	set NO_TEXT_SCROLL, [hl]
-	ld hl, .PCWhatText
+	ld hl, .Text_What
 	call PrintText
 	pop af
 	ld [wOptions], a
 	call LoadFontsBattleExtra
 	ret
 
-.PCWhatText:
-	text_far _PCWhatText
+.Text_What:
+	; What?
+	text_far UnknownText_0x1c1024
 	text_end
 
 .LogOut:
@@ -47,14 +49,14 @@ _BillsPC:
 	call LoadMenuHeader
 	ld a, $1
 .loop
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	call SetPalettes
 	xor a
 	ld [wWhichIndexSet], a
 	ldh [hBGMapMode], a
 	call DoNthMenu
 	jr c, .cancel
-	ld a, [wMenuCursorPosition]
+	ld a, [wMenuCursorBuffer]
 	push af
 	ld a, [wMenuSelection]
 	ld hl, .Jumptable
@@ -110,7 +112,7 @@ BillsPC_MovePKMNMenu:
 	call LoadStandardMenuHeader
 	farcall IsAnyMonHoldingMail
 	jr nc, .no_mail
-	ld hl, .PCMonHoldingMailText
+	ld hl, .Text_MonHoldingMail
 	call PrintText
 	jr .quit
 
@@ -126,8 +128,9 @@ BillsPC_MovePKMNMenu:
 	and a
 	ret
 
-.PCMonHoldingMailText:
-	text_far _PCMonHoldingMailText
+.Text_MonHoldingMail:
+	; There is a #MON holding MAIL. Please remove the MAIL.
+	text_far UnknownText_0x1c102b
 	text_end
 
 BillsPC_DepositMenu:
@@ -139,7 +142,7 @@ BillsPC_DepositMenu:
 	and a
 	ret
 
-BillsPC_Deposit_CheckPartySize: ; unreferenced
+Unreferenced_Functione512:
 	ld a, [wPartyCount]
 	and a
 	jr z, .no_mon
@@ -149,23 +152,25 @@ BillsPC_Deposit_CheckPartySize: ; unreferenced
 	ret
 
 .no_mon
-	ld hl, .PCNoSingleMonText
+	ld hl, .Text_NoMon
 	call MenuTextboxBackup
 	scf
 	ret
 
 .only_one_mon
-	ld hl, .PCCantDepositLastMonText
+	ld hl, .Text_ItsYourLastMon
 	call MenuTextboxBackup
 	scf
 	ret
 
-.PCNoSingleMonText:
-	text_far _PCNoSingleMonText
+.Text_NoMon:
+	; You don't have a single #MON!
+	text_far UnknownText_0x1c1062
 	text_end
 
-.PCCantDepositLastMonText:
-	text_far _PCCantDepositLastMonText
+.Text_ItsYourLastMon:
+	; You can't deposit your last #MON!
+	text_far UnknownText_0x1c1080
 	text_end
 
 CheckCurPartyMonFainted:
@@ -206,21 +211,22 @@ BillsPC_WithdrawMenu:
 	and a
 	ret
 
-BillsPC_Withdraw_CheckPartySize: ; unreferenced
+Unreferenced_Functione56d:
 	ld a, [wPartyCount]
 	cp PARTY_LENGTH
-	jr nc, .party_full
+	jr nc, .asm_e576
 	and a
 	ret
 
-.party_full
-	ld hl, PCCantTakeText
+.asm_e576
+	ld hl, UnknownText_0xe57e
 	call MenuTextboxBackup
 	scf
 	ret
 
-PCCantTakeText:
-	text_far _PCCantTakeText
+UnknownText_0xe57e:
+	; You can't take any more #MON.
+	text_far UnknownText_0x1c10a2
 	text_end
 
 BillsPC_ChangeBoxMenu:
@@ -256,17 +262,17 @@ CopyBoxmonToTempMon:
 	ld de, wTempMonSpecies
 	ld bc, BOXMON_STRUCT_LENGTH
 	ld a, BANK(sBoxMon1Species)
-	call OpenSRAM
+	call GetSRAMBank
 	call CopyBytes
 	call CloseSRAM
 	ret
 
-LoadBoxMonListing: ; unreferenced
+Unreferenced_Functione5d9:
 	ld a, [wCurBox]
 	cp b
 	jr z, .same_box
 	ld a, b
-	ld hl, .BoxAddresses
+	ld hl, .BoxAddrs
 	ld bc, 3
 	call AddNTimes
 	ld a, [hli]
@@ -282,13 +288,13 @@ LoadBoxMonListing: ; unreferenced
 	ld hl, sBoxCount
 
 .okay
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [hl]
-	ld bc, sBoxMons - sBox
+	ld bc, 1 + MONS_PER_BOX + 1
 	add hl, bc
 	ld b, a
 	ld c, $0
-	ld de, wBoxPartialData
+	ld de, wc608
 	ld a, b
 	and a
 	jr z, .empty_box
@@ -296,7 +302,7 @@ LoadBoxMonListing: ; unreferenced
 	push hl
 	push bc
 	ld a, c
-	ld bc, sBoxMon1Species - sBoxMons
+	ld bc, 0
 	add hl, bc
 	ld bc, BOXMON_STRUCT_LENGTH
 	call AddNTimes
@@ -311,7 +317,7 @@ LoadBoxMonListing: ; unreferenced
 	push hl
 	push bc
 	ld a, c
-	ld bc, sBoxMonNicknames - sBoxMons
+	ld bc, MONS_PER_BOX * (BOXMON_STRUCT_LENGTH + NAME_LENGTH)
 	add hl, bc
 	call SkipNames
 	call CopyBytes
@@ -364,8 +370,7 @@ LoadBoxMonListing: ; unreferenced
 	call CloseSRAM
 	ret
 
-.BoxAddresses:
-	table_width 3, LoadBoxMonListing.BoxAddresses
+.BoxAddrs:
 	dba sBox1
 	dba sBox2
 	dba sBox3
@@ -380,4 +385,3 @@ LoadBoxMonListing: ; unreferenced
 	dba sBox12
 	dba sBox13
 	dba sBox14
-	assert_table_length NUM_BOXES

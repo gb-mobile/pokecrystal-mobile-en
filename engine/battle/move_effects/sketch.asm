@@ -1,4 +1,6 @@
 BattleCommand_Sketch:
+; sketch
+
 	call ClearLastMove
 ; Don't sketch during a link battle
 	ld a, [wLinkMode]
@@ -12,7 +14,6 @@ BattleCommand_Sketch:
 	call CheckSubstituteOpp
 	jp nz, .fail
 ; If the opponent is transformed, fail.
-; BUG: A Transformed Pokémon can use Sketch and learn otherwise unobtainable moves (see docs/bugs_and_glitches.md)
 	ld a, BATTLE_VARS_SUBSTATUS5_OPP
 	call GetBattleVarAddr
 	bit SUBSTATUS_TRANSFORMED, [hl]
@@ -33,7 +34,7 @@ BattleCommand_Sketch:
 .get_last_move
 	ld a, BATTLE_VARS_LAST_COUNTER_MOVE_OPP
 	call GetBattleVar
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	ld b, a
 ; Fail if move is invalid or is Struggle.
 	and a

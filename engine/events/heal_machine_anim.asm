@@ -17,19 +17,19 @@ HealMachineAnim:
 	; 1: Left (Elm's Lab)
 	; 2: Up (Hall of Fame)
 	ld a, [wScriptVar]
-	ld [wHealMachineAnimType], a
+	ld [wBuffer1], a
 	ldh a, [rOBP1]
-	ld [wHealMachineTempOBP1], a
+	ld [wBuffer2], a
 	call .DoJumptableFunctions
-	ld a, [wHealMachineTempOBP1]
+	ld a, [wBuffer2]
 	call DmgToCgbObjPal1
 	ret
 
 .DoJumptableFunctions:
 	xor a
-	ld [wHealMachineAnimState], a
-.jumptable_loop
-	ld a, [wHealMachineAnimType]
+	ld [wBuffer3], a
+.jumpable_loop
+	ld a, [wBuffer1]
 	ld e, a
 	ld d, 0
 	ld hl, .Pointers
@@ -38,17 +38,17 @@ HealMachineAnim:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [wHealMachineAnimState]
+	ld a, [wBuffer3]
 	ld e, a
 	inc a
-	ld [wHealMachineAnimState], a
+	ld [wBuffer3], a
 	add hl, de
 	ld a, [hl]
 	cp HEALMACHINESTATE_FINISH
 	jr z, .finish
 	ld hl, .Jumptable
 	rst JumpTable
-	jr .jumptable_loop
+	jr .jumpable_loop
 
 .finish
 	ret
@@ -56,19 +56,19 @@ HealMachineAnim:
 .Pointers:
 ; entries correspond to HEALMACHINE_* constants
 	dw .Pokecenter
-	dw .ElmsLab
+	dw .ElmLab
 	dw .HallOfFame
 
-MACRO healmachineanimseq
-	rept _NARG
-		db HEALMACHINESTATE_\1
-		shift
-	endr
+healmachineanimseq: MACRO
+rept _NARG
+	db HEALMACHINESTATE_\1
+	shift
+endr
 ENDM
 
 .Pokecenter:
 	healmachineanimseq LOADGFX, PCLOADBALLS, PLAYMUSIC, FINISH
-.ElmsLab:
+.ElmLab:
 	healmachineanimseq LOADGFX, PCLOADBALLS, PLAYMUSIC, FINISH
 .HallOfFame:
 	healmachineanimseq LOADGFX, HOFLOADBALLS, HOFPLAYSFX, FINISH
@@ -91,14 +91,14 @@ ENDM
 	ret
 
 .PC_LoadBallsOntoMachine:
-	ld hl, wShadowOAMSprite32
+	ld hl, wVirtualOAMSprite32
 	ld de, .PC_ElmsLab_OAM
 	call .PlaceHealingMachineTile
 	call .PlaceHealingMachineTile
 	jr .LoadBallsOntoMachine
 
 .HOF_LoadBallsOntoMachine:
-	ld hl, wShadowOAMSprite32
+	ld hl, wVirtualOAMSprite32
 	ld de, .HOF_OAM
 
 .LoadBallsOntoMachine:
@@ -134,25 +134,25 @@ ENDM
 	ret
 
 .PC_ElmsLab_OAM:
-	dbsprite   4,   4, 2, 0, $7c, PAL_OW_TREE | OBP_NUM
-	dbsprite   4,   4, 6, 0, $7c, PAL_OW_TREE | OBP_NUM
-	dbsprite   4,   4, 0, 6, $7d, PAL_OW_TREE | OBP_NUM
-	dbsprite   5,   4, 0, 6, $7d, PAL_OW_TREE | OBP_NUM | X_FLIP
-	dbsprite   4,   5, 0, 3, $7d, PAL_OW_TREE | OBP_NUM
-	dbsprite   5,   5, 0, 3, $7d, PAL_OW_TREE | OBP_NUM | X_FLIP
-	dbsprite   4,   6, 0, 0, $7d, PAL_OW_TREE | OBP_NUM
-	dbsprite   5,   6, 0, 0, $7d, PAL_OW_TREE | OBP_NUM | X_FLIP
+	dsprite   4, 0,   4, 2, $7c, PAL_OW_TREE | OBP_NUM
+	dsprite   4, 0,   4, 6, $7c, PAL_OW_TREE | OBP_NUM
+	dsprite   4, 6,   4, 0, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   4, 6,   5, 0, $7d, PAL_OW_TREE | OBP_NUM | X_FLIP
+	dsprite   5, 3,   4, 0, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   5, 3,   5, 0, $7d, PAL_OW_TREE | OBP_NUM | X_FLIP
+	dsprite   6, 0,   4, 0, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   6, 0,   5, 0, $7d, PAL_OW_TREE | OBP_NUM | X_FLIP
 
 .HealMachineGFX:
 INCBIN "gfx/overworld/heal_machine.2bpp"
 
 .HOF_OAM:
-	dbsprite  10,   7, 1, 4, $7d, PAL_OW_TREE | OBP_NUM
-	dbsprite  10,   7, 6, 4, $7d, PAL_OW_TREE | OBP_NUM
-	dbsprite   9,   7, 5, 3, $7d, PAL_OW_TREE | OBP_NUM
-	dbsprite  11,   7, 2, 3, $7d, PAL_OW_TREE | OBP_NUM
-	dbsprite   9,   7, 1, 1, $7d, PAL_OW_TREE | OBP_NUM
-	dbsprite  11,   7, 5, 1, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   7, 4,  10, 1, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   7, 4,  10, 6, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   7, 3,   9, 5, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   7, 3,  11, 2, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   7, 1,   9, 1, $7d, PAL_OW_TREE | OBP_NUM
+	dsprite   7, 1,  11, 5, $7d, PAL_OW_TREE | OBP_NUM
 
 .LoadPalettes:
 	call IsCGB
@@ -167,7 +167,7 @@ INCBIN "gfx/overworld/heal_machine.2bpp"
 	ld bc, 1 palettes
 	ld a, BANK(wOBPals2)
 	call FarCopyWRAM
-	ld a, TRUE
+	ld a, $1
 	ldh [hCGBPalUpdate], a
 	ret
 
@@ -231,13 +231,13 @@ INCLUDE "gfx/overworld/heal_machine.pal"
 
 	pop af
 	ldh [rSVBK], a
-	ld a, TRUE
+	ld a, $1
 	ldh [hCGBPalUpdate], a
 	ret
 
 .PlaceHealingMachineTile:
 	push bc
-	ld a, [wHealMachineAnimType]
+	ld a, [wBuffer1]
 	bcpixel 2, 4
 	cp HEALMACHINE_ELMS_LAB
 	jr z, .okay

@@ -1,4 +1,4 @@
-DerekCheekPinchingText:
+DerekCheekPincherText:
 	text "Listen to this."
 	line "My @"
 	text_ram wStringBuffer4
@@ -12,7 +12,7 @@ DerekCheekPinchingText:
 	para "I must be special."
 	done
 
-DerekDefeatedMonText:
+UnknownText_0x65b29:
 	text "Oh, and recently,"
 	line "my PIKACHU beat a"
 	cont "wild @"
@@ -34,7 +34,7 @@ DerekDefeatedMonText:
 	line "greatest!"
 	done
 
-DerekLostAMonText:
+UnknownText_0x65bc8:
 	text "Oh, and I saw a"
 	line "wild @"
 	text_ram wStringBuffer4
@@ -51,7 +51,7 @@ DerekLostAMonText:
 	line "good otherwise."
 	done
 
-DerekHangUpText:
+UnknownText_0x65c4e:
 	text "Well, let's talk"
 	line "again!"
 	done
@@ -71,7 +71,7 @@ DerekBugCatchingContestText:
 	line "off its cuteness."
 	done
 
-DerekFoundItemText:
+UnknownText_0x65cf9:
 	text "I'd like you to"
 	line "have a NUGGET."
 
@@ -83,7 +83,7 @@ DerekFoundItemText:
 	cont "it too!"
 	done
 
-DerekLetsGetTogetherText:
+UnknownText_0x65d5c:
 	text "How is your"
 	line "PIKACHU doing?"
 
@@ -92,7 +92,7 @@ DerekLetsGetTogetherText:
 	cont "PIKACHU!"
 	done
 
-DerekComePickUpText:
+UnknownText_0x65da6:
 	text "What's wrong?"
 
 	para "I'm waiting on"

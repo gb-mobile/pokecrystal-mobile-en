@@ -11,7 +11,7 @@ Function17c000:
 
 	ld hl, HaveWantMap
 	decoord 0, 0
-	bccoord 0, 0, wAttrmap
+	bccoord 0, 0, wAttrMap
 
 	ld a, SCREEN_HEIGHT
 .y
@@ -68,7 +68,7 @@ Function17c000:
 	ld bc, $80 tiles
 	call CopyBytes
 
-	ld hl, HaveWantGFX + $80 tiles
+	ld hl, HaveWantGFX + $800
 	ld de, vTiles1
 	ld bc, $10 tiles
 	call CopyBytes
@@ -295,16 +295,16 @@ Function17d0f3:
 	farcall Function17d1f1
 	ld a, $1
 	ld [wForceEvolution], a
-	ld a, LINK_TRADECENTER
+	ld a, $2
 	ld [wLinkMode], a
 	farcall EvolvePokemon
 	xor a
 	ld [wLinkMode], a
 	farcall SaveAfterLinkTrade
+	ld a, BANK(s5_a800)
+	call GetSRAMBank
 	ld a, $5
-	call OpenSRAM
-	ld a, $5
-	ld [$a800], a
+	ld [s5_a800], a
 	call CloseSRAM
 	ld a, [wMapGroup]
 	ld b, a
@@ -324,46 +324,46 @@ Function17d0f3:
 
 Mobile_CopyDefaultOTName:
 	ld hl, Mobile5F_PlayersName
-	ld de, wc63d
-	ld bc, 5
+	ld de, wc608 + PLAYER_NAME_LENGTH - 1 + $30
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ret
 
 Mobile5F_PlayersName:
-	db "クりス@@"
+	db "CHRIS@@"
 
 Mobile_CopyDefaultNickname:
 	ld hl, .DefaultNickname
-	ld de, wc642
-	ld bc, 5
+	ld de, wc608 + PLAYER_NAME_LENGTH - 1 + $30 + PLAYER_NAME_LENGTH - 1
+	ld bc, MON_NAME_LENGTH - 1
 	call CopyBytes
 	ret
 
 .DefaultNickname:
-	db "？？？？？"
+	db "??????????"
 
 Mobile_CopyDefaultMail:
 	ld a, "@"
-	ld hl, wc647
+	ld hl, wc608 + PLAYER_NAME_LENGTH - 1 + $30 + PLAYER_NAME_LENGTH - 1 + MON_NAME_LENGTH - 1
 	ld bc, MAIL_MSG_LENGTH + 1
 	call ByteFill
 	ld hl, .DefaultMessage
-	ld de, wc647
+	ld de, wc608 + PLAYER_NAME_LENGTH - 1 + $30 + PLAYER_NAME_LENGTH - 1 + MON_NAME_LENGTH - 1
 	ld bc, 6
 	call CopyBytes
 	ret
 
 .DefaultMessage:
-	db "こんにちは@"
+	db "Hello@"
 
 Mobile_CopyDefaultMailAuthor:
 	ld a, "@"
-	ld de, wc668
-	ld bc, 5
+	ld de, wc608 + PLAYER_NAME_LENGTH - 1 + $30 + PLAYER_NAME_LENGTH - 1 + MON_NAME_LENGTH - 1 + $21
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call ByteFill
 	ld hl, Mobile5F_PlayersName
-	ld de, wc668
-	ld bc, 5
+	ld de, wc608 + PLAYER_NAME_LENGTH - 1 + $30 + PLAYER_NAME_LENGTH - 1 + MON_NAME_LENGTH - 1 + $21
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ret
 
@@ -424,22 +424,58 @@ Function17d1f1:
 Menu_ChallengeExplanationCancel:
 	ld a, [wScriptVar]
 	and a
-	jr nz, .English
+	jr nz, .jr_05f_5234;.English
 	ld a, $4
 	ld [wScriptVar], a
 	ld hl, MenuHeader_17d26a ; Japanese Menu, where you can choose 'News' as an option
 	jr .Load_Interpret
 
+.jr_05f_5234:
+    farcall BattleTower_CheckSaveFileExistsAndIsYours
+    ld a, [wScriptVar]
+    and a
+    jr nz, .jr_05f_524a
+
 .English:
 	ld a, $4
 	ld [wScriptVar], a
 	ld hl, MenuHeader_ChallengeExplanationCancel ; English Menu
+	jr .Load_Interpret
+
+.jr_05f_524a:
+    call Call_05f_5261
+    jr c, .English
+    ld a, $05
+    ld [wScriptVar], a
+    ld hl, MenuHeader_ChallengeRegisterExplanationCancel;$52f2
 
 .Load_Interpret:
 	call LoadMenuHeader
 	call Function17d246
 	call CloseWindow
 	ret
+
+Call_05f_5261:
+    ld a, BANK(s5_aa8e);$05
+    call GetSRAMBank;$2f9d
+    ld hl, s5_aa8e
+    ld bc, BATTLE_TOWER_STRUCT_LENGTH * BATTLETOWER_STREAK_LENGTH;$0594
+jr_05f_526c:
+    ld a, [hl+]
+    and a
+    jr nz, jr_05f_527b
+    dec bc
+    ld a, b
+    or a
+    and a
+    jr nz, jr_05f_526c
+    call CloseSRAM;$2fad
+    scf
+    ret
+
+jr_05f_527b:
+    call CloseSRAM;$2fad
+    ret
 
 Function17d246:
 	call VerticalMenu
@@ -475,23 +511,39 @@ MenuHeader_17d26a:
 MenuData_17d272:
 	db STATICMENU_CURSOR | STATICMENU_WRAP ; flags
 	db 4
-	db "ニュース¯よみこむ@"
-	db "ニュース¯みる@"
-	db "せつめい@"
-	db "やめる@"
+	db "RECEIVE NEWS@" 	; "ニュース¯よみこむ@"
+	db "VIEW NEWS@" 	; "ニュース¯みる@"
+	db "EXPLANATION@" 	; "せつめい@"
+	db "CANCEL@" 		; "やめる@"
 
 MenuHeader_ChallengeExplanationCancel:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 0, 14, 7
+	menu_coords 0, 0, 16, 9;14, 7
 	dw MenuData_ChallengeExplanationCancel
 	db 1 ; default option
 
 MenuData_ChallengeExplanationCancel:
 	db STATICMENU_CURSOR | STATICMENU_WRAP ; flags
-	db 3
-	db "Challenge@"
-	db "Explanation@"
-	db "Cancel@"
+	db 4
+	db "CHALLENGE@"
+	db "CHECK LEADERS@" ; check leaders?
+	db "EXPLANATION@"
+	db "CANCEL@"
+
+MenuHeader_ChallengeRegisterExplanationCancel:
+	db MENU_BACKUP_TILES ; flags
+	menu_coords 0, 0, 16, 11
+	dw MenuData_ChallengeRegisterExplanationCancel
+	db 1 ; default option
+
+MenuData_ChallengeRegisterExplanationCancel:
+	db STATICMENU_CURSOR | STATICMENU_WRAP ; flags
+	db 5
+	db "CHALLENGE@"
+	db "CHECK LEADERS@" ; check leaders?
+	db "PREVIOUS ROOM@"
+	db "EXPLANATION@"
+	db "CANCEL@"
 
 Function17d2b6:
 	call Function17d2c0
@@ -508,7 +560,7 @@ Function17d2c0:
 
 Function17d2ce:
 	ld a, BANK(s5_aa72)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [s5_aa72]
 	call CloseSRAM
 	and a
@@ -542,37 +594,37 @@ Function17d2ce:
 	ret
 
 Function17d314:
-	ld a, $5
-	call OpenSRAM
-	ld a, [$b1b1]
+	ld a, BANK(s5_b1b1)
+	call GetSRAMBank
+	ld a, [s5_b1b1]
 	call CloseSRAM
 	cp $21
 	jr nc, .asm_17d354
-	ld a, $6
-	call OpenSRAM
+	ld a, BANK(sNewsData)
+	call GetSRAMBank
 	ld l, $0
 	ld h, l
-	ld de, $a006
-	ld a, [$a004]
+	ld de, sNewsData + 6
+	ld a, [sNewsData + 4]
 	ld c, a
-	ld a, [$a005]
+	ld a, [sNewsData + 5]
 	ld b, a
 .asm_17d336
 	push bc
 	ld a, [de]
 	inc de
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	pop bc
 	dec bc
 	ld a, b
 	or c
 	jr nz, .asm_17d336
-	ld a, [$a002]
+	ld a, [sNewsData + 2]
 	cp l
 	jr nz, .asm_17d354
-	ld a, [$a003]
+	ld a, [sNewsData + 3]
 	cp h
 	jr nz, .asm_17d354
 	call CloseSRAM
@@ -581,10 +633,10 @@ Function17d314:
 
 .asm_17d354
 	call CloseSRAM
-	ld a, $5
-	call OpenSRAM
+	ld a, BANK(s5_aa73)
+	call GetSRAMBank
 	xor a
-	ld hl, $aa73
+	ld hl, s5_aa73
 	ld bc, $c
 	call ByteFill
 	call CloseSRAM
@@ -625,7 +677,7 @@ Function17d370:
 	call CopyBytes
 	xor a
 	ldh [rVBK], a
-	ld hl, PostalMarkGFX
+	ld hl, GFX_17eb7e
 	ld de, vTiles2 tile $60
 	ld bc, 1 tiles
 	call CopyBytes
@@ -635,9 +687,9 @@ Function17d370:
 	ld [wBGMapBuffer], a
 	ld a, $d0
 	ld [wcd21], a
-	ld a, $6
-	call OpenSRAM
-	ld hl, $a006
+	ld a, BANK(sNewsData)
+	call GetSRAMBank
+	ld hl, sNewsData + 6
 	ld de, wBGPals1
 	ld bc, $1000
 	call CopyBytes
@@ -677,7 +729,7 @@ Function17d405:
 	push af
 	ld a, $5
 	ldh [rSVBK], a
-	ld hl, PokemonNewsPalettes
+	ld hl, Palette_17eff6
 	ld de, wBGPals1
 	ld bc, 8 palettes
 	call CopyBytes
@@ -712,13 +764,13 @@ Jumptable_17d483:
 	dw Function17e427
 
 Function17d48d:
-	ld hl, PokemonNewsPalettes
+	ld hl, Palette_17eff6
 	ld de, wc608
 	ld bc, $40
 	call CopyBytes
-	ld hl, PokemonNewsTileAttrmap
+	ld hl, TileAttrmap_17eb8e
 	decoord 0, 0
-	bccoord 0, 0, wAttrmap
+	bccoord 0, 0, wAttrMap
 	ld a, $12
 .asm_17d4a4
 	push af
@@ -876,7 +928,7 @@ Function17d48d:
 	ld [wcd4a], a
 	ld a, [wcd42]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	add hl, bc
 	ld a, l
@@ -948,22 +1000,22 @@ Function17d5f6:
 
 Function17d60b:
 	ld a, $5
-	call OpenSRAM
-	ld hl, $b1d3
+	call GetSRAMBank
+	ld hl, s5_b1d3
 	ld de, wc608
 	ld bc, $20
 	call CopyBytes
-	ld a, [$b1b1]
+	ld a, [s5_b1b1]
 	ld c, a
-	ld a, [$b1b2]
+	ld a, [s5_b1b1 + 1]
 	ld b, a
-	ld a, [$b1b3]
+	ld a, [s5_b1b3]
 	ld l, a
-	ld a, [$b1b4]
+	ld a, [s5_b1b3 + 1]
 	ld h, a
 	call CloseSRAM
 	ld a, $6
-	call OpenSRAM
+	call GetSRAMBank
 	ld de, wc708
 	ld a, c
 	and a
@@ -1023,12 +1075,12 @@ Function17d60b:
 .asm_17d684
 	call CloseSRAM
 	ld a, $5
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, wc708
-	ld de, $b1b3
-	ld a, [$b1b1]
+	ld de, s5_b1b3
+	ld a, [s5_b1b1]
 	ld c, a
-	ld a, [$b1b2]
+	ld a, [s5_b1b1 + 1]
 	ld b, a
 	call CopyBytes
 	call CloseSRAM
@@ -1038,17 +1090,17 @@ Function17d6a1:
 	push hl
 	ld a, [wcd6e]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld a, $5
-	call OpenSRAM
-	ld hl, $b1d3
+	call GetSRAMBank
+	ld hl, s5_b1d3
 	add hl, bc
 	add hl, bc
 	ld a, [hli]
 	ld [wcd47], a
 	ld a, [hl]
 	ld [wBGMapPalBuffer], a
-	ld hl, $b1b3
+	ld hl, s5_b1b3
 	add hl, bc
 	add hl, bc
 	ld a, [hli]
@@ -1058,7 +1110,7 @@ Function17d6a1:
 	ld l, c
 	call CloseSRAM
 	ld a, $6
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, l
 	ld [wcd5e], a
 	ld a, h
@@ -1115,56 +1167,56 @@ asm_17d721:
 	ld [wcd77], a
 	ret
 
-Jumptable17d72a:
-	dw Function17d78c
-	dw Function17d78d
-	dw Function17d7b4
-	dw Function17d7c2
-	dw Function17d7d3
-	dw Function17d7e5
-	dw Function17d818
-	dw Function17d833
-	dw Function17d85d
-	dw Function17d902
-	dw Function17d93a
-	dw Function17d98b
-	dw Function17d9e3
-	dw Function17da31
-	dw Function17da9c
-	dw Function17dadc
-	dw Function17db2d
-	dw Function17db56
-	dw Function17db77
-	dw Function17dbe9
-	dw Function17dc1f
-	dw Function17dc9f
-	dw Function17dca9
-	dw Function17dccf
-	dw Function17dd13
-	dw Function17dd30
-	dw Function17dd49
-	dw Function17ddcd
-	dw Function17de32
-	dw Function17de91
-	dw Function17ded9
-	dw Function17e0fd
-	dw Function17e133
-	dw Function17e165
-	dw Function17e1a1
-	dw Function17e254
-	dw Function17e261
-	dw Function17e270
-	dw Function17e27f
-	dw Function17e293
-	dw Function17e2a7
-	dw IncCrashCheckPointer_SaveGameData
-	dw IncCrashCheckPointer_SaveAfterLinkTrade
-	dw IncCrashCheckPointer_SaveBox
-	dw IncCrashCheckPointer_SaveChecksum
-	dw IncCrashCheckPointer_SaveTrainerRankingsChecksum
-	dw Function17e3e0
-	dw Function17e3f0
-	dw Function17e409
+Jumptable17d72a: ; news script commands
+	dw Function17d78c ; 0
+	dw Function17d78d ; 1
+	dw Function17d7b4 ; 2
+	dw Function17d7c2 ; 3
+	dw Function17d7d3 ; 4
+	dw Function17d7e5 ; 5
+	dw Function17d818 ; 6
+	dw Function17d833 ; 7
+	dw Function17d85d ; 8
+	dw Function17d902 ; 9
+	dw Function17d93a ; a
+	dw Function17d98b ; b
+	dw Function17d9e3 ; c
+	dw Function17da31 ; d
+	dw Function17da9c ; e
+	dw Function17dadc ; f
+	dw Function17db2d ; 10
+	dw Function17db56 ; 11
+	dw Function17db77 ; 12
+	dw Function17dbe9 ; 13
+	dw Function17dc1f ; 14
+	dw Function17dc9f ; 15
+	dw Function17dca9 ; 16
+	dw Function17dccf ; 17
+	dw Function17dd13 ; 18
+	dw Function17dd30 ; 19
+	dw Function17dd49 ; 1a
+	dw Function17ddcd ; 1b
+	dw Function17de32 ; 1c
+	dw Function17de91 ; 1d
+	dw Function17ded9 ; 1e
+	dw Function17e0fd ; 1f
+	dw Function17e133 ; 20
+	dw Function17e165 ; 21
+	dw Function17e1a1 ; 22
+	dw Function17e254 ; 23
+	dw Function17e261 ; 24
+	dw Function17e270 ; 25
+	dw Function17e27f ; 26
+	dw Function17e293 ; 27
+	dw Function17e2a7 ; 28
+	dw IncCrashCheckPointer_SaveGameData ; 29
+	dw IncCrashCheckPointer_SaveAfterLinkTrade ; 2a
+	dw IncCrashCheckPointer_SaveBox ; 2b
+	dw IncCrashCheckPointer_SaveChecksum ; 2c
+	dw IncCrashCheckPointer_SaveTrainerRankingsChecksum ; 2d
+	dw Function17e3e0 ; 2e
+	dw Function17e3f0 ; 2f
+	dw Function17e409 ; 30
 
 Function17d78c:
 	ret
@@ -1176,9 +1228,9 @@ Function17d78d:
 	ld a, [hli]
 	ld b, a
 	call HlToCrashCheckPointer
-	ld a, $6
-	call OpenSRAM
-	ld hl, $a006
+	ld a, BANK(sNewsData)
+	call GetSRAMBank
+	ld hl, sNewsData + 6
 	add hl, bc
 	ld de, wBGPals1
 	ld bc, $1000
@@ -1193,7 +1245,7 @@ Function17d7b4:
 	call IncCrashCheckPointer
 	ld a, [hli]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	call PlayMusic2
 	call HlToCrashCheckPointer
 	ret
@@ -1202,7 +1254,7 @@ Function17d7c2:
 	call IncCrashCheckPointer
 	ld a, [hli]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	call PlaySFX
 	call WaitSFX
 	call HlToCrashCheckPointer
@@ -1213,7 +1265,7 @@ Function17d7d3:
 	ld a, [hli]
 	dec a
 	ld e, a
-	ld d, 0
+	ld d, $0
 	call PlayCry
 	call WaitSFX
 	call HlToCrashCheckPointer
@@ -1330,7 +1382,7 @@ Function17d85d:
 
 .asm_17d89b
 	ld a, [wcd4f]
-	call OpenSRAM
+	call GetSRAMBank
 
 .asm_17d8a1
 	push hl
@@ -1378,7 +1430,7 @@ Function17d85d:
 	xor a
 	ld [wcf66], a
 	farcall Function118329
-	ld a, [wMobileErrorCodeBuffer]
+	ld a, [wc300]
 	and a
 	jr z, .asm_17d8fe
 	cp $a
@@ -1412,7 +1464,7 @@ Function17d902:
 	xor a
 	ld [wcf66], a
 	farcall Function11837a
-	ld a, [wMobileErrorCodeBuffer]
+	ld a, [wc300]
 	and a
 	jr z, .asm_17d936
 	cp $a
@@ -1511,7 +1563,7 @@ Function17d9e3:
 
 .asm_17da01
 	ld a, [wc70c]
-	call OpenSRAM
+	call GetSRAMBank
 
 .asm_17da07
 	ld a, [wc708]
@@ -1556,7 +1608,7 @@ Function17da31:
 
 .asm_17da4f
 	ld a, [wc70a]
-	call OpenSRAM
+	call GetSRAMBank
 
 .asm_17da55
 	ld a, [wc708]
@@ -1580,7 +1632,7 @@ Function17da31:
 	ld a, c
 	and $7f
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [de]
 	and [hl]
@@ -1601,13 +1653,17 @@ Function17da31:
 	ret
 
 Unknown_17da8c:
-for x, 8
+x = 0
+rept 8
 	db 1 << x
+x = x + 1
 endr
 
 Unknown_17da94:
-for x, 8
-	db ~(1 << x)
+x = 0
+rept 8
+	db $ff ^ (1 << x)
+x = x + 1
 endr
 
 Function17da9c:
@@ -1878,11 +1934,11 @@ Function17dc1f:
 	call Function17e40f
 	ret
 
-MenuData_17dc96: ; unreferenced
+MenuData_17dc96:
 	db STATICMENU_CURSOR | STATICMENU_NO_TOP_SPACING | STATICMENU_WRAP ; flags
 	db 2
-	db "はい@"
-	db "いいえ@"
+	db "YES@"	; "はい@"
+	db "NO@"	; "いいえ@"
 
 Function17dc9f:
 	call IncCrashCheckPointer
@@ -1924,7 +1980,7 @@ Function17dccf:
 	ld h, a
 	ld a, [wcd2e]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	add hl, bc
 	ld a, [hli]
@@ -1989,7 +2045,7 @@ Function17dd30:
 	ld d, a
 	ld a, [hli]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld a, [hli]
 	push af
 	call HlToCrashCheckPointer
@@ -2006,7 +2062,7 @@ Function17dd49:
 	call CopyBytes
 	ld a, [wc711]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	call CopyBytes
 	ld a, [wc70a]
 	cp $c0
@@ -2017,7 +2073,7 @@ Function17dd49:
 
 .sram
 	ld a, [wc708]
-	call OpenSRAM
+	call GetSRAMBank
 
 .got_bank
 	ld a, [wc709]
@@ -2027,7 +2083,7 @@ Function17dd49:
 	ld de, wc688
 	ld a, [wc711]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	call CopyBytes
 	ld a, [wc70a]
 	cp $c0
@@ -2093,7 +2149,7 @@ Function17ddcd:
 
 .asm_17dde7
 	ld a, [wc708]
-	call OpenSRAM
+	call GetSRAMBank
 
 .asm_17dded
 	ld a, [wc709]
@@ -2104,7 +2160,7 @@ Function17ddcd:
 	ld [wc710], a
 	ld a, [wc70b]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld a, [wc70a]
 	cp $c0
 	jr c, .asm_17de0c
@@ -2147,10 +2203,10 @@ Function17de32:
 	call CopyBytes
 	ld a, [wc710]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	call CopyBytes
 	ld a, $6
-	call OpenSRAM
+	call GetSRAMBank
 	call Function17f4f6
 	ld a, [wc708]
 	ld e, a
@@ -2204,7 +2260,7 @@ Function17de91:
 	ld bc, $7
 	call CopyBytes
 	ld a, $6
-	call OpenSRAM
+	call GetSRAMBank
 	call Function17f4f6
 	ld a, [wc708]
 	ld e, a
@@ -2215,7 +2271,7 @@ Function17de91:
 	ld d, h
 	ld a, [wc70a]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld hl, Unknown_17da8c
 	add hl, bc
 	ld a, [hl]
@@ -2295,7 +2351,7 @@ Function17ded9:
 	push hl
 	ld a, [wPartyCount]
 	dec a
-	ld hl, wPartyMonOTs
+	ld hl, wPartyMonOT
 	call SkipNames
 	ld d, h
 	ld e, l
@@ -2448,7 +2504,7 @@ Function17ded9:
 
 Function17e026:
 	ld a, BANK(sBoxCount)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [sBoxCount]
 	call CloseSRAM
 	cp $14
@@ -2463,7 +2519,7 @@ Function17e026:
 	pop hl
 	pop bc
 	ld a, BANK(sBoxMonNicknames)
-	call OpenSRAM
+	call GetSRAMBank
 	bit 1, b
 	jr z, .asm_17e067
 	push bc
@@ -2482,7 +2538,7 @@ Function17e026:
 	jr z, .asm_17e08e
 	push bc
 	ld bc, $6
-	ld de, sBoxMonOTs
+	ld de, sBoxMonOT
 	call CopyBytes
 	ld a, [hli]
 	ld b, a
@@ -2490,7 +2546,7 @@ Function17e026:
 	call CloseSRAM
 	farcall SetGiftBoxMonCaughtData
 	ld a, $1
-	call OpenSRAM
+	call GetSRAMBank
 	pop hl
 	pop bc
 	jr .asm_17e092
@@ -2592,7 +2648,7 @@ Function17e0fd:
 	ld a, [hli]
 	ld [wCurItem], a
 	ld a, [hli]
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	push hl
 	ld hl, wNumItems
 	call ReceiveItem
@@ -2692,7 +2748,7 @@ Function17e1a1:
 
 .asm_17e1bb
 	ld a, [wc708]
-	call OpenSRAM
+	call GetSRAMBank
 
 .asm_17e1c1
 	ld a, [wc709]
@@ -2702,7 +2758,7 @@ Function17e1a1:
 	ld de, wc608
 	ld a, [wc70b]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	call CopyBytes
 	ld a, [wc70a]
 	cp $c0
@@ -2724,7 +2780,7 @@ Function17e1a1:
 
 .asm_17e1f3
 	ld a, [wc70c]
-	call OpenSRAM
+	call GetSRAMBank
 
 .asm_17e1f9
 	ld a, [wc70d]
@@ -2734,7 +2790,7 @@ Function17e1a1:
 	ld de, wc688
 	ld a, [wc70b]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	call CopyBytes
 	ld a, [wc70e]
 	cp $c0
@@ -2866,11 +2922,11 @@ Function17e2a7:
 	xor a
 	ld [wcf66], a
 	farcall Function118233
-	ld de, PostalMarkGFX
+	ld de, GFX_17eb7e
 	ld hl, vTiles2 tile $60
-	lb bc, BANK(PostalMarkGFX), 1
+	lb bc, BANK(GFX_17eb7e), 1
 	call Get2bpp
-	ld a, [wMobileErrorCodeBuffer]
+	ld a, [wc300]
 	and a
 	jr z, .asm_17e2d8
 	cp $a
@@ -2885,10 +2941,10 @@ Function17e2a7:
 	call Function17e349
 	xor a
 	ld [wcd7a], a
-	ld a, $5
-	call OpenSRAM
-	ld hl, $aa73
-	ld de, $aa7f
+	ld a, BANK(s5_aa73)
+	call GetSRAMBank
+	ld hl, s5_aa73
+	ld de, s5_aa7f
 	ld bc, $c
 	call CopyBytes
 	call CloseSRAM
@@ -2922,9 +2978,9 @@ Function17e309:
 
 Function17e32b:
 	ld a, $5
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, wc608
-	ld de, $b0b1
+	ld de, s5_b0b1
 	ld bc, $40
 	call CopyBytes
 	ld hl, wBGMapBuffer
@@ -2935,8 +2991,8 @@ Function17e32b:
 
 Function17e349:
 	ld a, $5
-	call OpenSRAM
-	ld hl, $b0b1
+	call GetSRAMBank
+	ld hl, s5_b0b1
 	ld de, wc608
 	ld bc, $40
 	call CopyBytes
@@ -2946,17 +3002,17 @@ Function17e349:
 	call CloseSRAM
 	ret
 
-MACRO inc_crash_check_pointer_farcall
+inc_crash_check_pointer_farcall: MACRO
 	call IncCrashCheckPointer
 	call HlToCrashCheckPointer ; redundant
 	ldh a, [rSVBK]
 	push af
 	ld a, $1
 	ldh [rSVBK], a
-	rept _NARG
-		farcall \1
-		shift
-	endr
+rept _NARG
+	farcall \1
+	shift
+endr
 	pop af
 	ldh [rSVBK], a
 	ret
@@ -3075,7 +3131,7 @@ Function17e451:
 	ld a, [wcd2f]
 	ld [wcd2e], a
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	add hl, bc
 	push hl
@@ -3085,7 +3141,7 @@ Function17e451:
 	call AddNTimes
 	ld a, [wCreditsTimer]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	pop bc
 	ld a, [wMobileCommsJumptableIndex]
@@ -3117,7 +3173,7 @@ Function17e451:
 	pop hl
 	ld a, [wcd26]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	ld a, [wcd2e]
 	inc a
@@ -3161,7 +3217,7 @@ Function17e4dd:
 	call AddNTimes
 	ld a, [wcd28]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [wcd2f]
 	and a
@@ -3199,7 +3255,7 @@ Function17e51b:
 	call AddNTimes
 	ld a, [wCreditsTimer]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [wMobileCommsJumptableIndex]
 	ld c, a
@@ -3210,7 +3266,7 @@ Function17e51b:
 	push hl
 	ld a, [wcd4f]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld a, $7f
 	call ByteFill
 	pop hl
@@ -3245,7 +3301,7 @@ Function17e571:
 	call AddNTimes
 	ld a, [wCreditsTimer]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	dec hl
 	push hl
@@ -3264,7 +3320,7 @@ Function17e571:
 	ld a, [wcd26]
 	call SimpleMultiply
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	pop bc
 	add hl, bc
@@ -3286,12 +3342,12 @@ Function17e5af:
 	add hl, bc
 	ld a, [wMobileInactivityTimerSeconds]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld a, [wMobileInactivityTimerFrames]
 	call Function17e600
 	ld a, [wcd2e]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld a, [wcd4d]
 	ld l, a
 	ld a, [wcd4e]
@@ -3353,7 +3409,7 @@ Function17e613:
 .asm_17e626
 	pop af
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	push hl
 	ld a, [wcd53]
@@ -3455,7 +3511,7 @@ Function17e691:
 .asm_17e6a5
 	pop af
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [de]
 	dec de
@@ -3482,7 +3538,7 @@ Function17e691:
 
 .asm_17e6c7
 	pop hl
-	bccoord 0, 0, wAttrmap
+	bccoord 0, 0, wAttrMap
 	add hl, bc
 	ld [hl], a
 	pop hl
@@ -3505,7 +3561,7 @@ Function17e6de:
 	ld l, a
 	ld a, [wc709]
 	ld h, a
-	decoord 0, 0, wAttrmap
+	decoord 0, 0, wAttrMap
 	add hl, de
 	pop af
 	ld b, $7
@@ -3526,18 +3582,49 @@ Function17e6de:
 PokemonNewsGFX:
 INCBIN "gfx/mobile/pokemon_news.2bpp"
 
-PostalMarkGFX:
-INCBIN "gfx/font/postal_mark.2bpp"
+GFX_17eb7e:
+INCBIN "gfx/unknown/17eb7e.2bpp"
 
-PokemonNewsTileAttrmap:
-INCBIN "gfx/mobile/pokemon_news.bin"
+TileAttrmap_17eb8e:
+INCBIN "gfx/unknown/17eb8e.attrmap"
 
-PokemonNewsPalettes:
-INCLUDE "gfx/mobile/pokemon_news.pal"
+Palette_17eff6:
+	RGB 24,  9,  8
+	RGB  4,  9, 18
+	RGB 18, 18, 12
+	RGB  0,  0,  0
+	RGB 24, 24, 18
+	RGB 18, 18, 12
+	RGB  4,  9, 18
+	RGB  0,  0,  0
+	RGB 31, 31, 31
+	RGB 23, 11, 10
+	RGB 13,  6,  5
+	RGB  0,  0,  0
+	RGB 31, 31, 31
+	RGB 15, 25,  5
+	RGB 10, 20,  0
+	RGB  0,  0,  0
+	RGB 31, 31, 31
+	RGB 20, 28, 20
+	RGB 10, 18, 15
+	RGB  0,  0,  0
+	RGB 31, 31, 31
+	RGB 22, 22, 12
+	RGB 17, 12,  5
+	RGB  0,  0,  0
+	RGB  5,  5, 16
+	RGB  8, 19, 28
+	RGB  0,  0,  0
+	RGB 31, 31, 31
+	RGB 31, 31, 31
+	RGB 27, 24,  0
+	RGB 24, 16,  3
+	RGB  0,  0,  0
 
 RunMobileScript::
 	ld a, $6
-	call OpenSRAM
+	call GetSRAMBank
 	inc de
 .loop
 	call _RunMobileScript
@@ -3580,8 +3667,8 @@ _RunMobileScript:
 	dw Function17f220 ; 5
 	dw Function17f27b ; 6
 	dw Function17f2cb ; 7
-	dw MobileScript_PlayerName ; 8
-	dw MobileScript_Prefecture ; 9
+	dw Function17f2ff ; 8
+	dw Function17f334 ; 9
 	dw Function17f382 ; a
 	dw Function17f3c9 ; b
 	dw Function17f3f0 ; c
@@ -3603,7 +3690,7 @@ Function17f081:
 	ld l, c
 	ld h, b
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [de]
 	cp "@"
@@ -3688,7 +3775,7 @@ Function17f0f8:
 	ld l, c
 	ld h, b
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [de]
 	cp "@"
@@ -3717,7 +3804,7 @@ Function17f0f8:
 	ld de, wc608
 	ld a, [wcd56]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	call CopyBytes
 	ld a, "@"
 	ld [de], a
@@ -3785,7 +3872,7 @@ Function17f181:
 	ld l, c
 	ld h, b
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [de]
 	cp "@"
@@ -3839,7 +3926,7 @@ Function17f1d0:
 	ld l, c
 	ld h, b
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [de]
 	cp "@"
@@ -3867,7 +3954,7 @@ Function17f1d0:
 	ld a, [hl]
 	ld a, $1
 	ldh [rSVBK], a
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	pop hl
 	call PlaceString
@@ -3895,7 +3982,7 @@ Function17f220:
 	ld l, c
 	ld h, b
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [de]
 	cp "@"
@@ -3958,7 +4045,7 @@ Function17f27b:
 	ld l, c
 	ld h, b
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [de]
 	cp "@"
@@ -3986,7 +4073,7 @@ Function17f27b:
 	ld a, [hl]
 	ld a, $1
 	ldh [rSVBK], a
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetItemName
 	pop hl
 	call PlaceString
@@ -4033,7 +4120,7 @@ Function17f2cb:
 	and a
 	ret
 
-MobileScript_PlayerName:
+Function17f2ff:
 	pop hl
 	push bc
 	ld a, [hli]
@@ -4045,7 +4132,7 @@ MobileScript_PlayerName:
 	ldh [rSVBK], a
 	ld hl, wPlayerName
 	ld de, wc608
-	ld bc, NAME_LENGTH_JAPANESE
+	ld bc, $6
 	call CopyBytes
 	ld a, $4
 	ldh [rSVBK], a
@@ -4062,7 +4149,7 @@ MobileScript_PlayerName:
 	and a
 	ret
 
-MobileScript_Prefecture:
+Function17f334:
 	pop hl
 	push bc
 	ld a, [hli]
@@ -4078,13 +4165,13 @@ MobileScript_Prefecture:
 	bit 7, a
 	jr nz, .asm_17f355
 	ld a, BANK(sCrystalData)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [sCrystalData + 2]
 	jr .asm_17f35d
 
 .asm_17f355
 	ld a, BANK(s5_b2f3)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [s5_b2f3]
 
 .asm_17f35d
@@ -4121,14 +4208,14 @@ Function17f382:
 	bit 7, a
 	jr nz, .asm_17f3a3
 	ld a, BANK(sCrystalData)
-	call OpenSRAM
+	call GetSRAMBank
 	ld de, sCrystalData + 3
 	jr .asm_17f3ab
 
 .asm_17f3a3
-	ld a, BANK(s5_b2f4)
-	call OpenSRAM
-	ld de, s5_b2f4
+	ld a, BANK(s5_b2f3)
+	call GetSRAMBank
+	ld de, s5_b2f3 + 1
 
 .asm_17f3ab
 	ld a, PRINTNUM_LEADINGZEROS | 2
@@ -4160,7 +4247,7 @@ Function17f3c9:
 	push hl
 	ld hl, wc708
 	ld de, wcd36
-	ld bc, 12
+	ld bc, $c
 	call CopyBytes
 	pop bc
 	pop de
@@ -4179,7 +4266,7 @@ Function17f3f0:
 	ld d, a
 	ld a, [de]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	add hl, bc
 	ld a, [hli]
@@ -4194,7 +4281,7 @@ Function17f3f0:
 	call PlaceString
 	pop af
 	ld e, a
-	ld d, 0
+	ld d, $0
 	pop hl
 	add hl, de
 	add hl, de
@@ -4215,7 +4302,7 @@ Function17f41d:
 	push af
 	ld l, c
 	ld h, b
-	ld bc, -wTilemap + $10000
+	ld bc, -wTileMap + $10000
 	add hl, bc
 	ld de, -SCREEN_WIDTH
 	ld c, $1
@@ -4295,7 +4382,7 @@ Function17f44f:
 
 .asm_17f488
 	ld a, [wcd54]
-	call OpenSRAM
+	call GetSRAMBank
 
 .asm_17f48e
 	ld a, [wcd55]
@@ -4305,7 +4392,7 @@ Function17f44f:
 	ld de, wc608
 	ld a, [wcd57]
 	ld c, a
-	ld b, 0
+	ld b, $0
 	call CopyBytes
 	ld a, [wcd56]
 	cp $c0
@@ -4317,7 +4404,7 @@ Function17f44f:
 .asm_17f4af
 	call CloseSRAM
 	ld a, $6
-	call OpenSRAM
+	call GetSRAMBank
 
 .asm_17f4b7
 	ld de, wc608
@@ -4385,7 +4472,7 @@ Function17f50f:
 	and a
 	jr z, .asm_17f519
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld c, l
 	ld b, h
@@ -4421,751 +4508,3 @@ Function17f524:
 .asm_17f53a
 	scf
 	jr .asm_17f536
-
-BattleTowerMobileError:
-	call FadeToMenu
-	xor a
-	ld [wc303], a
-	ldh a, [rSVBK]
-	push af
-	ld a, $1
-	ldh [rSVBK], a
-
-	call DisplayMobileError
-
-	pop af
-	ldh [rSVBK], a
-	call ExitAllMenus
-	ret
-
-DisplayMobileError:
-.loop
-	call JoyTextDelay
-	call .RunJumptable
-	ld a, [wc303]
-	bit 7, a
-	jr nz, .quit
-	farcall HDMATransferAttrmapAndTilemapToWRAMBank3
-	jr .loop
-
-.quit
-	call .deinit
-	ret
-
-.deinit
-	ld a, [wMobileErrorCodeBuffer]
-	cp $22
-	jr z, .asm_17f597
-	cp $31
-	jr z, .asm_17f58a
-	cp $33
-	ret nz
-	ld a, [wMobileErrorCodeBuffer + 1]
-	cp $1
-	ret nz
-	ld a, [wMobileErrorCodeBuffer + 2]
-	cp $2
-	ret nz
-	jr .asm_17f5a1
-
-.asm_17f58a
-	ld a, [wMobileErrorCodeBuffer + 1]
-	cp $3
-	ret nz
-	ld a, [wMobileErrorCodeBuffer + 2]
-	and a
-	ret nz
-	jr .asm_17f5a1
-
-.asm_17f597
-	ld a, [wMobileErrorCodeBuffer + 1]
-	and a
-	ret nz
-	ld a, [wMobileErrorCodeBuffer + 2]
-	and a
-	ret nz
-
-.asm_17f5a1
-	ld a, BANK(sMobileLoginPassword)
-	call OpenSRAM
-	xor a
-	ld [sMobileLoginPassword], a
-	call CloseSRAM
-	ret
-
-.RunJumptable:
-	jumptable .Jumptable, wc303
-
-.Jumptable:
-	dw Function17f5c3
-	dw Function17ff23
-	dw Function17f5d2
-
-Function17f5c3:
-	call Function17f5e4
-	farcall FinishExitMenu
-	ld a, $1
-	ld [wc303], a
-	ret
-
-Function17f5d2:
-	call Function17f5e4
-	farcall HDMATransferAttrmapAndTilemapToWRAMBank3
-	call SetPalettes
-	ld a, $1
-	ld [wc303], a
-	ret
-
-Function17f5e4:
-	ld a, $8
-	ld [wMusicFade], a
-	ld de, MUSIC_NONE
-	ld a, e
-	ld [wMusicFadeID], a
-	ld a, d
-	ld [wMusicFadeID + 1], a
-	ld a, " "
-	hlcoord 0, 0
-	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	call ByteFill
-	ld a, $6
-	hlcoord 0, 0, wAttrmap
-	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	call ByteFill
-	hlcoord 2, 1
-	ld b, $1
-	ld c, $e
-	call Function3eea
-	hlcoord 1, 4
-	ld b, $c
-	ld c, $10
-	call Function3eea
-	hlcoord 3, 2
-	ld de, MobileCommunicationErrorText
-	call PlaceString
-	call Function17ff3c
-	jr nc, .asm_17f632
-	hlcoord 11, 2
-	call Function17f6b7
-
-.asm_17f632
-	ld a, [wMobileErrorCodeBuffer]
-	cp $d0
-	jr nc, .asm_17f684
-	cp $10
-	jr c, .asm_17f679
-	sub $10
-	cp $24
-	jr nc, .asm_17f679
-	ld e, a
-	ld d, 0
-	ld hl, MobileErrorCodeTable
-	add hl, de
-	add hl, de
-	ld a, [wMobileErrorCodeBuffer + 1]
-	ld e, a
-	ld a, [wMobileErrorCodeBuffer + 2]
-	ld d, a
-	ld a, [hli]
-	ld c, a
-	ld a, [hl]
-	ld h, a
-	ld l, c
-	ld a, [hli]
-	and a
-	jr z, .asm_17f679
-	ld c, a
-.asm_17f65d
-	ld a, [hli]
-	ld b, a
-	ld a, [hli]
-	cp $ff
-	jr nz, .asm_17f667
-	cp b
-	jr z, .asm_17f66e
-
-.asm_17f667
-	xor d
-	jr nz, .asm_17f674
-	ld a, b
-	xor e
-	jr nz, .asm_17f674
-
-.asm_17f66e
-	ld a, [hli]
-	ld e, a
-	ld a, [hl]
-	ld d, a
-	jr .asm_17f67d
-
-.asm_17f674
-	inc hl
-	inc hl
-	dec c
-	jr nz, .asm_17f65d
-
-.asm_17f679
-	ld a, $d9
-	jr .asm_17f684
-
-.asm_17f67d
-	hlcoord 2, 6
-	call PlaceString
-	ret
-
-.asm_17f684
-	sub $d0
-	ld e, a
-	ld d, 0
-	ld hl, Table_17f699
-	add hl, de
-	add hl, de
-	ld a, [hli]
-	ld e, a
-	ld a, [hl]
-	ld d, a
-	hlcoord 2, 6
-	call PlaceString
-	ret
-
-Table_17f699:
-	dw MobileErrorCode_101_000_Text
-	dw MobileErrorCode_101_001_Text
-	dw MobileErrorCode_101_002_Text
-	dw MobileErrorCode_101_003_Text
-	dw MobileErrorCode_101_004_Text
-	dw MobileErrorCode_101_005_Text
-	dw MobileErrorCode_101_006_Text
-	dw MobileErrorCode_101_007_Text
-	dw MobileErrorCode_101_008_Text
-	dw MobileErrorCode_101_009_Text
-	dw MobileErrorCode_101_009_Text
-
-Palette_17f6af: ; unreferenced
-	RGB  5,  5, 16
-	RGB  8, 19, 28
-	RGB  0,  0,  0
-	RGB 31, 31, 31
-
-Function17f6b7:
-	ld a, [wMobileErrorCodeBuffer]
-	call .bcd_two_digits
-	inc hl
-	ld a, [wMobileErrorCodeBuffer + 2]
-	and $f
-	call .bcd_digit
-	ld a, [wMobileErrorCodeBuffer + 1]
-	call .bcd_two_digits
-	ret
-
-.bcd_two_digits
-	ld c, a
-	and $f0
-	swap a
-	call .bcd_digit
-	ld a, c
-	and $f
-
-.bcd_digit
-	add "0"
-	ld [hli], a
-	ret
-
-MobileCommunicationErrorText:
-	db "つうしんエラー　　　ー@"
-
-String_17f6e8: ; unreferenced
-	db   "みていぎ<NO>エラーです"
-	next "プログラム<WO>"
-	next "かくにん　してください"
-	db   "@"
-
-MobileErrorCodeTable:
-	dw MobileErrorCodes_10
-	dw MobileErrorCodes_11
-	dw MobileErrorCodes_12
-	dw MobileErrorCodes_13
-	dw MobileErrorCodes_14
-	dw MobileErrorCodes_15
-	dw MobileErrorCodes_16
-	dw MobileErrorCodes_17
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_20
-	dw MobileErrorCodes_21
-	dw MobileErrorCodes_22
-	dw MobileErrorCodes_23
-	dw MobileErrorCodes_24
-	dw MobileErrorCodes_25
-	dw MobileErrorCodes_26
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_30
-	dw MobileErrorCodes_31
-	dw MobileErrorCodes_32
-	dw MobileErrorCodes_33
-
-MobileErrorCodes_10: db 1
-	dw $000, MobileErrorCode_10_000_Text
-
-MobileErrorCodes_11: db 1
-	dw $000, MobileErrorCode_11_000_Text
-
-MobileErrorCodes_12: db 1
-	dw $000, MobileErrorCode_12_000_Text
-
-MobileErrorCodes_13: db 1
-	dw $000, MobileErrorCode_13_000_Text
-
-MobileErrorCodes_14: db 1
-	dw $000, MobileErrorCode_14_000_Text
-
-MobileErrorCodes_15: db 4
-	dw $000, MobileErrorCode_15_000_Text
-	dw $001, MobileErrorCode_15_001_Text
-	dw $002, MobileErrorCode_15_002_Text
-	dw $003, MobileErrorCode_15_003_Text
-
-MobileErrorCodes_16: db 1
-	dw $000, MobileErrorCode_CommuncationErrorText
-
-MobileErrorCodes_17: db 1
-	dw $000, MobileErrorCode_CommuncationErrorText
-
-MobileErrorCodes_20: db 1
-	dw $000, MobileErrorCode_CommuncationErrorText
-
-MobileErrorCodes_21: db 1
-	dw $000, MobileErrorCode_CommuncationErrorText
-
-MobileErrorCodes_22: db 1
-	dw $000, MobileErrorCode_22_000_Text
-
-MobileErrorCodes_23: db 1
-	dw $000, MobileErrorCode_23_000_Text
-
-MobileErrorCodes_24: db 1
-	dw $000, MobileErrorCode_ServerConnectionFailedText
-
-MobileErrorCodes_25: db 1
-	dw $000, MobileErrorCode_25_000_Text
-
-MobileErrorCodes_26: db 1
-	dw $000, MobileErrorCode_26_000_Text
-
-MobileErrorCodes_30: db 17
-	dw $000, MobileErrorCode_CommuncationErrorText
-	dw $221, MobileErrorCode_ServerConnectionFailedText
-	dw $421, MobileErrorCode_ServerConnectionFailedText
-	dw $450, MobileErrorCode_30_450_Text
-	dw $451, MobileErrorCode_ServerConnectionFailedText
-	dw $452, MobileErrorCode_ServerConnectionFailedText
-	dw $500, MobileErrorCode_CommuncationErrorText
-	dw $501, MobileErrorCode_CommuncationErrorText
-	dw $502, MobileErrorCode_CommuncationErrorText
-	dw $503, MobileErrorCode_CommuncationErrorText
-	dw $504, MobileErrorCode_CommuncationErrorText
-	dw $550, MobileErrorCode_30_550_Text
-	dw $551, MobileErrorCode_30_551_Text
-	dw $552, MobileErrorCode_ServerConnectionFailedText
-	dw $553, MobileErrorCode_30_553_Text
-	dw $554, MobileErrorCode_ServerConnectionFailedText
-	dw -1, MobileErrorCode_ServerConnectionFailedText
-
-MobileErrorCodes_31: db 5
-	dw $000, MobileErrorCode_CommuncationErrorText
-	dw $002, MobileErrorCode_31_002_Text
-	dw $003, MobileErrorCode_31_003_Text
-	dw $004, MobileErrorCode_CommuncationErrorText
-	dw -1, MobileErrorCode_ServerConnectionFailedText
-
-MobileErrorCodes_32: db 17
-	dw $000, MobileErrorCode_CommuncationErrorText
-	dw $301, MobileErrorCode_CommuncationErrorText
-	dw $302, MobileErrorCode_CommuncationErrorText
-	dw $400, MobileErrorCode_CommuncationErrorText
-	dw $401, MobileErrorCode_CommuncationErrorText
-	dw $403, MobileErrorCode_32_403_Text
-	dw $404, MobileErrorCode_32_404_Text
-	dw $405, MobileErrorCode_CommuncationErrorText
-	dw $406, MobileErrorCode_CommuncationErrorText
-	dw $407, MobileErrorCode_CommuncationErrorText
-	dw $408, MobileErrorCode_32_408_Text
-	dw $500, MobileErrorCode_ServerErrorText
-	dw $501, MobileErrorCode_CommuncationErrorText
-	dw $502, MobileErrorCode_ServerErrorText
-	dw $503, MobileErrorCode_32_503_Text
-	dw $504, MobileErrorCode_ServerErrorText
-	dw -1, MobileErrorCode_ServerErrorText
-
-MobileErrorCodes_33: db 19
-	dw $101, MobileErrorCode_33_101_Text
-	dw $102, MobileErrorCode_33_102_Text
-	dw $103, MobileErrorCode_33_103_Text
-	dw $104, MobileErrorCode_33_104_Text
-	dw $105, MobileErrorCode_33_105_Text
-	dw $106, MobileErrorCode_33_106_Text
-	dw $201, MobileErrorCode_33_201_Text
-	dw $202, MobileErrorCode_CommuncationErrorText
-	dw $203, MobileErrorCode_33_203_Text
-	dw $204, MobileErrorCode_CommuncationErrorText
-	dw $205, MobileErrorCode_ServerErrorText
-	dw $206, MobileErrorCode_33_206_Text
-	dw $299, MobileErrorCode_33_299_Text
-	dw $301, MobileErrorCode_ServerErrorText
-	dw $401, MobileErrorCode_ServerErrorText
-	dw $402, MobileErrorCode_ServerErrorText
-	dw $403, MobileErrorCode_ServerErrorText
-	dw $404, MobileErrorCode_ServerErrorText
-	dw -1, MobileErrorCode_ServerErrorText
-
-MobileErrorCode_10_000_Text:
-; The Mobile Adapter is not properly plugged in.
-; Ensure you have taken a good look at and properly followed the instructions.
-	db   "モバイルアダプタが　ただしく"
-	next "さしこまれていません"
-	next "とりあつかいせつめいしょを"
-	next "ごらんのうえ　しっかりと"
-	next "さしこんで　ください"
-	db   "@"
-
-MobileErrorCode_11_000_Text:
-MobileErrorCode_13_000_Text:
-; Could not connect because either the phone cannot make the call, or the telephone line is busy.
-; Please wait for a while and call again.
-	db   "でんわが　うまく　かけられないか"
-	next "でんわかいせんが　こんでいるので"
-	next "つうしん　できません"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	db   "@"
-
-MobileErrorCode_12_000_Text:
-; As the telephone line is busy, the phone was not able to gather enough information (?)
-; Please wait for a while and call again.
-	db   "でんわかいせんが　こんでいるため"
-	next "でんわが　かけられません"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	db   "@"
-
-MobileErrorCode_15_000_Text:
-MobileErrorCode_15_001_Text:
-MobileErrorCode_15_002_Text:
-MobileErrorCode_15_003_Text:
-; There is an error with the Mobile Adapter.
-; Please wait for a little while before calling again.
-; If the problem persists, please contact the Mobile Support Center.
-	db   "モバイルアダプタの　エラーです"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	next "なおらない　ときは"
-	next "モバイルサポートセンターへ"
-	next "おといあわせください"
-	db   "@"
-
-MobileErrorCode_CommuncationErrorText:
-; Communication error.
-; Please wait a moment, and then try again.
-; If the issue persists, please contact the Mobile Support Center.
-	db   "つうしんエラーです"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	next "なおらない　ときは"
-	next "モバイルサポートセンターへ"
-	next "おといあわせください"
-	db   "@"
-
-MobileErrorCode_22_000_Text:
-; There is a mistake either with the login password, or the login ID.
-; Please confirm the password, wait for a while, and try again.
-	db   "ログインパスワードか"
-	next "ログイン　アイディーに"
-	next "まちがいがあります"
-	next "パスワードを　かくにんして"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	db   "@"
-
-MobileErrorCode_23_000_Text:
-; The call was ended.
-; Please see the instruction manual, wait a moment, and try again.
-	db   "でんわが　きれました"
-	next "とりあつかいせつめいしょを"
-	next "ごらんのうえ"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	db   "@"
-
-MobileErrorCode_ServerErrorText:
-; There was a communication error with the mobile center.
-; Please wait a moment and then try again.
-	db   "モバイルセンターの"
-	next "つうしんエラーです"
-	next "しばらくまって"
-	next "かけなおして　ください"
-	db   "@"
-
-MobileErrorCode_14_000_Text:
-MobileErrorCode_25_000_Text:
-; The Mobile Adapter's details have expired and the information is not correct.
-; Please use the Mobile Trainer to repeat the initial registration (process).
-	db   "モバイルアダプタに"
-	next "とうろくされた　じょうほうが"
-	next "ただしく　ありません"
-	next "モバイルトレーナーで"
-	next "しょきとうろくを　してください"
-	db   "@"
-
-MobileErrorCode_32_503_Text:
-; Could not connect because the Mobile Center is busy.
-; Please wait a moment and try again.
-; For details, please see the instruction manual.
-	db   "モバイルセンターが"
-	next "こんでいて　つながりません"
-	next "しばらくまって"
-	next "かけなおして　ください"
-	next "くわしくは　とりあつかい"
-	next "せつめいしょを　ごらんください"
-	db   "@"
-
-MobileErrorCode_30_450_Text:
-MobileErrorCode_30_550_Text:
-MobileErrorCode_30_551_Text:
-MobileErrorCode_30_553_Text:
-; There is a mistake with the email address of the addressee.
-; Please replace with a / the correct email address.
-	db   "あてさき　メールアドレスに"
-	next "まちがいがあります"
-	next "ただしい　メールアドレスを"
-	next "いれなおしてください"
-	db   "@"
-
-MobileErrorCode_31_002_Text:
-; There is a mistake with the email address.
-; Please see the instruction manual, and use the Mobile Trainer to repeat the initial registration (process).
-	db   "メールアドレスに"
-	next "まちがいが　あります"
-	next "とりあつかいせつめいしょを"
-	next "ごらんのうえ"
-	next "モバイルトレーナーで"
-	next "しょきとうろくを　してください"
-	db   "@"
-
-MobileErrorCode_31_003_Text:
-MobileErrorCode_33_201_Text:
-; There is either an error with the login password, or an error with the Mobile Center.
-; Please confirm the password, wait a moment, and then try again.
-	db   "ログインパスワードに"
-	next "まちがいが　あるか"
-	next "モバイルセンターの　エラーです"
-	next "パスワードを　かくにんして"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	db   "@"
-
-MobileErrorCode_32_403_Text:
-MobileErrorCode_32_404_Text:
-; Cannot read data.
-; Please wait a moment, and then try again.
-; If the issue persists, please contact the Mobile Support Center.
-	db   "データの　よみこみが　できません"
-	next "しばらくまって"
-	next "かけなおして　ください"
-	next "なおらない　ときは"
-	next "モバイルサポートセンターへ"
-	next "おといあわせください"
-	db   "@"
-
-MobileErrorCode_26_000_Text:
-MobileErrorCode_32_408_Text:
-; Out of time.
-; The call was ended.
-; Please try again.
-; For details, please see the instruction manual.
-	db   "じかんぎれです"
-	next "でんわが　きれました"
-	next "でんわを　かけなおしてください"
-	next "くわしくは　とりあつかい"
-	next "せつめいしょを　ごらんください"
-	db   "@"
-
-MobileErrorCode_33_101_Text:
-; The service cannot be used if payments for usage fees are late.
-; For details, please see the instruction manual.
-	db   "ごりよう　りょうきんの　"
-	next "おしはらいが　おくれたばあいには"
-	next "ごりようが　できなくなります"
-	next "くわしくは　とりあつかい"
-	next "せつめいしょを　ごらんください"
-	db   "@"
-
-MobileErrorCode_33_102_Text:
-MobileErrorCode_33_299_Text:
-; Your access to this service has been restricted. Service cannot be used.
-; For details, please see the instruction manual.
-	db   "おきゃくさまの　ごつごうにより"
-	next "ごりようできません"
-	next "くわしくは　とりあつかい"
-	next "せつめいしょを　ごらんください"
-	db   "@"
-
-MobileErrorCode_ServerConnectionFailedText:
-; The telephone line is busy. Due to this error, the Mobile Center cannot communicate.
-; Please wait for a little while and call again.
-	db   "でんわかいせんが　こんでいるか"
-	next "モバイルセンターの　エラーで"
-	next "つうしんが　できません"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	db   "@"
-
-MobileErrorCode_33_103_Text:
-; Service cannot be used this month because usage fees have exceeded conditions.
-; For details, please see the instruction manual.
-	db   "ごりよう　りょうきんが"
-	next "じょうげんを　こえているため"
-	next "こんげつは　ごりようできません"
-	next "くわしくは　とりあつかい"
-	next "せつめいしょを　ごらんください"
-	db   "@"
-
-MobileErrorCode_33_106_Text:
-; Cannot communicate because the Mobile Center is currently undergoing maintenance.
-; Please wait a moment, then try again.
-	db   "げんざい　モバイルセンターの"
-	next "てんけんを　しているので"
-	next "つうしんが　できません"
-	next "しばらく　まって"
-	next "かけなおして　ください"
-	db   "@"
-
-MobileErrorCode_33_104_Text:
-MobileErrorCode_33_105_Text:
-MobileErrorCode_33_203_Text:
-MobileErrorCode_33_206_Text:
-MobileErrorCode_101_004_Text:
-; Cannot read data.
-; For details, please see the instruction manual.
-	db   "データの　よみこみが　できません"
-	next "くわしくは　とりあつかい"
-	next "せつめいしょを　ごらんください"
-	db   "@"
-
-MobileErrorCode_101_006_Text:
-; Call ended because more than 3 minutes elapsed with no input.
-	db   "３ぷん　いじょう　なにも"
-	next "にゅうりょく　しなかったので"
-	next "でんわが　きれました"
-	db   "@"
-
-MobileErrorCode_101_001_Text:
-MobileErrorCode_101_002_Text:
-; Could not connect properly.
-; Please try again from the beginning (of the process).
-	db   "つうしんが　うまく"
-	next "できませんでした"
-	next "もういちど　はじめから"
-	next "やりなおしてください"
-	db   "@"
-
-MobileErrorCode_101_003_Text:
-MobileErrorCode_101_008_Text:
-MobileErrorCode_101_009_Text:
-; Cannot read data.
-; Please wait a moment, then try again.
-; If the issue persists, please contact the Mobile Support Center.
-	db   "データの　よみこみが　できません"
-	next "しばらくまって"
-	next "かけなおして　ください"
-	next "なおらない　ときは"
-	next "モバイルサポートセンターへ"
-	next "おといあわせください"
-	db   "@"
-
-MobileErrorCode_101_007_Text:
-; Call ended due to long waiting time.
-	db   "まちじかんが　ながいので"
-	next "でんわが　きれました"
-	db   "@"
-
-MobileErrorCode_101_005_Text:
-; (Your adapter's) type differs from the other user’s Mobile Adapter.
-; For details, please see the instruction manual.
-	db   "あいての　モバイルアダプタと"
-	next "タイプが　ちがいます"
-	next "くわしくは　とりあつかい"
-	next "せつめいしょを　ごらんください"
-	db   "@"
-
-String_17fe9a: ; unreferenced
-; Cannot send your save data because Pokémon News is being updated.
-; Please send your save data after loading new Pokémon News.
-	db   "ポケモンニュースが"
-	next "あたらしくなっているので"
-	next "レポートを　おくれません"
-	next "あたらしい　ポケモンニュースの"
-	next "よみこみを　さきに　してください"
-	db   "@"
-
-MobileErrorCode_101_000_Text:
-; Either bad communication status, or the other user called was the incorrect user.
-; Please confirm and try again.
-	db   "つうしんの　じょうきょうが"
-	next "よくないか　かけるあいてが"
-	next "まちがっています"
-	next "もういちど　かくにんをして"
-	next "でんわを　かけなおして　ください"
-	db   "@"
-
-Function17ff23:
-	ldh a, [hJoyPressed]
-	and a
-	ret z
-	ld a, $8
-	ld [wMusicFade], a
-	ld a, [wMapMusic]
-	ld [wMusicFadeID], a
-	xor a
-	ld [wMusicFadeID + 1], a
-	ld hl, wc303
-	set 7, [hl]
-	ret
-
-Function17ff3c:
-	nop
-	ld a, [wMobileErrorCodeBuffer]
-	cp $d0
-	ret c
-	hlcoord 10, 2
-	ld de, String_17ff68
-	call PlaceString
-	ld a, [wMobileErrorCodeBuffer]
-	push af
-	sub $d0
-	inc a
-	ld [wMobileErrorCodeBuffer], a
-	hlcoord 14, 2
-	ld de, wMobileErrorCodeBuffer
-	lb bc, PRINTNUM_LEADINGZEROS | 1, 3
-	call PrintNum
-	pop af
-	ld [wMobileErrorCodeBuffer], a
-	and a
-	ret
-
-String_17ff68:
-	db "１０１@"

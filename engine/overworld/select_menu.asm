@@ -5,14 +5,14 @@ SelectMenu::
 
 .NotRegistered:
 	call OpenText
-	ld b, BANK(MayRegisterItemText)
-	ld hl, MayRegisterItemText
+	ld b, BANK(ItemMayBeRegisteredText)
+	ld hl, ItemMayBeRegisteredText
 	call MapTextbox
 	call WaitButton
 	jp CloseText
 
-MayRegisterItemText:
-	text_far _MayRegisterItemText
+ItemMayBeRegisteredText:
+	text_far UnknownText_0x1c1cf3
 	text_end
 
 CheckRegisteredItem:
@@ -109,7 +109,7 @@ CheckRegisteredItem:
 
 UseRegisteredItem:
 	farcall CheckItemMenu
-	ld a, [wItemAttributeValue]
+	ld a, [wItemAttributeParamBuffer]
 	ld hl, .SwitchTo
 	rst JumpTable
 	ret

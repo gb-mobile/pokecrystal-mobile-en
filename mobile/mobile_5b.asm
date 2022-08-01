@@ -1,4 +1,4 @@
-Function16c000: ; unreferenced
+MobileAdapterCheck:
 	; Only for CGB
 	ldh a, [hCGB]
 	and a
@@ -7,11 +7,11 @@ Function16c000: ; unreferenced
 	ldh a, [hSystemBooted]
 	and a
 	ret z
-	; Disable the joypad during mobile setup
-	ld a, [wJoypadDisable]
+	; Set some flag, preserving the old state
+	ld a, [wcfbe]
 	push af
-	set JOYPAD_DISABLE_SGB_TRANSFER_F, a
-	ld [wJoypadDisable], a
+	set 7, a
+	ld [wcfbe], a
 	; Do stuff
 	call MobileSystemSplashScreen_InitGFX ; Load GFX
 	farcall SetRAMStateForMobile
@@ -24,7 +24,7 @@ Function16c000: ; unreferenced
 	ldh [hSystemBooted], a
 	; Restore the flag state
 	pop af
-	ld [wJoypadDisable], a
+	ld [wcfbe], a
 	ret
 
 .RunJumptable:
@@ -78,7 +78,7 @@ Function16c000: ; unreferenced
 
 Function16c089:
 	ld a, $1
-	ld [wd1eb], a
+	ld [wBuffer2], a
 	ld [wd1f1], a
 	xor a
 	ldh [hWY], a
@@ -96,7 +96,7 @@ Function16c09e:
 
 Function16c0a8:
 	xor a
-	ld [wd1eb], a
+	ld [wBuffer2], a
 	ld [wd1f1], a
 	call ClearSprites
 	ld a, $90
@@ -161,8 +161,8 @@ MobileSystemSplashScreen_InitGFX:
 	lb bc, BANK(.Tiles), 104
 	call Get2bpp
 	call .LoadPals
-	call .LoadTilemap
-	call .LoadAttrmap
+	call .LoadTileMap
+	call .LoadAttrMap
 	hlbgcoord 0, 0
 	call Function16cc73
 	call Function16cc02
@@ -173,31 +173,31 @@ MobileSystemSplashScreen_InitGFX:
 
 .LoadPals:
 	ld de, wBGPals1
-	ld hl, MobileSplashScreenPalettes
+	ld hl, UnknownMobilePalettes_16c903
 	ld bc, 8
 	ld a, $5
 	call FarCopyWRAM
 	farcall ApplyPals
 	ret
 
-.LoadTilemap:
+.LoadTileMap:
 	hlcoord 0, 0
 	ld bc, 20
 	xor a
 	call ByteFill
-	ld hl, .Tilemap
+	ld hl, .TileMap
 	decoord 0, 1
 	ld bc, $0154
 	call CopyBytes
 	ret
 
-.LoadAttrmap:
-	hlcoord 0, 0, wAttrmap
+.LoadAttrMap:
+	hlcoord 0, 0, wAttrMap
 	ld bc, SCREEN_WIDTH
 	xor a
 	call ByteFill
-	ld hl, .Attrmap
-	decoord 0, 1, wAttrmap
+	ld hl, .AttrMap
+	decoord 0, 1, wAttrMap
 	ld bc, 17 * SCREEN_WIDTH
 	call CopyBytes
 	ret
@@ -205,14 +205,14 @@ MobileSystemSplashScreen_InitGFX:
 .Tiles:
 INCBIN "gfx/mobile/mobile_splash.2bpp"
 
-.Tilemap:
+.TileMap:
 INCBIN "gfx/mobile/mobile_splash.tilemap"
 
-.Attrmap:
+.AttrMap:
 INCBIN "gfx/mobile/mobile_splash.attrmap"
 
-MobileSplashScreenPalettes:
-INCLUDE "gfx/mobile/mobile_splash.pal"
+UnknownMobilePalettes_16c903:
+INCLUDE "gfx/unknown/16c903.pal"
 
 Function16c943:
 	ld a, [wd003]
@@ -237,7 +237,7 @@ Function16c943:
 	ld e, $0
 	ld a, $0
 .asm_16c969
-	ld hl, MobileSplashScreenPalettes
+	ld hl, UnknownMobilePalettes_16c903
 	call Function16cab6
 	call Function16cabb
 	ld d, a
@@ -260,7 +260,7 @@ Function16c943:
 	call Function16cadc
 
 .asm_16c991
-	ld hl, MobileSplashScreenPalettes
+	ld hl, UnknownMobilePalettes_16c903
 	call Function16cab6
 	call Function16cad8
 	ld d, a
@@ -283,7 +283,7 @@ Function16c943:
 	call Function16cb08
 
 .asm_16c9b9
-	ld hl, MobileSplashScreenPalettes
+	ld hl, UnknownMobilePalettes_16c903
 	call Function16cab6
 	call Function16cac4
 	ld d, a
@@ -515,27 +515,27 @@ Function16cb08:
 
 Function16cb0f:
 	xor a
-	ld [wd1ea], a
-	ld [wd1eb], a
+	ld [wBuffer1], a
+	ld [wBuffer2], a
 	xor a
 	ld [wd1ec], a
 	ld a, $70
 	ld [wd1ee], a
 	ld a, $4
 	ld [wd1ed], a
-	ld a, $a0
+	ld a, $a0 + $10
 	ld [wd1ef], a
 	xor a
 	ld [wd1f0], a
 	ret
 
 Function16cb2e:
-	ld a, [wd1eb]
+	ld a, [wBuffer2]
 	and a
 	ret z
 	call Function16cb40
 	ld hl, Unknown_16cb86
-	ld de, wShadowOAM
+	ld de, wVirtualOAM
 	call Function16cb5d
 	ret
 
@@ -548,14 +548,14 @@ Function16cb40:
 	xor a
 	ld [hl], a
 	ld a, [wd1ef]
-	cp $a0
+	cp $a0 + $10
 	jr nz, .asm_16cb57
-	ld a, $a7
+	ld a, $a7 + $10
 	ld [wd1ef], a
 	ret
 
 .asm_16cb57
-	ld a, $a0
+	ld a, $a0 + $10
 	ld [wd1ef], a
 	ret
 
@@ -650,7 +650,7 @@ Function16cbd1:
 	ld a, $5
 	call FarCopyWRAM
 	farcall ApplyPals
-	ld a, TRUE
+	ld a, $1
 	ldh [hCGBPalUpdate], a
 	ret
 
@@ -669,8 +669,8 @@ Function16cc02:
 
 Function16cc18:
 	ld hl, vTiles1
-	ld de, MobileAdapterCheckGFX
-	lb bc, BANK(MobileAdapterCheckGFX), 46
+	ld de, GFX_16cca3
+	lb bc, BANK(GFX_16cca3), 46 + $10
 	call Get2bpp
 	ret
 
@@ -692,11 +692,15 @@ Function16cc25:
 	jp FarCopyWRAM
 
 Function16cc49:
-	hlcoord 4, 15
+	hlcoord 4, 14
 	ld a, $80
 	call Function16cc5a
+
+	hlcoord 4, 15
+	ld a, $90;$80
+	call Function16cc5a
 	hlcoord 4, 16
-	ld a, $90
+	ld a, $A0;$90
 	call Function16cc5a
 	ret
 
@@ -710,8 +714,8 @@ Function16cc5a:
 	ret
 
 Function16cc62:
-	hlcoord 0, 15, wAttrmap
-	ld bc, $0028
+	hlcoord 0, 14, wAttrMap;0, 15, wAttrMap
+	ld bc, $0028 + $14
 	ld a, $1
 	call ByteFill
 	ret
@@ -731,7 +735,7 @@ Function16cc73:
 	pop hl
 	ld a, $1
 	ldh [rVBK], a
-	decoord 0, 0, wAttrmap
+	decoord 0, 0, wAttrMap
 	call Function16cc90
 	pop af
 	ldh [rVBK], a
@@ -754,8 +758,8 @@ Function16cc90:
 	jr nz, .asm_16cc93
 	ret
 
-MobileAdapterCheckGFX:
-INCBIN "gfx/mobile/mobile_splash_check.2bpp"
+GFX_16cca3:
+INCBIN "gfx/unknown/16cca3.2bpp"
 
 Unknown_16cfa3:
 	RGB 31, 31, 31

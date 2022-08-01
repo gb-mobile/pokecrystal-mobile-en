@@ -1,19 +1,19 @@
 DragonsDen1F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 DragonsDen1F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 4 ; warp events
 	warp_event  3,  5, BLACKTHORN_CITY, 8
 	warp_event  3,  3, DRAGONS_DEN_1F, 4
 	warp_event  5, 15, DRAGONS_DEN_B1F, 1
 	warp_event  5, 13, DRAGONS_DEN_1F, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 0 ; object events

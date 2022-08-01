@@ -1,14 +1,14 @@
 # Pic Animations
 
-Defined in [macros/scripts/pic_anims.asm](https://github.com/pret/pokecrystal/blob/master/macros/scripts/pic_anims.asm).
+Defined in [macros/scripts/gfx_anims.asm](https://github.com/pret/pokecrystal/blob/master/macros/scripts/gfx_anims.asm).
 
 Pic animations are assembled in 3 parts:
 
 - Top-level animations:
    - <code>frame <i>N</i>, <i>duration</i></code>: Frame #0 is the original pic (no change)
    - <code>setrepeat <i>N</i></code>: Sets the number of times to repeat
-   - <code>dorepeat <i>I</i></code>: Repeats from command #<i>I</i> (with the first command being #0)
-   - `endanim`
+   - <code>dorepeat <i>I</i></code>: Repeats from command #<i>I</i> (starting from 0)
+   - `end`
 
 - Bitmasks:
   Layered over the pic to designate affected tiles

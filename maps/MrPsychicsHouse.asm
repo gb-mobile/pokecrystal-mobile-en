@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const MRPSYCHICSHOUSE_FISHING_GURU
 
 MrPsychicsHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 MrPsychic:
 	faceplayer
@@ -12,7 +12,7 @@ MrPsychic:
 	checkevent EVENT_GOT_TM29_PSYCHIC
 	iftrue .AlreadyGotItem
 	writetext MrPsychicText1
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_PSYCHIC_M
 	iffalse .Done
 	setevent EVENT_GOT_TM29_PSYCHIC
@@ -24,7 +24,7 @@ MrPsychic:
 	end
 
 MrPsychicsHouseBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 MrPsychicText1:
 	text "…"
@@ -48,15 +48,15 @@ MrPsychicText2:
 MrPsychicsHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, SAFFRON_CITY, 5
 	warp_event  3,  7, SAFFRON_CITY, 5
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  0,  1, BGEVENT_READ, MrPsychicsHouseBookshelf
 	bg_event  1,  1, BGEVENT_READ, MrPsychicsHouseBookshelf
 
-	def_object_events
+	db 1 ; object events
 	object_event  5,  3, SPRITE_FISHING_GURU, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MrPsychic, -1

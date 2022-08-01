@@ -17,7 +17,7 @@ Credits::
 	ldh [rSVBK], a
 
 	call ClearBGPalettes
-	call ClearTilemap
+	call ClearTileMap
 	call ClearSprites
 
 	ld hl, wCreditsBlankFrame2bpp
@@ -76,17 +76,16 @@ Credits::
 
 	call GetCreditsPalette
 	call SetPalettes
-; BUG: Credits sequence changes move selection menu behavior (see docs/bugs_and_glitches.md)
 	ldh a, [hVBlank]
 	push af
 	ld a, $5
 	ldh [hVBlank], a
-	ld a, TRUE
+	ld a, $1
 	ldh [hInMenu], a
 	xor a
 	ldh [hBGMapMode], a
 	ld [wCreditsPos], a
-	ld [wCreditsPos + 1], a
+	ld [wCreditsUnusedCD21], a
 	ld [wCreditsTimer], a
 
 .execution_loop
@@ -199,8 +198,8 @@ Credits_UpdateGFXRequestPath:
 Credits_RequestGFX:
 	xor a
 	ldh [hBGMapMode], a
-	ld a, 8
-	ld [wRequested2bppSize], a
+	ld a, $8
+	ld [wRequested2bpp], a
 	jp Credits_Next
 
 Credits_LYOverride:
@@ -246,7 +245,7 @@ ParseCredits:
 	xor a
 	ldh [hBGMapMode], a
 	hlcoord 0, 5
-	ld bc, SCREEN_WIDTH * 12
+	ld bc, 20 * 12
 	ld a, " "
 	call ByteFill
 
@@ -276,7 +275,7 @@ ParseCredits:
 	push af
 	ld e, a
 	ld d, 0
-	ld hl, CreditsStringsPointers
+	ld hl, CreditsStrings
 	add hl, de
 	add hl, de
 	ld a, [hli]
@@ -307,7 +306,7 @@ ParseCredits:
 .print
 ; Print strings spaced every two lines.
 	call .get
-	ld bc, SCREEN_WIDTH * 2
+	ld bc, 20 * 2
 	call AddNTimes
 	call PlaceString
 	jr .loop
@@ -420,22 +419,22 @@ ConstructCreditsTilemap:
 	ld a, $20
 	call DrawCreditsBorder
 
-	hlcoord 0, 0, wAttrmap
+	hlcoord 0, 0, wAttrMap
 	ld bc, 4 * SCREEN_WIDTH
 	xor a
 	call ByteFill
 
-	hlcoord 0, 4, wAttrmap
+	hlcoord 0, 4, wAttrMap
 	ld bc, SCREEN_WIDTH
 	ld a, $1
 	call ByteFill
 
-	hlcoord 0, 5, wAttrmap
+	hlcoord 0, 5, wAttrMap
 	ld bc, 12 * SCREEN_WIDTH
 	ld a, $2
 	call ByteFill
 
-	hlcoord 0, 17, wAttrmap
+	hlcoord 0, 17, wAttrMap
 	ld bc, SCREEN_WIDTH
 	ld a, $1
 	call ByteFill
@@ -573,17 +572,14 @@ Credits_LoadBorderGFX:
 	dw CreditsPichuGFX     + 16 tiles
 	dw CreditsPichuGFX     + 32 tiles
 	dw CreditsPichuGFX     + 48 tiles
-
 	dw CreditsSmoochumGFX
 	dw CreditsSmoochumGFX  + 16 tiles
 	dw CreditsSmoochumGFX  + 32 tiles
 	dw CreditsSmoochumGFX  + 48 tiles
-
 	dw CreditsDittoGFX
 	dw CreditsDittoGFX     + 16 tiles
 	dw CreditsDittoGFX     + 32 tiles
 	dw CreditsDittoGFX     + 48 tiles
-
 	dw CreditsIgglybuffGFX
 	dw CreditsIgglybuffGFX + 16 tiles
 	dw CreditsIgglybuffGFX + 32 tiles

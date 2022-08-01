@@ -41,10 +41,10 @@ BattleRandom::
 
 	call _BattleRandom
 
-	ld [wPredefHL + 1], a
+	ld [wPredefTemp + 1], a
 	pop af
 	rst Bankswitch
-	ld a, [wPredefHL + 1]
+	ld a, [wPredefTemp + 1]
 	ret
 
 RandomRange::

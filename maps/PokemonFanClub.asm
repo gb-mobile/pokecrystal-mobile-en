@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const POKEMONFANCLUB_CHAIRMAN
 	const POKEMONFANCLUB_RECEPTIONIST
 	const POKEMONFANCLUB_CLEFAIRY_GUY
@@ -7,9 +7,9 @@
 	const POKEMONFANCLUB_ODDISH
 
 PokemonFanClub_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 PokemonFanClubChairmanScript:
 	faceplayer
@@ -22,10 +22,10 @@ PokemonFanClubChairmanScript:
 	yesorno
 	iffalse .NotListening
 	writetext PokemonFanClubChairmanRapidashText
-	promptbutton
+	buttonsound
 .HeardSpeechButBagFull:
 	writetext PokemonFanClubChairmanIWantYouToHaveThisText
-	promptbutton
+	buttonsound
 	verbosegiveitem RARE_CANDY
 	iffalse .BagFull
 	setevent EVENT_LISTENED_TO_FAN_CLUB_PRESIDENT
@@ -71,9 +71,9 @@ PokemonFanClubClefairyGuyScript:
 	end
 
 .MetCopycat:
-	promptbutton
+	buttonsound
 	writetext PokemonFanClubClefairyGuyTakeThisDollBackToGirlText
-	promptbutton
+	buttonsound
 	waitsfx
 	giveitem LOST_ITEM
 	iffalse .NoRoom
@@ -297,17 +297,17 @@ PokemonFanClubBraggingSignText:
 PokemonFanClub_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, VERMILION_CITY, 3
 	warp_event  3,  7, VERMILION_CITY, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  7,  0, BGEVENT_READ, PokemonFanClubListenSign
 	bg_event  9,  0, BGEVENT_READ, PokemonFanClubBraggingSign
 
-	def_object_events
+	db 6 ; object events
 	object_event  3,  1, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, PokemonFanClubChairmanScript, -1
 	object_event  4,  1, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, PokemonFanClubReceptionistScript, -1
 	object_event  2,  3, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, PokemonFanClubClefairyGuyScript, -1

@@ -1,6 +1,8 @@
-DEF MAX_ROLLOUT_COUNT EQU 5
+MAX_ROLLOUT_COUNT EQU 5
 
 BattleCommand_CheckCurl:
+; checkcurl
+
 	ld de, wPlayerRolloutCount
 	ldh a, [hBattleTurn]
 	and a
@@ -12,7 +14,7 @@ BattleCommand_CheckCurl:
 	bit SUBSTATUS_ROLLOUT, a
 	jr z, .reset
 
-	ld b, doturn_command
+	ld b, $4 ; doturn
 	jp SkipToBattleCommand
 
 .reset
@@ -21,9 +23,11 @@ BattleCommand_CheckCurl:
 	ret
 
 BattleCommand_RolloutPower:
+; rolloutpower
+
 	ld a, BATTLE_VARS_STATUS
 	call GetBattleVar
-	and SLP_MASK
+	and SLP
 	ret nz
 
 	ld hl, wPlayerRolloutCount

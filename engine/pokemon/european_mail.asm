@@ -5,7 +5,7 @@ IsMailEuropean:
 ; return 4 if Spanish
 ; return 0 if none of the above
 	ld c, $0
-	ld hl, sPartyMon1MailNationality - sPartyMon1Mail
+	ld hl, sPartyMon1MailAuthorNationality - sPartyMon1Mail
 	add hl, de
 	ld a, [hli]
 	cp "E"
@@ -38,15 +38,15 @@ INCBIN "gfx/font/french_german.1bpp"
 SpanishItalianFont:
 INCBIN "gfx/font/spanish_italian.1bpp"
 
-ConvertFrenchGermanMailToEnglish:
-; Called if mail is French or German
-; Converts 's 't 'v from French/German character set to English
+HandleFrenchGermanMail:
+; called if mail is french or german
+; fix 's 't 'v
 	ld b, sPartyMon1MailAuthor - sPartyMon1Mail
 	ld h, d
 	ld l, e
 .loop
 	ld a, [hl]
-	cp $dc ; 's in French/German font
+	cp $dc ; 's in french/german font
 	jr nz, .check_intermediate_chars
 	ld a, "'s"
 	jr .replace
@@ -67,9 +67,12 @@ ConvertFrenchGermanMailToEnglish:
 	jr nz, .loop
 	ret
 
-ConvertEnglishMailToFrenchGerman:
-; Called if mail is English and game is French or German
-; Converts 's 't 'v from English character set to French/German
+LireLeCourrierAnglais:
+DeutenEnglischenPost:
+; Cette fonction convertit certains des caractères anglais pour
+; leur équivalent dans le jeu de caractères français.
+; Diese Funktion wandelt bestimmte englische Zeichen, um ihre
+; Entsprechung in der Deutschen-Zeichensatz.
 	ld b, sPartyMon1MailAuthor - sPartyMon1Mail
 	ld h, d
 	ld l, e
@@ -77,7 +80,7 @@ ConvertEnglishMailToFrenchGerman:
 	ld a, [hl]
 	cp "'s"
 	jr nz, .check_intermediate_chars
-	ld a, $dc ; 's in French/German font
+	ld a, $dc
 	jr .replace
 
 .check_intermediate_chars
@@ -96,12 +99,15 @@ ConvertEnglishMailToFrenchGerman:
 	jr nz, .loop
 	ret
 
-ConvertSpanishItalianMailToEnglish:
-; Called if mail is Spanish or Italian
-; Converts 'd 'l 'm 'r 's 't 'v from Spanish/Italian character set to English
-ConvertEnglishMailToSpanishItalian:
-; Called if mail is English and game is Spanish or Italian
-; Converts 'd 'l 'm 'r 's 't 'v from English character set to Spanish/Italian
+HandleSpanishItalianMail:
+LeerCorreosIngleses:
+LeggiPostaInglese:
+; This function converts certain characters between
+; the English and Spanish/Italian character sets.
+; Esta función convierte ciertos caracteres entre
+; el juego de caracteres Inglés y Español.
+; Questa funzione converte alcuni caratteri tra
+; l'inglese e il set di caratteri italiani.
 	ld b, sPartyMon1MailAuthor - sPartyMon1Mail
 	ld h, d
 	ld l, e

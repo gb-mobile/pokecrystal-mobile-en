@@ -115,7 +115,7 @@ DoPoisonStep::
 	end
 
 .whiteout
-	farsjump OverworldWhiteoutScript
+	farsjump Script_OverworldWhiteout
 
 .CheckWhitedOut:
 	xor a
@@ -128,7 +128,7 @@ DoPoisonStep::
 	jr z, .mon_not_fainted
 	ld c, HAPPINESS_POISONFAINT
 	farcall ChangeHappiness
-	farcall GetPartyNickname
+	farcall GetPartyNick
 	ld hl, .PoisonFaintText
 	call PrintText
 
@@ -146,9 +146,9 @@ DoPoisonStep::
 	ret
 
 .PoisonFaintText:
-	text_far _PoisonFaintText
+	text_far UnknownText_0x1c0acc
 	text_end
 
-.PoisonWhiteoutText: ; unreferenced
-	text_far _PoisonWhiteoutText
+.PoisonWhiteOutText:
+	text_far UnknownText_0x1c0ada
 	text_end

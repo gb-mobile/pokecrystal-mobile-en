@@ -1,4 +1,5 @@
 BattleCommand_LeechSeed:
+; leechseed
 	ld a, [wAttackMissed]
 	and a
 	jr nz, .evaded

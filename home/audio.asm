@@ -1,6 +1,6 @@
 ; Audio interfaces.
 
-InitSound::
+MapSetup_Sound_Off::
 	push hl
 	push de
 	push bc
@@ -8,11 +8,11 @@ InitSound::
 
 	ldh a, [hROMBank]
 	push af
-	ld a, BANK(_InitSound)
+	ld a, BANK(_MapSetup_Sound_Off)
 	ldh [hROMBank], a
 	ld [MBC3RomBank], a
 
-	call _InitSound
+	call _MapSetup_Sound_Off
 
 	pop af
 	ldh [hROMBank], a
@@ -49,7 +49,7 @@ UpdateSound::
 	ret
 
 _LoadMusicByte::
-; [wCurMusicByte] = [a:de]
+; wCurMusicByte = [a:de]
 	ldh [hROMBank], a
 	ld [MBC3RomBank], a
 
@@ -71,7 +71,7 @@ PlayMusic::
 
 	ldh a, [hROMBank]
 	push af
-	ld a, BANK(_PlayMusic) ; aka BANK(_InitSound)
+	ld a, BANK(_PlayMusic) ; aka BANK(_MapSetup_Sound_Off)
 	ldh [hROMBank], a
 	ld [MBC3RomBank], a
 
@@ -83,7 +83,7 @@ PlayMusic::
 	jr .end
 
 .nomusic
-	call _InitSound
+	call _MapSetup_Sound_Off
 
 .end
 	pop af
@@ -143,7 +143,7 @@ PlayCry::
 	ld [MBC3RomBank], a
 
 	ld hl, PokemonCries
-rept MON_CRY_LENGTH
+rept 6 ; sizeof(mon_cry)
 	add hl, de
 endr
 
@@ -277,21 +277,21 @@ MaxVolume::
 	ret
 
 LowVolume::
-	ld a, $33 ; 50%
+	ld a, $33 ; 40%
 	ld [wVolume], a
 	ret
 
-MinVolume::
+VolumeOff::
 	xor a
 	ld [wVolume], a
 	ret
 
-FadeOutToMusic:: ; unreferenced
+Unused_FadeOutMusic::
 	ld a, 4
 	ld [wMusicFade], a
 	ret
 
-FadeInToMusic::
+FadeInMusic::
 	ld a, 4 | (1 << MUSIC_FADE_IN_F)
 	ld [wMusicFade], a
 	ret
@@ -359,8 +359,7 @@ PlayMapMusic::
 	pop hl
 	ret
 
-PlayMapMusicBike::
-; If the player's on a bike, play the bike music instead of the map music
+EnterMapMusic::
 	push hl
 	push de
 	push bc
@@ -436,7 +435,7 @@ SpecialMapMusic::
 	and a
 	ret
 
-.bike ; unreferenced
+.bike
 	ld de, MUSIC_BICYCLE
 	scf
 	ret
@@ -467,18 +466,19 @@ GetMapMusic_MaybeSpecial::
 	call GetMapMusic
 	ret
 
-PlaceBCDNumberSprite:: ; unreferenced
-; Places a BCD number at the upper center of the screen.
+Unreferenced_Function3d9f::
+; Places a BCD number at the
+; upper center of the screen.
 	ld a, 4 * TILE_WIDTH
-	ld [wShadowOAMSprite38YCoord], a
-	ld [wShadowOAMSprite39YCoord], a
+	ld [wVirtualOAMSprite38YCoord], a
+	ld [wVirtualOAMSprite39YCoord], a
 	ld a, 10 * TILE_WIDTH
-	ld [wShadowOAMSprite38XCoord], a
+	ld [wVirtualOAMSprite38XCoord], a
 	ld a, 11 * TILE_WIDTH
-	ld [wShadowOAMSprite39XCoord], a
+	ld [wVirtualOAMSprite39XCoord], a
 	xor a
-	ld [wShadowOAMSprite38Attributes], a
-	ld [wShadowOAMSprite39Attributes], a
+	ld [wVirtualOAMSprite38Attributes], a
+	ld [wVirtualOAMSprite39Attributes], a
 	ld a, [wUnusedBCDNumber]
 	cp 100
 	jr nc, .max
@@ -488,17 +488,17 @@ PlaceBCDNumberSprite:: ; unreferenced
 	swap a
 	and $f
 	add "0"
-	ld [wShadowOAMSprite38TileID], a
+	ld [wVirtualOAMSprite38TileID], a
 	ld a, b
 	and $f
 	add "0"
-	ld [wShadowOAMSprite39TileID], a
+	ld [wVirtualOAMSprite39TileID], a
 	ret
 
 .max
 	ld a, "9"
-	ld [wShadowOAMSprite38TileID], a
-	ld [wShadowOAMSprite39TileID], a
+	ld [wVirtualOAMSprite38TileID], a
+	ld [wVirtualOAMSprite39TileID], a
 	ret
 
 CheckSFX::
@@ -524,7 +524,7 @@ CheckSFX::
 TerminateExpBarSound::
 	xor a
 	ld [wChannel5Flags1], a
-	ld [wPitchSweep], a
+	ld [wSoundInput], a
 	ldh [rNR10], a
 	ldh [rNR11], a
 	ldh [rNR12], a
@@ -539,7 +539,7 @@ ChannelsOff::
 	ld [wChannel2Flags1], a
 	ld [wChannel3Flags1], a
 	ld [wChannel4Flags1], a
-	ld [wPitchSweep], a
+	ld [wSoundInput], a
 	ret
 
 SFXChannelsOff::
@@ -549,5 +549,5 @@ SFXChannelsOff::
 	ld [wChannel6Flags1], a
 	ld [wChannel7Flags1], a
 	ld [wChannel8Flags1], a
-	ld [wPitchSweep], a
+	ld [wSoundInput], a
 	ret

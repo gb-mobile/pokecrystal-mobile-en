@@ -250,7 +250,7 @@ HatchEggs:
 	ld a, [wCurPartySpecies]
 	dec de
 	ld [de], a
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	ld [wCurSpecies], a
 	call GetPokemonName
 	xor a
@@ -303,7 +303,7 @@ HatchEggs:
 	ld a, [wPlayerID + 1]
 	ld [hl], a
 	ld a, [wCurPartyMon]
-	ld hl, wPartyMonOTs
+	ld hl, wPartyMonOT
 	ld bc, NAME_LENGTH
 	call AddNTimes
 	ld d, h
@@ -319,7 +319,7 @@ HatchEggs:
 	ld d, h
 	ld e, l
 	push de
-	ld hl, .BreedAskNicknameText
+	ld hl, .Text_NicknameHatchling
 	call PrintText
 	call YesNoBox
 	pop de
@@ -356,7 +356,7 @@ HatchEggs:
 
 .Text_HatchEgg:
 	; Huh? @ @
-	text_far Text_BreedHuh
+	text_far UnknownText_0x1c0db0
 	text_asm
 	ld hl, wVramState
 	res 0, [hl]
@@ -366,26 +366,29 @@ HatchEggs:
 	ld a, [wCurPartySpecies]
 	push af
 	call EggHatch_AnimationSequence
-	ld hl, .BreedClearboxText
+	ld hl, .ClearTextbox
 	call PrintText
 	pop af
 	ld [wCurPartySpecies], a
 	pop bc
 	pop de
 	pop hl
-	ld hl, .BreedEggHatchText
+	ld hl, .CameOutOfItsEgg
 	ret
 
-.BreedClearboxText:
-	text_far _BreedClearboxText
+.ClearTextbox:
+	;
+	text_far UnknownText_0x1c0db8
 	text_end
 
-.BreedEggHatchText:
-	text_far _BreedEggHatchText
+.CameOutOfItsEgg:
+	; came out of its EGG!@ @
+	text_far UnknownText_0x1c0dba
 	text_end
 
-.BreedAskNicknameText:
-	text_far _BreedAskNicknameText
+.Text_NicknameHatchling:
+	; Give a nickname to @ ?
+	text_far UnknownText_0x1c0dd8
 	text_end
 
 InitEggMoves:
@@ -428,7 +431,7 @@ GetEggMove:
 	add hl, bc
 	add hl, bc
 	ld a, BANK(EggMovePointers)
-	call GetFarWord
+	call GetFarHalfword
 .loop
 	ld a, BANK("Egg Moves")
 	call GetFarByte
@@ -462,7 +465,7 @@ GetEggMove:
 	add hl, bc
 	add hl, bc
 	ld a, BANK(EvosAttacksPointers)
-	call GetFarWord
+	call GetFarHalfword
 .loop3
 	ld a, BANK("Evolutions and Attacks")
 	call GetFarByte
@@ -620,7 +623,6 @@ GetBreedmonMovePointer:
 	ret
 
 GetEggFrontpic:
-; BUG: A hatching Unown egg would not show the right letter (see docs/bugs_and_glitches.md)
 	push de
 	ld [wCurPartySpecies], a
 	ld [wCurSpecies], a
@@ -674,7 +676,7 @@ EggHatch_DoAnimFrame:
 	ret
 
 EggHatch_AnimationSequence:
-	ld a, [wNamedObjectIndex]
+	ld a, [wNamedObjectIndexBuffer]
 	ld [wJumptableIndex], a
 	ld a, [wCurSpecies]
 	push af
@@ -783,7 +785,7 @@ EggHatch_CrackShell:
 	ld d, a
 	ld e, 11 * 8
 	ld a, SPRITE_ANIM_INDEX_EGG_CRACK
-	call InitSpriteAnimStruct
+	call _InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
 	ld [hl], $0
@@ -811,7 +813,7 @@ Hatch_InitShellFragments:
 	push bc
 
 	ld a, SPRITE_ANIM_INDEX_EGG_HATCH
-	call InitSpriteAnimStruct
+	call _InitSpriteAnimStruct
 
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
@@ -836,7 +838,7 @@ Hatch_InitShellFragments:
 	call EggHatch_DoAnimFrame
 	ret
 
-MACRO shell_fragment
+shell_fragment: MACRO
 ; y tile, y pxl, x tile, x pxl, frameset offset, ???
 	db (\1 * 8) % $100 + \2, (\3 * 8) % $100 + \4, \5 - SPRITE_ANIM_FRAMESET_EGG_HATCH_1, \6
 ENDM
@@ -863,40 +865,42 @@ Hatch_ShellFragmentLoop:
 	ret
 
 DayCareMon1:
-	ld hl, LeftWithDayCareManText
+	ld hl, DayCareMon1Text
 	call PrintText
 	ld a, [wBreedMon1Species]
 	call PlayMonCry
 	ld a, [wDayCareLady]
 	bit DAYCARELADY_HAS_MON_F, a
 	jr z, DayCareMonCursor
-	call PromptButton
-	ld hl, wBreedMon2Nickname
+	call ButtonSound
+	ld hl, wBreedMon2Nick
 	call DayCareMonCompatibilityText
 	jp PrintText
 
 DayCareMon2:
-	ld hl, LeftWithDayCareLadyText
+	ld hl, DayCareMon2Text
 	call PrintText
 	ld a, [wBreedMon2Species]
 	call PlayMonCry
 	ld a, [wDayCareMan]
 	bit DAYCAREMAN_HAS_MON_F, a
 	jr z, DayCareMonCursor
-	call PromptButton
-	ld hl, wBreedMon1Nickname
+	call ButtonSound
+	ld hl, wBreedMon1Nick
 	call DayCareMonCompatibilityText
 	jp PrintText
 
 DayCareMonCursor:
 	jp WaitPressAorB_BlinkCursor
 
-LeftWithDayCareLadyText:
-	text_far _LeftWithDayCareLadyText
+DayCareMon2Text:
+	; It's @ that was left with the DAY-CARE LADY.
+	text_far UnknownText_0x1c0df3
 	text_end
 
-LeftWithDayCareManText:
-	text_far _LeftWithDayCareManText
+DayCareMon1Text:
+	; It's @ that was left with the DAY-CARE MAN.
+	text_far UnknownText_0x1c0e24
 	text_end
 
 DayCareMonCompatibilityText:
@@ -907,44 +911,49 @@ DayCareMonCompatibilityText:
 	call CheckBreedmonCompatibility
 	pop bc
 	ld a, [wBreedingCompatibility]
-	ld hl, .BreedBrimmingWithEnergyText
+	ld hl, .AllAlone
 	cp -1
 	jr z, .done
-	ld hl, .BreedNoInterestText
+	ld hl, .Incompatible
 	and a
 	jr z, .done
-	ld hl, .BreedAppearsToCareForText
+	ld hl, .HighCompatibility
 	cp 230
 	jr nc, .done
 	cp 70
-	ld hl, .BreedFriendlyText
+	ld hl, .ModerateCompatibility
 	jr nc, .done
-	ld hl, .BreedShowsInterestText
+	ld hl, .SlightCompatibility
 
 .done
 	ret
 
-.BreedBrimmingWithEnergyText:
-	text_far _BreedBrimmingWithEnergyText
+.AllAlone:
+	; It's brimming with energy.
+	text_far UnknownText_0x1c0e54
 	text_end
 
-.BreedNoInterestText:
-	text_far _BreedNoInterestText
+.Incompatible:
+	; It has no interest in @ .
+	text_far UnknownText_0x1c0e6f
 	text_end
 
-.BreedAppearsToCareForText:
-	text_far _BreedAppearsToCareForText
+.HighCompatibility:
+	; It appears to care for @ .
+	text_far UnknownText_0x1c0e8d
 	text_end
 
-.BreedFriendlyText:
-	text_far _BreedFriendlyText
+.ModerateCompatibility:
+	; It's friendly with @ .
+	text_far UnknownText_0x1c0eac
 	text_end
 
-.BreedShowsInterestText:
-	text_far _BreedShowsInterestText
+.SlightCompatibility:
+	; It shows interest in @ .
+	text_far UnknownText_0x1c0ec6
 	text_end
 
-DayCareMonPrintEmptyString: ; unreferenced
+Unreferenced_DayCareMonPrintEmptyString:
 	ld hl, .string
 	ret
 

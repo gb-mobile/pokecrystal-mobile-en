@@ -1,4 +1,4 @@
-TiffanyMonIsAdorableText:
+UnknownText_0x665ad:
 	text "My @"
 	text_ram wStringBuffer4
 	text "'s"
@@ -11,7 +11,7 @@ TiffanyMonIsAdorableText:
 	line "fluffy and warm!"
 	done
 
-TiffanyDefeatedMonText:
+UnknownText_0x66605:
 	text "Oh, and we had to"
 	line "battle a wild"
 
@@ -31,7 +31,7 @@ TiffanyDefeatedMonText:
 	text "!"
 	done
 
-TiffanyLostAMonText:
+UnknownText_0x66688:
 	text "Oh, and we had to"
 	line "battle a wild"
 
@@ -51,7 +51,7 @@ TiffanyLostAMonText:
 	cont "of my CLEFAIRY."
 	done
 
-TiffanyBattleRematchText:
+UnknownText_0x66730:
 	text "I know this might"
 	line "surprise you, but"
 
@@ -81,11 +81,11 @@ TiffanyItsAwfulText:
 	line "Bye-bye!"
 	done
 
-TiffanyHangUpText:
+UnknownText_0x667f7:
 	text "Bye-bye!"
 	done
 
-TiffanyFoundItemText:
+UnknownText_0x66801:
 	text "I bought some PINK"
 	line "BOWS at GOLDENROD"
 
@@ -101,12 +101,12 @@ TiffanyFoundItemText:
 	text "."
 	done
 
-TiffanyNoItemText:
+UnknownText_0x66882:
 	text "I love dressing up"
 	line "my CLEFAIRY!"
 	done
 
-TiffanyAsleepText:
+UnknownText_0x668a3:
 	text "What's wrong?"
 	line "Can't you visit?"
 
@@ -122,7 +122,7 @@ TiffanyAsleepText:
 	text "!"
 	done
 
-TiffanyHurryText:
+UnknownText_0x6691d:
 	text "What's wrong?"
 	line "Can't you visit?"
 

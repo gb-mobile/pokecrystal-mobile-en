@@ -1,11 +1,11 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const OLIVINEGYM_JASMINE
-	const OLIVINEGYM_GYM_GUIDE
+	const OLIVINEGYM_GYM_GUY
 
 OlivineGym_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 OlivineGymJasmineScript:
 	faceplayer
@@ -31,7 +31,7 @@ OlivineGymJasmineScript:
 	checkevent EVENT_GOT_TM23_IRON_TAIL
 	iftrue .GotIronTail
 	writetext Jasmine_BadgeSpeech
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_IRON_TAIL
 	iffalse .NoRoomForIronTail
 	setevent EVENT_GOT_TM23_IRON_TAIL
@@ -53,33 +53,33 @@ OlivineGymActivateRockets:
 	end
 
 .GoldenrodRockets:
-	jumpstd GoldenrodRocketsScript
+	jumpstd goldenrodrockets
 
 .RadioTowerRockets:
-	jumpstd RadioTowerRocketsScript
+	jumpstd radiotowerrockets
 
-OlivineGymGuideScript:
+OlivineGymGuyScript:
 	faceplayer
 	checkevent EVENT_BEAT_JASMINE
-	iftrue .OlivineGymGuideWinScript
+	iftrue .OlivineGymGuyWinScript
 	checkevent EVENT_JASMINE_RETURNED_TO_GYM
-	iffalse .OlivineGymGuidePreScript
+	iffalse .OlivineGymGuyPreScript
 	opentext
-	writetext OlivineGymGuideText
+	writetext OlivineGymGuyText
 	waitbutton
 	closetext
 	end
 
-.OlivineGymGuideWinScript:
+.OlivineGymGuyWinScript:
 	opentext
-	writetext OlivineGymGuideWinText
+	writetext OlivineGymGuyWinText
 	waitbutton
 	closetext
 	end
 
-.OlivineGymGuidePreScript:
+.OlivineGymGuyPreScript:
 	opentext
-	writetext OlivineGymGuidePreText
+	writetext OlivineGymGuyPreText
 	waitbutton
 	closetext
 	end
@@ -87,10 +87,10 @@ OlivineGymGuideScript:
 OlivineGymStatue:
 	checkflag ENGINE_MINERALBADGE
 	iftrue .Beaten
-	jumpstd GymStatue1Script
+	jumpstd gymstatue1
 .Beaten:
 	gettrainername STRING_BUFFER_4, JASMINE, JASMINE1
-	jumpstd GymStatue2Script
+	jumpstd gymstatue2
 
 Jasmine_SteelTypeIntro:
 	text "…Thank you for"
@@ -145,7 +145,7 @@ Jasmine_BadgeSpeech:
 	line "this too…"
 	done
 
-Text_ReceivedTM09: ; unreferenced
+Text_ReceivedTM09:
 	text "<PLAYER> received"
 	line "TM09."
 	done
@@ -162,7 +162,7 @@ Jasmine_GoodLuck:
 	cont "but good luck…"
 	done
 
-OlivineGymGuideText:
+OlivineGymGuyText:
 	text "JASMINE uses the"
 	line "newly discovered"
 	cont "steel-type."
@@ -171,7 +171,7 @@ OlivineGymGuideText:
 	line "much about it."
 	done
 
-OlivineGymGuideWinText:
+OlivineGymGuyWinText:
 	text "That was awesome."
 
 	para "The steel-type,"
@@ -182,7 +182,7 @@ OlivineGymGuideWinText:
 	cont "unknown kind!"
 	done
 
-OlivineGymGuidePreText:
+OlivineGymGuyPreText:
 	text "JASMINE, the GYM"
 	line "LEADER, is at the"
 	cont "LIGHTHOUSE."
@@ -198,16 +198,16 @@ OlivineGymGuidePreText:
 OlivineGym_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4, 15, OLIVINE_CITY, 2
 	warp_event  5, 15, OLIVINE_CITY, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  3, 13, BGEVENT_READ, OlivineGymStatue
 	bg_event  6, 13, BGEVENT_READ, OlivineGymStatue
 
-	def_object_events
+	db 2 ; object events
 	object_event  5,  3, SPRITE_JASMINE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, OlivineGymJasmineScript, EVENT_OLIVINE_GYM_JASMINE
-	object_event  7, 13, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, OlivineGymGuideScript, -1
+	object_event  7, 13, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, OlivineGymGuyScript, -1

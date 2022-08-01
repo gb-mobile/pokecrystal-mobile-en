@@ -1,4 +1,5 @@
 BattleCommand_Protect:
+; protect
 	call ProtectChance
 	ret c
 
@@ -15,9 +16,9 @@ ProtectChance:
 	ld de, wPlayerProtectCount
 	ldh a, [hBattleTurn]
 	and a
-	jr z, .got_count
+	jr z, .asm_37637
 	ld de, wEnemyProtectCount
-.got_count
+.asm_37637
 
 	call CheckOpponentWentFirst
 	jr nz, .failed

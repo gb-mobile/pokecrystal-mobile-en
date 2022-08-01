@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE32_FISHER1
 	const ROUTE32_FISHER2
 	const ROUTE32_FISHER3
@@ -15,12 +15,12 @@
 	const ROUTE32_POKE_BALL2
 
 Route32_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene0, SCENE_ROUTE32_COOLTRAINER_M_BLOCKS
-	scene_script .DummyScene1, SCENE_ROUTE32_OFFER_SLOWPOKETAIL
-	scene_script .DummyScene2, SCENE_ROUTE32_NOOP
+	db 3 ; scene scripts
+	scene_script .DummyScene0 ; SCENE_DEFAULT
+	scene_script .DummyScene1 ; SCENE_ROUTE32_OFFER_SLOWPOKETAIL
+	scene_script .DummyScene2 ; SCENE_ROUTE32_NOTHING
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .Frieda
 
 .DummyScene0:
@@ -36,11 +36,11 @@ Route32_MapScripts:
 	readvar VAR_WEEKDAY
 	ifequal FRIDAY, .FriedaAppears
 	disappear ROUTE32_FRIEDA
-	endcallback
+	return
 
 .FriedaAppears:
 	appear ROUTE32_FRIEDA
-	endcallback
+	return
 
 Route32CooltrainerMScript:
 	faceplayer
@@ -57,7 +57,7 @@ Route32CooltrainerMContinueScene:
 	closetext
 	end
 
-.GoToSproutTower: ; unreferenced
+.Unreferenced:
 	writetext Route32CooltrainerMText_UnusedSproutTower
 	waitbutton
 	closetext
@@ -65,7 +65,7 @@ Route32CooltrainerMContinueScene:
 
 .GiveMiracleSeed:
 	writetext Route32CooltrainerMText_HaveThisSeed
-	promptbutton
+	buttonsound
 	verbosegiveitem MIRACLE_SEED
 	iffalse .BagFull
 	setevent EVENT_GOT_MIRACLE_SEED_IN_ROUTE_32
@@ -106,7 +106,7 @@ Route32RoarTMGuyScript:
 	checkevent EVENT_GOT_TM05_ROAR
 	iftrue .AlreadyHaveRoar
 	writetext Text_RoarIntro
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_ROAR
 	iffalse .Finish
 	setevent EVENT_GOT_TM05_ROAR
@@ -125,7 +125,7 @@ Route32WannaBuyASlowpokeTailScript:
 SlowpokeTailSalesmanScript:
 	faceplayer
 _OfferToSellSlowpokeTail:
-	setscene SCENE_ROUTE32_NOOP
+	setscene SCENE_ROUTE32_NOTHING
 	opentext
 	writetext Text_MillionDollarSlowpokeTail
 	yesorno
@@ -170,16 +170,16 @@ TrainerFisherRalph1:
 	loadvar VAR_CALLERID, PHONE_FISHER_RALPH
 	endifjustbattled
 	opentext
-	checkflag ENGINE_RALPH_READY_FOR_REMATCH
+	checkflag ENGINE_RALPH
 	iftrue .Rematch
-	checkflag ENGINE_QWILFISH_SWARM
+	checkflag ENGINE_FISH_SWARM
 	iftrue .Swarm
 	checkcellnum PHONE_FISHER_RALPH
 	iftrue .NumberAccepted
 	checkevent EVENT_RALPH_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskAgain
 	writetext FisherRalphAfterText
-	promptbutton
+	buttonsound
 	setevent EVENT_RALPH_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
 	sjump .AskForNumber
@@ -220,7 +220,7 @@ TrainerFisherRalph1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wRalphFightCount, 1
-	clearflag ENGINE_RALPH_READY_FOR_REMATCH
+	clearflag ENGINE_RALPH
 	end
 
 .LoadFight1:
@@ -228,7 +228,7 @@ TrainerFisherRalph1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wRalphFightCount, 2
-	clearflag ENGINE_RALPH_READY_FOR_REMATCH
+	clearflag ENGINE_RALPH
 	end
 
 .LoadFight2:
@@ -236,7 +236,7 @@ TrainerFisherRalph1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wRalphFightCount, 3
-	clearflag ENGINE_RALPH_READY_FOR_REMATCH
+	clearflag ENGINE_RALPH
 	end
 
 .LoadFight3:
@@ -244,14 +244,14 @@ TrainerFisherRalph1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wRalphFightCount, 4
-	clearflag ENGINE_RALPH_READY_FOR_REMATCH
+	clearflag ENGINE_RALPH
 	end
 
 .LoadFight4:
 	loadtrainer FISHER, RALPH5
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_RALPH_READY_FOR_REMATCH
+	clearflag ENGINE_RALPH
 	end
 
 .Swarm:
@@ -261,31 +261,31 @@ TrainerFisherRalph1:
 	end
 
 .AskNumber1:
-	jumpstd AskNumber1MScript
+	jumpstd asknumber1m
 	end
 
 .AskNumber2:
-	jumpstd AskNumber2MScript
+	jumpstd asknumber2m
 	end
 
 .RegisteredNumber:
-	jumpstd RegisteredNumberMScript
+	jumpstd registerednumberm
 	end
 
 .NumberAccepted:
-	jumpstd NumberAcceptedMScript
+	jumpstd numberacceptedm
 	end
 
 .NumberDeclined:
-	jumpstd NumberDeclinedMScript
+	jumpstd numberdeclinedm
 	end
 
 .PhoneFull:
-	jumpstd PhoneFullMScript
+	jumpstd phonefullm
 	end
 
 .RematchStd:
-	jumpstd RematchMScript
+	jumpstd rematchm
 	end
 
 TrainerFisherHenry:
@@ -306,14 +306,14 @@ TrainerPicnickerLiz1:
 	loadvar VAR_CALLERID, PHONE_PICNICKER_LIZ
 	endifjustbattled
 	opentext
-	checkflag ENGINE_LIZ_READY_FOR_REMATCH
+	checkflag ENGINE_LIZ
 	iftrue .Rematch
 	checkcellnum PHONE_PICNICKER_LIZ
 	iftrue .NumberAccepted
 	checkevent EVENT_LIZ_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskAgain
 	writetext PicnickerLiz1AfterText
-	promptbutton
+	buttonsound
 	setevent EVENT_LIZ_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
 	sjump .AskForNumber
@@ -354,7 +354,7 @@ TrainerPicnickerLiz1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wLizFightCount, 1
-	clearflag ENGINE_LIZ_READY_FOR_REMATCH
+	clearflag ENGINE_LIZ
 	end
 
 .LoadFight1:
@@ -362,7 +362,7 @@ TrainerPicnickerLiz1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wLizFightCount, 2
-	clearflag ENGINE_LIZ_READY_FOR_REMATCH
+	clearflag ENGINE_LIZ
 	end
 
 .LoadFight2:
@@ -370,7 +370,7 @@ TrainerPicnickerLiz1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wLizFightCount, 3
-	clearflag ENGINE_LIZ_READY_FOR_REMATCH
+	clearflag ENGINE_LIZ
 	end
 
 .LoadFight3:
@@ -378,42 +378,42 @@ TrainerPicnickerLiz1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wLizFightCount, 4
-	clearflag ENGINE_LIZ_READY_FOR_REMATCH
+	clearflag ENGINE_LIZ
 	end
 
 .LoadFight4:
 	loadtrainer PICNICKER, LIZ5
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_LIZ_READY_FOR_REMATCH
+	clearflag ENGINE_LIZ
 	end
 
 .AskNumber1:
-	jumpstd AskNumber1FScript
+	jumpstd asknumber1f
 	end
 
 .AskNumber2:
-	jumpstd AskNumber2FScript
+	jumpstd asknumber2f
 	end
 
 .RegisteredNumber:
-	jumpstd RegisteredNumberFScript
+	jumpstd registerednumberf
 	end
 
 .NumberAccepted:
-	jumpstd NumberAcceptedFScript
+	jumpstd numberacceptedf
 	end
 
 .NumberDeclined:
-	jumpstd NumberDeclinedFScript
+	jumpstd numberdeclinedf
 	end
 
 .PhoneFull:
-	jumpstd PhoneFullFScript
+	jumpstd phonefullf
 	end
 
 .RematchStd:
-	jumpstd RematchFScript
+	jumpstd rematchf
 	end
 
 TrainerYoungsterAlbert:
@@ -459,11 +459,11 @@ FriedaScript:
 	checkevent EVENT_MET_FRIEDA_OF_FRIDAY
 	iftrue .MetFrieda
 	writetext MeetFriedaText
-	promptbutton
+	buttonsound
 	setevent EVENT_MET_FRIEDA_OF_FRIDAY
 .MetFrieda:
 	writetext FriedaGivesGiftText
-	promptbutton
+	buttonsound
 	verbosegiveitem POISON_BARB
 	iffalse .Done
 	setevent EVENT_GOT_POISON_BARB_FROM_FRIEDA
@@ -501,7 +501,7 @@ Route32UnionCaveSign:
 	jumptext Route32UnionCaveSignText
 
 Route32PokecenterSign:
-	jumpstd PokecenterSignScript
+	jumpstd pokecentersign
 
 Route32HiddenGreatBall:
 	hiddenitem GREAT_BALL, EVENT_ROUTE_32_HIDDEN_GREAT_BALL
@@ -542,6 +542,7 @@ Route32CooltrainerMText_AideIsWaiting:
 	done
 
 Route32CooltrainerMText_UnusedSproutTower:
+; unused
 	text "Have you gone to"
 	line "SPROUT TOWER?"
 
@@ -678,7 +679,9 @@ FisherRalphSwarmText:
 	line "as you can, kid!"
 	done
 
-Route32UnusedFisher1SeenText: ; unreferenced
+; --- start a segment of unused text
+
+Route32UnusedFisher1SeenText:
 	text "I keep catching"
 	line "the same #MON…"
 
@@ -687,35 +690,37 @@ Route32UnusedFisher1SeenText: ; unreferenced
 	cont "around for me."
 	done
 
-Route32UnusedFisher1BeatenText: ; unreferenced
+Route32UnusedFisher1BeatenText:
 	text "Nothing ever goes"
 	line "right for me now…"
 	done
 
-Route32UnusedFisher1AfterText: ; unreferenced
+Route32UnusedFisher1AfterText:
 	text "How come the guy"
 	line "next to me catches"
 	cont "good #MON?"
 	done
 
-Route32UnusedFisher2SeenText: ; unreferenced
+Route32UnusedFisher2SeenText:
 	text "Heh, I'm on a roll"
 	line "today. How about a"
 	cont "battle, kid?"
 	done
 
-Route32UnusedFisher2BeatenText: ; unreferenced
+Route32UnusedFisher2BeatenText:
 	text "Oof. I wasn't"
 	line "lucky that time."
 	done
 
-Route32UnusedFisher2AfterText: ; unreferenced
+Route32UnusedFisher2AfterText:
 	text "You have to have a"
 	line "good ROD if you"
 
 	para "want to catch good"
 	line "#MON."
 	done
+
+; --- end a segment of unused texts
 
 FisherHenrySeenText:
 	text "My #MON?"
@@ -830,7 +835,8 @@ BirdKeeperPeterAfterText:
 	cont "in VIOLET CITY."
 	done
 
-Route32UnusedText: ; unreferenced
+Route32UnusedText:
+; unused
 	text "The fishermen"
 	line "yelled at me for"
 	cont "bugging them…"
@@ -923,17 +929,17 @@ Route32UnionCaveSignText:
 Route32_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 4 ; warp events
 	warp_event 11, 73, ROUTE_32_POKECENTER_1F, 1
 	warp_event  4,  2, ROUTE_32_RUINS_OF_ALPH_GATE, 3
 	warp_event  4,  3, ROUTE_32_RUINS_OF_ALPH_GATE, 4
 	warp_event  6, 79, UNION_CAVE_1F, 4
 
-	def_coord_events
-	coord_event 18,  8, SCENE_ROUTE32_COOLTRAINER_M_BLOCKS, Route32CooltrainerMStopsYouScene
+	db 2 ; coord events
+	coord_event 18,  8, SCENE_DEFAULT, Route32CooltrainerMStopsYouScene
 	coord_event  7, 71, SCENE_ROUTE32_OFFER_SLOWPOKETAIL, Route32WannaBuyASlowpokeTailScript
 
-	def_bg_events
+	db 6 ; bg events
 	bg_event 13,  5, BGEVENT_READ, Route32Sign
 	bg_event  9,  1, BGEVENT_READ, Route32RuinsSign
 	bg_event 10, 84, BGEVENT_READ, Route32UnionCaveSign
@@ -941,7 +947,7 @@ Route32_MapEvents:
 	bg_event 12, 67, BGEVENT_ITEM, Route32HiddenGreatBall
 	bg_event 11, 40, BGEVENT_ITEM, Route32HiddenSuperPotion
 
-	def_object_events
+	db 14 ; object events
 	object_event  8, 49, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 1, TrainerFisherJustin, -1
 	object_event 12, 56, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 3, TrainerFisherRalph1, -1
 	object_event  6, 48, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 1, TrainerFisherHenry, -1

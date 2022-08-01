@@ -1,4 +1,6 @@
 BattleCommand_FuryCutter:
+; furycutter
+
 	ld hl, wPlayerFuryCutterCount
 	ldh a, [hBattleTurn]
 	and a

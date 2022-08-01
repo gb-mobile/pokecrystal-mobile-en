@@ -20,7 +20,7 @@ GetSpriteVTile::
 	ld hl, wUsedSprites + 2
 	ld c, SPRITE_GFX_LIST_CAPACITY - 1
 	ld b, a
-	ldh a, [hMapObjectIndex]
+	ldh a, [hMapObjectIndexBuffer]
 	cp 0
 	jr z, .nope
 	ld a, b
@@ -80,7 +80,7 @@ GetPlayerStandingTile::
 CheckOnWater::
 	ld a, [wPlayerStandingTile]
 	call GetTileCollision
-	sub WATER_TILE
+	sub WATERTILE
 	ret z
 	and a
 	ret
@@ -202,7 +202,7 @@ CheckStandingOnEntrance::
 GetMapObject::
 ; Return the location of map object a in bc.
 	ld hl, wMapObjects
-	ld bc, MAPOBJECT_LENGTH
+	ld bc, OBJECT_LENGTH
 	call AddNTimes
 	ld b, h
 	ld c, l
@@ -210,14 +210,14 @@ GetMapObject::
 
 CheckObjectVisibility::
 ; Sets carry if the object is not visible on the screen.
-	ldh [hMapObjectIndex], a
+	ldh [hMapObjectIndexBuffer], a
 	call GetMapObject
 	ld hl, MAPOBJECT_OBJECT_STRUCT_ID
 	add hl, bc
 	ld a, [hl]
 	cp -1
 	jr z, .not_visible
-	ldh [hObjectStructIndex], a
+	ldh [hObjectStructIndexBuffer], a
 	call GetObjectStruct
 	and a
 	ret
@@ -237,7 +237,7 @@ CheckObjectTime::
 	ld a, [hl]
 	cp -1
 	jr z, .timeofday_always
-	ld hl, .TimesOfDay
+	ld hl, .TimeOfDayValues_191e
 	ld a, [wTimeOfDay]
 	add l
 	ld l, a
@@ -257,7 +257,7 @@ CheckObjectTime::
 	and a
 	ret
 
-.TimesOfDay:
+.TimeOfDayValues_191e:
 ; entries correspond to TimeOfDay values
 	db MORN
 	db DAY
@@ -300,22 +300,22 @@ CheckObjectTime::
 	scf
 	ret
 
-CopyMapObjectStruct:: ; unreferenced
-	ldh [hMapObjectIndex], a
+; unused
+	ldh [hMapObjectIndexBuffer], a
 	call GetMapObject
 	call CopyObjectStruct
 	ret
 
-UnmaskCopyMapObjectStruct::
-	ldh [hMapObjectIndex], a
+_CopyObjectStruct::
+	ldh [hMapObjectIndexBuffer], a
 	call UnmaskObject
-	ldh a, [hMapObjectIndex]
+	ldh a, [hMapObjectIndexBuffer]
 	call GetMapObject
 	farcall CopyObjectStruct
 	ret
 
 ApplyDeletionToMapObject::
-	ldh [hMapObjectIndex], a
+	ldh [hMapObjectIndexBuffer], a
 	call GetMapObject
 	ld hl, MAPOBJECT_OBJECT_STRUCT_ID
 	add hl, bc
@@ -358,11 +358,11 @@ CopyPlayerObjectTemplate::
 	ld [de], a
 	inc de
 	pop hl
-	ld bc, MAPOBJECT_LENGTH - 1
+	ld bc, OBJECT_LENGTH - 1
 	call CopyBytes
 	ret
 
-DeleteFollowerMapObject: ; unreferenced
+Unreferenced_Function19b8:
 	call GetMapObject
 	ld hl, MAPOBJECT_OBJECT_STRUCT_ID
 	add hl, bc
@@ -370,13 +370,13 @@ DeleteFollowerMapObject: ; unreferenced
 	push af
 	ld [hl], -1
 	inc hl
-	ld bc, MAPOBJECT_LENGTH - 1
+	ld bc, OBJECT_LENGTH - 1
 	xor a
 	call ByteFill
 	pop af
 	cp -1
 	ret z
-	cp NUM_OBJECT_STRUCTS
+	cp $d
 	ret nc
 	ld b, a
 	ld a, [wObjectFollow_Leader]
@@ -410,7 +410,7 @@ LoadMovementDataPointer::
 
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
-	ld [hl], STEP_TYPE_RESET
+	ld [hl], STEP_TYPE_00
 
 	ld hl, wVramState
 	set 7, [hl]
@@ -424,7 +424,7 @@ FindFirstEmptyObjectStruct::
 	push bc
 	push de
 	ld hl, wObjectStructs
-	ld de, OBJECT_LENGTH
+	ld de, OBJECT_STRUCT_LENGTH
 	ld c, NUM_OBJECT_STRUCTS
 .loop
 	ld a, [hl]
@@ -574,12 +574,12 @@ _GetMovementByte::
 	ld a, h
 	ret
 
-SetVramState_Bit0:: ; unreferenced
+SetVramState_Bit0::
 	ld hl, wVramState
 	set 0, [hl]
 	ret
 
-ResetVramState_Bit0:: ; unreferenced
+ResetVramState_Bit0::
 	ld hl, wVramState
 	res 0, [hl]
 	ret
@@ -589,12 +589,12 @@ UpdateSprites::
 	bit 0, a
 	ret z
 
-	farcall UpdateAllObjectsFrozen
+	farcall Function55e0
 	farcall _UpdateSprites
 	ret
 
 GetObjectStruct::
-	ld bc, OBJECT_LENGTH
+	ld bc, OBJECT_STRUCT_LENGTH
 	ld hl, wObjectStructs
 	call AddNTimes
 	ld b, h

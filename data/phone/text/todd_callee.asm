@@ -1,4 +1,4 @@
-ToddAnswerPhoneText:
+UnknownText_0x1b60f5:
 	text "Yes? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -7,7 +7,7 @@ ToddAnswerPhoneText:
 	para "Hey, <PLAY_G>!"
 	done
 
-ToddAnswerPhoneDayText:
+UnknownText_0x1b611b:
 	text "Yes? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -17,7 +17,7 @@ ToddAnswerPhoneDayText:
 	line "<PLAY_G>."
 	done
 
-ToddAnswerPhoneNiteText:
+UnknownText_0x1b6149:
 	text "Yes? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -26,7 +26,7 @@ ToddAnswerPhoneNiteText:
 	para "Ah, <PLAY_G>!"
 	done
 
-ToddGreetText:
+UnknownText_0x1b616e:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -35,7 +35,7 @@ ToddGreetText:
 	para "<PLAY_G>, right?"
 	done
 
-ToddGreetDayText:
+UnknownText_0x1b618f:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -45,7 +45,7 @@ ToddGreetDayText:
 	line "you doing?"
 	done
 
-ToddGreetNiteText:
+UnknownText_0x1b61bd:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -55,7 +55,7 @@ ToddGreetNiteText:
 	line "call you so late."
 	done
 
-ToddGenericText:
+UnknownText_0x1b61f2:
 	text "How do you raise"
 	line "your #MON?"
 

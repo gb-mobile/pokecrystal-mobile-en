@@ -28,7 +28,7 @@ LoadWildMonData:
 FindNest:
 ; Parameters:
 ; e: 0 = Johto, 1 = Kanto
-; wNamedObjectIndex: species
+; wNamedObjectIndexBuffer: species
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
 	xor a
@@ -102,7 +102,7 @@ FindNest:
 	inc hl
 .ScanMapLoop:
 	push af
-	ld a, [wNamedObjectIndex]
+	ld a, [wNamedObjectIndexBuffer]
 	cp [hl]
 	jr z, .found
 	inc hl
@@ -144,7 +144,7 @@ FindNest:
 .RoamMon1:
 	ld a, [wRoamMon1Species]
 	ld b, a
-	ld a, [wNamedObjectIndex]
+	ld a, [wNamedObjectIndexBuffer]
 	cp b
 	ret nz
 	ld a, [wRoamMon1MapGroup]
@@ -160,7 +160,7 @@ FindNest:
 .RoamMon2:
 	ld a, [wRoamMon2Species]
 	ld b, a
-	ld a, [wNamedObjectIndex]
+	ld a, [wNamedObjectIndexBuffer]
 	cp b
 	ret nz
 	ld a, [wRoamMon2MapGroup]
@@ -313,14 +313,14 @@ ChooseWildEncounter:
 	inc b
 ; Store the level
 .ok
-; BUG: ChooseWildEncounter doesn't really validate the wild Pokemon species (see docs/bugs_and_glitches.md)
 	ld a, b
 	ld [wCurPartyLevel], a
 	ld b, [hl]
+	; ld a, b
 	call ValidateTempWildMonSpecies
 	jr c, .nowildbattle
 
-	ld a, b
+	ld a, b ; This is in the wrong place.
 	cp UNOWN
 	jr nz, .done
 
@@ -705,14 +705,11 @@ JumpRoamMons:
 JumpRoamMon:
 .loop
 	ld hl, RoamMaps
-.innerloop1
-	; 0-15 are all valid indexes into RoamMaps,
-	; so this retry loop is unnecessary
-	; since NUM_ROAMMON_MAPS happens to be 16
-	call Random
-	maskbits NUM_ROAMMON_MAPS
-	cp NUM_ROAMMON_MAPS
-	jr nc, .innerloop1
+.innerloop1                   ; This loop happens to be unnecessary.
+	call Random               ; Choose a random number.
+	maskbits NUM_ROAMMON_MAPS ; Mask the number to limit it between 0 and 15.
+	cp NUM_ROAMMON_MAPS       ; If the number is not less than 16, try again.
+	jr nc, .innerloop1        ; I'm sure you can guess why this check is bogus.
 	inc a
 	ld b, a
 .innerloop2 ; Loop to get hl to the address of the chosen roam map.
@@ -822,9 +819,9 @@ RandomUnseenWildMon:
 	ld de, wStringBuffer1
 	call CopyName1
 	ld a, c
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
-	ld hl, .JustSawSomeRareMonText
+	ld hl, .SawRareMonText
 	call PrintText
 	xor a
 	ld [wScriptVar], a
@@ -835,7 +832,8 @@ RandomUnseenWildMon:
 	ld [wScriptVar], a
 	ret
 
-.JustSawSomeRareMonText:
+.SawRareMonText:
+	; I just saw some rare @  in @ . I'll call you if I see another rare #MON, OK?
 	text_far _JustSawSomeRareMonText
 	text_end
 
@@ -871,7 +869,7 @@ RandomPhoneWildMon:
 	add hl, bc
 	inc hl
 	ld a, [hl]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	ld hl, wStringBuffer1
 	ld de, wStringBuffer4
@@ -889,7 +887,7 @@ RandomPhoneMon:
 	add hl, bc
 	add hl, bc
 	ld a, BANK(TrainerGroups)
-	call GetFarWord
+	call GetFarHalfword
 
 .skip_trainer
 	dec e
@@ -954,7 +952,7 @@ RandomPhoneMon:
 	inc hl ; species
 	ld a, BANK(Trainers)
 	call GetFarByte
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	ld hl, wStringBuffer1
 	ld de, wStringBuffer4

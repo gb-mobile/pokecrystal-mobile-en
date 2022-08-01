@@ -1,19 +1,19 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODHAPPINESSRATER_TEACHER
 	const GOLDENRODHAPPINESSRATER_POKEFAN_M
 	const GOLDENRODHAPPINESSRATER_TWIN
 
 GoldenrodHappinessRater_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 GoldenrodHappinessRaterTeacherScript:
 	faceplayer
 	opentext
 	special GetFirstPokemonHappiness
 	writetext GoldenrodHappinessRaterTeacherText
-	promptbutton
+	buttonsound
 	ifgreater 250 - 1, .LovesYouALot
 	ifgreater 200 - 1, .ReallyTrustsYou
 	ifgreater 150 - 1, .SortOfHappy
@@ -64,10 +64,10 @@ GoldenrodHappinessRaterTwinScript:
 	jumptextfaceplayer GoldenrodHappinessRaterTwinText
 
 HappinessRatersHouseBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 HappinessRatersHouseRadio:
-	jumpstd Radio2Script
+	jumpstd radio2
 
 GoldenrodHappinessRaterTeacherText:
 	text "If you treat your"
@@ -137,18 +137,18 @@ GoldenrodHappinessRaterTwinText:
 GoldenrodHappinessRater_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, GOLDENROD_CITY, 3
 	warp_event  3,  7, GOLDENROD_CITY, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event  0,  1, BGEVENT_READ, HappinessRatersHouseBookshelf
 	bg_event  1,  1, BGEVENT_READ, HappinessRatersHouseBookshelf
 	bg_event  7,  1, BGEVENT_READ, HappinessRatersHouseRadio
 
-	def_object_events
+	db 3 ; object events
 	object_event  2,  4, SPRITE_TEACHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, GoldenrodHappinessRaterTeacherScript, -1
 	object_event  5,  3, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, GoldenrodHappinessRaterPokefanMScript, -1
 	object_event  5,  6, SPRITE_TWIN, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, GoldenrodHappinessRaterTwinScript, -1

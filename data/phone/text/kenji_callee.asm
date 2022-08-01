@@ -1,4 +1,4 @@
-KenjiAnswerPhoneText:
+UnknownText_0x1b730b:
 	text_ram wStringBuffer3
 	text " here…"
 
@@ -6,7 +6,7 @@ KenjiAnswerPhoneText:
 	line "morning, hey?"
 	done
 
-KenjiAnswerPhoneDayText:
+UnknownText_0x1b7331:
 	text_ram wStringBuffer3
 	text " here…"
 
@@ -14,7 +14,7 @@ KenjiAnswerPhoneDayText:
 	line "weather, hey?"
 	done
 
-KenjiAnswerPhoneNiteText:
+UnknownText_0x1b7357:
 	text_ram wStringBuffer3
 	text " here…"
 
@@ -22,21 +22,21 @@ KenjiAnswerPhoneNiteText:
 	line "moonlight, hey?"
 	done
 
-KenjiGreetText:
+UnknownText_0x1b737f:
 	text "Hey, <PLAYER>!"
 	line "This is @"
 	text_ram wStringBuffer3
 	text "!"
 	done
 
-KenjiGreetDayText:
+UnknownText_0x1b7397:
 	text "Hey, <PLAYER>!"
 	line "This is @"
 	text_ram wStringBuffer3
 	text "!"
 	done
 
-KenjiGreetNiteText:
+UnknownText_0x1b73af:
 	text "Hey, <PLAYER>!"
 	line "This is @"
 	text_ram wStringBuffer3

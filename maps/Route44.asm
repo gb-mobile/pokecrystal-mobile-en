@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE44_FISHER1
 	const ROUTE44_FISHER2
 	const ROUTE44_YOUNGSTER1
@@ -12,9 +12,9 @@
 	const ROUTE44_POKE_BALL3
 
 Route44_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 TrainerBirdKeeperVance1:
 	trainer BIRD_KEEPER, VANCE1, EVENT_BEAT_BIRD_KEEPER_VANCE, BirdKeeperVance1SeenText, BirdKeeperVance1BeatenText, 0, .Script
@@ -23,14 +23,14 @@ TrainerBirdKeeperVance1:
 	loadvar VAR_CALLERID, PHONE_BIRDKEEPER_VANCE
 	endifjustbattled
 	opentext
-	checkflag ENGINE_VANCE_READY_FOR_REMATCH
+	checkflag ENGINE_VANCE
 	iftrue .WantsBattle
 	checkcellnum PHONE_BIRDKEEPER_VANCE
 	iftrue Route44NumberAcceptedM
 	checkevent EVENT_VANCE_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskedAlready
 	writetext BirdKeeperVanceLegendaryBirdsText
-	promptbutton
+	buttonsound
 	setevent EVENT_VANCE_ASKED_FOR_PHONE_NUMBER
 	scall Route44AskNumber1M
 	sjump .AskForNumber
@@ -63,7 +63,7 @@ TrainerBirdKeeperVance1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wVanceFightCount, 1
-	clearflag ENGINE_VANCE_READY_FOR_REMATCH
+	clearflag ENGINE_VANCE
 	end
 
 .LoadFight1:
@@ -71,14 +71,14 @@ TrainerBirdKeeperVance1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wVanceFightCount, 2
-	clearflag ENGINE_VANCE_READY_FOR_REMATCH
+	clearflag ENGINE_VANCE
 	end
 
 .LoadFight2:
 	loadtrainer BIRD_KEEPER, VANCE3
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_VANCE_READY_FOR_REMATCH
+	clearflag ENGINE_VANCE
 	checkevent EVENT_VANCE_CARBOS
 	iftrue .Carbos
 	checkevent EVENT_GOT_CARBOS_FROM_VANCE
@@ -103,48 +103,48 @@ TrainerBirdKeeperVance1:
 	sjump Route44NumberAcceptedM
 
 Route44AskNumber1M:
-	jumpstd AskNumber1MScript
+	jumpstd asknumber1m
 	end
 
 Route44AskNumber2M:
-	jumpstd AskNumber2MScript
+	jumpstd asknumber2m
 	end
 
 Route44RegisteredNumberM:
-	jumpstd RegisteredNumberMScript
+	jumpstd registerednumberm
 	end
 
 Route44NumberAcceptedM:
-	jumpstd NumberAcceptedMScript
+	jumpstd numberacceptedm
 	end
 
 Route44NumberDeclinedM:
-	jumpstd NumberDeclinedMScript
+	jumpstd numberdeclinedm
 	end
 
 Route44PhoneFullM:
-	jumpstd PhoneFullMScript
+	jumpstd phonefullm
 	end
 
 Route44RematchM:
-	jumpstd RematchMScript
+	jumpstd rematchm
 	end
 
 Route44GiftM:
-	jumpstd GiftMScript
+	jumpstd giftm
 	end
 
 Route44PackFullM:
-	jumpstd PackFullMScript
+	jumpstd packfullm
 	end
 
 VancePackFull:
 	setevent EVENT_VANCE_CARBOS
-	jumpstd PackFullMScript
+	jumpstd packfullm
 	end
 
 Route44RematchGiftM:
-	jumpstd RematchGiftMScript
+	jumpstd rematchgiftm
 	end
 
 TrainerPsychicPhil:
@@ -165,7 +165,7 @@ TrainerFisherWilton1:
 	loadvar VAR_CALLERID, PHONE_FISHER_WILTON
 	endifjustbattled
 	opentext
-	checkflag ENGINE_WILTON_READY_FOR_REMATCH
+	checkflag ENGINE_WILTON
 	iftrue .WantsBattle
 	checkflag ENGINE_WILTON_HAS_ITEM
 	iftrue .HasItem
@@ -174,7 +174,7 @@ TrainerFisherWilton1:
 	checkevent EVENT_WILTON_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskedAlready
 	writetext FisherWiltonHugePoliwagText
-	promptbutton
+	buttonsound
 	setevent EVENT_WILTON_ASKED_FOR_PHONE_NUMBER
 	scall Route44AskNumber1M
 	sjump .AskForNumber
@@ -207,7 +207,7 @@ TrainerFisherWilton1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wWiltonFightCount, 1
-	clearflag ENGINE_WILTON_READY_FOR_REMATCH
+	clearflag ENGINE_WILTON
 	end
 
 .LoadFight1:
@@ -215,14 +215,14 @@ TrainerFisherWilton1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wWiltonFightCount, 2
-	clearflag ENGINE_WILTON_READY_FOR_REMATCH
+	clearflag ENGINE_WILTON
 	end
 
 .LoadFight2:
 	loadtrainer FISHER, WILTON3
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_WILTON_READY_FOR_REMATCH
+	clearflag ENGINE_WILTON
 	end
 
 .HasItem:
@@ -507,17 +507,17 @@ Route44Sign2Text:
 Route44_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 1 ; warp events
 	warp_event 56,  7, ICE_PATH_1F, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event 53,  7, BGEVENT_READ, Route44Sign1
 	bg_event  6, 10, BGEVENT_READ, Route44Sign2
 	bg_event 32,  9, BGEVENT_ITEM, Route44HiddenElixer
 
-	def_object_events
+	db 11 ; object events
 	object_event 35,  3, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 1, TrainerFisherWilton1, -1
 	object_event 19, 13, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 1, TrainerFisherEdgar, -1
 	object_event 10,  9, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerPsychicPhil, -1

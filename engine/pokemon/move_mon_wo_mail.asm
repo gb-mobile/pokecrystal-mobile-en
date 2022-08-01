@@ -1,6 +1,6 @@
 InsertPokemonIntoBox:
 	ld a, BANK(sBoxCount)
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, sBoxCount
 	call InsertSpeciesIntoBoxOrParty
 	ld a, [sBoxCount]
@@ -8,12 +8,12 @@ InsertPokemonIntoBox:
 	ld [wNextBoxOrPartyIndex], a
 	ld hl, sBoxMonNicknames
 	ld bc, MON_NAME_LENGTH
-	ld de, wBufferMonNickname
+	ld de, wBufferMonNick
 	call InsertDataIntoBoxOrParty
 	ld a, [sBoxCount]
 	dec a
 	ld [wNextBoxOrPartyIndex], a
-	ld hl, sBoxMonOTs
+	ld hl, sBoxMonOT
 	ld bc, NAME_LENGTH
 	ld de, wBufferMonOT
 	call InsertDataIntoBoxOrParty
@@ -45,12 +45,12 @@ InsertPokemonIntoParty:
 	ld [wNextBoxOrPartyIndex], a
 	ld hl, wPartyMonNicknames
 	ld bc, MON_NAME_LENGTH
-	ld de, wBufferMonNickname
+	ld de, wBufferMonNick
 	call InsertDataIntoBoxOrParty
 	ld a, [wPartyCount]
 	dec a
 	ld [wNextBoxOrPartyIndex], a
-	ld hl, wPartyMonOTs
+	ld hl, wPartyMonOT
 	ld bc, NAME_LENGTH
 	ld de, wBufferMonOT
 	call InsertDataIntoBoxOrParty

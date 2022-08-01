@@ -1,6 +1,5 @@
 UnownPicPointers::
 ; entries correspond to Unown letters, two apiece
-	table_width 3 * 2, UnownPicPointers
 	dba_pic UnownAFrontpic
 	dba_pic UnownABackpic
 	dba_pic UnownBFrontpic
@@ -53,4 +52,3 @@ UnownPicPointers::
 	dba_pic UnownYBackpic
 	dba_pic UnownZFrontpic
 	dba_pic UnownZBackpic
-	assert_table_length NUM_UNOWN

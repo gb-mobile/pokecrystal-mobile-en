@@ -1,16 +1,16 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const VERMILIONPOKECENTER1F_NURSE
 	const VERMILIONPOKECENTER1F_FISHING_GURU
 	const VERMILIONPOKECENTER1F_SAILOR
 	const VERMILIONPOKECENTER1F_BUG_CATCHER
 
 VermilionPokecenter1F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 VermilionPokecenter1FNurseScript:
-	jumpstd PokecenterNurseScript
+	jumpstd pokecenternurse
 
 VermilionPokecenter1FFishingGuruScript:
 	faceplayer
@@ -77,16 +77,16 @@ VermilionPokecenter1FBugCatcherText:
 VermilionPokecenter1F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  3,  7, VERMILION_CITY, 2
 	warp_event  4,  7, VERMILION_CITY, 2
 	warp_event  0,  7, POKECENTER_2F, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 4 ; object events
 	object_event  3,  1, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, VermilionPokecenter1FNurseScript, -1
 	object_event  7,  2, SPRITE_FISHING_GURU, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, VermilionPokecenter1FFishingGuruScript, -1
 	object_event  6,  5, SPRITE_SAILOR, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, VermilionPokecenter1FSailorScript, -1

@@ -1,6 +1,5 @@
 SpriteMovementData::
 ; entries correspond to SPRITEMOVEDATA_* constants
-	table_width NUM_SPRITEMOVEDATA_FIELDS, SpriteMovementData
 
 ; SPRITEMOVEDATA_00
 	db SPRITEMOVEFN_00 ; movement function
@@ -98,16 +97,16 @@ SpriteMovementData::
 	db 0 ; flags2
 	db 0 ; palette flags
 
-; SPRITEMOVEDATA_INDEXED_1
-	db SPRITEMOVEFN_INDEXED_1 ; movement function
+; SPRITEMOVEDATA_0C
+	db SPRITEMOVEFN_08 ; movement function
 	db DOWN ; facing
 	db OBJECT_ACTION_STAND ; action
 	db 0 ; flags1
 	db 0 ; flags2
 	db 0 ; palette flags
 
-; SPRITEMOVEDATA_INDEXED_2
-	db SPRITEMOVEFN_INDEXED_2 ; movement function
+; SPRITEMOVEDATA_0D
+	db SPRITEMOVEFN_09 ; movement function
 	db DOWN ; facing
 	db OBJECT_ACTION_STAND ; action
 	db 0 ; flags1
@@ -298,9 +297,7 @@ SpriteMovementData::
 	db 0 ; flags2
 	db SWIMMING ; palette flags
 
-	assert_table_length NUM_SPRITEMOVEDATA
-
-; unused
+; 25
 	db SPRITEMOVEFN_00 ; movement function
 	db DOWN ; facing
 	db OBJECT_ACTION_STAND ; action

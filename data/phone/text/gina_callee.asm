@@ -1,4 +1,4 @@
-GinaAnswerPhoneText:
+UnknownText_0x1b626a:
 	text "Hello? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -8,7 +8,7 @@ GinaAnswerPhoneText:
 	line "Good morning!"
 	done
 
-GinaAnswerPhoneDayText:
+UnknownText_0x1b6296:
 	text "Hello? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -18,7 +18,7 @@ GinaAnswerPhoneDayText:
 	line "Hi, how are you?"
 	done
 
-GinaAnswerPhoneNiteText:
+UnknownText_0x1b62c5:
 	text "Hello? This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -28,7 +28,7 @@ GinaAnswerPhoneNiteText:
 	line "Good evening!"
 	done
 
-GinaGreetText:
+UnknownText_0x1b62f1:
 	text "<PLAY_G>?"
 
 	para "It's @"
@@ -37,7 +37,7 @@ GinaGreetText:
 	line "Good morning!"
 	done
 
-GinaGreetDayText:
+UnknownText_0x1b630e:
 	text "<PLAY_G>?"
 
 	para "It's @"
@@ -46,7 +46,7 @@ GinaGreetDayText:
 	line "this a bad time?"
 	done
 
-GinaGreetNiteText:
+UnknownText_0x1b6331:
 	text "<PLAY_G>?"
 
 	para "It's @"
@@ -55,7 +55,7 @@ GinaGreetNiteText:
 	line "Got time to chat?"
 	done
 
-GinaGenericText:
+UnknownText_0x1b6352:
 	text "Are your #MON"
 	line "still tough?"
 

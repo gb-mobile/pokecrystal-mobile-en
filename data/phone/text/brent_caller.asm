@@ -12,7 +12,7 @@ BrentRareTradeText:
 	line "it a secret!"
 	done
 
-BrentDefeatedMonText:
+UnknownText_0x6613c:
 	text "Oh yeah, I took"
 	line "down this wild"
 
@@ -25,7 +25,7 @@ BrentDefeatedMonText:
 	line "catching."
 	done
 
-BrentLostAMonText:
+UnknownText_0x6618c:
 	text "Oh yeah, I saw a"
 	line "rare #MON about"
 	cont "an hour ago."
@@ -40,7 +40,7 @@ BrentLostAMonText:
 	line "at my mistakes?"
 	done
 
-BrentBattleRematchText:
+UnknownText_0x66214:
 	text "You've got time"
 	line "like usual, right?"
 
@@ -59,11 +59,11 @@ BrentBattleRematchText:
 	text "."
 	done
 
-BrentHangUpText:
+UnknownText_0x662a9:
 	text "So that's it then."
 	done
 
-BrentFatherGossipText:
+UnknownText_0x662bc:
 	text "Did you know…?"
 	line "BILL's father is"
 
@@ -71,7 +71,7 @@ BrentFatherGossipText:
 	line "great #MANIAC."
 	done
 
-BrentGrandpaGossipText:
+UnknownText_0x662fc:
 	text "Did you know…?"
 	line "Apparently BILL's"
 
@@ -79,13 +79,13 @@ BrentGrandpaGossipText:
 	line "#MANIAC."
 	done
 
-BrentGoldenrodGossipText:
+UnknownText_0x66335:
 	text "Did you know…?"
 	line "BILL's originally"
 	cont "from GOLDENROD."
 	done
 
-BrentRoute25GossipText:
+UnknownText_0x66366:
 	text "Did you know…?"
 	line "BILL evidently"
 
@@ -93,7 +93,7 @@ BrentRoute25GossipText:
 	line "in KANTO."
 	done
 
-BrentAbraGossipText:
+UnknownText_0x663a1:
 	text "Did you know…?"
 	line "ABRA was the first"
 
@@ -101,7 +101,7 @@ BrentAbraGossipText:
 	line "ostensibly caught."
 	done
 
-BrentSisterGossipText:
+UnknownText_0x663e6:
 	text "Did you know…?"
 	line "BILL's younger"
 
@@ -109,7 +109,7 @@ BrentSisterGossipText:
 	line "can't wink."
 	done
 
-BrentMilkGossipText:
+UnknownText_0x66421:
 	text "Did you know…?"
 	line "BILL supposedly"
 
@@ -117,7 +117,7 @@ BrentMilkGossipText:
 	line "can't drink it."
 	done
 
-BrentBattlingGossipText:
+UnknownText_0x6645f:
 	text "Did you know…?"
 	line "Evidently, BILL"
 
@@ -125,7 +125,7 @@ BrentBattlingGossipText:
 	line "battling."
 	done
 
-BrentFlowerShopGossipText:
+UnknownText_0x6649b:
 	text "Did you know…?"
 	line "BILL appears to"
 
@@ -133,7 +133,7 @@ BrentFlowerShopGossipText:
 	line "the FLOWER SHOP."
 	done
 
-BrentKimonoGirlGossipText:
+UnknownText_0x664dd:
 	text "Did you know…?"
 	line "BILL's mother is"
 
@@ -141,7 +141,7 @@ BrentKimonoGirlGossipText:
 	line "a KIMONO GIRL."
 	done
 
-BrentSorryImTooBusyText:
+UnknownText_0x6651e:
 	text "You wanted to hear"
 	line "about BILL?"
 
@@ -152,7 +152,7 @@ BrentSorryImTooBusyText:
 	line "have time."
 	done
 
-BrentReminderText:
+UnknownText_0x66579:
 	text "You want to see my"
 	line "rare #MON."
 

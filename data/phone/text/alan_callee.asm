@@ -1,4 +1,4 @@
-AlanAnswerPhoneText:
+UnknownText_0x1b659d:
 	text "Yup, it's @"
 	text_ram wStringBuffer3
 	text "!"
@@ -7,7 +7,7 @@ AlanAnswerPhoneText:
 	line "Good morning!"
 	done
 
-AlanAnswerPhoneDayText:
+UnknownText_0x1b65c7:
 	text "Yup, it's @"
 	text_ram wStringBuffer3
 	text "!"
@@ -15,7 +15,7 @@ AlanAnswerPhoneDayText:
 	para "Is that <PLAY_G>?"
 	done
 
-AlanAnswerPhoneNiteText:
+UnknownText_0x1b65e3:
 	text "Yup, it's @"
 	text_ram wStringBuffer3
 	text "!"
@@ -24,28 +24,28 @@ AlanAnswerPhoneNiteText:
 	line "Good evening!"
 	done
 
-AlanGreetText:
+UnknownText_0x1b660d:
 	text "Hello! It's me,"
 	line "@"
 	text_ram wStringBuffer3
 	text "!"
 	done
 
-AlanGreetDayText:
+UnknownText_0x1b6624:
 	text "Hello! It's me,"
 	line "@"
 	text_ram wStringBuffer3
 	text "!"
 	done
 
-AlanGreetNiteText:
+UnknownText_0x1b663b:
 	text "Hello! It's me,"
 	line "@"
 	text_ram wStringBuffer3
 	text "!"
 	done
 
-AlanGenericText:
+UnknownText_0x1b6652:
 	text "<PLAY_G>, are you"
 	line "raising your"
 	cont "#MON properly?"

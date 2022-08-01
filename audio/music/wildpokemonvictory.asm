@@ -1,49 +1,48 @@
 Music_WildPokemonVictory:
-	channel_count 3
-	channel 1, Music_WildPokemonVictory_Ch1
-	channel 2, Music_WildPokemonVictory_Ch2
-	channel 3, Music_WildPokemonVictory_Ch3
+	musicheader 3, 1, Music_WildPokemonVictory_Ch1
+	musicheader 1, 2, Music_WildPokemonVictory_Ch2
+	musicheader 1, 3, Music_WildPokemonVictory_Ch3
 
 Music_WildPokemonVictory_Ch1:
 	tempo 126
-	volume 7, 7
-	duty_cycle 3
-	pitch_offset 1
-	note_type 12, 11, 1
+	volume $77
+	dutycycle $3
+	tone $0001
+	notetype $c, $b1
 	octave 3
 	note B_, 1
 	note A_, 1
 	note G#, 1
 	note F#, 1
-	volume_envelope 11, 6
+	intensity $b6
 	note E_, 12
-.body:
-	stereo_panning FALSE, TRUE
-.mainloop:
-	sound_call .sub1
+Music_SuccessfulCapture_branch_f4536:
+	stereopanning $f
+Music_WildPokemonVictory_branch_f4538:
+	callchannel Music_WildPokemonVictory_branch_f455c
 	note F#, 2
 	note F#, 2
 	note F#, 4
-	sound_call .sub1
+	callchannel Music_WildPokemonVictory_branch_f455c
 	note G#, 4
-	volume_envelope 7, 8
+	intensity $78
 	octave 3
 	note G_, 4
-	transpose 0, 1
-	sound_call .sub1
+	pitchoffset 0, C#
+	callchannel Music_WildPokemonVictory_branch_f455c
 	note F#, 2
 	note F#, 2
 	note F#, 4
-	sound_call .sub1
+	callchannel Music_WildPokemonVictory_branch_f455c
 	note G#, 4
-	transpose 0, 0
-	volume_envelope 7, 8
+	pitchoffset 0, C_
+	intensity $78
 	octave 3
 	note F#, 4
-	sound_loop 0, .mainloop
+	loopchannel 0, Music_WildPokemonVictory_branch_f4538
 
-.sub1:
-	volume_envelope 7, 1
+Music_WildPokemonVictory_branch_f455c:
+	intensity $71
 	octave 3
 	note G#, 1
 	note B_, 1
@@ -66,56 +65,56 @@ Music_WildPokemonVictory_Ch1:
 	note E_, 2
 	note E_, 2
 	note A_, 2
-	sound_ret
+	endchannel
 
 Music_WildPokemonVictory_Ch2:
-	vibrato 18, 2, 4
-	duty_cycle 2
-	note_type 12, 13, 1
+	vibrato $12, $24
+	dutycycle $2
+	notetype $c, $d1
 	octave 4
 	note E_, 1
 	note F#, 1
 	note G#, 1
 	note A_, 1
-	volume_envelope 13, 6
+	intensity $d6
 	note B_, 12
-.body:
-	stereo_panning TRUE, FALSE
-.mainloop:
-	sound_call .sub1
+Music_SuccessfulCapture_branch_f4585:
+	stereopanning $f0
+Music_WildPokemonVictory_branch_f4587:
+	callchannel Music_WildPokemonVictory_branch_f45b5
 	octave 4
 	note B_, 2
 	note B_, 2
 	note B_, 4
-	sound_call .sub1
+	callchannel Music_WildPokemonVictory_branch_f45b5
 	octave 4
 	note B_, 4
-	volume_envelope 8, 1
+	intensity $81
 	note C_, 1
 	note E_, 1
 	note G_, 1
 	note A#, 1
-	transpose 0, 1
-	sound_call .sub1
+	pitchoffset 0, C#
+	callchannel Music_WildPokemonVictory_branch_f45b5
 	octave 4
 	note B_, 2
 	note B_, 2
 	note B_, 4
-	sound_call .sub1
+	callchannel Music_WildPokemonVictory_branch_f45b5
 	octave 4
 	note B_, 4
-	transpose 0, 0
-	volume_envelope 8, 1
+	pitchoffset 0, C_
+	intensity $81
 	octave 3
 	note B_, 1
 	octave 4
 	note D#, 1
 	note F#, 1
 	note A_, 1
-	sound_loop 0, .mainloop
+	loopchannel 0, Music_WildPokemonVictory_branch_f4587
 
-.sub1:
-	volume_envelope 8, 1
+Music_WildPokemonVictory_branch_f45b5:
+	intensity $81
 	octave 4
 	note B_, 2
 	note A_, 2
@@ -128,56 +127,56 @@ Music_WildPokemonVictory_Ch2:
 	note C#, 2
 	note C#, 2
 	note C#, 4
-	sound_ret
+	endchannel
 
 Music_WildPokemonVictory_Ch3:
-	note_type 12, 2, 0
-	rest 6
+	notetype $c, $20
+	note __, 6
 	octave 6
 	note D#, 1
-	rest 1
+	note __, 1
 	note E_, 1
-	rest 3
+	note __, 3
 	note E_, 1
-	rest 3
-.body:
-.mainloop:
-	sound_call .sub1
+	note __, 3
+Music_SuccessfulCapture_branch_f45cf:
+Music_WildPokemonVictory_branch_f45cf:
+	callchannel Music_WildPokemonVictory_branch_f45f4
 	note D#, 2
 	note C#, 2
 	octave 2
 	note B_, 2
-	rest 2
-	sound_call .sub1
+	note __, 2
+	callchannel Music_WildPokemonVictory_branch_f45f4
 	note E_, 2
-	rest 2
+	note __, 2
 	note C_, 4
-	transpose 0, 1
-	sound_call .sub1
+	pitchoffset 0, C#
+	callchannel Music_WildPokemonVictory_branch_f45f4
 	note D#, 2
 	note C#, 2
 	octave 2
 	note B_, 2
-	rest 2
-	sound_call .sub1
+	note __, 2
+	callchannel Music_WildPokemonVictory_branch_f45f4
 	note E_, 2
-	rest 2
-	transpose 0, 0
+	note __, 2
+	pitchoffset 0, C_
 	octave 2
 	note B_, 4
-	sound_loop 0, .mainloop
+	loopchannel 0, Music_WildPokemonVictory_branch_f45cf
 
-.sub1:
-	volume_envelope 2, 5
+Music_WildPokemonVictory_branch_f45f4:
+	intensity $25
 	octave 3
 	note E_, 2
-	rest 4
+	note __, 4
 	note E_, 2
-	rest 2
+	note __, 2
 	note D_, 2
-	rest 2
+	note __, 2
 	note D_, 2
 	note C#, 2
-	rest 4
+	note __, 4
 	note C#, 2
-	sound_ret
+	endchannel

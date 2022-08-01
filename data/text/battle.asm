@@ -9,7 +9,7 @@ BattleText_PlayerPickedUpPayDayMoney:
 
 WildPokemonAppearedText:
 	text "Wild @"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text_start
 	line "appeared!"
 	prompt
@@ -17,20 +17,20 @@ WildPokemonAppearedText:
 HookedPokemonAttackedText:
 	text "The hooked"
 	line "@"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text_start
 	cont "attacked!"
 	prompt
 
 PokemonFellFromTreeText:
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text " fell"
 	line "out of the tree!"
 	prompt
 
 WildCelebiAppearedText:
 	text "Wild @"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text_start
 	line "appeared!"
 	prompt
@@ -42,14 +42,14 @@ WantsToBattleText::
 
 BattleText_WildFled:
 	text "Wild @"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text_start
 	line "fled!"
 	prompt
 
 BattleText_EnemyFled:
 	text "Enemy @"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text_start
 	line "fled!"
 	prompt
@@ -87,7 +87,7 @@ SandstormHitsText:
 PerishCountText:
 	text "<USER>'s"
 	line "PERISH count is @"
-	text_decimal wTextDecimalByte, 1, 1
+	text_decimal wDeciramBuffer, 1, 1
 	text "!"
 	prompt
 
@@ -161,7 +161,7 @@ BattleText_TheSandstormSubsided:
 
 BattleText_EnemyMonFainted:
 	text "Enemy @"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text_start
 	line "fainted!"
 	prompt
@@ -199,14 +199,14 @@ SentAllToMomText:
 	text "Sent all to MOM!"
 	prompt
 
-UnusedRivalLossText: ; unreferenced
+BattleText_0x80a4f:
 	text "<RIVAL>: Huh? I"
 	line "should've chosen"
 	cont "your #MON!"
 	prompt
 
 BattleText_MonFainted:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text_start
 	line "fainted!"
 	prompt
@@ -215,7 +215,7 @@ BattleText_UseNextMon:
 	text "Use next #MON?"
 	done
 
-UnusedRivalWinText: ; unreferenced
+BattleText_0x80a93:
 	text "<RIVAL>: Yes!"
 	line "I guess I chose a"
 	cont "good #MON!"
@@ -230,7 +230,7 @@ BattleText_EnemyIsAboutToUseWillPlayerChangeMon:
 	text "<ENEMY>"
 	line "is about to use"
 	cont "@"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text "."
 
 	para "Will <PLAYER>"
@@ -241,7 +241,7 @@ BattleText_EnemySentOut:
 	text "<ENEMY>"
 	line "sent out"
 	cont "@"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text "!"
 	done
 
@@ -308,13 +308,13 @@ BattleText_ItemsCantBeUsedHere:
 	prompt
 
 BattleText_MonIsAlreadyOut:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text_start
 	line "is already out."
 	prompt
 
 BattleText_MonCantBeRecalled:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text_start
 	line "can't be recalled!"
 	prompt
@@ -330,7 +330,7 @@ BattleText_TheMoveIsDisabled:
 	prompt
 
 BattleText_MonHasNoMovesLeft:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text_start
 	line "has no moves left!"
 	done
@@ -349,18 +349,18 @@ BattleText_StringBuffer1GrewToLevel:
 	sound_dex_fanfare_50_79
 	text_end
 
-	text_end ; unreferenced
+	text_end ; unused
 
 BattleText_WildMonIsEating:
 	text "Wild @"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text_start
 	line "is eating!"
 	prompt
 
 BattleText_WildMonIsAngry:
 	text "Wild @"
-	text_ram wEnemyMonNickname
+	text_ram wEnemyMonNick
 	text_start
 	line "is angry!"
 	prompt
@@ -516,37 +516,37 @@ DisabledMoveText:
 	prompt
 
 LoafingAroundText:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text " is"
 	line "loafing around."
 	prompt
 
 BeganToNapText:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text " began"
 	line "to nap!"
 	prompt
 
 WontObeyText:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text " won't"
 	line "obey!"
 	prompt
 
 TurnedAwayText:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text " turned"
 	line "away!"
 	prompt
 
 IgnoredOrdersText:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text " ignored"
 	line "orders!"
 	prompt
 
 IgnoredSleepingText:
-	text_ram wBattleMonNickname
+	text_ram wBattleMonNick
 	text " ignored"
 	line "orders…sleeping!"
 	prompt
@@ -670,7 +670,7 @@ SpiteEffectText:
 	text_ram wStringBuffer1
 	text " was"
 	cont "reduced by @"
-	text_decimal wTextDecimalByte, 1, 1
+	text_decimal wDeciramBuffer, 1, 1
 	text "!"
 	prompt
 
@@ -819,7 +819,7 @@ SubFadedText:
 	line "SUBSTITUTE faded!"
 	prompt
 
-MimicLearnedMoveText:
+LearnedMoveText:
 	text "<USER>"
 	line "learned"
 	cont "@"
@@ -1030,7 +1030,7 @@ SafeguardProtectText:
 
 MagnitudeText:
 	text "Magnitude @"
-	text_decimal wTextDecimalByte, 1, 1
+	text_decimal wDeciramBuffer, 1, 1
 	text "!"
 	prompt
 
@@ -1085,7 +1085,7 @@ BeatUpAttackText:
 	line "attack!"
 	done
 
-PresentFailedText:
+RefusedGiftText:
 	text "<TARGET>"
 	line "refused the gift!"
 	prompt
@@ -1102,7 +1102,7 @@ BattleText_LinkErrorBattleCanceled:
 	line "been canceled…"
 	prompt
 
-BattleText_NoTimeLeftToday: ; unreferenced
+BattleText_0x8188e:
 	text "There is no time"
 	line "left today!"
 	done

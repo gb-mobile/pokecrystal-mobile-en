@@ -58,13 +58,13 @@ CGBOnly_CopyTilemapAtOnce::
 	jr z, WaitBGMap
 
 CopyTilemapAtOnce::
-	jr _CopyTilemapAtOnce
+	jr .CopyTilemapAtOnce
 
-CopyAttrmapAndTilemapToWRAMBank3: ; unreferenced
-	farcall HDMATransferAttrmapAndTilemapToWRAMBank3
+; unused
+	farcall HDMATransferAttrMapAndTileMapToWRAMBank3
 	ret
 
-_CopyTilemapAtOnce:
+.CopyTilemapAtOnce:
 	ldh a, [hBGMapMode]
 	push af
 	xor a
@@ -77,22 +77,22 @@ _CopyTilemapAtOnce:
 
 .wait
 	ldh a, [rLY]
-	cp $80 - 1
+	cp $7f
 	jr c, .wait
 
 	di
-	ld a, BANK(vBGMap2)
+	ld a, BANK(vTiles3)
 	ldh [rVBK], a
-	hlcoord 0, 0, wAttrmap
-	call .CopyBGMapViaStack
-	ld a, BANK(vBGMap0)
+	hlcoord 0, 0, wAttrMap
+	call .StackPointerMagic
+	ld a, BANK(vTiles0)
 	ldh [rVBK], a
 	hlcoord 0, 0
-	call .CopyBGMapViaStack
+	call .StackPointerMagic
 
 .wait2
 	ldh a, [rLY]
-	cp $80 - 1
+	cp $7f
 	jr c, .wait2
 	ei
 
@@ -102,7 +102,7 @@ _CopyTilemapAtOnce:
 	ldh [hBGMapMode], a
 	ret
 
-.CopyBGMapViaStack:
+.StackPointerMagic:
 ; Copy all tiles to vBGMap
 	ld [hSPBuffer], sp
 	ld sp, hl
@@ -122,7 +122,7 @@ rept SCREEN_WIDTH / 2
 	ldh a, [c]
 	and b
 	jr nz, .loop\@
-; load vBGMap
+; load BGMap0
 	ld [hl], e
 	inc l
 	ld [hl], d
@@ -197,12 +197,12 @@ ClearPalettes::
 	ldh [rSVBK], a
 
 ; Request palette update
-	ld a, TRUE
+	ld a, 1
 	ldh [hCGBPalUpdate], a
 	ret
 
 GetMemSGBLayout::
-	ld b, SCGB_DEFAULT
+	ld b, SCGB_RAM
 GetSGBLayout::
 ; load sgb packets unless dmg
 
@@ -216,21 +216,3 @@ GetSGBLayout::
 
 .sgb
 	predef_jump LoadSGBLayout
-
-SetHPPal::
-; Set palette for hp bar pixel length e at hl.
-	call GetHPPal
-	ld [hl], d
-	ret
-
-GetHPPal::
-; Get palette for hp bar pixel length e in d.
-	ld d, HP_GREEN
-	ld a, e
-	cp (HP_BAR_LENGTH_PX * 50 / 100) ; 24
-	ret nc
-	inc d ; HP_YELLOW
-	cp (HP_BAR_LENGTH_PX * 21 / 100) ; 10
-	ret nc
-	inc d ; HP_RED
-	ret

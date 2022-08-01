@@ -1,28 +1,37 @@
+tmhm: MACRO
 ; used in data/pokemon/base_stats/*.asm
-MACRO tmhm
-	; initialize bytes to 0
-	for n, (NUM_TM_HM_TUTOR + 7) / 8
-		DEF _tm{d:n} = 0
-	endr
-	; set bits of bytes
-	rept _NARG
-		if DEF(\1_TMNUM)
-		DEF n = (\1_TMNUM - 1) / 8
-		DEF i = (\1_TMNUM - 1) % 8
-		DEF _tm{d:n} |= 1 << i
-		else
-			fail "\1 is not a TM, HM, or tutor move"
-		endc
-		shift
-	endr
-	; output bytes
-	for n, (NUM_TM_HM_TUTOR + 7) / 8
-		db _tm{d:n}
-	endr
+_tms1 = 0 ; TM01-TM24 (24)
+_tms2 = 0 ; TM25-TM48 (24)
+_tms3 = 0 ; TM49-TM50 + HM01-HM07 + MT01-MT03 (12/24)
+rept _NARG
+	if DEF(\1_TMNUM)
+	if \1_TMNUM < 24 + 1
+_tms1 = _tms1 | (1 << ((\1_TMNUM) - 1))
+	elif \1_TMNUM < 48 + 1
+_tms2 = _tms2 | (1 << ((\1_TMNUM) - 1 - 24))
+	else
+_tms3 = _tms3 | (1 << ((\1_TMNUM) - 1 - 48))
+	endc
+	else
+		fail "\1 is not a TM, HM, or move tutor move"
+	endc
+	shift
+endr
+rept 3 ; TM01-TM24 (24/24)
+	db _tms1 & $ff
+_tms1 = _tms1 >> 8
+endr
+rept 3 ; TM25-TM48 (24/24)
+	db _tms2 & $ff
+_tms2 = _tms2 >> 8
+endr
+rept 2 ; TM49-TM50 + HM01-HM07 + MT01-MT03 (12/16)
+	db _tms3 & $ff
+_tms3 = _tms3 >> 8
+endr
 ENDM
 
 BaseData::
-	table_width BASE_DATA_SIZE, BaseData
 INCLUDE "data/pokemon/base_stats/bulbasaur.asm"
 INCLUDE "data/pokemon/base_stats/ivysaur.asm"
 INCLUDE "data/pokemon/base_stats/venusaur.asm"
@@ -274,4 +283,3 @@ INCLUDE "data/pokemon/base_stats/tyranitar.asm"
 INCLUDE "data/pokemon/base_stats/lugia.asm"
 INCLUDE "data/pokemon/base_stats/ho_oh.asm"
 INCLUDE "data/pokemon/base_stats/celebi.asm"
-	assert_table_length NUM_POKEMON

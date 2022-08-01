@@ -1,4 +1,5 @@
-LoadOpponentTrainerAndPokemon:
+; all of this is now obsolete
+Function_LoadOpponentTrainerAndPokemons:
 	ldh a, [rSVBK]
 	push af
 	ld a, BANK(wBT_OTTrainer)
@@ -39,7 +40,7 @@ endc
 	ld b, a
 
 	ld a, BANK(sBTTrainers)
-	call OpenSRAM
+	call GetSRAMBank
 
 	ld c, BATTLETOWER_STREAK_LENGTH
 	ld hl, sBTTrainers
@@ -68,7 +69,7 @@ endc
 	ld bc, NAME_LENGTH
 	call CopyBytes
 
-	call LoadRandomBattleTowerMon
+	call Function_LoadRandomBattleTowerMon
 	pop af
 
 	ld hl, BattleTowerTrainerData
@@ -91,12 +92,12 @@ endc
 
 	ret
 
-LoadRandomBattleTowerMon:
+Function_LoadRandomBattleTowerMon:
 	ld c, BATTLETOWER_PARTY_LENGTH
 .loop
 	push bc
-	ld a, BANK(sBTMonOfTrainers)
-	call OpenSRAM
+	ld a, BANK(sBTMonPrevTrainer1)
+	call GetSRAMBank
 
 .FindARandomBattleTowerMon:
 	; From Which LevelGroup are the mon loaded
@@ -168,13 +169,13 @@ LoadRandomBattleTowerMon:
 	ld bc, NICKNAMED_MON_STRUCT_LENGTH
 	call CopyBytes
 
-	ld a, [wNamedObjectIndex]
+	ld a, [wNamedObjectIndexBuffer]
 	push af
 	push de
 	ld hl, -NICKNAMED_MON_STRUCT_LENGTH
 	add hl, de
 	ld a, [hl]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	ld bc, PARTYMON_STRUCT_LENGTH
 	add hl, bc
 	push hl
@@ -187,7 +188,7 @@ LoadRandomBattleTowerMon:
 
 	pop de
 	pop af
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	pop bc
 	dec c
 	jp nz, .loop

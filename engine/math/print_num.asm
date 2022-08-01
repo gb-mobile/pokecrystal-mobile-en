@@ -6,7 +6,7 @@ _PrintNum::
 ; digits will be in front of the decimal point.
 ; Some extra flags can be given in bits 5-7 of b.
 ; Bit 5: money if set (unless left-aligned without leading zeros)
-; Bit 6: left-aligned if set
+; Bit 6: right-aligned if set
 ; Bit 7: print leading zeros if set
 
 	push bc
@@ -35,6 +35,7 @@ _PrintNum::
 	cp 2
 	jr z, .word
 ; maximum 3 bytes
+.long
 	ld a, [de]
 	ldh [hPrintNumBuffer + 1], a
 	inc de
@@ -80,7 +81,7 @@ _PrintNum::
 	cp 6
 	jr z, .six
 
-; seven
+.seven
 	ld a, HIGH(1000000 >> 8)
 	ldh [hPrintNumBuffer + 4], a
 	ld a, HIGH(1000000) ; mid

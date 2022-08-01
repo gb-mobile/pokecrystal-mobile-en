@@ -1,4 +1,4 @@
-BrentAnswerPhoneText:
+UnknownText_0x1b6c96:
 	text "Yes? @"
 	text_ram wStringBuffer3
 	text " here…"
@@ -7,7 +7,7 @@ BrentAnswerPhoneText:
 	line "can I do for you?"
 	done
 
-BrentAnswerPhoneDayText:
+UnknownText_0x1b6cc6:
 	text "Yes? @"
 	text_ram wStringBuffer3
 	text " here…"
@@ -16,7 +16,7 @@ BrentAnswerPhoneDayText:
 	line "can I do for you?"
 	done
 
-BrentAnswerPhoneNiteText:
+UnknownText_0x1b6cf6:
 	text "Yes? @"
 	text_ram wStringBuffer3
 	text " here…"
@@ -25,7 +25,7 @@ BrentAnswerPhoneNiteText:
 	line "can I do for you?"
 	done
 
-BrentGreetText:
+UnknownText_0x1b6d26:
 	text "Hiya, <PLAYER>. How"
 	line "are you doing?"
 
@@ -35,7 +35,7 @@ BrentGreetText:
 	text "."
 	done
 
-BrentGreetDayText:
+UnknownText_0x1b6d57:
 	text "Hiya, <PLAYER>, how"
 	line "are you doing?"
 
@@ -45,7 +45,7 @@ BrentGreetDayText:
 	text "."
 	done
 
-BrentGreetNiteText:
+UnknownText_0x1b6d88:
 	text "Hiya, <PLAYER>, how"
 	line "are you doing?"
 
@@ -55,7 +55,7 @@ BrentGreetNiteText:
 	text "."
 	done
 
-BrentGenericText:
+UnknownText_0x1b6db9:
 	text "Oh yeah, I saw you"
 	line "coming out of a"
 

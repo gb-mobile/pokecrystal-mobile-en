@@ -1,12 +1,12 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const CHARCOALKILN_BLACK_BELT
 	const CHARCOALKILN_YOUNGSTER
 	const CHARCOALKILN_MOLTRES
 
 CharcoalKiln_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 CharcoalKilnBoss:
 	faceplayer
@@ -46,7 +46,7 @@ CharcoalKilnApprentice:
 
 .Thanks:
 	writetext CharcoalKilnApprenticeText2
-	promptbutton
+	buttonsound
 	verbosegiveitem CHARCOAL
 	iffalse .Done
 	setevent EVENT_GOT_CHARCOAL_IN_CHARCOAL_KILN
@@ -70,10 +70,10 @@ CharcoalKilnFarfetchd:
 	end
 
 CharcoalKilnBookshelf:
-	jumpstd MagazineBookshelfScript
+	jumpstd magazinebookshelf
 
 CharcoalKilnRadio:
-	jumpstd Radio2Script
+	jumpstd radio2
 
 CharcoalKilnBossText1:
 	text "All the SLOWPOKE"
@@ -149,18 +149,18 @@ FarfetchdText:
 CharcoalKiln_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, AZALEA_TOWN, 2
 	warp_event  3,  7, AZALEA_TOWN, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event  0,  1, BGEVENT_READ, CharcoalKilnBookshelf
 	bg_event  1,  1, BGEVENT_READ, CharcoalKilnBookshelf
 	bg_event  7,  1, BGEVENT_READ, CharcoalKilnRadio
 
-	def_object_events
+	db 3 ; object events
 	object_event  2,  3, SPRITE_BLACK_BELT, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, CharcoalKilnBoss, EVENT_CHARCOAL_KILN_BOSS
 	object_event  5,  3, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, CharcoalKilnApprentice, EVENT_CHARCOAL_KILN_APPRENTICE
 	object_event  5,  6, SPRITE_MOLTRES, SPRITEMOVEDATA_POKEMON, 2, 2, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, CharcoalKilnFarfetchd, EVENT_CHARCOAL_KILN_FARFETCH_D

@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const WHIRLISLANDLUGIACHAMBER_LUGIA
 
 WhirlIslandLugiaChamber_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .Lugia
 
 .Lugia:
@@ -16,11 +16,11 @@ WhirlIslandLugiaChamber_MapScripts:
 
 .Appear:
 	appear WHIRLISLANDLUGIACHAMBER_LUGIA
-	endcallback
+	return
 
 .NoAppear:
 	disappear WHIRLISLANDLUGIACHAMBER_LUGIA
-	endcallback
+	return
 
 Lugia:
 	faceplayer
@@ -44,12 +44,12 @@ LugiaText:
 WhirlIslandLugiaChamber_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 1 ; warp events
 	warp_event  9, 13, WHIRL_ISLAND_B2F, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  9,  5, SPRITE_LUGIA, SPRITEMOVEDATA_POKEMON, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, Lugia, EVENT_WHIRL_ISLAND_LUGIA_CHAMBER_LUGIA

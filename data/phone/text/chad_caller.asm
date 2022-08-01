@@ -18,7 +18,7 @@ ChadObservingWildText:
 	line "PROF.OAK soon."
 	done
 
-ChadDefeatedMonText:
+UnknownText_0x65318:
 	text "Oh yes, I managed"
 	line "to knock out a"
 
@@ -34,7 +34,7 @@ ChadDefeatedMonText:
 	line "was inevitable."
 	done
 
-ChadLostAMonText:
+UnknownText_0x65399:
 	text "Oh yes, I came"
 	line "close to catching"
 
@@ -52,7 +52,7 @@ ChadLostAMonText:
 	text ". Rats…"
 	done
 
-ChadBattleRematchText:
+UnknownText_0x65419:
 	text "Want to battle?"
 	line "I have to battle"
 
@@ -65,7 +65,7 @@ ChadBattleRematchText:
 	text "!"
 	done
 
-ChadHangUpText:
+UnknownText_0x65471:
 	text "See you later!"
 	done
 
@@ -106,7 +106,7 @@ ChadProfElmGossipText:
 	line "I envy him!"
 	done
 
-ChadProfOaksDreamGossipText:
+ChadDreamGossipText:
 	text "PROF.OAK's dream"
 	line "is to compile a"
 
@@ -148,7 +148,7 @@ ChadLeagueGossipText:
 	line "great man."
 	done
 
-ChadPokemonTalkGossipText:
+ChadRadioShowGossipText:
 	text "PROF.OAK'S #MON"
 	line "TALK is a popular"
 	cont "radio show, right?"
@@ -167,7 +167,7 @@ ChadPokemonTalkGossipText:
 	line "thank for it!"
 	done
 
-ChadProfOakTrainerGossipText:
+ChadBattlingGossipText:
 	text "PROF.OAK used to"
 	line "be a trainer a"
 	cont "long time ago."
@@ -203,7 +203,7 @@ ChadDaisyTeaGossipText:
 	line "PROF.OAK."
 	done
 
-ChadProfOakTravelingGossipText:
+ChadTravelGossipText:
 	text "Did you know?"
 	line "PROF.OAK traveled"
 
@@ -223,7 +223,7 @@ ChadProfOakTravelingGossipText:
 	line "things too…"
 	done
 
-ChadGoingToStudyHardText:
+UnknownText_0x65a23:
 	text "I'm going to study"
 	line "hard so PROF.OAK"
 
@@ -231,7 +231,7 @@ ChadGoingToStudyHardText:
 	line "assistant!"
 	done
 
-ChadReminderText:
+UnknownText_0x65a63:
 	text "Do you remember"
 	line "about our battle?"
 

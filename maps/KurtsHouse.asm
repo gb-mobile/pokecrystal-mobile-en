@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const KURTSHOUSE_KURT1
 	const KURTSHOUSE_TWIN1
 	const KURTSHOUSE_SLOWPOKE
@@ -6,9 +6,9 @@
 	const KURTSHOUSE_TWIN2
 
 KurtsHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .KurtCallback
 
 .KurtCallback:
@@ -22,7 +22,7 @@ KurtsHouse_MapScripts:
 	appear KURTSHOUSE_KURT1
 	disappear KURTSHOUSE_TWIN2
 	appear KURTSHOUSE_TWIN1
-	endcallback
+	return
 
 .MakingBalls:
 	disappear KURTSHOUSE_KURT1
@@ -30,7 +30,7 @@ KurtsHouse_MapScripts:
 	disappear KURTSHOUSE_TWIN1
 	appear KURTSHOUSE_TWIN2
 .Done:
-	endcallback
+	return
 
 Kurt1:
 	faceplayer
@@ -67,7 +67,7 @@ Kurt1:
 
 .ClearedSlowpokeWell:
 	writetext KurtsHouseKurtHonoredToMakeBallsText
-	promptbutton
+	buttonsound
 	verbosegiveitem LURE_BALL
 	iffalse .NoRoomForBall
 	setevent EVENT_KURT_GAVE_YOU_LURE_BALL
@@ -127,7 +127,7 @@ Kurt1:
 
 .AskApricorn:
 	writetext KurtsHouseKurtAskYouHaveAnApricornText
-	promptbutton
+	buttonsound
 	setevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_3
 	special SelectApricornForKurt
 	ifequal FALSE, .Cancel
@@ -193,7 +193,7 @@ Kurt1:
 	checkflag ENGINE_KURT_MAKING_BALLS
 	iftrue KurtMakingBallsScript
 	writetext KurtsHouseKurtJustFinishedYourBallText
-	promptbutton
+	buttonsound
 	verbosegiveitemvar LEVEL_BALL, VAR_KURT_APRICORNS
 	iffalse .NoRoomForBall
 	clearevent EVENT_GAVE_KURT_RED_APRICORN
@@ -203,7 +203,7 @@ Kurt1:
 	checkflag ENGINE_KURT_MAKING_BALLS
 	iftrue KurtMakingBallsScript
 	writetext KurtsHouseKurtJustFinishedYourBallText
-	promptbutton
+	buttonsound
 	verbosegiveitemvar LURE_BALL, VAR_KURT_APRICORNS
 	iffalse .NoRoomForBall
 	clearevent EVENT_GAVE_KURT_BLU_APRICORN
@@ -213,7 +213,7 @@ Kurt1:
 	checkflag ENGINE_KURT_MAKING_BALLS
 	iftrue KurtMakingBallsScript
 	writetext KurtsHouseKurtJustFinishedYourBallText
-	promptbutton
+	buttonsound
 	verbosegiveitemvar MOON_BALL, VAR_KURT_APRICORNS
 	iffalse .NoRoomForBall
 	clearevent EVENT_GAVE_KURT_YLW_APRICORN
@@ -223,7 +223,7 @@ Kurt1:
 	checkflag ENGINE_KURT_MAKING_BALLS
 	iftrue KurtMakingBallsScript
 	writetext KurtsHouseKurtJustFinishedYourBallText
-	promptbutton
+	buttonsound
 	verbosegiveitemvar FRIEND_BALL, VAR_KURT_APRICORNS
 	iffalse .NoRoomForBall
 	clearevent EVENT_GAVE_KURT_GRN_APRICORN
@@ -233,7 +233,7 @@ Kurt1:
 	checkflag ENGINE_KURT_MAKING_BALLS
 	iftrue KurtMakingBallsScript
 	writetext KurtsHouseKurtJustFinishedYourBallText
-	promptbutton
+	buttonsound
 	verbosegiveitemvar FAST_BALL, VAR_KURT_APRICORNS
 	iffalse .NoRoomForBall
 	clearevent EVENT_GAVE_KURT_WHT_APRICORN
@@ -243,7 +243,7 @@ Kurt1:
 	checkflag ENGINE_KURT_MAKING_BALLS
 	iftrue KurtMakingBallsScript
 	writetext KurtsHouseKurtJustFinishedYourBallText
-	promptbutton
+	buttonsound
 	verbosegiveitemvar HEAVY_BALL, VAR_KURT_APRICORNS
 	iffalse .NoRoomForBall
 	clearevent EVENT_GAVE_KURT_BLK_APRICORN
@@ -253,7 +253,7 @@ Kurt1:
 	checkflag ENGINE_KURT_MAKING_BALLS
 	iftrue KurtMakingBallsScript
 	writetext KurtsHouseKurtJustFinishedYourBallText
-	promptbutton
+	buttonsound
 	verbosegiveitemvar LOVE_BALL, VAR_KURT_APRICORNS
 	iffalse .NoRoomForBall
 	clearevent EVENT_GAVE_KURT_PNK_APRICORN
@@ -426,10 +426,10 @@ KurtsHouseCelebiStatue:
 	jumptext KurtsHouseCelebiStatueText
 
 KurtsHouseBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 KurtsHouseRadio:
-	jumpstd Radio2Script
+	jumpstd radio2
 
 KurtsHouseKurtExitHouseMovement:
 	big_step DOWN
@@ -677,13 +677,13 @@ KurtsHouseCelebiStatueText:
 KurtsHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  3,  7, AZALEA_TOWN, 4
 	warp_event  4,  7, AZALEA_TOWN, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 7 ; bg events
 	bg_event  6,  1, BGEVENT_READ, KurtsHouseRadio
 	bg_event  8,  0, BGEVENT_READ, KurtsHouseOakPhoto
 	bg_event  9,  0, BGEVENT_READ, KurtsHouseOakPhoto
@@ -692,7 +692,7 @@ KurtsHouse_MapEvents:
 	bg_event  3,  1, BGEVENT_READ, KurtsHouseBookshelf
 	bg_event  4,  1, BGEVENT_READ, KurtsHouseCelebiStatue
 
-	def_object_events
+	db 5 ; object events
 	object_event  3,  2, SPRITE_KURT, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Kurt1, EVENT_KURTS_HOUSE_KURT_1
 	object_event  5,  3, SPRITE_TWIN, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, KurtsGranddaughter1, EVENT_KURTS_HOUSE_GRANDDAUGHTER_1
 	object_event  6,  3, SPRITE_SLOWPOKE, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, KurtsHouseSlowpoke, EVENT_KURTS_HOUSE_SLOWPOKE

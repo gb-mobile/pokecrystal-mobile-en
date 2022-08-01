@@ -1,11 +1,11 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const VIRIDIANGYM_BLUE
-	const VIRIDIANGYM_GYM_GUIDE
+	const VIRIDIANGYM_GYM_GUY
 
 ViridianGym_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 ViridianGymBlueScript:
 	faceplayer
@@ -36,18 +36,18 @@ ViridianGymBlueScript:
 	closetext
 	end
 
-ViridianGymGuideScript:
+ViridianGymGuyScript:
 	faceplayer
 	opentext
 	checkevent EVENT_BEAT_BLUE
-	iftrue .ViridianGymGuideWinScript
-	writetext ViridianGymGuideText
+	iftrue .ViridianGymGuyWinScript
+	writetext ViridianGymGuyText
 	waitbutton
 	closetext
 	end
 
-.ViridianGymGuideWinScript:
-	writetext ViridianGymGuideWinText
+.ViridianGymGuyWinScript:
+	writetext ViridianGymGuyWinText
 	waitbutton
 	closetext
 	end
@@ -55,11 +55,11 @@ ViridianGymGuideScript:
 ViridianGymStatue:
 	checkflag ENGINE_EARTHBADGE
 	iftrue .Beaten
-	jumpstd GymStatue1Script
+	jumpstd gymstatue1
 
 .Beaten:
 	gettrainername STRING_BUFFER_4, BLUE, BLUE1
-	jumpstd GymStatue2Script
+	jumpstd gymstatue2
 
 LeaderBlueBeforeText:
 	text "BLUE: Yo! Finally"
@@ -136,7 +136,7 @@ LeaderBlueEpilogueText:
 	cont "you. Got it?"
 	done
 
-ViridianGymGuideText:
+ViridianGymGuyText:
 	text "Yo, CHAMP in"
 	line "making!"
 
@@ -156,7 +156,7 @@ ViridianGymGuideText:
 	line "you've got!"
 	done
 
-ViridianGymGuideWinText:
+ViridianGymGuyWinText:
 	text "Man, you are truly"
 	line "tough…"
 
@@ -170,16 +170,16 @@ ViridianGymGuideWinText:
 ViridianGym_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4, 17, VIRIDIAN_CITY, 1
 	warp_event  5, 17, VIRIDIAN_CITY, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  3, 13, BGEVENT_READ, ViridianGymStatue
 	bg_event  6, 13, BGEVENT_READ, ViridianGymStatue
 
-	def_object_events
+	db 2 ; object events
 	object_event  5,  3, SPRITE_BLUE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ViridianGymBlueScript, EVENT_VIRIDIAN_GYM_BLUE
-	object_event  7, 13, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ViridianGymGuideScript, EVENT_VIRIDIAN_GYM_BLUE
+	object_event  7, 13, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ViridianGymGuyScript, EVENT_VIRIDIAN_GYM_BLUE

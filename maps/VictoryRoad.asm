@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const VICTORYROAD_SILVER
 	const VICTORYROAD_POKE_BALL1
 	const VICTORYROAD_POKE_BALL2
@@ -7,11 +7,11 @@
 	const VICTORYROAD_POKE_BALL5
 
 VictoryRoad_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene0, SCENE_VICTORYROAD_RIVAL_BATTLE
-	scene_script .DummyScene1, SCENE_VICTORYROAD_NOOP
+	db 2 ; scene scripts
+	scene_script .DummyScene0 ; SCENE_DEFAULT
+	scene_script .DummyScene1 ; SCENE_FINISHED
 
-	def_callbacks
+	db 0 ; callbacks
 
 .DummyScene0:
 	end
@@ -26,11 +26,11 @@ VictoryRoadRivalLeft:
 	special FadeOutMusic
 	pause 15
 	appear VICTORYROAD_SILVER
-	applymovement VICTORYROAD_SILVER, VictoryRoadRivalBattleApproachMovement1
+	applymovement VICTORYROAD_SILVER, MovementData_0x74539
 	scall VictoryRoadRivalNext
-	applymovement VICTORYROAD_SILVER, VictoryRoadRivalBattleExitMovement1
+	applymovement VICTORYROAD_SILVER, MovementData_0x7454c
 	disappear VICTORYROAD_SILVER
-	setscene SCENE_VICTORYROAD_NOOP
+	setscene SCENE_FINISHED
 	playmapmusic
 	end
 
@@ -40,11 +40,11 @@ VictoryRoadRivalRight:
 	special FadeOutMusic
 	pause 15
 	appear VICTORYROAD_SILVER
-	applymovement VICTORYROAD_SILVER, VictoryRoadRivalBattleApproachMovement2
+	applymovement VICTORYROAD_SILVER, MovementData_0x74542
 	scall VictoryRoadRivalNext
-	applymovement VICTORYROAD_SILVER, VictoryRoadRivalBattleExitMovement2
+	applymovement VICTORYROAD_SILVER, MovementData_0x74555
 	disappear VICTORYROAD_SILVER
-	setscene SCENE_VICTORYROAD_NOOP
+	setscene SCENE_FINISHED
 	playmapmusic
 	end
 
@@ -115,7 +115,7 @@ VictoryRoadHiddenMaxPotion:
 VictoryRoadHiddenFullHeal:
 	hiddenitem FULL_HEAL, EVENT_VICTORY_ROAD_HIDDEN_FULL_HEAL
 
-VictoryRoadRivalBattleApproachMovement1:
+MovementData_0x74539:
 	step LEFT
 	step LEFT
 	step LEFT
@@ -126,7 +126,7 @@ VictoryRoadRivalBattleApproachMovement1:
 	step UP
 	step_end
 
-VictoryRoadRivalBattleApproachMovement2:
+MovementData_0x74542:
 	step UP
 	step UP
 	step LEFT
@@ -138,7 +138,7 @@ VictoryRoadRivalBattleApproachMovement2:
 	step UP
 	step_end
 
-VictoryRoadRivalBattleExitMovement1:
+MovementData_0x7454c:
 	step DOWN
 	step DOWN
 	step RIGHT
@@ -149,7 +149,7 @@ VictoryRoadRivalBattleExitMovement1:
 	step RIGHT
 	step_end
 
-VictoryRoadRivalBattleExitMovement2:
+MovementData_0x74555:
 	step DOWN
 	step DOWN
 	step RIGHT
@@ -239,7 +239,7 @@ VictoryRoadRivalVictoryText:
 VictoryRoad_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 10 ; warp events
 	warp_event  9, 67, VICTORY_ROAD_GATE, 5
 	warp_event  1, 49, VICTORY_ROAD, 3
 	warp_event  1, 35, VICTORY_ROAD, 2
@@ -251,15 +251,15 @@ VictoryRoad_MapEvents:
 	warp_event  0, 27, VICTORY_ROAD, 8
 	warp_event 13,  5, ROUTE_23, 3
 
-	def_coord_events
-	coord_event 12,  8, SCENE_VICTORYROAD_RIVAL_BATTLE, VictoryRoadRivalLeft
-	coord_event 13,  8, SCENE_VICTORYROAD_RIVAL_BATTLE, VictoryRoadRivalRight
+	db 2 ; coord events
+	coord_event 12,  8, SCENE_DEFAULT, VictoryRoadRivalLeft
+	coord_event 13,  8, SCENE_DEFAULT, VictoryRoadRivalRight
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  3, 29, BGEVENT_ITEM, VictoryRoadHiddenMaxPotion
 	bg_event  3, 65, BGEVENT_ITEM, VictoryRoadHiddenFullHeal
 
-	def_object_events
+	db 6 ; object events
 	object_event 18, 13, SPRITE_SILVER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_RIVAL_VICTORY_ROAD
 	object_event  3, 28, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, VictoryRoadTMEarthquake, EVENT_VICTORY_ROAD_TM_EARTHQUAKE
 	object_event 12, 48, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, VictoryRoadMaxRevive, EVENT_VICTORY_ROAD_MAX_REVIVE

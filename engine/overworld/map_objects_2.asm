@@ -19,7 +19,7 @@ LoadObjectMasks:
 	ld [de], a
 	inc de
 	pop bc
-	ld hl, MAPOBJECT_LENGTH
+	ld hl, OBJECT_LENGTH
 	add hl, bc
 	ld b, h
 	ld c, l

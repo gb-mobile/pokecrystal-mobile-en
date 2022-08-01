@@ -1,4 +1,4 @@
-AnthonyMonAteSomeBerriesText:
+AnthonyAteBerriesText:
 	text "The other day, I"
 	line "was watching my"
 
@@ -20,7 +20,7 @@ AnthonyMonAteSomeBerriesText:
 	line "was delicious!"
 	done
 
-AnthonyDefeatedMonText:
+UnknownText_0x176aef:
 	text "Lately, I've been"
 	line "running across"
 
@@ -33,7 +33,7 @@ AnthonyDefeatedMonText:
 	line "taken care of."
 	done
 
-AnthonyLostAMonText:
+UnknownText_0x176b45:
 	text "Oh yeah, I was"
 	line "battling this"
 
@@ -53,7 +53,7 @@ AnthonyLostAMonText:
 	line "the job at hand!"
 	done
 
-AnthonyBattleRematchText:
+UnknownText_0x176bee:
 	text "Come on--let's"
 	line "battle right now!"
 
@@ -66,12 +66,12 @@ AnthonyBattleRematchText:
 	line "you feel up to it!"
 	done
 
-AnthonyHangUpText:
+UnknownText_0x176c47:
 	text "All right then!"
 	line "Be good!"
 	done
 
-AnthonySwarmText:
+UnknownText_0x176c61:
 	text "<PLAYER>! It's"
 	line "mind-blowing!"
 
@@ -99,7 +99,7 @@ AnthonySwarmText:
 	line "strong #MON."
 	done
 
-AnthonyWasntPayingAttentionText:
+UnknownText_0x176d32:
 	text "Rare #MON?"
 
 	para "Hey, sorry! I was"
@@ -109,7 +109,7 @@ AnthonyWasntPayingAttentionText:
 	line "paying attention."
 	done
 
-AnthonyReminderText:
+UnknownText_0x176d85:
 	text "Hello! You haven't"
 	line "forgotten about"
 
@@ -122,7 +122,7 @@ AnthonyReminderText:
 	line "I'm waiting!"
 	done
 
-AnthonyHurryText:
+UnknownText_0x176dd1:
 	text "Hello? What? Where"
 	line "is DUNSPARCE?"
 

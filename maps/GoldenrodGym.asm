@@ -1,17 +1,17 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODGYM_WHITNEY
 	const GOLDENRODGYM_LASS1
 	const GOLDENRODGYM_LASS2
-	const GOLDENRODGYM_BEAUTY1
-	const GOLDENRODGYM_BEAUTY2
-	const GOLDENRODGYM_GYM_GUIDE
+	const GOLDENRODGYM_BUENA1
+	const GOLDENRODGYM_BUENA2
+	const GOLDENRODGYM_GYM_GUY
 
 GoldenrodGym_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene0, SCENE_GOLDENRODGYM_NOOP
-	scene_script .DummyScene1, SCENE_GOLDENRODGYM_WHITNEY_STOPS_CRYING
+	db 2 ; scene scripts
+	scene_script .DummyScene0 ; SCENE_GOLDENRODGYM_NOTHING
+	scene_script .DummyScene1 ; SCENE_GOLDENRODGYM_WHITNEY_STOPS_CRYING
 
-	def_callbacks
+	db 0 ; callbacks
 
 .DummyScene0:
 	end
@@ -53,7 +53,7 @@ GoldenrodGymWhitneyScript:
 	checkflag ENGINE_PLAINBADGE
 	iftrue .GotPlainBadge
 	writetext WhitneyWhatDoYouWantText
-	promptbutton
+	buttonsound
 	waitsfx
 	writetext PlayerReceivedPlainBadgeText
 	playsound SFX_GET_BADGE
@@ -63,7 +63,7 @@ GoldenrodGymWhitneyScript:
 	scall GoldenrodGymActivateRockets
 .GotPlainBadge:
 	writetext WhitneyPlainBadgeText
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_ATTRACT
 	iffalse .NoRoomForAttract
 	setevent EVENT_GOT_TM45_ATTRACT
@@ -85,10 +85,10 @@ GoldenrodGymActivateRockets:
 	end
 
 .GoldenrodRockets:
-	jumpstd GoldenrodRocketsScript
+	jumpstd goldenrodrockets
 
 .RadioTowerRockets:
-	jumpstd RadioTowerRocketsScript
+	jumpstd radiotowerrockets
 
 TrainerLassCarrie:
 	trainer LASS, CARRIE, EVENT_BEAT_LASS_CARRIE, LassCarrieSeenText, LassCarrieBeatenText, 0, .Script
@@ -110,7 +110,7 @@ WhitneyCriesScript:
 	waitbutton
 	closetext
 	applymovement GOLDENRODGYM_LASS2, BridgetWalksAwayMovement
-	setscene SCENE_GOLDENRODGYM_NOOP
+	setscene SCENE_GOLDENRODGYM_NOTHING
 	clearevent EVENT_MADE_WHITNEY_CRY
 	end
 
@@ -147,19 +147,19 @@ TrainerBeautySamantha:
 	closetext
 	end
 
-GoldenrodGymGuideScript:
+GoldenrodGymGuyScript:
 	faceplayer
 	checkevent EVENT_BEAT_WHITNEY
-	iftrue .GoldenrodGymGuideWinScript
+	iftrue .GoldenrodGymGuyWinScript
 	opentext
-	writetext GoldenrodGymGuideText
+	writetext GoldenrodGymGuyText
 	waitbutton
 	closetext
 	end
 
-.GoldenrodGymGuideWinScript:
+.GoldenrodGymGuyWinScript:
 	opentext
-	writetext GoldenrodGymGuideWinText
+	writetext GoldenrodGymGuyWinText
 	waitbutton
 	closetext
 	end
@@ -167,10 +167,10 @@ GoldenrodGymGuideScript:
 GoldenrodGymStatue:
 	checkflag ENGINE_PLAINBADGE
 	iftrue .Beaten
-	jumpstd GymStatue1Script
+	jumpstd gymstatue1
 .Beaten:
 	gettrainername STRING_BUFFER_4, WHITNEY, WHITNEY1
-	jumpstd GymStatue2Script
+	jumpstd gymstatue2
 
 BridgetWalksUpMovement:
 	step LEFT
@@ -358,7 +358,7 @@ BeautySamanthaAfterBattleText:
 	cont "on any type…"
 	done
 
-GoldenrodGymGuideText:
+GoldenrodGymGuyText:
 	text "Yo! CHAMP in"
 	line "making!"
 
@@ -371,7 +371,7 @@ GoldenrodGymGuideText:
 	cont "#MON."
 	done
 
-GoldenrodGymGuideWinText:
+GoldenrodGymGuyWinText:
 	text "You won? Great! I"
 	line "was busy admiring"
 	cont "the ladies here."
@@ -380,21 +380,21 @@ GoldenrodGymGuideWinText:
 GoldenrodGym_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2, 17, GOLDENROD_CITY, 1
 	warp_event  3, 17, GOLDENROD_CITY, 1
 
-	def_coord_events
+	db 1 ; coord events
 	coord_event  8,  5, SCENE_GOLDENRODGYM_WHITNEY_STOPS_CRYING, WhitneyCriesScript
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  1, 15, BGEVENT_READ, GoldenrodGymStatue
 	bg_event  4, 15, BGEVENT_READ, GoldenrodGymStatue
 
-	def_object_events
+	db 6 ; object events
 	object_event  8,  3, SPRITE_WHITNEY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, GoldenrodGymWhitneyScript, -1
 	object_event  9, 13, SPRITE_LASS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 4, TrainerLassCarrie, -1
 	object_event  9,  6, SPRITE_LASS, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 1, TrainerLassBridget, -1
-	object_event  0,  2, SPRITE_BEAUTY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerBeautyVictoria, -1
-	object_event 19,  5, SPRITE_BEAUTY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerBeautySamantha, -1
-	object_event  5, 15, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, GoldenrodGymGuideScript, -1
+	object_event  0,  2, SPRITE_BUENA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerBeautyVictoria, -1
+	object_event 19,  5, SPRITE_BUENA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerBeautySamantha, -1
+	object_event  5, 15, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, GoldenrodGymGuyScript, -1

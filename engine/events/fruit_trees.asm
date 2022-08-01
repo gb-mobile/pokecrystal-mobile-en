@@ -4,7 +4,7 @@ FruitTreeScript::
 	readmem wCurFruit
 	getitemname STRING_BUFFER_3, USE_SCRIPT_VAR
 	writetext FruitBearingTreeText
-	promptbutton
+	buttonsound
 	callasm TryResetFruitTrees
 	callasm CheckFruitTree
 	iffalse .fruit
@@ -17,7 +17,7 @@ FruitTreeScript::
 	readmem wCurFruit
 	giveitem ITEM_FROM_MEM
 	iffalse .packisfull
-	promptbutton
+	buttonsound
 	writetext ObtainedFruitText
 	callasm PickedFruitTree
 	specialsound
@@ -25,7 +25,7 @@ FruitTreeScript::
 	sjump .end
 
 .packisfull
-	promptbutton
+	buttonsound
 	writetext FruitPackIsFullText
 	waitbutton
 
@@ -61,9 +61,9 @@ PickedFruitTree:
 ResetFruitTrees:
 	xor a
 	ld hl, wFruitTreeFlags
-rept (NUM_FRUIT_TREES + 7) / 8 - 1
 	ld [hli], a
-endr
+	ld [hli], a
+	ld [hli], a
 	ld [hl], a
 	ld hl, wDailyFlags1
 	set DAILYFLAGS1_ALL_FRUIT_TREES_F, [hl]

@@ -1,12 +1,12 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const SEAFOAMGYM_BLAINE
-	const SEAFOAMGYM_GYM_GUIDE
+	const SEAFOAMGYM_GYM_GUY
 
 SeafoamGym_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene ; unusable
+	db 1 ; scene scripts
+	scene_script .DummyScene
 
-	def_callbacks
+	db 0 ; callbacks
 
 .DummyScene:
 	end
@@ -23,7 +23,7 @@ SeafoamGymBlaineScript:
 	loadtrainer BLAINE, BLAINE1
 	startbattle
 	iftrue .ReturnAfterBattle
-	appear SEAFOAMGYM_GYM_GUIDE
+	appear SEAFOAMGYM_GYM_GUY
 .ReturnAfterBattle:
 	reloadmapafterbattle
 	setevent EVENT_BEAT_BLAINE
@@ -43,19 +43,19 @@ SeafoamGymBlaineScript:
 	closetext
 	end
 
-SeafoamGymGuideScript:
+SeafoamGymGuyScript:
 	faceplayer
 	opentext
-	checkevent EVENT_TALKED_TO_SEAFOAM_GYM_GUIDE_ONCE
-	iftrue .TalkedToSeafoamGymGuideScript
-	writetext SeafoamGymGuideWinText
+	checkevent EVENT_TALKED_TO_SEAFOAM_GYM_GUY_ONCE
+	iftrue .TalkedToSeafoamGymGuyScript
+	writetext SeafoamGymGuyWinText
 	waitbutton
 	closetext
-	setevent EVENT_TALKED_TO_SEAFOAM_GYM_GUIDE_ONCE
+	setevent EVENT_TALKED_TO_SEAFOAM_GYM_GUY_ONCE
 	end
 
-.TalkedToSeafoamGymGuideScript:
-	writetext SeafoamGymGuideWinText2
+.TalkedToSeafoamGymGuyScript:
+	writetext SeafoamGymGuyWinText2
 	waitbutton
 	closetext
 	end
@@ -123,7 +123,7 @@ BlaineFightDoneText:
 	line "Just you watch!"
 	done
 
-SeafoamGymGuideWinText:
+SeafoamGymGuyWinText:
 	text "Yo!"
 
 	para "… Huh? It's over"
@@ -144,7 +144,7 @@ SeafoamGymGuideWinText:
 	line "I knew you'd win!"
 	done
 
-SeafoamGymGuideWinText2:
+SeafoamGymGuyWinText2:
 	text "A #MON GYM can"
 	line "be anywhere as"
 
@@ -158,13 +158,13 @@ SeafoamGymGuideWinText2:
 SeafoamGym_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 1 ; warp events
 	warp_event  5,  5, ROUTE_20, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 2 ; object events
 	object_event  5,  2, SPRITE_BLAINE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, SeafoamGymBlaineScript, -1
-	object_event  6,  5, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, SeafoamGymGuideScript, EVENT_SEAFOAM_GYM_GYM_GUIDE
+	object_event  6,  5, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, SeafoamGymGuyScript, EVENT_SEAFOAM_GYM_GYM_GUY

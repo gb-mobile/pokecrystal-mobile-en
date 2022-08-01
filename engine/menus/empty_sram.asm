@@ -7,10 +7,18 @@ EmptyAllSRAMBanks:
 	call .EmptyBank
 	ld a, 3
 	call .EmptyBank
+	ld a, 4
+	call .EmptyBank
+	ld a, 5
+	call .EmptyBank
+	ld a, 6
+	call .EmptyBank
+	ld a, 7
+	call .EmptyBank
 	ret
 
 .EmptyBank:
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, SRAM_Begin
 	ld bc, SRAM_End - SRAM_Begin
 	xor a

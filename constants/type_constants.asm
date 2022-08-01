@@ -6,7 +6,7 @@
 ; - TypeBoostItems (see data/types/type_boost_items.asm)
 	const_def
 
-DEF PHYSICAL EQU const_value
+PHYSICAL EQU const_value
 	const NORMAL
 	const FIGHTING
 	const FLYING
@@ -18,22 +18,28 @@ DEF PHYSICAL EQU const_value
 	const GHOST
 	const STEEL
 
-DEF UNUSED_TYPES EQU const_value
-	const_next 19
-	const CURSE_TYPE
-DEF UNUSED_TYPES_END EQU const_value
+UNUSED_TYPES EQU const_value
+	const TYPE_10
+	const TYPE_11
+	const TYPE_12
+	const TYPE_13
+	const TYPE_14
+	const TYPE_15
+	const TYPE_16
+	const TYPE_17
+	const TYPE_18
+	const CURSE_T
+UNUSED_TYPES_END EQU const_value
 
-DEF SPECIAL EQU const_value
+SPECIAL EQU const_value
 	const FIRE
 	const WATER
 	const GRASS
 	const ELECTRIC
-	const PSYCHIC_TYPE
+	const PSYCHIC
 	const ICE
 	const DRAGON
 	const DARK
-DEF TYPES_END EQU const_value
+TYPES_END EQU const_value
 
-DEF NUM_TYPES EQU TYPES_END + UNUSED_TYPES - UNUSED_TYPES_END - 1 ; discount BIRD
-
-DEF POKEDEX_TYPE_STRING_LENGTH EQU 9
+NUM_TYPES EQU TYPES_END + UNUSED_TYPES - UNUSED_TYPES_END

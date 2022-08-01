@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const CELADONDEPTSTORE3F_CLERK
 	const CELADONDEPTSTORE3F_YOUNGSTER
 	const CELADONDEPTSTORE3F_GAMEBOY_KID1
@@ -6,9 +6,9 @@
 	const CELADONDEPTSTORE3F_SUPER_NERD
 
 CeladonDeptStore3F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 CeladonDeptStore3FClerkScript:
 	faceplayer
@@ -42,7 +42,7 @@ CeladonDeptStore3FSuperNerdScript:
 	jumptextfaceplayer CeladonDeptStore3FSuperNerdText
 
 CeladonDeptStore3FElevatorButton:
-	jumpstd ElevatorButtonScript
+	jumpstd elevatorbutton
 
 CeladonDeptStore3FDirectory:
 	jumptext CeladonDeptStore3FDirectoryText
@@ -95,18 +95,18 @@ CeladonDeptStore3FDirectoryText:
 CeladonDeptStore3F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event 12,  0, CELADON_DEPT_STORE_2F, 1
 	warp_event 15,  0, CELADON_DEPT_STORE_4F, 2
 	warp_event  2,  0, CELADON_DEPT_STORE_ELEVATOR, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event 14,  0, BGEVENT_READ, CeladonDeptStore3FDirectory
 	bg_event  3,  0, BGEVENT_READ, CeladonDeptStore3FElevatorButton
 
-	def_object_events
+	db 5 ; object events
 	object_event  7,  1, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, CeladonDeptStore3FClerkScript, -1
 	object_event  6,  4, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, CeladonDeptStore3FYoungsterScript, -1
 	object_event  9,  1, SPRITE_GAMEBOY_KID, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CeladonDeptStore3FGameboyKid1Script, -1

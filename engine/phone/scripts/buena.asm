@@ -2,70 +2,70 @@ BuenaPhoneCalleeScript:
 	checkflag ENGINE_ROCKETS_IN_RADIO_TOWER
 	iftrue BuenaPhoneScript_Rocket
 	readvar VAR_HOUR
-	ifgreater 17, BuenaPhoneScript_AfterMidnightCallee
-	scall BuenaPhoneScript_CheckTimeOfDayCallee
-	sjump BuenaPhoneScript_RandomCallee
+	ifgreater 17, BuenaPhoneScript_AfterMidnight1
+	scall BuenaPhoneScript_CheckTimeOfDay1
+	sjump BuenaPhoneScript_Random1
 
 BuenaPhoneCallerScript:
 	checkflag ENGINE_ROCKETS_IN_RADIO_TOWER
 	iftrue BuenaPhoneScript_Rocket
-	scall BuenaPhoneScript_CheckTimeOfDayCaller
-	sjump BuenaPhoneScript_RandomCaller
+	scall BuenaPhoneScript_CheckTimeOfDay2
+	sjump BuenaPhoneScript_Random2
 
-BuenaPhoneScript_CheckTimeOfDayCallee:
+BuenaPhoneScript_CheckTimeOfDay1:
 	checktime MORN
 	iftrue .morn
 	checktime DAY
 	iftrue .day
-	writetext BuenaPhoneNiteAnswerText
-	promptbutton
+	writetext UnknownText_0xa0d42
+	buttonsound
 	end
 
 .morn
-	writetext BuenaPhoneMorningAnswerText
-	promptbutton
+	writetext UnknownText_0xa0c28
+	buttonsound
 	end
 
 .day
-	writetext BuenaPhoneDayAnswerText
-	promptbutton
+	writetext UnknownText_0xa0c72
+	buttonsound
 	end
 
-BuenaPhoneScript_AfterMidnightCallee:
-	writetext BuenaPhoneMidnightAnswerText
+BuenaPhoneScript_AfterMidnight1:
+	writetext UnknownText_0xa0caf
 	end
 
-BuenaPhoneScript_CheckTimeOfDayCaller:
+BuenaPhoneScript_CheckTimeOfDay2:
 	readvar VAR_HOUR
-	ifgreater 17, BuenaPhoneScript_AfterMidnightCaller
+	ifgreater 17, BuenaPhoneScript_AfterMidnight2
 	checktime MORN
 	iftrue .morn
 	checktime DAY
 	iftrue .day
-	writetext BuenaPhoneNiteText
-	promptbutton
+	writetext UnknownText_0xa0e29
+	buttonsound
 	end
 
 .morn
-	writetext BuenaPhoneMorningText
-	promptbutton
+	writetext UnknownText_0xa0d96
+	buttonsound
 	end
 
 .day
-	writetext BuenaPhoneDayText
-	promptbutton
+	writetext UnknownText_0xa0dcf
+	buttonsound
 	end
 
-BuenaPhoneScript_AfterMidnightCaller:
-	writetext BuenaPhoneMidnightText
-	promptbutton
+BuenaPhoneScript_AfterMidnight2:
+	writetext UnknownText_0xa0e01
+	buttonsound
 	end
 
 BuenaPhoneScript_Rocket:
-	writetext BuenaPhoneRocketText
+	writetext UnknownText_0xa0e5e
 	end
 
-BuenaPhoneScript_RandomCaller:
+BuenaPhoneScript_Random2:
 	checkevent EVENT_BEAT_ELITE_FOUR
 	iftrue .PostE4
 	random 11
@@ -91,79 +91,79 @@ BuenaPhoneScript_RandomCaller:
 	ifequal 13, .thirteen
 
 .zero
-	writetext BuenaPhoneWentOutWithBenText
+	writetext UnknownText_0xa0efb
 	sjump .finish
 
 .one
-	writetext BuenaPhoneReceptionistText
+	writetext UnknownText_0xa0fcf
 	sjump .finish
 
 .two
-	writetext BuenaPhoneLuckyNumberShowText
+	writetext UnknownText_0xa109d
 	sjump .finish
 
 .three
-	writetext BuenaPhoneStressedFromWorkText
+	writetext UnknownText_0xa1143
 	sjump .finish
 
 .four
-	writetext BuenaPhoneProfessorOakText
+	writetext UnknownText_0xa1244
 	sjump .finish
 
 .five
-	writetext BuenaPhoneGotAColdText
+	writetext UnknownText_0xa1318
 	sjump .finish
 
 .six
-	writetext BuenaPhoneRadioCardQuestionsText
+	writetext UnknownText_0xa13d8
 	sjump .finish
 
 .seven
-	writetext BuenaPhonePikachuFanClubText
+	writetext UnknownText_0xa1488
 	sjump .finish
 
 .eight
-	writetext BuenaPhoneRadioTowerDirectorText
+	writetext UnknownText_0xa15de
 	sjump .finish
 
 .nine
-	writetext BuenaPhoneWhenDoYouRelaxText
+	writetext UnknownText_0xa1717
 	sjump .finish
 
 .ten
-	writetext BuenaPhoneStarterPokemonText
+	writetext UnknownText_0xa183d
 	sjump .finish
 
 .eleven
-	writetext BuenaPhoneCompanyVacationText
+	writetext UnknownText_0xa19b1
 	sjump .finish
 
 .twelve
-	writetext BuenaPhoneBenAndFernText
+	writetext UnknownText_0xa1ac0
 	sjump .finish
 
 .thirteen
-	writetext BuenaPhoneGoingShoppingText
+	writetext UnknownText_0xa1bed
 
 .finish
 	end
 
-BuenaPhoneScript_RandomCallee:
+BuenaPhoneScript_Random1:
 	random 3
 	ifequal 0, .zero
 	ifequal 1, .one
 	ifequal 2, .two
 
 .zero
-	writetext BuenaPhoneFavoriteSlotMachineAnswerText
+	writetext UnknownText_0xa1c88
 	end
 
 .one
-	writetext BuenaPhonePokegearAnswerText
+	writetext UnknownText_0xa1d5f
 	end
 
 .two
-	writetext BuenaPhoneCoopedUpInRadioTowerAnswerText
+	writetext UnknownText_0xa1e2f
 	end
 
 INCLUDE "data/phone/text/buena.asm"

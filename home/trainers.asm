@@ -15,7 +15,7 @@ _CheckTrainerBattle::
 
 ; Skip the player object.
 	ld a, 1
-	ld de, wMap1Object
+	ld de, wMapObjects + OBJECT_LENGTH
 
 .loop
 
@@ -78,7 +78,7 @@ _CheckTrainerBattle::
 
 .next
 	pop de
-	ld hl, MAPOBJECT_LENGTH
+	ld hl, OBJECT_LENGTH
 	add hl, de
 	ld d, h
 	ld e, l
@@ -116,7 +116,7 @@ LoadTrainer_continue::
 	ld hl, MAPOBJECT_SCRIPT_POINTER
 	add hl, bc
 	ld a, [wSeenTrainerBank]
-	call GetFarWord
+	call GetFarHalfword
 	ld de, wTempTrainer
 	ld bc, wTempTrainerEnd - wTempTrainer
 	ld a, [wSeenTrainerBank]
@@ -203,7 +203,7 @@ FacingPlayerDistance::
 	and a
 	ret
 
-CheckTrainerFlag:: ; unreferenced
+CheckTrainerFlag::
 	push bc
 	ld hl, OBJECT_MAP_OBJECT_INDEX
 	add hl, bc
@@ -215,7 +215,7 @@ CheckTrainerFlag:: ; unreferenced
 	ld h, [hl]
 	ld l, a
 	call GetMapScriptsBank
-	call GetFarWord
+	call GetFarHalfword
 	ld d, h
 	ld e, l
 	push de
@@ -230,8 +230,7 @@ CheckTrainerFlag:: ; unreferenced
 PrintWinLossText::
 	ld a, [wBattleType]
 	cp BATTLETYPE_CANLOSE
-	; code was probably dummied out here
-	jr .canlose
+	jr .canlose ; ??????????
 
 ; unused
 	ld hl, wWinTextPointer

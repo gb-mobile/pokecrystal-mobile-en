@@ -1,17 +1,17 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const TIMECAPSULE_CHRIS1
 	const TIMECAPSULE_CHRIS2
 
 TimeCapsule_MapScripts:
-	def_scene_scripts
-	scene_script .InitializeTimeCapsule, SCENE_TIMECAPSULE_INITIALIZE
-	scene_script .DummyScene,            SCENE_TIMECAPSULE_NOOP
+	db 2 ; scene scripts
+	scene_script .InitializeTimeCapsule ; SCENE_DEFAULT
+	scene_script .DummyScene ; SCENE_FINISHED
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .SetWhichChris
 
 .InitializeTimeCapsule:
-	sdefer .InitializeAndPreparePokecenter2F
+	prioritysjump .InitializeAndPreparePokecenter2F
 	end
 
 .DummyScene:
@@ -22,15 +22,15 @@ TimeCapsule_MapScripts:
 	iffalse .Chris2
 	disappear TIMECAPSULE_CHRIS2
 	appear TIMECAPSULE_CHRIS1
-	endcallback
+	return
 
 .Chris2:
 	disappear TIMECAPSULE_CHRIS1
 	appear TIMECAPSULE_CHRIS2
-	endcallback
+	return
 
 .InitializeAndPreparePokecenter2F:
-	setscene SCENE_TIMECAPSULE_NOOP
+	setscene SCENE_FINISHED
 	setmapscene POKECENTER_2F, SCENE_POKECENTER2F_LEAVE_TIME_CAPSULE
 	end
 
@@ -54,16 +54,16 @@ TimeCapsuleFriendScript:
 TimeCapsule_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4,  7, POKECENTER_2F, 4
 	warp_event  5,  7, POKECENTER_2F, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  4,  4, BGEVENT_RIGHT, TimeCapsuleConsoleScript
 	bg_event  5,  4, BGEVENT_LEFT, TimeCapsuleConsoleScript
 
-	def_object_events
+	db 2 ; object events
 	object_event  3,  4, SPRITE_CHRIS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, TimeCapsuleFriendScript, EVENT_TEMPORARY_UNTIL_MAP_RELOAD_1
 	object_event  6,  4, SPRITE_CHRIS, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, TimeCapsuleFriendScript, EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2

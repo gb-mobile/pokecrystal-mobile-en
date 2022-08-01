@@ -1,4 +1,4 @@
-DEF HALLOFFAME_COLON EQU $63
+HALLOFFAME_COLON EQU $63
 
 HallOfFame::
 	call HallOfFame_FadeOutMusic
@@ -278,7 +278,7 @@ HOF_SlideBackpic:
 	ldh a, [hSCX]
 	cp $70
 	ret z
-	add 4
+	add $4
 	ldh [hSCX], a
 	call DelayFrame
 	jr .backpicloop
@@ -363,9 +363,8 @@ _HallOfFamePC:
 	call ClearBGPalettes
 	pop hl
 	call DisplayHOFMon
-; BUG: A "HOF Master!" title for 200-Time Famers is defined but inaccessible (see docs/bugs_and_glitches.md)
 	ld a, [wHallOfFameTempWinCount]
-	cp HOF_MASTER_COUNT + 1
+	cp HOF_MASTER_COUNT + 1 ; should be HOF_MASTER_COUNT
 	jr c, .print_num_hof
 	ld de, .HOFMaster
 	hlcoord 1, 2
@@ -413,7 +412,7 @@ LoadHOFTeam:
 	ld bc, wHallOfFameTempEnd - wHallOfFameTemp + 1
 	call AddNTimes
 	ld a, BANK(sHallOfFame)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [hl]
 	and a
 	jr z, .absent
@@ -450,7 +449,7 @@ DisplayHOFMon:
 	ld bc, MON_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, "@"
-	ld [wStringBuffer2 + MON_NAME_LENGTH - 1], a
+	ld [wStringBuffer2 + 10], a
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
 	ld a, " "
@@ -463,7 +462,7 @@ DisplayHOFMon:
 	call Textbox
 	ld a, [wTempMonSpecies]
 	ld [wCurPartySpecies], a
-	ld [wTextDecimalByte], a
+	ld [wDeciramBuffer], a
 	ld hl, wTempMonDVs
 	predef GetUnownLetter
 	xor a
@@ -478,7 +477,7 @@ DisplayHOFMon:
 	ld [hli], a
 	ld [hl], "<DOT>"
 	hlcoord 3, 13
-	ld de, wTextDecimalByte
+	ld de, wDeciramBuffer
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 3
 	call PrintNum
 	call GetBasePokemonName

@@ -1,5 +1,5 @@
-DEF NUM_MOM_ITEMS_1 EQUS "((MomItems_1.End - MomItems_1) / 8)"
-DEF NUM_MOM_ITEMS_2 EQUS "((MomItems_2.End - MomItems_2) / 8)"
+NUM_MOM_ITEMS_1 EQUS "((MomItems_1.End - MomItems_1) / 8)"
+NUM_MOM_ITEMS_2 EQUS "((MomItems_2.End - MomItems_2) / 8)"
 
 	const_def 1
 	const MOM_ITEM
@@ -146,7 +146,7 @@ Mom_GiveItemOrDoll:
 	ld a, [hl]
 	ld [wCurItem], a
 	ld a, 1
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	ld hl, wNumPCItems
 	call ReceiveItem
 	ret
@@ -163,17 +163,17 @@ Mom_GetScriptPointer:
 	ret
 
 .ItemScript:
-	writetext MomHiHowAreYouText
-	writetext MomFoundAnItemText
-	writetext MomBoughtWithYourMoneyText
-	writetext MomItsInPCText
+	writetext _MomText_HiHowAreYou
+	writetext _MomText_FoundAnItem
+	writetext _MomText_BoughtWithYourMoney
+	writetext _MomText_ItsInPC
 	end
 
 .DollScript:
-	writetext MomHiHowAreYouText
-	writetext MomFoundADollText
-	writetext MomBoughtWithYourMoneyText
-	writetext MomItsInYourRoomText
+	writetext _MomText_HiHowAreYou
+	writetext _MomText_FoundADoll
+	writetext _MomText_BoughtWithYourMoney
+	writetext _MomText_ItsInRoom
 	end
 
 GetItemFromMom:
@@ -204,36 +204,41 @@ endr
 
 INCLUDE "data/items/mom_phone.asm"
 
-MomHiHowAreYouText:
-	text_far _MomHiHowAreYouText
+	db 0, 0, 0 ; unused
+
+_MomText_HiHowAreYou:
+	; Hi,  ! How are you?
+	text_far _MomShoppingText1
 	text_end
 
-MomFoundAnItemText:
-	text_far _MomFoundAnItemText
+_MomText_FoundAnItem:
+	; I found a useful item shopping, so
+	text_far _MomShoppingText2
 	text_end
 
-MomBoughtWithYourMoneyText:
-	text_far _MomBoughtWithYourMoneyText
+_MomText_BoughtWithYourMoney:
+	; I bought it with your money. Sorry!
+	text_far _MomShoppingText3
 	text_end
 
-MomItsInPCText:
-	text_far _MomItsInPCText
+_MomText_ItsInPC:
+	; It's in your PC. You'll like it!
+	text_far _MomShoppingText4
 	text_end
 
-MomFoundADollText:
-	text_far _MomFoundADollText
+_MomText_FoundADoll:
+	; While shopping today, I saw this adorable doll, so
+	text_far _MomShoppingText5
 	text_end
 
-MomItsInYourRoomText:
-	text_far _MomItsInYourRoomText
+_MomText_ItsInRoom:
+	; It's in your room. You'll love it!
+	text_far _MomShoppingText6
 	text_end
 
-
-DummyPredef3A_DummyData: ; unreferenced
-	db 0
+	db 0 ; unused
 
 DummyPredef3A:
 	ret
 
-DummyPredef3A_DummyFunction: ; unreferenced
-	ret
+	ret ; unused

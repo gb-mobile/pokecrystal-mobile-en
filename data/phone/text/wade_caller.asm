@@ -1,4 +1,4 @@
-WadeAreYourMonGrowingText:
+WadeAreYouGrowingText:
 	text "Are your #MON"
 	line "growing?"
 
@@ -17,7 +17,7 @@ WadeAreYourMonGrowingText:
 	line "it'll get tough."
 	done
 
-WadeDefeatedMonText:
+UnknownText_0x175869:
 	text "Oh yeah, we KO'd a"
 	line "wild @"
 	text_ram wStringBuffer4
@@ -32,7 +32,7 @@ WadeDefeatedMonText:
 	line "the poor thing."
 	done
 
-WadeLostAMonText:
+UnknownText_0x1758e4:
 	text "Oh yeah, a wild"
 	line "@"
 	text_ram wStringBuffer4
@@ -51,7 +51,7 @@ WadeLostAMonText:
 	line "had it."
 	done
 
-WadeBattleRematchText:
+UnknownText_0x175976:
 	text "Do you feel like a"
 	line "#MON battle?"
 
@@ -67,7 +67,7 @@ WadeBattleRematchText:
 	line "you get there."
 	done
 
-WadeHangUpText:
+UnknownText_0x1759e7:
 	text "See you later!"
 	done
 
@@ -85,7 +85,7 @@ WadeBugCatchingContestText:
 	line "up my mind."
 	done
 
-WadeFoundItemText:
+WadeFoundBerryText:
 	text "I found all kinds"
 	line "of BERRIES. If you"
 
@@ -98,7 +98,7 @@ WadeFoundItemText:
 	text "."
 	done
 
-WadeNoBerriesText:
+UnknownText_0x175abe:
 	text "Huh? BERRIES?"
 
 	para "Sorry, I haven't"
@@ -109,7 +109,7 @@ WadeNoBerriesText:
 	cont "please wait?"
 	done
 
-WadeQuickBattleText:
+UnknownText_0x175b1e:
 	text "Let's battle"
 	line "already!"
 
@@ -122,7 +122,7 @@ WadeQuickBattleText:
 	line "soon as you can!"
 	done
 
-WadeComeQuickText:
+UnknownText_0x175b6d:
 	text "How come you're"
 	line "not here yet?"
 

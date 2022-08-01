@@ -6,7 +6,7 @@ GetEmote2bpp:
 	ldh [rVBK], a
 	ret
 
-_UpdatePlayerSprite::
+_ReplaceKrisSprite::
 	call GetPlayerSprite
 	ld a, [wUsedSprites]
 	ldh [hUsedSpriteIndex], a
@@ -15,7 +15,7 @@ _UpdatePlayerSprite::
 	call GetUsedSprite
 	ret
 
-_RefreshSprites: ; mobile
+Function14146: ; mobile
 	ld hl, wSpriteFlags
 	ld a, [hl]
 	push af
@@ -26,7 +26,7 @@ _RefreshSprites: ; mobile
 	ld [wSpriteFlags], a
 	ret
 
-_ClearSprites: ; mobile
+Function14157: ; mobile
 	ld hl, wSpriteFlags
 	ld a, [hl]
 	push af
@@ -109,7 +109,7 @@ AddIndoorSprites:
 	push af
 	ld a, [hl]
 	call AddSpriteGFX
-	ld de, MAPOBJECT_LENGTH
+	ld de, OBJECT_LENGTH
 	add hl, de
 	pop af
 	inc a
@@ -142,10 +142,10 @@ LoadUsedSpritesGFX:
 	ld a, MAPCALLBACK_SPRITES
 	call RunMapCallback
 	call GetUsedSprites
-	call LoadMiscTiles
+	call .LoadMiscTiles
 	ret
 
-LoadMiscTiles:
+.LoadMiscTiles:
 	ld a, [wSpriteFlags]
 	bit 6, a
 	ret nz
@@ -234,7 +234,7 @@ GetMonSprite:
 
 	farcall LoadOverworldMonIcon
 
-	ld l, WALKING_SPRITE
+	ld l, 1
 	ld h, 0
 	scf
 	ret
@@ -250,8 +250,8 @@ GetMonSprite:
 	jp nz, GetMonSprite
 
 .NoBreedmon:
-	ld a, WALKING_SPRITE
-	ld l, WALKING_SPRITE
+	ld a, 1
+	ld l, 1
 	ld h, 0
 	and a
 	ret
@@ -346,7 +346,8 @@ AddSpriteGFX:
 	ret
 
 LoadSpriteGFX:
-; BUG: LoadSpriteGFX does not limit the capacity of UsedSprites (see docs/bugs_and_glitches.md)
+; Bug: b is not preserved, so it's useless as a next count.
+; Uncomment the lines below to fix.
 
 	ld hl, wUsedSprites
 	ld b, SPRITE_GFX_LIST_CAPACITY
@@ -365,7 +366,9 @@ LoadSpriteGFX:
 	ret
 
 .LoadSprite:
+	; push bc
 	call GetSprite
+	; pop bc
 	ld a, l
 	ret
 
@@ -633,7 +636,7 @@ endr
 LoadEmote::
 ; Get the address of the pointer to emote c.
 	ld a, c
-	ld bc, EMOTE_LENGTH
+	ld bc, 6 ; sizeof(emote)
 	ld hl, Emotes
 	call AddNTimes
 ; Load the emote address into de

@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE43_SUPER_NERD1
 	const ROUTE43_SUPER_NERD2
 	const ROUTE43_SUPER_NERD3
@@ -9,20 +9,20 @@
 	const ROUTE43_POKE_BALL
 
 Route43_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .CheckIfRockets
 
 .CheckIfRockets:
 	checkevent EVENT_CLEARED_ROCKET_HIDEOUT
 	iftrue .NoRockets
-	setmapscene ROUTE_43_GATE, SCENE_ROUTE43GATE_ROCKET_SHAKEDOWN
-	endcallback
+	setmapscene ROUTE_43_GATE, SCENE_DEFAULT
+	return
 
 .NoRockets:
-	setmapscene ROUTE_43_GATE, SCENE_ROUTE43GATE_NOOP
-	endcallback
+	setmapscene ROUTE_43_GATE, SCENE_FINISHED
+	return
 
 TrainerCamperSpencer:
 	trainer CAMPER, SPENCER, EVENT_BEAT_CAMPER_SPENCER, CamperSpencerSeenText, CamperSpencerBeatenText, 0, .Script
@@ -53,14 +53,14 @@ TrainerPokemaniacBrent:
 	loadvar VAR_CALLERID, PHONE_POKEMANIAC_BRENT
 	endifjustbattled
 	opentext
-	checkflag ENGINE_BRENT_READY_FOR_REMATCH
+	checkflag ENGINE_BRENT
 	iftrue .WantsBattle
 	checkcellnum PHONE_POKEMANIAC_BRENT
 	iftrue .NumberAccepted
 	checkevent EVENT_BRENT_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskedAlready
 	writetext PokemaniacBrentAfterBattleText
-	promptbutton
+	buttonsound
 	setevent EVENT_BRENT_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
 	sjump .AskForNumber
@@ -97,7 +97,7 @@ TrainerPokemaniacBrent:
 	startbattle
 	reloadmapafterbattle
 	loadmem wBrentFightCount, 1
-	clearflag ENGINE_BRENT_READY_FOR_REMATCH
+	clearflag ENGINE_BRENT
 	end
 
 .LoadFight1:
@@ -105,7 +105,7 @@ TrainerPokemaniacBrent:
 	startbattle
 	reloadmapafterbattle
 	loadmem wBrentFightCount, 2
-	clearflag ENGINE_BRENT_READY_FOR_REMATCH
+	clearflag ENGINE_BRENT
 	end
 
 .LoadFight2:
@@ -113,42 +113,42 @@ TrainerPokemaniacBrent:
 	startbattle
 	reloadmapafterbattle
 	loadmem wBrentFightCount, 3
-	clearflag ENGINE_BRENT_READY_FOR_REMATCH
+	clearflag ENGINE_BRENT
 	end
 
 .LoadFight3:
 	loadtrainer POKEMANIAC, BRENT4
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_BRENT_READY_FOR_REMATCH
+	clearflag ENGINE_BRENT
 	end
 
 .AskNumber1:
-	jumpstd AskNumber1MScript
+	jumpstd asknumber1m
 	end
 
 .AskNumber2:
-	jumpstd AskNumber2MScript
+	jumpstd asknumber2m
 	end
 
 .RegisteredNumber:
-	jumpstd RegisteredNumberMScript
+	jumpstd registerednumberm
 	end
 
 .NumberAccepted:
-	jumpstd NumberAcceptedMScript
+	jumpstd numberacceptedm
 	end
 
 .NumberDeclined:
-	jumpstd NumberDeclinedMScript
+	jumpstd numberdeclinedm
 	end
 
 .PhoneFull:
-	jumpstd PhoneFullMScript
+	jumpstd phonefullm
 	end
 
 .Rematch:
-	jumpstd RematchMScript
+	jumpstd rematchm
 	end
 
 TrainerPokemaniacRon:
@@ -180,7 +180,7 @@ TrainerPicnickerTiffany:
 	loadvar VAR_CALLERID, PHONE_PICNICKER_TIFFANY
 	endifjustbattled
 	opentext
-	checkflag ENGINE_TIFFANY_READY_FOR_REMATCH
+	checkflag ENGINE_TIFFANY
 	iftrue .WantsBattle
 	checkflag ENGINE_TIFFANY_HAS_PINK_BOW
 	iftrue .HasPinkBow
@@ -191,7 +191,7 @@ TrainerPicnickerTiffany:
 	checkevent EVENT_TIFFANY_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskedAlready
 	writetext PicnickerTiffanyWantsPicnicText
-	promptbutton
+	buttonsound
 	setevent EVENT_TIFFANY_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
 	sjump .AskForNumber
@@ -228,7 +228,7 @@ TrainerPicnickerTiffany:
 	startbattle
 	reloadmapafterbattle
 	loadmem wTiffanyFightCount, 1
-	clearflag ENGINE_TIFFANY_READY_FOR_REMATCH
+	clearflag ENGINE_TIFFANY
 	end
 
 .LoadFight1:
@@ -236,7 +236,7 @@ TrainerPicnickerTiffany:
 	startbattle
 	reloadmapafterbattle
 	loadmem wTiffanyFightCount, 2
-	clearflag ENGINE_TIFFANY_READY_FOR_REMATCH
+	clearflag ENGINE_TIFFANY
 	end
 
 .LoadFight2:
@@ -244,14 +244,14 @@ TrainerPicnickerTiffany:
 	startbattle
 	reloadmapafterbattle
 	loadmem wTiffanyFightCount, 3
-	clearflag ENGINE_TIFFANY_READY_FOR_REMATCH
+	clearflag ENGINE_TIFFANY
 	end
 
 .LoadFight3:
 	loadtrainer PICNICKER, TIFFANY4
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_TIFFANY_READY_FOR_REMATCH
+	clearflag ENGINE_TIFFANY
 	end
 
 .HasPinkBow:
@@ -272,39 +272,39 @@ TrainerPicnickerTiffany:
 	end
 
 .AskNumber1:
-	jumpstd AskNumber1FScript
+	jumpstd asknumber1f
 	end
 
 .AskNumber2:
-	jumpstd AskNumber2FScript
+	jumpstd asknumber2f
 	end
 
 .RegisteredNumber:
-	jumpstd RegisteredNumberFScript
+	jumpstd registerednumberf
 	end
 
 .NumberAccepted:
-	jumpstd NumberAcceptedFScript
+	jumpstd numberacceptedf
 	end
 
 .NumberDeclined:
-	jumpstd NumberDeclinedFScript
+	jumpstd numberdeclinedf
 	end
 
 .PhoneFull:
-	jumpstd PhoneFullFScript
+	jumpstd phonefullf
 	end
 
 .Rematch:
-	jumpstd RematchFScript
+	jumpstd rematchf
 	end
 
 .Gift:
-	jumpstd GiftFScript
+	jumpstd giftf
 	end
 
 .PackFull:
-	jumpstd PackFullFScript
+	jumpstd packfullf
 	end
 
 Route43Sign1:
@@ -501,21 +501,21 @@ Route43TrainerTipsText:
 Route43_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 5 ; warp events
 	warp_event  9, 51, ROUTE_43_MAHOGANY_GATE, 1
 	warp_event 10, 51, ROUTE_43_MAHOGANY_GATE, 2
 	warp_event 17, 35, ROUTE_43_GATE, 3
 	warp_event 17, 31, ROUTE_43_GATE, 1
 	warp_event 18, 31, ROUTE_43_GATE, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event 13,  3, BGEVENT_READ, Route43Sign1
 	bg_event 11, 49, BGEVENT_READ, Route43Sign2
 	bg_event 16, 38, BGEVENT_READ, Route43TrainerTips
 
-	def_object_events
+	db 8 ; object events
 	object_event 13,  5, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 2, TrainerPokemaniacBen, -1
 	object_event 13, 20, SPRITE_SUPER_NERD, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerPokemaniacBrent, -1
 	object_event 14,  7, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 2, TrainerPokemaniacRon, -1

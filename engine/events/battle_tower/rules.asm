@@ -16,12 +16,13 @@ CheckForMobileBattleRules:
 	dw BattleTower_CheckPartyHasThreeMonsThatAreNotEggs
 
 .TextPointers:
-	dw .BTExcuseMeText
+	dw .ExcuseMeText
 	dw NeedAtLeastThreeMonText
 	dw EggDoesNotQualifyText
 
-.BTExcuseMeText:
-	text_far _BTExcuseMeText
+.ExcuseMeText:
+	; Excuse me!
+	text_far UnknownText_0x1c5937
 	text_end
 
 _CheckForBattleTowerRules:
@@ -42,52 +43,60 @@ _CheckForBattleTowerRules:
 	dw .TextPointers
 
 .Functions:
-	dw CheckBTRule_PartyCountEq3
-	dw CheckBTRule_PartySpeciesAreUnique
-	dw CheckBTRule_PartyItemsAreUnique
-	dw CheckBTRule_HasPartyAnEgg
+	dw Function_PartyCountEq3
+	dw Function_PartySpeciesAreUnique
+	dw Function_PartyItemsAreUnique
+	dw Function_HasPartyAnEgg
 
 .TextPointers:
-	dw ExcuseMeYoureNotReadyText
+	dw JumpText_ExcuseMeYoureNotReady
 	dw OnlyThreeMonMayBeEnteredText
 	dw TheMonMustAllBeDifferentKindsText
 	dw TheMonMustNotHoldTheSameItemsText
 	dw YouCantTakeAnEggText
 
-ExcuseMeYoureNotReadyText:
-	text_far _ExcuseMeYoureNotReadyText
+JumpText_ExcuseMeYoureNotReady:
+	; Excuse me. You're not ready.
+	text_far Text_ExcuseMeYoureNotReady
 	text_end
 
 BattleTower_PleaseReturnWhenReady:
-	ld hl, .BattleTowerReturnWhenReadyText
+	ld hl, .PleaseReturnWhenReady
 	call PrintText
 	ret
 
-.BattleTowerReturnWhenReadyText:
-	text_far _BattleTowerReturnWhenReadyText
+.PleaseReturnWhenReady:
+	; Please return when you're ready.
+	text_far UnknownText_0x1c5962
 	text_end
 
 NeedAtLeastThreeMonText:
+	; You need at least three #MON.
 	text_far _NeedAtLeastThreeMonText
 	text_end
 
 EggDoesNotQualifyText:
+	; Sorry, an EGG doesn't qualify.
 	text_far _EggDoesNotQualifyText
 	text_end
 
 OnlyThreeMonMayBeEnteredText:
+	; Only three #MON may be entered.
 	text_far _OnlyThreeMonMayBeEnteredText
 	text_end
 
 TheMonMustAllBeDifferentKindsText:
+	; The @  #MON must all be different kinds.
 	text_far _TheMonMustAllBeDifferentKindsText
 	text_end
 
 TheMonMustNotHoldTheSameItemsText:
+	; The @  #MON must not hold the same items.
 	text_far _TheMonMustNotHoldTheSameItemsText
 	text_end
 
 YouCantTakeAnEggText:
+	; You can't take an EGG!
 	text_far _YouCantTakeAnEggText
 	text_end
 
@@ -203,19 +212,19 @@ BattleTower_CheckPartyHasThreeMonsThatAreNotEggs:
 	cp BATTLETOWER_PARTY_LENGTH
 	ret
 
-CheckBTRule_PartyCountEq3:
+Function_PartyCountEq3:
 	ld a, [wPartyCount]
 	cp BATTLETOWER_PARTY_LENGTH
 	ret z
 	scf
 	ret
 
-CheckBTRule_PartySpeciesAreUnique:
+Function_PartySpeciesAreUnique:
 	ld hl, wPartyMon1Species
-	call CheckPartyValueIsUnique
+	call VerifyUniqueness
 	ret
 
-CheckPartyValueIsUnique:
+VerifyUniqueness:
 	ld de, wPartyCount
 	ld a, [de]
 	inc de
@@ -276,12 +285,12 @@ CheckPartyValueIsUnique:
 	pop bc
 	ret
 
-CheckBTRule_PartyItemsAreUnique:
+Function_PartyItemsAreUnique:
 	ld hl, wPartyMon1Item
-	call CheckPartyValueIsUnique
+	call VerifyUniqueness
 	ret
 
-CheckBTRule_HasPartyAnEgg:
+Function_HasPartyAnEgg:
 	ld hl, wPartyCount
 	ld a, [hli]
 	ld c, a

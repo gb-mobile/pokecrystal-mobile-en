@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const LAKEOFRAGE_LANCE
 	const LAKEOFRAGE_GRAMPS
 	const LAKEOFRAGE_SUPER_NERD1
@@ -13,11 +13,11 @@
 	const LAKEOFRAGE_POKE_BALL2
 
 LakeOfRage_MapScripts:
-	def_scene_scripts
+	db 2 ; scene scripts
 	scene_script .DummyScene0 ; unusable
 	scene_script .DummyScene1 ; unusable
 
-	def_callbacks
+	db 2 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPoint
 	callback MAPCALLBACK_OBJECTS, .Wesley
 
@@ -29,34 +29,34 @@ LakeOfRage_MapScripts:
 
 .FlyPoint:
 	setflag ENGINE_FLYPOINT_LAKE_OF_RAGE
-	endcallback
+	return
 
 .Wesley:
 	readvar VAR_WEEKDAY
 	ifequal WEDNESDAY, .WesleyAppears
 	disappear LAKEOFRAGE_WESLEY
-	endcallback
+	return
 
 .WesleyAppears:
 	appear LAKEOFRAGE_WESLEY
-	endcallback
+	return
 
 LakeOfRageLanceScript:
 	checkevent EVENT_REFUSED_TO_HELP_LANCE_AT_LAKE_OF_RAGE
 	iftrue .AskAgainForHelp
 	opentext
-	writetext LakeOfRageLanceForcedToEvolveText
-	promptbutton
+	writetext UnknownText_0x70157
+	buttonsound
 	faceplayer
-	writetext LakeOfRageLanceIntroText
+	writetext UnknownText_0x701b4
 	yesorno
 	iffalse .RefusedToHelp
 .AgreedToHelp:
-	writetext LakeOfRageLanceRadioSignalText
+	writetext UnknownText_0x702c6
 	waitbutton
 	closetext
 	playsound SFX_WARP_TO
-	applymovement LAKEOFRAGE_LANCE, LakeOfRageLanceTeleportIntoSkyMovement
+	applymovement LAKEOFRAGE_LANCE, MovementData_0x70155
 	disappear LAKEOFRAGE_LANCE
 	clearevent EVENT_MAHOGANY_MART_LANCE_AND_DRAGONITE
 	setevent EVENT_DECIDED_TO_HELP_LANCE
@@ -64,7 +64,7 @@ LakeOfRageLanceScript:
 	end
 
 .RefusedToHelp:
-	writetext LakeOfRageLanceRefusedText
+	writetext UnknownText_0x70371
 	waitbutton
 	closetext
 	setevent EVENT_REFUSED_TO_HELP_LANCE_AT_LAKE_OF_RAGE
@@ -73,14 +73,14 @@ LakeOfRageLanceScript:
 .AskAgainForHelp:
 	faceplayer
 	opentext
-	writetext LakeOfRageLanceAskHelpText
+	writetext UnknownText_0x703a5
 	yesorno
 	iffalse .RefusedToHelp
 	sjump .AgreedToHelp
 
 RedGyarados:
 	opentext
-	writetext LakeOfRageGyaradosCryText
+	writetext UnknownText_0x703cb
 	pause 15
 	cry GYARADOS
 	closetext
@@ -94,7 +94,7 @@ RedGyarados:
 	opentext
 	giveitem RED_SCALE
 	waitsfx
-	writetext LakeOfRageGotRedScaleText
+	writetext UnknownText_0x703df
 	playsound SFX_ITEM
 	waitsfx
 	itemnotify
@@ -138,7 +138,7 @@ MagikarpHouseSignScript:
 	end
 
 .MagikarpLengthRecord:
-	promptbutton
+	buttonsound
 	special MagikarpHouseSign
 	closetext
 	end
@@ -197,12 +197,12 @@ WesleyScript:
 	checkevent EVENT_MET_WESLEY_OF_WEDNESDAY
 	iftrue .MetWesley
 	writetext MeetWesleyText
-	promptbutton
+	buttonsound
 	setevent EVENT_MET_WESLEY_OF_WEDNESDAY
 .MetWesley:
 	writetext WesleyGivesGiftText
-	promptbutton
-	verbosegiveitem BLACKBELT_I
+	buttonsound
+	verbosegiveitem BLACKBELT
 	iffalse WesleyDoneScript
 	setevent EVENT_GOT_BLACKBELT_FROM_WESLEY
 	writetext WesleyGaveGiftText
@@ -238,11 +238,11 @@ LakeOfRageHiddenRareCandy:
 LakeOfRageHiddenMaxPotion:
 	hiddenitem MAX_POTION, EVENT_LAKE_OF_RAGE_HIDDEN_MAX_POTION
 
-LakeOfRageLanceTeleportIntoSkyMovement:
+MovementData_0x70155:
 	teleport_from
 	step_end
 
-LakeOfRageLanceForcedToEvolveText:
+UnknownText_0x70157:
 	text "This lake is full"
 	line "of GYARADOS but"
 	cont "nothing else…"
@@ -252,7 +252,7 @@ LakeOfRageLanceForcedToEvolveText:
 	cont "to evolve…"
 	done
 
-LakeOfRageLanceIntroText:
+UnknownText_0x701b4:
 	text "Did you come here"
 	line "because of the"
 	cont "rumors?"
@@ -280,7 +280,7 @@ LakeOfRageLanceIntroText:
 	cont "investigate?"
 	done
 
-LakeOfRageLanceRadioSignalText:
+UnknownText_0x702c6:
 	text "LANCE: Excellent!"
 
 	para "It seems that the"
@@ -299,22 +299,22 @@ LakeOfRageLanceRadioSignalText:
 	line "for you, <PLAY_G>."
 	done
 
-LakeOfRageLanceRefusedText:
+UnknownText_0x70371:
 	text "Oh… Well, if you"
 	line "change your mind,"
 	cont "please help me."
 	done
 
-LakeOfRageLanceAskHelpText:
+UnknownText_0x703a5:
 	text "LANCE: Hm? Are you"
 	line "going to help me?"
 	done
 
-LakeOfRageGyaradosCryText:
+UnknownText_0x703cb:
 	text "GYARADOS: Gyashaa!"
 	done
 
-LakeOfRageGotRedScaleText:
+UnknownText_0x703df:
 	text "<PLAYER> obtained a"
 	line "RED SCALE."
 	done
@@ -494,20 +494,20 @@ FishingGurusHouseSignText:
 LakeOfRage_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  7,  3, LAKE_OF_RAGE_HIDDEN_POWER_HOUSE, 1
 	warp_event 27, 31, LAKE_OF_RAGE_MAGIKARP_HOUSE, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 5 ; bg events
 	bg_event 21, 27, BGEVENT_READ, LakeOfRageSign
 	bg_event 25, 31, BGEVENT_READ, MagikarpHouseSignScript
 	bg_event 11, 28, BGEVENT_ITEM, LakeOfRageHiddenFullRestore
 	bg_event  4,  4, BGEVENT_ITEM, LakeOfRageHiddenRareCandy
 	bg_event 35,  5, BGEVENT_ITEM, LakeOfRageHiddenMaxPotion
 
-	def_object_events
+	db 12 ; object events
 	object_event 21, 28, SPRITE_LANCE, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageLanceScript, EVENT_LAKE_OF_RAGE_LANCE
 	object_event 20, 26, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageGrampsScript, -1
 	object_event 36, 13, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, LakeOfRageSuperNerdScript, -1

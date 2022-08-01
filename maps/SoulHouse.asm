@@ -1,13 +1,13 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const SOULHOUSE_MRFUJI
 	const SOULHOUSE_TEACHER
 	const SOULHOUSE_LASS
 	const SOULHOUSE_GRANNY
 
 SoulHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 MrFuji:
 	jumptextfaceplayer MrFujiText
@@ -73,15 +73,15 @@ SoulHouseGrannyText:
 SoulHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4,  7, LAVENDER_TOWN, 6
 	warp_event  5,  7, LAVENDER_TOWN, 6
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 4 ; object events
 	object_event  4,  2, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MrFuji, -1
 	object_event  7,  3, SPRITE_TEACHER, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, SoulHouseTeacherScript, -1
 	object_event  2,  5, SPRITE_LASS, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, SoulHouseLassScript, -1

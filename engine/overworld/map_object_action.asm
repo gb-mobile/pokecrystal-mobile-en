@@ -1,7 +1,5 @@
 ObjectActionPairPointers:
-; entries correspond to OBJECT_ACTION_* constants (see constants/map_object_constants.asm)
-	table_width 2 + 2, ObjectActionPairPointers
-	;  normal action,                  frozen action
+; entries correspond to OBJECT_ACTION_* constants
 	dw SetFacingStanding,              SetFacingStanding
 	dw SetFacingStandAction,           SetFacingCurrent
 	dw SetFacingStepAction,            SetFacingCurrent
@@ -19,7 +17,6 @@ ObjectActionPairPointers:
 	dw SetFacingBoulderDust,           SetFacingStanding
 	dw SetFacingGrassShake,            SetFacingStanding
 	dw SetFacingSkyfall,               SetFacingCurrent
-	assert_table_length NUM_OBJECT_ACTIONS
 
 SetFacingStanding:
 	ld hl, OBJECT_FACING_STEP
@@ -166,7 +163,7 @@ CounterclockwiseSpinAction:
 
 	swap e
 	ld d, 0
-	ld hl, .facings
+	ld hl, .Directions
 	add hl, de
 	ld a, [hl]
 	ld hl, OBJECT_FACING
@@ -174,11 +171,8 @@ CounterclockwiseSpinAction:
 	ld [hl], a
 	ret
 
-.facings:
-	db OW_DOWN
-	db OW_RIGHT
-	db OW_UP
-	db OW_LEFT
+.Directions:
+	db OW_DOWN, OW_RIGHT, OW_UP, OW_LEFT
 
 SetFacingFish:
 	call GetSpriteDirection
@@ -275,8 +269,7 @@ SetFacingBoulderDust:
 	and 2
 	ld a, FACING_BOULDER_DUST_1
 	jr z, .ok
-	inc a
-	assert FACING_BOULDER_DUST_1 + 1 == FACING_BOULDER_DUST_2
+	inc a ; FACING_BOULDER_DUST_2
 .ok
 	ld [hl], a
 	ret

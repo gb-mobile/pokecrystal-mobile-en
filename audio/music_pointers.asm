@@ -2,7 +2,6 @@
 
 Music:
 ; entries correspond to MUSIC_* constants
-	table_width 3, Music
 	dba Music_Nothing
 	dba Music_TitleScreen
 	dba Music_Route1
@@ -107,4 +106,3 @@ Music:
 	dba Music_SuicuneBattle
 	dba Music_BattleTowerLobby
 	dba Music_MobileCenter
-	assert_table_length NUM_MUSIC_SONGS

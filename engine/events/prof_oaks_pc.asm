@@ -36,18 +36,18 @@ Rate:
 	ld hl, wPokedexSeen
 	ld b, wEndPokedexSeen - wPokedexSeen
 	call CountSetBits
-	ld [wTempPokedexSeenCount], a
+	ld [wd002], a
 	ld hl, wPokedexCaught
 	ld b, wEndPokedexCaught - wPokedexCaught
 	call CountSetBits
-	ld [wTempPokedexCaughtCount], a
+	ld [wd003], a
 
 ; print appropriate rating
 	call .UpdateRatingBuffers
 	ld hl, OakPCText3
 	call PrintText
 	call JoyWaitAorB
-	ld a, [wTempPokedexCaughtCount]
+	ld a, [wd003]
 	ld hl, OakRatings
 	call FindOakRating
 	push de
@@ -57,10 +57,10 @@ Rate:
 
 .UpdateRatingBuffers:
 	ld hl, wStringBuffer3
-	ld de, wTempPokedexSeenCount
+	ld de, wd002
 	call .UpdateRatingBuffer
 	ld hl, wStringBuffer4
-	ld de, wTempPokedexCaughtCount
+	ld de, wd003
 	call .UpdateRatingBuffer
 	ret
 
@@ -70,7 +70,7 @@ Rate:
 	ld bc, ITEM_NAME_LENGTH
 	call ByteFill
 	pop hl
-	lb bc, PRINTNUM_LEFTALIGN | 1, 3
+	lb bc, PRINTNUM_RIGHTALIGN | 1, 3
 	call PrintNum
 	ret
 

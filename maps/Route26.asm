@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const ROUTE26_COOLTRAINER_M1
 	const ROUTE26_COOLTRAINER_M2
 	const ROUTE26_COOLTRAINER_F1
@@ -9,9 +9,9 @@
 	const ROUTE26_POKE_BALL
 
 Route26_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 TrainerCooltrainermJake:
 	trainer COOLTRAINERM, JAKE, EVENT_BEAT_COOLTRAINERM_JAKE, CooltrainermJakeSeenText, CooltrainermJakeBeatenText, 0, .Script
@@ -31,14 +31,14 @@ TrainerCooltrainermGaven3:
 	loadvar VAR_CALLERID, PHONE_COOLTRAINERM_GAVEN
 	endifjustbattled
 	opentext
-	checkflag ENGINE_GAVEN_READY_FOR_REMATCH
+	checkflag ENGINE_GAVEN
 	iftrue .WantsBattle
 	checkcellnum PHONE_COOLTRAINERM_GAVEN
 	iftrue .NumberAccepted
 	checkevent EVENT_GAVEN_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskedAlready
 	writetext CooltrainermGavenAfterText
-	promptbutton
+	buttonsound
 	setevent EVENT_GAVEN_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
 	sjump .AskForNumber
@@ -71,7 +71,7 @@ TrainerCooltrainermGaven3:
 	startbattle
 	reloadmapafterbattle
 	loadmem wGavenFightCount, 1
-	clearflag ENGINE_GAVEN_READY_FOR_REMATCH
+	clearflag ENGINE_GAVEN
 	end
 
 .LoadFight1:
@@ -79,42 +79,42 @@ TrainerCooltrainermGaven3:
 	startbattle
 	reloadmapafterbattle
 	loadmem wGavenFightCount, 2
-	clearflag ENGINE_GAVEN_READY_FOR_REMATCH
+	clearflag ENGINE_GAVEN
 	end
 
 .LoadFight2:
 	loadtrainer COOLTRAINERM, GAVEN2
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_GAVEN_READY_FOR_REMATCH
+	clearflag ENGINE_GAVEN
 	end
 
 .AskNumber1:
-	jumpstd AskNumber1MScript
+	jumpstd asknumber1m
 	end
 
 .AskNumber2:
-	jumpstd AskNumber2MScript
+	jumpstd asknumber2m
 	end
 
 .RegisteredNumber:
-	jumpstd RegisteredNumberMScript
+	jumpstd registerednumberm
 	end
 
 .NumberAccepted:
-	jumpstd NumberAcceptedMScript
+	jumpstd numberacceptedm
 	end
 
 .NumberDeclined:
-	jumpstd NumberDeclinedMScript
+	jumpstd numberdeclinedm
 	end
 
 .PhoneFull:
-	jumpstd PhoneFullMScript
+	jumpstd phonefullm
 	end
 
 .Rematch:
-	jumpstd RematchMScript
+	jumpstd rematchm
 	end
 
 TrainerCooltrainerfJoyce:
@@ -135,14 +135,14 @@ TrainerCooltrainerfBeth1:
 	loadvar VAR_CALLERID, PHONE_COOLTRAINERF_BETH
 	endifjustbattled
 	opentext
-	checkflag ENGINE_BETH_READY_FOR_REMATCH
+	checkflag ENGINE_BETH
 	iftrue .WantsBattle
 	checkcellnum PHONE_COOLTRAINERF_BETH
 	iftrue .NumberAccepted
 	checkevent EVENT_BETH_ASKED_FOR_PHONE_NUMBER
 	iftrue .AskedAlready
 	writetext CooltrainerfBethAfterText
-	promptbutton
+	buttonsound
 	setevent EVENT_BETH_ASKED_FOR_PHONE_NUMBER
 	scall .AskNumber1
 	sjump .AskForNumber
@@ -175,7 +175,7 @@ TrainerCooltrainerfBeth1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wBethFightCount, 1
-	clearflag ENGINE_BETH_READY_FOR_REMATCH
+	clearflag ENGINE_BETH
 	end
 
 .LoadFight1:
@@ -183,42 +183,42 @@ TrainerCooltrainerfBeth1:
 	startbattle
 	reloadmapafterbattle
 	loadmem wBethFightCount, 2
-	clearflag ENGINE_BETH_READY_FOR_REMATCH
+	clearflag ENGINE_BETH
 	end
 
 .LoadFight2:
 	loadtrainer COOLTRAINERF, BETH3
 	startbattle
 	reloadmapafterbattle
-	clearflag ENGINE_BETH_READY_FOR_REMATCH
+	clearflag ENGINE_BETH
 	end
 
 .AskNumber1:
-	jumpstd AskNumber1FScript
+	jumpstd asknumber1f
 	end
 
 .AskNumber2:
-	jumpstd AskNumber2FScript
+	jumpstd asknumber2f
 	end
 
 .RegisteredNumber:
-	jumpstd RegisteredNumberFScript
+	jumpstd registerednumberf
 	end
 
 .NumberAccepted:
-	jumpstd NumberAcceptedFScript
+	jumpstd numberacceptedf
 	end
 
 .NumberDeclined:
-	jumpstd NumberDeclinedFScript
+	jumpstd numberdeclinedf
 	end
 
 .PhoneFull:
-	jumpstd PhoneFullFScript
+	jumpstd phonefullf
 	end
 
 .Rematch:
-	jumpstd RematchFScript
+	jumpstd rematchf
 	end
 
 TrainerPsychicRichard:
@@ -413,17 +413,17 @@ Route26SignText:
 Route26_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  7,  5, VICTORY_ROAD_GATE, 3
 	warp_event 15, 57, ROUTE_26_HEAL_HOUSE, 1
 	warp_event  5, 71, DAY_OF_WEEK_SIBLINGS_HOUSE, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 1 ; bg events
 	bg_event  8,  6, BGEVENT_READ, Route26Sign
 
-	def_object_events
+	db 8 ; object events
 	object_event 14, 24, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 2, TrainerCooltrainermJake, -1
 	object_event  9, 38, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerCooltrainermGaven3, -1
 	object_event 10, 56, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerCooltrainerfJoyce, -1

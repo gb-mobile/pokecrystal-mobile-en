@@ -1,15 +1,6 @@
 MobileCheckOwnMonAnywhere:
-; Like CheckOwnMonAnywhere, but only checks for species.
+; Like CheckOwnMonAnywhere, but only check for species.
 ; OT/ID don't matter.
-
-; inputs:
-; [wScriptVar] should contain the species we're looking for.
-
-; outputs:
-; sets carry if monster matches species.
-
-	; If there are no monsters in the party,
-	; the player must not own any yet.
 
 	ld a, [wPartyCount]
 	and a
@@ -18,83 +9,62 @@ MobileCheckOwnMonAnywhere:
 	ld d, a
 	ld e, 0
 	ld hl, wPartyMon1Species
-	ld bc, wPartyMonOTs
-
-	; Run .CheckMatch on each Pokémon in the party.
-
-.partymon
+	ld bc, wPartyMonOT
+.asm_4a851
 	call .CheckMatch
 	ret c
-
 	push bc
 	ld bc, PARTYMON_STRUCT_LENGTH
 	add hl, bc
 	pop bc
-	call .AdvanceOTName
+	call .CopyName
 	dec d
-	jr nz, .partymon
-
-	; Run .CheckMatch on each Pokémon in the PC.
-
+	jr nz, .asm_4a851
 	ld a, BANK(sBoxCount)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [sBoxCount]
 	and a
-	jr z, .boxes
-
+	jr z, .asm_4a888
 	ld d, a
 	ld hl, sBoxMon1Species
-	ld bc, sBoxMonOTs
-.openboxmon
+	ld bc, sBoxMonOT
+.asm_4a873
 	call .CheckMatch
-	jr nc, .loop
-
+	jr nc, .asm_4a87c
 	call CloseSRAM
 	ret
 
-.loop
+.asm_4a87c
 	push bc
 	ld bc, BOXMON_STRUCT_LENGTH
 	add hl, bc
 	pop bc
-	call .AdvanceOTName
+	call .CopyName
 	dec d
-	jr nz, .openboxmon
+	jr nz, .asm_4a873
 
-	; Run .CheckMatch on each monster in the other 13 PC boxes.
-
-.boxes
+.asm_4a888
 	call CloseSRAM
-
 	ld c, 0
-.box
-	; Don't search the current box again.
+.asm_4a88d
 	ld a, [wCurBox]
 	and $f
 	cp c
-	jr z, .loopbox
-
-	; Load the box.
-
-	ld hl, .BoxAddresses
+	jr z, .asm_4a8d1
+	ld hl, .BoxAddrs
 	ld b, 0
 	add hl, bc
 	add hl, bc
 	add hl, bc
 	ld a, [hli]
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-
-	; Number of monsters in the box
-
 	ld a, [hl]
 	and a
-	jr z, .loopbox
-
+	jr z, .asm_4a8d1
 	push bc
-
 	push hl
 	ld de, sBoxMons - sBoxCount
 	add hl, de
@@ -102,56 +72,44 @@ MobileCheckOwnMonAnywhere:
 	ld e, l
 	pop hl
 	push de
-	ld de, sBoxMonOTs - sBoxCount
+	ld de, sBoxMonOT - sBoxCount
 	add hl, de
 	ld b, h
 	ld c, l
 	pop hl
-
 	ld d, a
-
-.boxmon
+.asm_4a8ba
 	call .CheckMatch
-	jr nc, .loopboxmon
-
+	jr nc, .asm_4a8c4
 	pop bc
 	call CloseSRAM
 	ret
 
-.loopboxmon
+.asm_4a8c4
 	push bc
 	ld bc, BOXMON_STRUCT_LENGTH
 	add hl, bc
 	pop bc
-	call .AdvanceOTName
+	call .CopyName
 	dec d
-	jr nz, .boxmon
+	jr nz, .asm_4a8ba
 	pop bc
 
-.loopbox
+.asm_4a8d1
 	inc c
 	ld a, c
 	cp NUM_BOXES
-	jr c, .box
-
+	jr c, .asm_4a88d
 	call CloseSRAM
 	and a
 	ret
 
 .CheckMatch:
-	; Check if a Pokémon is of a specific species.
-	; We compare the species we are looking for in
-	; [wScriptVar] to the species we have in [hl].
-	; Sets carry flag if species matches.
-
 	push bc
 	push hl
 	push de
 	ld d, b
 	ld e, c
-
-	; check species
-
 	ld a, [wScriptVar]
 	ld b, [hl]
 	cp b
@@ -172,8 +130,7 @@ MobileCheckOwnMonAnywhere:
 	scf
 	ret
 
-.BoxAddresses:
-	table_width 3, MobileCheckOwnMonAnywhere.BoxAddresses
+.BoxAddrs:
 	dba sBox1
 	dba sBox2
 	dba sBox3
@@ -188,9 +145,8 @@ MobileCheckOwnMonAnywhere:
 	dba sBox12
 	dba sBox13
 	dba sBox14
-	assert_table_length NUM_BOXES
 
-.AdvanceOTName:
+.CopyName:
 	push hl
 	ld hl, NAME_LENGTH
 	add hl, bc
@@ -279,12 +235,13 @@ Function4a94e:
 .asm_4a9b0
 	ld de, SFX_WRONG
 	call PlaySFX
-	ld hl, MobilePickThreeMonForBattleText
+	ld hl, UnknownText_0x4a9be
 	call PrintText
 	jr .asm_4a974
 
-MobilePickThreeMonForBattleText:
-	text_far _MobilePickThreeMonForBattleText
+UnknownText_0x4a9be:
+	; Pick three #MON for battle.
+	text_far UnknownText_0x1c51d7
 	text_end
 
 Function4a9c3:
@@ -308,35 +265,36 @@ Function4a9c3:
 Function4a9d7:
 	ld a, [wd002]
 	ld hl, wPartyMonNicknames
-	call GetNickname
+	call GetNick
 	ld h, d
 	ld l, e
-	ld de, wMobileParticipant1Nickname
-	ld bc, NAME_LENGTH_JAPANESE
+	ld de, wMobileParticipant1Nickname;wd006
+	ld bc, NAME_LENGTH;6
 	call CopyBytes
 	ld a, [wd003]
 	ld hl, wPartyMonNicknames
-	call GetNickname
+	call GetNick
 	ld h, d
 	ld l, e
-	ld de, wMobileParticipant2Nickname
-	ld bc, NAME_LENGTH_JAPANESE
+	ld de, wMobileParticipant2Nickname;wd00c
+	ld bc, NAME_LENGTH;6
 	call CopyBytes
 	ld a, [wd004]
 	ld hl, wPartyMonNicknames
-	call GetNickname
+	call GetNick
 	ld h, d
 	ld l, e
-	ld de, wMobileParticipant3Nickname
-	ld bc, NAME_LENGTH_JAPANESE
+	ld de, wMobileParticipant3Nickname;wd012
+	ld bc, NAME_LENGTH;6
 	call CopyBytes
-	ld hl, MobileUseTheseThreeMonText
+	ld hl, UnknownText_0x4aa1d
 	call PrintText
 	call YesNoBox
 	ret
 
-MobileUseTheseThreeMonText:
-	text_far _MobileUseTheseThreeMonText
+UnknownText_0x4aa1d:
+	; , @  and @ . Use these three?
+	text_far UnknownText_0x1c51f4
 	text_end
 
 Function4aa22:
@@ -376,7 +334,7 @@ Function4aa34:
 	pop af
 	ret
 
-Function4aa6e: ; unreferenced
+Function4aa6e:
 	pop af
 	ld de, SFX_WRONG
 	call PlaySFX
@@ -466,15 +424,15 @@ Function4aad3:
 
 	ld c, a
 	xor a
-	ldh [hObjectStructIndex], a
+	ldh [hObjectStructIndexBuffer], a
 .loop
 	push bc
 	push hl
 	ld e, MONICON_PARTYMENU
 	farcall LoadMenuMonIcon
-	ldh a, [hObjectStructIndex]
+	ldh a, [hObjectStructIndexBuffer]
 	inc a
-	ldh [hObjectStructIndex], a
+	ldh [hObjectStructIndexBuffer], a
 	pop hl
 	pop bc
 	dec c
@@ -539,7 +497,7 @@ Function4ab1a:
 	dec a
 	ld [wCurPartyMon], a
 	ld c, a
-	ld b, 0
+	ld b, $0
 	ld hl, wPartySpecies
 	add hl, bc
 	ld a, [hl]
@@ -720,9 +678,9 @@ Function4ac58:
 	jr .asm_4ac96
 
 .asm_4ac89
-	hlcoord 11, 9
+	hlcoord 9, 9;11, 9
 	ld b, $7
-	ld c, $7
+	ld c, $9;$7
 	call Textbox
 	call Function4ad68
 
@@ -736,7 +694,7 @@ Function4ac58:
 
 MenuHeader_0x4aca2:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 11, 9, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1
+	menu_coords 9, 9, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1;11, 9, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1
 	dw NULL
 	db 1 ; default option
 
@@ -751,6 +709,8 @@ Function4acaa:
 	ld [wMenuDataItems], a
 	ld a, $c
 	ld [wMenuBorderTopCoord], a
+	ld a, $b
+	ld [wMenuBorderLeftCoord], a
 	jr .asm_4accc
 
 .asm_4acc2
@@ -758,12 +718,14 @@ Function4acaa:
 	ld [wMenuDataItems], a
 	ld a, $8
 	ld [wMenuBorderTopCoord], a
+	ld a, $9;$b
+	ld [wMenuBorderLeftCoord], a
 
 .asm_4accc
-	ld a, $b
-	ld [wMenuBorderLeftCoord], a
+	;ld a, $b
+	;ld [wMenuBorderLeftCoord], a
 	ld a, $1
-	ld [wMenuCursorPosition], a
+	ld [wMenuCursorBuffer], a
 	call InitVerticalMenuCursor
 	ld hl, w2DMenuFlags1
 	set 6, [hl]
@@ -814,7 +776,7 @@ Function4ad17:
 	jr z, .asm_4ad39
 	ld de, SFX_WRONG
 	call WaitPlaySFX
-	ld hl, MobileOnlyThreeMonMayEnterText
+	ld hl, UnknownText_0x4ad51
 	call PrintText
 	ret
 
@@ -834,8 +796,9 @@ Function4ad17:
 	call Function4adc2
 	ret
 
-MobileOnlyThreeMonMayEnterText:
-	text_far _MobileOnlyThreeMonMayEnterText
+UnknownText_0x4ad51:
+	; Only three #MON may enter.
+	text_far UnknownText_0x1c521c
 	text_end
 
 Function4ad56:
@@ -847,21 +810,21 @@ Function4ad60:
 	farcall ManagePokemonMoves
 	ret
 
-Function4ad67: ; unreferenced
+Function4ad67:
 	ret
 
 Function4ad68:
-	hlcoord 13, 12
+	hlcoord 11, 12;13, 12
 	ld de, String_4ad88
 	call PlaceString
 	call Function4adb2
 	jr c, .asm_4ad7e
-	hlcoord 13, 10
+	hlcoord 11, 10;13, 10
 	ld de, String_4ada0
 	jr .asm_4ad84
 
 .asm_4ad7e
-	hlcoord 13, 10
+	hlcoord 11, 10;13, 10
 	ld de, String_4ad9a
 
 .asm_4ad84
@@ -869,19 +832,19 @@ Function4ad68:
 	ret
 
 String_4ad88:
-	db   "つよさをみる"
-	next "つかえるわざ"
-	next "もどる@"
+	db   "STATS";"つよさをみる"
+	next "MOVE";"つかえるわざ"
+	next "CANCEL@";"もどる@"
 
 String_4ad9a:
-	db   "さんかする@"
+	db   "ENTER@";"さんかする@"
 
 String_4ada0:
-	db   "さんかしない@"
+	db   "WITHDRAW@";"さんかしない@"
 
 String_4ada7:
-	db   "つよさをみる"
-	next "もどる@" ; BACK
+	db   "STATS";"つよさをみる"
+	next "CANCEL@";"もどる@" ; BACK
 
 Function4adb2:
 	ld hl, wd002

@@ -1,6 +1,6 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const RADIOTOWER3F_SUPER_NERD
-	const RADIOTOWER3F_GYM_GUIDE
+	const RADIOTOWER3F_GYM_GUY
 	const RADIOTOWER3F_COOLTRAINER_F
 	const RADIOTOWER3F_ROCKET1
 	const RADIOTOWER3F_ROCKET2
@@ -8,36 +8,36 @@
 	const RADIOTOWER3F_SCIENTIST
 
 RadioTower3F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_TILES, .CardKeyShutterCallback
 
 .CardKeyShutterCallback:
 	checkevent EVENT_USED_THE_CARD_KEY_IN_THE_RADIO_TOWER
 	iftrue .Change
-	endcallback
+	return
 
 .Change:
 	changeblock 14, 2, $2a ; open shutter
 	changeblock 14, 4, $01 ; floor
-	endcallback
+	return
 
 RadioTower3FSuperNerdScript:
 	jumptextfaceplayer RadioTower3FSuperNerdText
 
-RadioTower3FGymGuideScript:
+RadioTower3FGymGuyScript:
 	faceplayer
 	opentext
 	checkevent EVENT_CLEARED_RADIO_TOWER
 	iftrue .NoRockets
-	writetext RadioTower3FGymGuideText_Rockets
+	writetext RadioTower3FGymGuyText_Rockets
 	waitbutton
 	closetext
 	end
 
 .NoRockets:
-	writetext RadioTower3FGymGuideText
+	writetext RadioTower3FGymGuyText
 	waitbutton
 	closetext
 	end
@@ -64,7 +64,7 @@ RadioTower3FCooltrainerFScript:
 
 .NoRockets:
 	writetext RadioTower3FCooltrainerFYoureMyHeroText
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_SUNNY_DAY
 	iffalse .NoRoom
 	writetext RadioTower3FCooltrainerFItsSunnyDayText
@@ -165,7 +165,7 @@ RadioTower3FSuperNerdText:
 	line "200 kinds."
 	done
 
-RadioTower3FGymGuideText_Rockets:
+RadioTower3FGymGuyText_Rockets:
 	text "To trainers, #-"
 	line "MON are their"
 	cont "beloved partners."
@@ -177,7 +177,7 @@ RadioTower3FGymGuideText_Rockets:
 	line "#MON."
 	done
 
-RadioTower3FGymGuideText:
+RadioTower3FGymGuyText:
 	text "We run 24 hours a"
 	line "day to broadcast"
 
@@ -329,21 +329,21 @@ RadioTower3FPokemonMusicSignText:
 RadioTower3F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  0,  0, RADIO_TOWER_2F, 1
 	warp_event  7,  0, RADIO_TOWER_4F, 2
 	warp_event 17,  0, RADIO_TOWER_4F, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event  3,  0, BGEVENT_READ, RadioTower3FPersonnelSign
 	bg_event  9,  0, BGEVENT_READ, RadioTower3FPokemonMusicSign
 	bg_event 14,  2, BGEVENT_UP, CardKeySlotScript
 
-	def_object_events
+	db 7 ; object events
 	object_event  7,  4, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, RadioTower3FSuperNerdScript, EVENT_RADIO_TOWER_CIVILIANS_AFTER
-	object_event  3,  4, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, RadioTower3FGymGuideScript, -1
+	object_event  3,  4, SPRITE_GYM_GUY, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, RadioTower3FGymGuyScript, -1
 	object_event 11,  3, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, RadioTower3FCooltrainerFScript, -1
 	object_event  5,  1, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 2, TrainerGruntM7, EVENT_RADIO_TOWER_ROCKET_TAKEOVER
 	object_event  6,  2, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 3, TrainerGruntM8, EVENT_RADIO_TOWER_ROCKET_TAKEOVER

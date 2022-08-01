@@ -1,4 +1,5 @@
 DoPlayerMovement::
+
 	call .GetDPad
 	ld a, movement_step_sleep
 	ld [wMovementAnimation], a
@@ -11,6 +12,7 @@ DoPlayerMovement::
 	ret
 
 .GetDPad:
+
 	ldh a, [hJoyDown]
 	ld [wCurInput], a
 
@@ -118,7 +120,7 @@ DoPlayerMovement::
 	ld c, a
 	call CheckWhirlpoolTile
 	jr c, .not_whirlpool
-	ld a, PLAYERMOVEMENT_FORCE_TURN
+	ld a, 3
 	scf
 	ret
 
@@ -220,7 +222,7 @@ DoPlayerMovement::
 .continue_walk
 	ld a, STEP_WALK
 	call .DoStep
-	ld a, PLAYERMOVEMENT_CONTINUE
+	ld a, 5
 	scf
 	ret
 
@@ -245,7 +247,7 @@ DoPlayerMovement::
 
 	ld a, STEP_TURN
 	call .DoStep
-	ld a, PLAYERMOVEMENT_TURN
+	ld a, 2
 	scf
 	ret
 
@@ -309,7 +311,7 @@ DoPlayerMovement::
 	scf
 	ret
 
-.unused ; unreferenced
+; unused
 	xor a
 	ret
 
@@ -343,7 +345,7 @@ DoPlayerMovement::
 	call PlayMapMusic
 	ld a, STEP_WALK
 	call .DoStep
-	ld a, PLAYERMOVEMENT_EXIT_WATER
+	ld a, 6
 	scf
 	ret
 
@@ -362,7 +364,7 @@ DoPlayerMovement::
 	and 7
 	ld e, a
 	ld d, 0
-	ld hl, .ledge_table
+	ld hl, .data_8021e
 	add hl, de
 	ld a, [wFacingDirection]
 	and [hl]
@@ -372,7 +374,7 @@ DoPlayerMovement::
 	call PlaySFX
 	ld a, STEP_LEDGE
 	call .DoStep
-	ld a, PLAYERMOVEMENT_JUMP
+	ld a, 7
 	scf
 	ret
 
@@ -380,7 +382,7 @@ DoPlayerMovement::
 	xor a
 	ret
 
-.ledge_table
+.data_8021e
 	db FACE_RIGHT             ; COLL_HOP_RIGHT
 	db FACE_LEFT              ; COLL_HOP_LEFT
 	db FACE_UP                ; COLL_HOP_UP
@@ -391,9 +393,14 @@ DoPlayerMovement::
 	db FACE_UP | FACE_LEFT    ; COLL_HOP_UP_LEFT
 
 .CheckWarp:
-; BUG: No bump noise if standing on tile $3E (see docs/bugs_and_glitches.md)
+; Bug: Since no case is made for STANDING here, it will check
+; [.edgewarps + $ff]. This resolves to $3e at $8035a.
+; This causes wWalkingIntoEdgeWarp to be nonzero when standing on tile $3e,
+; making bumps silent.
 
 	ld a, [wWalkingDirection]
+	; cp STANDING
+	; jr z, .not_warp
 	ld e, a
 	ld d, 0
 	ld hl, .EdgeWarps
@@ -405,6 +412,7 @@ DoPlayerMovement::
 	ld a, TRUE
 	ld [wWalkingIntoEdgeWarp], a
 	ld a, [wWalkingDirection]
+	; This is in the wrong place.
 	cp STANDING
 	jr z, .not_warp
 
@@ -420,11 +428,11 @@ DoPlayerMovement::
 
 	call .StandInPlace
 	scf
-	ld a, PLAYERMOVEMENT_WARP
+	ld a, 1
 	ret
 
 .not_warp
-	xor a ; PLAYERMOVEMENT_NORMAL
+	xor a
 	ret
 
 .EdgeWarps:
@@ -457,12 +465,11 @@ DoPlayerMovement::
 	ld a, [hl]
 	ld [wPlayerTurningDirection], a
 
-	ld a, PLAYERMOVEMENT_FINISH
+	ld a, 4
 	ret
 
 .Steps:
-; entries correspond to STEP_* constants (see constants/map_object_constants.asm)
-	table_width 2, DoPlayerMovement.Steps
+; entries correspond to STEP_* constants
 	dw .SlowStep
 	dw .NormalStep
 	dw .FastStep
@@ -471,7 +478,6 @@ DoPlayerMovement::
 	dw .TurningStep
 	dw .BackJumpStep
 	dw .FinishFacing
-	assert_table_length NUM_STEPS
 
 .SlowStep:
 	slow_step DOWN
@@ -571,14 +577,11 @@ DoPlayerMovement::
 ; Standing
 	jr .update
 
-.d_down
-	add hl, de
-.d_up
-	add hl, de
-.d_left
-	add hl, de
-.d_right
-	add hl, de
+.d_down 	add hl, de
+.d_up   	add hl, de
+.d_left 	add hl, de
+.d_right	add hl, de
+
 .update
 	ld a, [hli]
 	ld [wWalkingDirection], a
@@ -595,7 +598,7 @@ DoPlayerMovement::
 	ld [wWalkingTile], a
 	ret
 
-MACRO player_action
+player_action: MACRO
 ; walk direction, facing, x movement, y movement, tile collision pointer
 	db \1, \2, \3, \4
 	dw \5
@@ -615,7 +618,7 @@ ENDM
 ; Returns 1 if there is no NPC in front
 ; Returns 2 if there is a movable NPC in front
 	ld a, 0
-	ldh [hMapObjectIndex], a
+	ldh [hMapObjectIndexBuffer], a
 ; Load the next X coordinate into d
 	ld a, [wPlayerStandingMapX]
 	ld d, a
@@ -735,7 +738,7 @@ ENDM
 ; Return 0 if tile a is land. Otherwise, return carry.
 
 	call GetTileCollision
-	and a ; LAND_TILE
+	and a ; LANDTILE?
 	ret z
 	scf
 	ret
@@ -745,11 +748,11 @@ ENDM
 ; Otherwise, return carry.
 
 	call GetTileCollision
-	cp WATER_TILE
+	cp WATERTILE
 	jr z, .Water
 
 ; Can walk back onto land from water.
-	and a ; LAND_TILE
+	and a ; LANDTILE?
 	jr z, .Land
 
 	jr .Neither
@@ -778,7 +781,7 @@ ENDM
 	push bc
 	ld a, PLAYER_NORMAL
 	ld [wPlayerState], a
-	call UpdatePlayerSprite ; UpdateSprites
+	call ReplaceKrisSprite ; UpdateSprites
 	pop bc
 	ret
 

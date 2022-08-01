@@ -1,7 +1,7 @@
-DEF PUZZLE_BORDER EQU $ee
-DEF PUZZLE_VOID   EQU $ef
+PUZZLE_BORDER EQU $ee
+PUZZLE_VOID   EQU $ef
 
-DEF puzcoord EQUS "* 6 +"
+puzcoord EQUS "* 6 +"
 
 _UnownPuzzle:
 	ldh a, [hInMenu]
@@ -9,13 +9,13 @@ _UnownPuzzle:
 	ld a, $1
 	ldh [hInMenu], a
 	call ClearBGPalettes
-	call ClearTilemap
+	call ClearTileMap
 	call ClearSprites
 	xor a
 	ldh [hBGMapMode], a
 	call DisableLCD
-	ld hl, STARTOF("Miscellaneous") ; includes wPuzzlePieces
-	ld bc, SIZEOF("Miscellaneous")
+	ld hl, wUnownPuzzle ; includes wPuzzlePieces
+	ld bc, wUnownPuzzleEnd - wUnownPuzzle
 	xor a
 	call ByteFill
 	ld hl, UnownPuzzleCursorGFX
@@ -83,21 +83,21 @@ _UnownPuzzle:
 	pop af
 	ldh [hInMenu], a
 	call ClearBGPalettes
-	call ClearTilemap
+	call ClearTileMap
 	call ClearSprites
 	ld a, LCDC_DEFAULT
 	ldh [rLCDC], a
 	ret
 
 InitUnownPuzzlePiecePositions:
-	ld c, 1
+	ld c,  1
 	ld b, 16
 .load_loop
 	call Random
 	and $f
 	ld hl, .PuzzlePieceInitialPositions
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	ld e, [hl]
 	ld hl, wPuzzlePieces
@@ -112,11 +112,12 @@ InitUnownPuzzlePiecePositions:
 	ret
 
 .PuzzlePieceInitialPositions:
-MACRO initpuzcoord
-	rept _NARG / 2
-		db \1 puzcoord \2
-		shift 2
-	endr
+initpuzcoord: MACRO
+rept _NARG / 2
+	db \1 puzcoord \2
+	shift
+	shift
+endr
 ENDM
 	initpuzcoord 0,0, 0,1, 0,2, 0,3, 0,4, 0,5
 	initpuzcoord 1,0,                     1,5
@@ -169,9 +170,18 @@ PlaceStartCancelBoxBorder:
 	ret
 
 UnownPuzzleJumptable:
-	jumptable .Jumptable, wJumptableIndex
+	ld a, [wJumptableIndex]
+	ld e, a
+	ld d, 0
+	ld hl, .Jumptable
+	add hl, de
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	jp hl
 
-.Jumptable: ; redundant one-entry jumptable
+.Jumptable:
 	dw .Function
 
 .Function:
@@ -449,7 +459,7 @@ UnownPuzzle_CheckCurrentTileOccupancy:
 	ld hl, wPuzzlePieces
 	ld a, [wUnownPuzzleCursorPosition]
 	ld e, a
-	ld d, 0
+	ld d, $0
 	add hl, de
 	ld a, [hl]
 	ret
@@ -504,13 +514,13 @@ CheckSolvedUnownPuzzle:
 
 RedrawUnownPuzzlePieces:
 	call GetCurrentPuzzlePieceVTileCorner
-	ld [wUnownPuzzleCornerTile], a
+	ld [wd002], a
 	xor a
 	call GetUnownPuzzleCoordData ; get pixel positions
 	ld a, [hli]
 	ld b, [hl]
 	ld c, a
-	ld a, [wUnownPuzzleCornerTile]
+	ld a, [wd002]
 	cp $e0
 	jr z, .NoPiece
 	ld hl, .OAM_HoldingPiece
@@ -520,7 +530,7 @@ RedrawUnownPuzzlePieces:
 	ld hl, .OAM_NotHoldingPiece
 
 .load
-	ld de, wShadowOAMSprite00
+	ld de, wVirtualOAMSprite00
 .loop
 	ld a, [hli]
 	cp -1
@@ -532,7 +542,7 @@ RedrawUnownPuzzlePieces:
 	add c
 	ld [de], a ; x
 	inc de
-	ld a, [wUnownPuzzleCornerTile]
+	ld a, [wd002]
 	add [hl]
 	ld [de], a ; tile id
 	inc hl
@@ -543,32 +553,32 @@ RedrawUnownPuzzlePieces:
 	jr .loop
 
 .OAM_HoldingPiece:
-	dbsprite -1, -1, -4, -4, $00, 0
-	dbsprite  0, -1, -4, -4, $01, 0
-	dbsprite  0, -1,  4, -4, $02, 0
-	dbsprite -1,  0, -4, -4, $0c, 0
-	dbsprite  0,  0, -4, -4, $0d, 0
-	dbsprite  0,  0,  4, -4, $0e, 0
-	dbsprite -1,  0, -4,  4, $18, 0
-	dbsprite  0,  0, -4,  4, $19, 0
-	dbsprite  0,  0,  4,  4, $1a, 0
+	dsprite -1, -4, -1, -4, $00, 0
+	dsprite -1, -4,  0, -4, $01, 0
+	dsprite -1, -4,  0,  4, $02, 0
+	dsprite  0, -4, -1, -4, $0c, 0
+	dsprite  0, -4,  0, -4, $0d, 0
+	dsprite  0, -4,  0,  4, $0e, 0
+	dsprite  0,  4, -1, -4, $18, 0
+	dsprite  0,  4,  0, -4, $19, 0
+	dsprite  0,  4,  0,  4, $1a, 0
 	db -1
 
 .OAM_NotHoldingPiece:
-	dbsprite -1, -1, -4, -4, $00, 0
-	dbsprite  0, -1, -4, -4, $01, 0
-	dbsprite  0, -1,  4, -4, $00, 0 | X_FLIP
-	dbsprite -1,  0, -4, -4, $02, 0
-	dbsprite  0,  0, -4, -4, $03, 0
-	dbsprite  0,  0,  4, -4, $02, 0 | X_FLIP
-	dbsprite -1,  0, -4,  4, $00, 0 | Y_FLIP
-	dbsprite  0,  0, -4,  4, $01, 0 | Y_FLIP
-	dbsprite  0,  0,  4,  4, $00, 0 | X_FLIP | Y_FLIP
+	dsprite -1, -4, -1, -4, $00, 0
+	dsprite -1, -4,  0, -4, $01, 0
+	dsprite -1, -4,  0,  4, $00, 0 | X_FLIP
+	dsprite  0, -4, -1, -4, $02, 0
+	dsprite  0, -4,  0, -4, $03, 0
+	dsprite  0, -4,  0,  4, $02, 0 | X_FLIP
+	dsprite  0,  4, -1, -4, $00, 0 | Y_FLIP
+	dsprite  0,  4,  0, -4, $01, 0 | Y_FLIP
+	dsprite  0,  4,  0,  4, $00, 0 | X_FLIP | Y_FLIP
 	db -1
 
 UnownPuzzleCoordData:
 
-MACRO puzzle_coords
+puzzle_coords: MACRO
 	dbpixel \1, \2, \3, \4
 	dwcoord \5, \6
 	db \7, \8
@@ -721,8 +731,10 @@ ConvertLoadedPuzzlePieces:
 	ret
 
 .EnlargedTiles:
-for x, 16
+x = 0
+rept 16
 	db ((x & %1000) * %11000) + ((x & %0100) * %1100) + ((x & %0010) * %110) + ((x & %0001) * %11)
+x = x + 1
 endr
 
 UnownPuzzle_AddPuzzlePieceBorders:

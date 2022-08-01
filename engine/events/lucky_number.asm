@@ -20,7 +20,7 @@ CheckForLuckyNumberWinners:
 	dec d
 	jr nz, .PartyLoop
 	ld a, BANK(sBox)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [sBoxCount]
 	and a
 	jr z, .SkipOpenBox
@@ -59,7 +59,7 @@ CheckForLuckyNumberWinners:
 	add hl, bc
 	add hl, bc
 	ld a, [hli]
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a ; hl now contains the address of the loaded box in SRAM
@@ -103,18 +103,17 @@ CheckForLuckyNumberWinners:
 	ld a, [wScriptVar]
 	and a
 	ret z ; found nothing
-
 	farcall StubbedTrainerRankings_LuckyNumberShow
 	ld a, [wTempByteValue]
 	and a
 	push af
 	ld a, [wCurPartySpecies]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
-	ld hl, .LuckyNumberMatchPartyText
+	ld hl, .FoundPartymonText
 	pop af
 	jr z, .print
-	ld hl, .LuckyNumberMatchPCText
+	ld hl, .FoundBoxmonText
 
 .print
 	jp PrintText
@@ -125,7 +124,7 @@ CheckForLuckyNumberWinners:
 	push hl
 	ld d, h
 	ld e, l
-	ld hl, wMonIDDigitsBuffer
+	ld hl, wBuffer1
 	lb bc, PRINTNUM_LEADINGZEROS | 2, 5
 	call PrintNum
 	ld hl, wLuckyNumberDigitsBuffer
@@ -135,7 +134,7 @@ CheckForLuckyNumberWinners:
 	ld b, 5
 	ld c, 0
 	ld hl, wLuckyNumberDigitsBuffer + 4
-	ld de, wMonIDDigitsBuffer + 4
+	ld de, wBuffer1 + 4
 .loop
 	ld a, [de]
 	cp [hl]
@@ -149,7 +148,7 @@ CheckForLuckyNumberWinners:
 .done
 	pop hl
 	push hl
-	ld de, MON_SPECIES - MON_ID
+	ld de, -6
 	add hl, de
 	ld a, [hl]
 	pop hl
@@ -192,7 +191,6 @@ CheckForLuckyNumberWinners:
 	ret
 
 .BoxBankAddresses:
-	table_width 3, CheckForLuckyNumberWinners.BoxBankAddresses
 	dba sBox1
 	dba sBox2
 	dba sBox3
@@ -207,14 +205,15 @@ CheckForLuckyNumberWinners:
 	dba sBox12
 	dba sBox13
 	dba sBox14
-	assert_table_length NUM_BOXES
 
-.LuckyNumberMatchPartyText:
-	text_far _LuckyNumberMatchPartyText
+.FoundPartymonText:
+	; Congratulations! We have a match with the ID number of @  in your party.
+	text_far UnknownText_0x1c1261
 	text_end
 
-.LuckyNumberMatchPCText:
-	text_far _LuckyNumberMatchPCText
+.FoundBoxmonText:
+	; Congratulations! We have a match with the ID number of @  in your PC BOX.
+	text_far UnknownText_0x1c12ae
 	text_end
 
 PrintTodaysLuckyNumber:

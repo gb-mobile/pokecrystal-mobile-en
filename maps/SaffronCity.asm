@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const SAFFRONCITY_LASS1
 	const SAFFRONCITY_POKEFAN_M
 	const SAFFRONCITY_COOLTRAINER_M
@@ -9,14 +9,14 @@
 	const SAFFRONCITY_LASS2
 
 SaffronCity_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPoint
 
 .FlyPoint:
 	setflag ENGINE_FLYPOINT_SAFFRON
-	endcallback
+	return
 
 SaffronCityLass1Script:
 	faceplayer
@@ -100,10 +100,10 @@ SaffronCityMagnetTrainStationSign:
 	jumptext SaffronCityMagnetTrainStationSignText
 
 SaffronCityPokecenterSign:
-	jumpstd PokecenterSignScript
+	jumpstd pokecentersign
 
 SaffronCityMartSign:
-	jumpstd MartSignScript
+	jumpstd martsign
 
 SaffronCityLass1Text:
 	text "A little girl who"
@@ -266,7 +266,7 @@ SaffronCityMagnetTrainStationSignText:
 SaffronCity_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 15 ; warp events
 	warp_event 26,  3, FIGHTING_DOJO, 1
 	warp_event 34,  3, SAFFRON_GYM, 1
 	warp_event 25, 11, SAFFRON_MART, 2
@@ -283,9 +283,9 @@ SaffronCity_MapEvents:
 	warp_event 39, 22, ROUTE_8_SAFFRON_GATE, 1
 	warp_event 39, 23, ROUTE_8_SAFFRON_GATE, 2
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 8 ; bg events
 	bg_event 21,  5, BGEVENT_READ, SaffronCitySign
 	bg_event 33,  5, BGEVENT_READ, SaffronGymSign
 	bg_event 25,  5, BGEVENT_READ, FightingDojoSign
@@ -295,7 +295,7 @@ SaffronCity_MapEvents:
 	bg_event 10, 29, BGEVENT_READ, SaffronCityPokecenterSign
 	bg_event 26, 11, BGEVENT_READ, SaffronCityMartSign
 
-	def_object_events
+	db 8 ; object events
 	object_event  7, 14, SPRITE_LASS, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 2, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, SaffronCityLass1Script, -1
 	object_event 19, 30, SPRITE_POKEFAN_M, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 2, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, SaffronCityPokefanMScript, -1
 	object_event 32,  7, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, SaffronCityCooltrainerMScript, -1

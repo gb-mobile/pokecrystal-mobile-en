@@ -87,7 +87,7 @@ HiddenPowerDamage:
 ; Skip unused types
 	cp UNUSED_TYPES
 	jr c, .done
-	add UNUSED_TYPES_END - UNUSED_TYPES
+	add SPECIAL - UNUSED_TYPES
 
 .done
 

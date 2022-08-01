@@ -1,11 +1,11 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const CIANWOODPHARMACY_PHARMACIST
 
 CianwoodPharmacy_MapScripts:
-	def_scene_scripts
+	db 1 ; scene scripts
 	scene_script .DummyScene
 
-	def_callbacks
+	db 0 ; callbacks
 
 .DummyScene:
 	end
@@ -18,7 +18,7 @@ CianwoodPharmacist:
 	checkevent EVENT_JASMINE_EXPLAINED_AMPHYS_SICKNESS
 	iffalse .Mart
 	writetext PharmacistGiveSecretpotionText
-	promptbutton
+	buttonsound
 	giveitem SECRETPOTION
 	writetext ReceivedSecretpotionText
 	playsound SFX_KEY_ITEM
@@ -36,7 +36,7 @@ CianwoodPharmacist:
 	end
 
 CianwoodPharmacyBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 PharmacistGiveSecretpotionText:
 	text "Your #MON ap-"
@@ -73,15 +73,15 @@ PharmacistDescribeSecretpotionText:
 CianwoodPharmacy_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, CIANWOOD_CITY, 4
 	warp_event  3,  7, CIANWOOD_CITY, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  0,  1, BGEVENT_READ, CianwoodPharmacyBookshelf
 	bg_event  1,  1, BGEVENT_READ, CianwoodPharmacyBookshelf
 
-	def_object_events
+	db 1 ; object events
 	object_event  2,  3, SPRITE_PHARMACIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CianwoodPharmacist, -1

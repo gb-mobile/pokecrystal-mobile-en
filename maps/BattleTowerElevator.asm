@@ -1,16 +1,16 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const BATTLETOWERELEVATOR_RECEPTIONIST
 
 BattleTowerElevator_MapScripts:
-	def_scene_scripts
-	scene_script .Scene0, SCENE_BATTLETOWERELEVATOR_ENTER
-	scene_script .Scene1, SCENE_BATTLETOWERELEVATOR_NOOP
+	db 2 ; scene scripts
+	scene_script .Scene0 ; SCENE_DEFAULT
+	scene_script .Scene1 ; SCENE_FINISHED
 
-	def_callbacks
+	db 0 ; callbacks
 
 .Scene0:
-	sdefer .RideElevator
-	setscene SCENE_BATTLETOWERELEVATOR_NOOP
+	prioritysjump .RideElevator
+	setscene SCENE_FINISHED
 .Scene1:
 	end
 
@@ -44,13 +44,13 @@ MovementData_BattleTowerElevatorPlayerWalksIn:
 BattleTowerElevator_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  1,  3, BATTLE_TOWER_HALLWAY, 1
 	warp_event  2,  3, BATTLE_TOWER_HALLWAY, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  1,  2, SPRITE_RECEPTIONIST, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MovementData_BattleTowerElevatorReceptionistWalksIn, -1

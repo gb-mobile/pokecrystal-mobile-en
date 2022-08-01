@@ -1,5 +1,5 @@
-DEF UNOWNSTAMP_BOLD_A EQU "♂" ; $ef
-DEF UNOWNSTAMP_BOLD_B EQU "♀" ; $f5
+UNOWNSTAMP_BOLD_A EQU "♂" ; $ef
+UNOWNSTAMP_BOLD_B EQU "♀" ; $f5
 
 _UnownPrinter:
 	ld a, [wUnownDex]
@@ -15,7 +15,7 @@ _UnownPrinter:
 	set NO_TEXT_SCROLL, a
 	ld [wOptions], a
 	call ClearBGPalettes
-	call ClearTilemap
+	call ClearTileMap
 
 	ld de, UnownDexATile
 	ld hl, vTiles0 tile UNOWNSTAMP_BOLD_A
@@ -74,13 +74,7 @@ _UnownPrinter:
 	jr nz, .pressed_b
 
 	ldh a, [hJoyPressed]
-	vc_patch Forbid_printing_Unown
-if DEF(_CRYSTAL11_VC)
-	and 0
-else
 	and A_BUTTON
-endc
-	vc_patch_end
 	jr nz, .pressed_a
 
 	call .LeftRight
@@ -118,7 +112,7 @@ endc
 	ld a, [hl]
 	and a
 	jr nz, .wrap_around_left
-	ld [hl], NUM_UNOWN + 1
+	ld [hl], 26 + 1
 .wrap_around_left
 	dec [hl]
 	jr .return
@@ -126,7 +120,7 @@ endc
 .press_right
 	ld hl, wJumptableIndex
 	ld a, [hl]
-	cp NUM_UNOWN
+	cp 26
 	jr c, .wrap_around_right
 	ld [hl], -1
 .wrap_around_right
@@ -138,7 +132,7 @@ endc
 
 .UpdateUnownFrontpic:
 	ld a, [wJumptableIndex]
-	cp NUM_UNOWN
+	cp 26
 	jr z, .vacant
 	inc a
 	ld [wUnownLetter], a
@@ -165,7 +159,7 @@ endc
 	ldh [rSVBK], a
 
 	ld a, BANK(sScratch)
-	call OpenSRAM
+	call GetSRAMBank
 	ld de, wDecompressScratch
 	ld hl, sScratch
 	ldh a, [hROMBank]
@@ -186,7 +180,7 @@ endc
 	ld de, UnownDexVacantString
 	call PlaceString
 	xor a ; sScratch
-	call OpenSRAM
+	call GetSRAMBank
 	ld hl, sScratch
 	ld bc, $31 tiles
 	xor a

@@ -1,4 +1,4 @@
-ErinAnswerPhoneText:
+UnknownText_0x1b751a:
 	text "Yes, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -8,7 +8,7 @@ ErinAnswerPhoneText:
 	line "Good morning!"
 	done
 
-ErinAnswerPhoneDayText:
+UnknownText_0x1b7548:
 	text "Yes, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -18,7 +18,7 @@ ErinAnswerPhoneDayText:
 	line "Yahoo!"
 	done
 
-ErinAnswerPhoneNiteText:
+UnknownText_0x1b756f:
 	text "Yes, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -27,7 +27,7 @@ ErinAnswerPhoneNiteText:
 	para "Oh, hi, <PLAY_G>!"
 	done
 
-ErinGreetText:
+UnknownText_0x1b758f:
 	text "<PLAY_G>!"
 
 	para "It's @"
@@ -36,7 +36,7 @@ ErinGreetText:
 	line "Good morning!"
 	done
 
-ErinGreetDayText:
+UnknownText_0x1b75ac:
 	text "<PLAY_G>!"
 
 	para "It's @"
@@ -45,7 +45,7 @@ ErinGreetDayText:
 	line "Working hard?"
 	done
 
-ErinGreetNiteText:
+UnknownText_0x1b75c9:
 	text "<PLAY_G>!"
 
 	para "It's @"
@@ -54,7 +54,7 @@ ErinGreetNiteText:
 	line "Were you up?"
 	done
 
-ErinGenericText:
+UnknownText_0x1b75e5:
 	text "Are you raising"
 	line "your #MON?"
 

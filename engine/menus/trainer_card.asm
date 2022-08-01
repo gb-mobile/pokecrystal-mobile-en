@@ -41,7 +41,7 @@ TrainerCard:
 .InitRAM:
 	call ClearBGPalettes
 	call ClearSprites
-	call ClearTilemap
+	call ClearTileMap
 	call DisableLCD
 
 	farcall GetCardPic
@@ -128,7 +128,7 @@ TrainerCard_Page1_Joypad:
 	ld [wJumptableIndex], a
 	ret
 
-.KantoBadgeCheck: ; unreferenced
+.Unreferenced_KantoCheck:
 	ld a, [wKantoBadges]
 	and a
 	ret z
@@ -171,7 +171,7 @@ TrainerCard_Page2_Joypad:
 	ld [wJumptableIndex], a
 	ret
 
-.KantoBadgeCheck: ; unreferenced
+.Unreferenced_KantoCheck:
 	ld a, [wKantoBadges]
 	and a
 	ret z
@@ -296,8 +296,7 @@ TrainerCard_Page1_PrintDexCaught_GameTime:
 	db   "#DEX"
 	next "PLAY TIME@"
 
-.Unused: ; unreferenced
-	db "@"
+	db "@" ; unused
 
 .Badges:
 	db "  BADGES▶@"
@@ -357,8 +356,7 @@ TrainerCard_InitBorder:
 
 	ld a, $23
 	ld [hli], a
-
-	ld e, SCREEN_WIDTH - 3
+	ld e, SCREEN_HEIGHT - 1
 	ld a, " "
 .loop2
 	ld [hli], a
@@ -369,12 +367,11 @@ TrainerCard_InitBorder:
 	ld [hli], a
 	ld a, $23
 	ld [hli], a
-
 .loop3
 	ld a, $23
 	ld [hli], a
 
-	ld e, SCREEN_WIDTH - 2
+	ld e, SCREEN_HEIGHT
 	ld a, " "
 .loop4
 	ld [hli], a
@@ -383,7 +380,6 @@ TrainerCard_InitBorder:
 
 	ld a, $23
 	ld [hli], a
-
 	dec d
 	jr nz, .loop3
 
@@ -392,16 +388,14 @@ TrainerCard_InitBorder:
 	ld a, $24
 	ld [hli], a
 
-	ld e, SCREEN_WIDTH - 3
+	ld e, SCREEN_HEIGHT - 1
 	ld a, " "
 .loop5
 	ld [hli], a
 	dec e
 	jr nz, .loop5
-
 	ld a, $23
 	ld [hli], a
-
 	ld e, SCREEN_WIDTH
 .loop6
 	ld a, $23
@@ -478,7 +472,7 @@ TrainerCard_Page2_3_OAMUpdate:
 	ld d, a
 	ld a, [de]
 	ld c, a
-	ld de, wShadowOAMSprite00
+	ld de, wVirtualOAMSprite00
 	ld b, NUM_JOHTO_BADGES
 .loop
 	srl c
@@ -532,7 +526,7 @@ TrainerCard_Page2_3_OAMUpdate:
 	inc de
 
 	ld a, [wTrainerCardBadgeTileID]
-	and ~(1 << 7)
+	and $ff ^ (1 << 7)
 	add [hl]
 	ld [de], a ; tile id
 	inc hl
@@ -546,17 +540,17 @@ TrainerCard_Page2_3_OAMUpdate:
 	jr .loop2
 
 .facing1
-	dbsprite  0,  0,  0,  0, $00, 0
-	dbsprite  1,  0,  0,  0, $01, 0
-	dbsprite  0,  1,  0,  0, $02, 0
-	dbsprite  1,  1,  0,  0, $03, 0
+	dsprite  0,  0,  0,  0, $00, 0
+	dsprite  0,  0,  1,  0, $01, 0
+	dsprite  1,  0,  0,  0, $02, 0
+	dsprite  1,  0,  1,  0, $03, 0
 	db -1
 
 .facing2
-	dbsprite  0,  0,  0,  0, $01, 0 | X_FLIP
-	dbsprite  1,  0,  0,  0, $00, 0 | X_FLIP
-	dbsprite  0,  1,  0,  0, $03, 0 | X_FLIP
-	dbsprite  1,  1,  0,  0, $02, 0 | X_FLIP
+	dsprite  0,  0,  0,  0, $01, 0 | X_FLIP
+	dsprite  0,  0,  1,  0, $00, 0 | X_FLIP
+	dsprite  1,  0,  0,  0, $03, 0 | X_FLIP
+	dsprite  1,  0,  1,  0, $02, 0 | X_FLIP
 	db -1
 
 TrainerCard_JohtoBadgesOAM:

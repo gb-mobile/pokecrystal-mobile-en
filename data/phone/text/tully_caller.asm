@@ -1,4 +1,4 @@
-TullyMonHasGrownText:
+TullyGrownText:
 	text "My @"
 	text_ram wStringBuffer4
 	text " has"
@@ -11,7 +11,7 @@ TullyMonHasGrownText:
 	line "it's way bigger."
 	done
 
-TullyDefeatedMonText:
+UnknownText_0x65e42:
 	text "Oh yeah, I KO'd a"
 	line "wild @"
 	text_ram wStringBuffer4
@@ -25,7 +25,7 @@ TullyDefeatedMonText:
 	cont "the phone…"
 	done
 
-TullyLostAMonText:
+UnknownText_0x65eac:
 	text "Oh yeah, I lost a"
 	line "wild @"
 	text_ram wStringBuffer4
@@ -39,7 +39,7 @@ TullyLostAMonText:
 	cont "the phone…"
 	done
 
-TullyBattleRematchText:
+UnknownText_0x65f17:
 	text "We should get a"
 	line "battle going!"
 
@@ -52,12 +52,12 @@ TullyBattleRematchText:
 	line "have the time."
 	done
 
-TullyHangUpText:
+UnknownText_0x65f6e:
 	text "Well, I'll be"
 	line "seeing you."
 	done
 
-TullyFoundItemText:
+UnknownText_0x65f88:
 	text "I picked up a good"
 	line "little thing at"
 	cont "the water's edge."
@@ -71,7 +71,7 @@ TullyFoundItemText:
 	text "."
 	done
 
-TullyNoItemText:
+UnknownText_0x65ff2:
 	text "Have I found"
 	line "anything good?"
 
@@ -81,7 +81,7 @@ TullyNoItemText:
 	line "you need patience."
 	done
 
-TullyForwardText:
+UnknownText_0x66043:
 	text "Yup, TULLY here…"
 
 	para "<PLAY_G>? What?"
@@ -93,7 +93,7 @@ TullyForwardText:
 	text "."
 	done
 
-TullyHurryText:
+UnknownText_0x66087:
 	text "I've got something"
 	line "good for you."
 

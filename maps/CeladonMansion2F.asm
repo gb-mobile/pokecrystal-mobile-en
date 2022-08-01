@@ -1,7 +1,7 @@
 CeladonMansion2F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 CeladonMansion2FComputer:
 	jumptext CeladonMansion2FComputerText
@@ -10,7 +10,7 @@ CeladonMansion2FMeetingRoomSign:
 	jumptext CeladonMansion2FMeetingRoomSignText
 
 CeladonMansion2FBookshelf:
-	jumpstd DifficultBookshelfScript
+	jumpstd difficultbookshelf
 
 CeladonMansion2FComputerText:
 	text "<PLAYER> turned on"
@@ -50,17 +50,17 @@ CeladonMansion2FMeetingRoomSignText:
 CeladonMansion2F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 4 ; warp events
 	warp_event  0,  0, CELADON_MANSION_1F, 4
 	warp_event  1,  0, CELADON_MANSION_3F, 2
 	warp_event  6,  0, CELADON_MANSION_3F, 3
 	warp_event  7,  0, CELADON_MANSION_1F, 5
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event  0,  3, BGEVENT_READ, CeladonMansion2FComputer
 	bg_event  5,  8, BGEVENT_UP, CeladonMansion2FMeetingRoomSign
 	bg_event  2,  3, BGEVENT_READ, CeladonMansion2FBookshelf
 
-	def_object_events
+	db 0 ; object events

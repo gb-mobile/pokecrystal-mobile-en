@@ -1,10 +1,10 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const VERMILIONFISHINGSPEECHHOUSE_FISHING_GURU
 
 VermilionFishingSpeechHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 FishingDude:
 	jumptextfaceplayer FishingDudeText
@@ -12,8 +12,9 @@ FishingDude:
 FishingDudesHousePhoto:
 	jumptext FishingDudesHousePhotoText
 
-FishingDudesHouseBookshelf: ; unreferenced
-	jumpstd PictureBookshelfScript
+FishingDudesHouseBookshelf:
+; unused
+	jumpstd picturebookshelf
 
 FishingDudeText:
 	text "I am the FISHING"
@@ -50,14 +51,14 @@ FishingDudesHousePhotoText:
 VermilionFishingSpeechHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, VERMILION_CITY, 1
 	warp_event  3,  7, VERMILION_CITY, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 1 ; bg events
 	bg_event  3,  0, BGEVENT_READ, FishingDudesHousePhoto
 
-	def_object_events
+	db 1 ; object events
 	object_event  2,  4, SPRITE_FISHING_GURU, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, FishingDude, -1

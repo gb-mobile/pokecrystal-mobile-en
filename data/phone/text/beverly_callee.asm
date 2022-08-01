@@ -1,4 +1,4 @@
-BeverlyAnswerPhoneText:
+UnknownText_0x1b4f21:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -8,7 +8,7 @@ BeverlyAnswerPhoneText:
 	line "<PLAYER>."
 	done
 
-BeverlyAnswerPhoneDayText:
+UnknownText_0x1b4f4d:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -18,7 +18,7 @@ BeverlyAnswerPhoneDayText:
 	line "<PLAYER>."
 	done
 
-BeverlyAnswerPhoneNiteText:
+UnknownText_0x1b4f75:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -28,7 +28,7 @@ BeverlyAnswerPhoneNiteText:
 	line "<PLAYER>."
 	done
 
-BeverlyGreetText:
+UnknownText_0x1b4fa1:
 	text "Hello, <PLAYER>."
 	line "Good morning."
 
@@ -38,7 +38,7 @@ BeverlyGreetText:
 	line "Were you asleep?"
 	done
 
-BeverlyGreetDayText:
+UnknownText_0x1b4fda:
 	text "Hi, <PLAYER>."
 	line "This is @"
 	text_ram wStringBuffer3
@@ -47,7 +47,7 @@ BeverlyGreetDayText:
 	para "How are you doing?"
 	done
 
-BeverlyGreetNiteText:
+UnknownText_0x1b5004:
 	text "Hi, <PLAYER>."
 	line "This is @"
 	text_ram wStringBuffer3
@@ -56,7 +56,7 @@ BeverlyGreetNiteText:
 	para "Were you awake?"
 	done
 
-BeverlyGenericText:
+UnknownText_0x1b502b:
 	text "Keeping your"
 	line "#MON happy?"
 

@@ -1,12 +1,12 @@
 Route23_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPoint
 
 .FlyPoint:
 	setflag ENGINE_FLYPOINT_INDIGO_PLATEAU
-	endcallback
+	return
 
 IndigoPlateauSign:
 	jumptext IndigoPlateauSignText
@@ -23,15 +23,15 @@ IndigoPlateauSignText:
 Route23_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 4 ; warp events
 	warp_event  9,  5, INDIGO_PLATEAU_POKECENTER_1F, 1
 	warp_event 10,  5, INDIGO_PLATEAU_POKECENTER_1F, 2
 	warp_event  9, 13, VICTORY_ROAD, 10
 	warp_event 10, 13, VICTORY_ROAD, 10
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 1 ; bg events
 	bg_event 11,  7, BGEVENT_READ, IndigoPlateauSign
 
-	def_object_events
+	db 0 ; object events

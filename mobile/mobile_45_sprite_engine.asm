@@ -1,7 +1,7 @@
 Function115d99:
-	ld de, MobileDialingGFX
+	ld de, GFX_11601a
 	ld hl, vTiles0 tile $60
-	lb bc, BANK(MobileDialingGFX), 20
+	lb bc, BANK(GFX_11601a), 20
 	call Get2bpp
 	xor a
 	ld [wc305], a
@@ -20,7 +20,7 @@ Function115dc3:
 	xor a
 	ld [wc305], a
 	ld a, $a0
-	ld hl, wShadowOAMSprite31
+	ld hl, wVirtualOAMSprite31
 	ld bc, 8 * SPRITEOAMSTRUCT_LENGTH
 	call ByteFill
 	ret
@@ -30,7 +30,7 @@ Function115dd3:
 	and a
 	ret z
 	ld a, $a0
-	ld hl, wShadowOAMSprite31
+	ld hl, wVirtualOAMSprite31
 	ld bc, 8 * SPRITEOAMSTRUCT_LENGTH
 	call ByteFill
 	call Function115e22
@@ -46,7 +46,7 @@ Function115dd3:
 	ld d, a
 	push de
 	pop hl
-	ld de, wShadowOAMSprite31
+	ld de, wVirtualOAMSprite31
 	ld a, [wc307]
 	ld c, a
 	ld a, [wc308]
@@ -103,7 +103,7 @@ Function115e2b:
 	ld a, [wc30b]
 	sla a
 	ld c, a
-	ld b, 0
+	ld b, $0
 	add hl, bc
 	ld a, [hli]
 	cp $ff
@@ -172,148 +172,148 @@ Unknown_115e86:
 
 Unknown_115ea6:
 	db 4
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115eb7:
 	db 5
-	dbsprite   1,   0, 0, 0, $64, $00
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 0,   1, 0, $64, $00
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115ecc:
 	db 5
-	dbsprite   1,   0, 0, 0, $65, $00
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 0,   1, 0, $65, $00
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115ee1:
 	db 5
-	dbsprite   1,   0, 0, 0, $66, $00
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 0,   1, 0, $66, $00
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115ef6:
 	db 7
-	dbsprite   0,   0, 0, 0, $67, $01
-	dbsprite   0,   1, 0, 0, $68, $01
-	dbsprite   0,   2, 0, 0, $6d, $00
-	dbsprite   1,   2, 0, 0, $69, $00
-	dbsprite   2,   2, 0, 0, $6a, $00
-	dbsprite   1,   3, 0, 0, $6b, $00
-	dbsprite   2,   3, 0, 0, $6c, $00
+	dsprite   0, 0,   0, 0, $67, $01
+	dsprite   1, 0,   0, 0, $68, $01
+	dsprite   2, 0,   0, 0, $6d, $00
+	dsprite   2, 0,   1, 0, $69, $00
+	dsprite   2, 0,   2, 0, $6a, $00
+	dsprite   3, 0,   1, 0, $6b, $00
+	dsprite   3, 0,   2, 0, $6c, $00
 
 Unknown_115f13:
 	db 7
-	dbsprite   0,   0, 0, 0, $67, $01
-	dbsprite   0,   1, 0, 0, $68, $01
-	dbsprite   0,   2, 0, 0, $6e, $00
-	dbsprite   1,   2, 0, 0, $69, $00
-	dbsprite   2,   2, 0, 0, $6a, $00
-	dbsprite   1,   3, 0, 0, $6b, $00
-	dbsprite   2,   3, 0, 0, $6c, $00
+	dsprite   0, 0,   0, 0, $67, $01
+	dsprite   1, 0,   0, 0, $68, $01
+	dsprite   2, 0,   0, 0, $6e, $00
+	dsprite   2, 0,   1, 0, $69, $00
+	dsprite   2, 0,   2, 0, $6a, $00
+	dsprite   3, 0,   1, 0, $6b, $00
+	dsprite   3, 0,   2, 0, $6c, $00
 
 Unknown_115f30:
 	db 7
-	dbsprite   0,   0, 0, 0, $67, $01
-	dbsprite   0,   1, 0, 0, $68, $01
-	dbsprite   0,   2, 0, 0, $6f, $00
-	dbsprite   1,   2, 0, 0, $69, $00
-	dbsprite   2,   2, 0, 0, $6a, $00
-	dbsprite   1,   3, 0, 0, $6b, $00
-	dbsprite   2,   3, 0, 0, $6c, $00
+	dsprite   0, 0,   0, 0, $67, $01
+	dsprite   1, 0,   0, 0, $68, $01
+	dsprite   2, 0,   0, 0, $6f, $00
+	dsprite   2, 0,   1, 0, $69, $00
+	dsprite   2, 0,   2, 0, $6a, $00
+	dsprite   3, 0,   1, 0, $6b, $00
+	dsprite   3, 0,   2, 0, $6c, $00
 
 Unknown_115f4d:
 	db 7
-	dbsprite   0,   0, 0, 0, $67, $01
-	dbsprite   0,   1, 0, 0, $68, $01
-	dbsprite   0,   2, 0, 0, $70, $00
-	dbsprite   1,   2, 0, 0, $69, $00
-	dbsprite   2,   2, 0, 0, $6a, $00
-	dbsprite   1,   3, 0, 0, $6b, $00
-	dbsprite   2,   3, 0, 0, $6c, $00
+	dsprite   0, 0,   0, 0, $67, $01
+	dsprite   1, 0,   0, 0, $68, $01
+	dsprite   2, 0,   0, 0, $70, $00
+	dsprite   2, 0,   1, 0, $69, $00
+	dsprite   2, 0,   2, 0, $6a, $00
+	dsprite   3, 0,   1, 0, $6b, $00
+	dsprite   3, 0,   2, 0, $6c, $00
 
 Unknown_115f6a:
 	db 7
-	dbsprite   0,   0, 0, 0, $67, $01
-	dbsprite   0,   1, 0, 0, $68, $01
-	dbsprite   0,   2, 0, 0, $71, $00
-	dbsprite   1,   2, 0, 0, $69, $00
-	dbsprite   2,   2, 0, 0, $6a, $00
-	dbsprite   1,   3, 0, 0, $6b, $00
-	dbsprite   2,   3, 0, 0, $6c, $00
+	dsprite   0, 0,   0, 0, $67, $01
+	dsprite   1, 0,   0, 0, $68, $01
+	dsprite   2, 0,   0, 0, $71, $00
+	dsprite   2, 0,   1, 0, $69, $00
+	dsprite   2, 0,   2, 0, $6a, $00
+	dsprite   3, 0,   1, 0, $6b, $00
+	dsprite   3, 0,   2, 0, $6c, $00
 
 Unknown_115f87:
 	db 5
-	dbsprite   1,   0, 0, 0, $72, $00
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 0,   1, 0, $72, $00
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115f9c:
 	db 5
-	dbsprite   1,   0, 0, 0, $73, $00
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 0,   1, 0, $73, $00
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115fb1:
 	db 5
-	dbsprite   1,   0, 0, 1, $64, $60
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 1,   1, 0, $64, $60
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115fc6:
 	db 5
-	dbsprite   1,   0, 0, 1, $65, $60
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 1,   1, 0, $65, $60
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115fdb:
 	db 5
-	dbsprite   1,   0, 0, 1, $66, $60
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 1,   1, 0, $66, $60
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_115ff0:
 	db 5
-	dbsprite   1,   0, 0, 1, $72, $60
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 1,   1, 0, $72, $60
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
 Unknown_116005:
 	db 5
-	dbsprite   1,   0, 0, 1, $73, $60
-	dbsprite   0,   1, 0, 0, $60, $01
-	dbsprite   1,   1, 0, 0, $61, $01
-	dbsprite   0,   2, 0, 0, $62, $01
-	dbsprite   1,   2, 0, 0, $63, $01
+	dsprite   0, 1,   1, 0, $73, $60
+	dsprite   1, 0,   0, 0, $60, $01
+	dsprite   1, 0,   1, 0, $61, $01
+	dsprite   2, 0,   0, 0, $62, $01
+	dsprite   2, 0,   1, 0, $63, $01
 
-MobileDialingGFX::
-INCBIN "gfx/mobile/dialing.2bpp"
+GFX_11601a::
+INCBIN "gfx/unknown/11601a.2bpp"
 
 Function11615a:
 	xor a
 	ld [wc30d], a
-	ld [wc319], a
+	ld [$c319], a
 	ld [wc310], a
 	ld [wc311], a
 	ld [wc312], a
@@ -341,11 +341,11 @@ Function11619d:
 	ld a, [wc30d]
 	and a
 	ret z
-	ld a, [wc319]
+	ld a, [$c319]
 	cp $2
 	jr c, .asm_1161b4
 	ld a, $a0
-	ld hl, wShadowOAM
+	ld hl, wVirtualOAM
 	ld bc, 25 * SPRITEOAMSTRUCT_LENGTH
 	call ByteFill
 
@@ -354,7 +354,16 @@ Function11619d:
 	ret
 
 Function1161b8:
-	jumptable .Jumptable, wc319
+	ld a, [$c319]
+	ld e, a
+	ld d, 0
+	ld hl, .Jumptable
+	add hl, de
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	jp hl
 
 .Jumptable:
 	dw Function1161d5
@@ -372,9 +381,9 @@ Function1161d5:
 	ld a, $6
 	ldh [rSVBK], a
 
-	ld hl, PichuBorderMobileTilemapAttrmap
+	ld hl, Unknown_117356
 	ld de, wDecompressScratch
-	ld bc, 32 * 12 * 2
+	ld bc, $0300
 	call CopyBytes
 
 	di
@@ -470,12 +479,12 @@ Function1161d5:
 	ld [wMusicFadeID], a
 	ld a, d
 	ld [wMusicFadeID + 1], a
-	ld a, [wc319]
+	ld a, [$c319]
 	inc a
-	ld [wc319], a
+	ld [$c319], a
 	ret
 
-MenuHeader_11628c: ; unreferenced
+MenuHeader_11628c:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 0, 6, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1
 	dw NULL
@@ -483,18 +492,18 @@ MenuHeader_11628c: ; unreferenced
 
 Function116294:
 	farcall Function170d02
-	ld a, [wc319]
+	ld a, [$c319]
 	inc a
-	ld [wc319], a
+	ld [$c319], a
 	ldh a, [rSVBK]
 	push af
 	ld a, $5
 	ldh [rSVBK], a
 	ld hl, wBGPals1 palette 6
-	ld de, wc320
+	ld de, $c320
 	ld bc, 2 palettes
 	call CopyBytes
-	ld hl, PichuBorderMobileBGPalettes
+	ld hl, Palette_11734e
 	ld de, wBGPals1 palette 7
 	ld bc, 1 palettes
 	call CopyBytes
@@ -507,14 +516,14 @@ Function116294:
 
 Function1162cb:
 	farcall Function170cc6
-	ld a, [wc319]
+	ld a, [$c319]
 	inc a
-	ld [wc319], a
+	ld [$c319], a
 	ldh a, [rSVBK]
 	push af
 	ld a, $5
 	ldh [rSVBK], a
-	ld hl, PichuBorderMobileOBPalettes
+	ld hl, Palette_11730e
 	ld de, wOBPals1 + 2 palettes
 	ld bc, 6 palettes
 	call CopyBytes
@@ -549,7 +558,7 @@ Function1162f2:
 	ld e, a
 	ld a, [hli]
 	sub e
-	ld de, wShadowOAMSprite09
+	ld de, wVirtualOAMSprite09
 .asm_116321
 	push af
 	ld a, [hli]
@@ -590,7 +599,7 @@ Function1162f2:
 	ld e, a
 	ld a, [hli]
 	sub e
-	ld de, wShadowOAMSprite00
+	ld de, wVirtualOAMSprite00
 .asm_11635a
 	push af
 	ld a, [hli]
@@ -629,7 +638,7 @@ Function11636e:
 	ld a, $1
 	ldh [rSVBK], a
 	ld a, $a0
-	ld hl, wShadowOAM
+	ld hl, wVirtualOAM
 	ld bc, 16 * SPRITEOAMSTRUCT_LENGTH
 	call ByteFill
 	ld a, $90
@@ -645,7 +654,7 @@ Function11636e:
 	xor a
 	ld [wMusicFadeID + 1], a
 	xor a
-	ld [wc319], a
+	ld [$c319], a
 	ld [wc30d], a
 	ret
 
@@ -655,11 +664,11 @@ Function1163c0:
 	ld a, $1
 	ldh [rSVBK], a
 	ld a, $a0
-	ld hl, wShadowOAM
+	ld hl, wVirtualOAM
 	ld bc, 16 * SPRITEOAMSTRUCT_LENGTH
 	call ByteFill
 	call DelayFrame
-	farcall _RefreshSprites
+	farcall Function14146
 	ld b, SCGB_MAPPALS
 	call GetSGBLayout
 	ldh a, [rSVBK]
@@ -677,12 +686,12 @@ Function1163c0:
 	ld a, $90
 	ldh [hWY], a
 	call UpdateSprites
-	farcall _ClearSprites
+	farcall Function14157
 	pop af
 	ldh [rSVBK], a
 	farcall ReloadMapPart
 	ld a, [wLinkMode]
-	cp LINK_MOBILE
+	cp $4
 	jr z, .asm_11642a
 	ld a, $8
 	ld [wMusicFade], a
@@ -695,14 +704,14 @@ Function1163c0:
 .asm_11642a
 	ld a, $8
 	ld [wMusicFade], a
-	ld a, LOW(MUSIC_NONE)
+	ld a, $0
 	ld [wMusicFadeID], a
-	ld a, HIGH(MUSIC_NONE)
+	ld a, $0
 	ld [wMusicFadeID + 1], a
 
 .asm_116439
 	xor a
-	ld [wc319], a
+	ld [$c319], a
 	ld [wc30d], a
 	ret
 
@@ -718,7 +727,7 @@ Function116441:
 	xor a
 	ld [wMusicFadeID + 1], a
 	xor a
-	ld [wc319], a
+	ld [$c319], a
 	ld [wc30d], a
 	ret
 

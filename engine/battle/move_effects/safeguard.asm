@@ -1,4 +1,6 @@
 BattleCommand_Safeguard:
+; safeguard
+
 	ld hl, wPlayerScreens
 	ld de, wPlayerSafeguardCount
 	ldh a, [hBattleTurn]

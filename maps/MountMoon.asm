@@ -1,15 +1,15 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const MOUNTMOON_SILVER
 
 MountMoon_MapScripts:
-	def_scene_scripts
-	scene_script .RivalEncounter, SCENE_MOUNTMOON_RIVAL_BATTLE
-	scene_script .DummyScene,     SCENE_MOUNTMOON_NOOP
+	db 2 ; scene scripts
+	scene_script .RivalEncounter ; SCENE_DEFAULT
+	scene_script .DummyScene ; SCENE_FINISHED
 
-	def_callbacks
+	db 0 ; callbacks
 
 .RivalEncounter:
-	sdefer .RivalBattle
+	prioritysjump .RivalBattle
 	end
 
 .DummyScene:
@@ -64,7 +64,7 @@ MountMoon_MapScripts:
 	closetext
 	applymovement MOUNTMOON_SILVER, MountMoonSilverMovementAfter
 	disappear MOUNTMOON_SILVER
-	setscene SCENE_MOUNTMOON_NOOP
+	setscene SCENE_FINISHED
 	setevent EVENT_BEAT_RIVAL_IN_MT_MOON
 	playmapmusic
 	end
@@ -161,7 +161,7 @@ MountMoonSilverTextLoss:
 MountMoon_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 8 ; warp events
 	warp_event  3,  3, ROUTE_3, 1
 	warp_event 15, 15, ROUTE_4, 1
 	warp_event 13,  3, MOUNT_MOON, 7
@@ -171,9 +171,9 @@ MountMoon_MapEvents:
 	warp_event 25,  3, MOUNT_MOON, 3
 	warp_event 25, 13, MOUNT_MOON, 4
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  7,  3, SPRITE_SILVER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_MT_MOON_RIVAL

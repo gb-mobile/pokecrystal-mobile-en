@@ -1,7 +1,7 @@
 PlaceMenuItemName:
 	push de
 	ld a, [wMenuSelection]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetItemName
 	pop hl
 	call PlaceString
@@ -12,7 +12,7 @@ PlaceMenuItemQuantity:
 	ld a, [wMenuSelection]
 	ld [wCurItem], a
 	farcall _CheckTossableItem
-	ld a, [wItemAttributeValue]
+	ld a, [wItemAttributeParamBuffer]
 	pop hl
 	and a
 	jr nz, .done
@@ -28,17 +28,17 @@ PlaceMenuItemQuantity:
 	ret
 
 PlaceMoneyTopRight:
-	ld hl, MoneyTopRightMenuHeader
+	ld hl, MenuHeader_0x24b15
 	call CopyMenuHeader
 	jr PlaceMoneyTextbox
 
 PlaceMoneyBottomLeft:
-	ld hl, MoneyBottomLeftMenuHeader
+	ld hl, MenuHeader_0x24b1d
 	call CopyMenuHeader
 	jr PlaceMoneyTextbox
 
 PlaceMoneyAtTopLeftOfTextbox:
-	ld hl, MoneyTopRightMenuHeader
+	ld hl, MenuHeader_0x24b15
 	lb de, 0, 11
 	call OffsetMenuHeader
 
@@ -52,13 +52,13 @@ PlaceMoneyTextbox:
 	call PrintNum
 	ret
 
-MoneyTopRightMenuHeader:
+MenuHeader_0x24b15:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 11, 0, SCREEN_WIDTH - 1, 2
 	dw NULL
 	db 1 ; default option
 
-MoneyBottomLeftMenuHeader:
+MenuHeader_0x24b1d:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 0, 11, 8, 13
 	dw NULL
@@ -110,7 +110,8 @@ CoinString:
 ShowMoney_TerminatorString:
 	db "@"
 
-StartMenu_PrintSafariGameStatus: ; unreferenced
+Unreferenced_Function24b8f:
+; related to safari?
 	ld hl, wOptions
 	ld a, [hl]
 	push af
@@ -156,20 +157,20 @@ StartMenu_PrintBugContestStatus:
 	set NO_TEXT_SCROLL, [hl]
 	call StartMenu_DrawBugContestStatusBox
 	hlcoord 1, 5
-	ld de, .BallsString
+	ld de, .Balls_EN
 	call PlaceString
 	hlcoord 8, 5
 	ld de, wParkBallsRemaining
-	lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	lb bc, PRINTNUM_RIGHTALIGN | 1, 2
 	call PrintNum
 	hlcoord 1, 1
-	ld de, .CaughtString
+	ld de, .CAUGHT
 	call PlaceString
 	ld a, [wContestMon]
 	and a
-	ld de, .NoneString
+	ld de, .None
 	jr z, .no_contest_mon
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 
 .no_contest_mon
@@ -179,37 +180,36 @@ StartMenu_PrintBugContestStatus:
 	and a
 	jr z, .skip_level
 	hlcoord 1, 3
-	ld de, .LevelString
+	ld de, .LEVEL
 	call PlaceString
 	ld a, [wContestMonLevel]
 	ld h, b
 	ld l, c
 	inc hl
 	ld c, 3
-	call Print8BitNumLeftAlign
+	call Print8BitNumRightAlign
 
 .skip_level
 	pop af
 	ld [wOptions], a
 	ret
 
-.BallsJPString: ; unreferenced
+.Balls_JP:
 	db "ボール　　　こ@"
-.CaughtString:
+.CAUGHT:
 	db "CAUGHT@"
-.BallsString:
+.Balls_EN:
 	db "BALLS:@"
-.NoneString:
+.None:
 	db "None@"
-.LevelString:
+.LEVEL:
 	db "LEVEL@"
 
 FindApricornsInBag:
 ; Checks the bag for Apricorns.
-	ld hl, wKurtApricornCount
+	ld hl, wBuffer1
 	xor a
 	ld [hli], a
-	assert wKurtApricornCount + 1 == wKurtApricornItems
 	dec a
 	ld bc, 10
 	call ByteFill
@@ -233,15 +233,15 @@ FindApricornsInBag:
 	jr .loop
 
 .done
-	ld a, [wKurtApricornCount]
+	ld a, [wBuffer1]
 	and a
 	ret nz
 	scf
 	ret
 
-.addtobuffer:
+.addtobuffer
 	push hl
-	ld hl, wKurtApricornCount
+	ld hl, wBuffer1
 	inc [hl]
 	ld e, [hl]
 	ld d, 0

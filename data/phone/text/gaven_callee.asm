@@ -1,4 +1,4 @@
-GavenAnswerPhoneText:
+UnknownText_0x1b5270:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -8,7 +8,7 @@ GavenAnswerPhoneText:
 	line "Good morning!"
 	done
 
-GavenAnswerPhoneDayText:
+UnknownText_0x1b52a5:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -17,7 +17,7 @@ GavenAnswerPhoneDayText:
 	para "Hi, <PLAY_G>!"
 	done
 
-GavenAnswerPhoneNiteText:
+UnknownText_0x1b52cc:
 	text "Hello, this is"
 	line "@"
 	text_ram wStringBuffer3
@@ -27,7 +27,7 @@ GavenAnswerPhoneNiteText:
 	line "Good evening!"
 	done
 
-GavenGreetText:
+UnknownText_0x1b5301:
 	text "<PLAY_G>, good"
 	line "morning!"
 
@@ -37,7 +37,7 @@ GavenGreetText:
 	line "How are you doing?"
 	done
 
-GavenGreetDayText:
+UnknownText_0x1b5335:
 	text "Hi, <PLAY_G>!"
 
 	para "It's me, @"
@@ -46,7 +46,7 @@ GavenGreetDayText:
 	line "How are you doing?"
 	done
 
-GavenGreetNiteText:
+UnknownText_0x1b535f:
 	text "<PLAY_G>, good"
 	line "evening!"
 
@@ -56,7 +56,7 @@ GavenGreetNiteText:
 	line "How are you doing?"
 	done
 
-GavenGenericText:
+UnknownText_0x1b5393:
 	text "How are your"
 	line "#MON doing?"
 

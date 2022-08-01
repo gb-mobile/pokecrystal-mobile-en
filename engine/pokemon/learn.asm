@@ -1,8 +1,8 @@
 LearnMove:
-	call LoadTilemapToTempTilemap
+	call LoadTileMapToTempTileMap
 	ld a, [wCurPartyMon]
 	ld hl, wPartyMonNicknames
-	call GetNickname
+	call GetNick
 	ld hl, wStringBuffer1
 	ld de, wMonOrItemNameBuffer
 	ld bc, MON_NAME_LENGTH
@@ -36,7 +36,7 @@ LearnMove:
 
 	push hl
 	push de
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 
 	ld b, a
 	ld a, [wBattleMode]
@@ -102,25 +102,25 @@ LearnMove:
 	jp .learned
 
 .cancel
-	ld hl, StopLearningMoveText
+	ld hl, Text_StopLearning ; Stop learning <MOVE>?
 	call PrintText
 	call YesNoBox
 	jp c, .loop
 
-	ld hl, DidNotLearnMoveText
+	ld hl, Text_DidNotLearn ; <MON> did not learn <MOVE>.
 	call PrintText
 	ld b, 0
 	ret
 
 .learned
-	ld hl, LearnedMoveText
+	ld hl, Text_LearnedMove ; <MON> learned <MOVE>!
 	call PrintText
 	ld b, 1
 	ret
 
 ForgetMove:
 	push hl
-	ld hl, AskForgetMoveText
+	ld hl, Text_TryingToLearn
 	call PrintText
 	call YesNoBox
 	pop hl
@@ -134,7 +134,7 @@ ForgetMove:
 	pop hl
 .loop
 	push hl
-	ld hl, MoveAskForgetText
+	ld hl, Text_ForgetWhich
 	call PrintText
 	hlcoord 5, 2
 	ld b, NUM_MOVES * 2
@@ -142,7 +142,7 @@ ForgetMove:
 	call Textbox
 	hlcoord 5 + 2, 2 + 2
 	ld a, SCREEN_WIDTH * 2
-	ld [wListMovesLineSpacing], a
+	ld [wBuffer1], a
 	predef ListMoves
 	; w2DMenuData
 	ld a, $4
@@ -166,7 +166,7 @@ ForgetMove:
 	ld [w2DMenuCursorOffsets], a
 	call StaticMenuJoypad
 	push af
-	call SafeLoadTempTilemapToTilemap
+	call Call_LoadTempTileMapToTileMap
 	pop af
 	pop hl
 	bit 1, a
@@ -191,7 +191,7 @@ ForgetMove:
 	ret
 
 .hmmove
-	ld hl, MoveCantForgetHMText
+	ld hl, Text_CantForgetHM
 	call PrintText
 	pop hl
 	jr .loop
@@ -200,40 +200,48 @@ ForgetMove:
 	scf
 	ret
 
-LearnedMoveText:
-	text_far _LearnedMoveText
+Text_LearnedMove:
+; <MON> learned <MOVE>!
+	text_far UnknownText_0x1c5660
 	text_end
 
-MoveAskForgetText:
-	text_far _MoveAskForgetText
+Text_ForgetWhich:
+; Which move should be forgotten?
+	text_far UnknownText_0x1c5678
 	text_end
 
-StopLearningMoveText:
-	text_far _StopLearningMoveText
+Text_StopLearning:
+; Stop learning <MOVE>?
+	text_far UnknownText_0x1c5699
 	text_end
 
-DidNotLearnMoveText:
-	text_far _DidNotLearnMoveText
+Text_DidNotLearn:
+; <MON> did not learn <MOVE>.
+	text_far UnknownText_0x1c56af
 	text_end
 
-AskForgetMoveText:
-	text_far _AskForgetMoveText
+Text_TryingToLearn:
+; <MON> is trying to learn <MOVE>. But <MON> can't learn more than
+; four moves. Delete an older move to make room for <MOVE>?
+	text_far UnknownText_0x1c56c9
 	text_end
 
 Text_1_2_and_Poof:
-	text_far Text_MoveForgetCount ; 1, 2 and…
+	text_far UnknownText_0x1c5740 ; 1, 2 and…
 	text_asm
 	push de
 	ld de, SFX_SWITCH_POKEMON
 	call PlaySFX
 	pop de
-	ld hl, .MoveForgotText
+	ld hl, .PoofForgot
 	ret
 
-.MoveForgotText:
-	text_far _MoveForgotText
+.PoofForgot:
+; Poof! <MON> forgot <MOVE>. And…
+	text_far UnknownText_0x1c574e
 	text_end
 
-MoveCantForgetHMText:
-	text_far _MoveCantForgetHMText
+Text_CantForgetHM:
+; HM moves can't be forgotten now.
+	text_far UnknownText_0x1c5772
 	text_end

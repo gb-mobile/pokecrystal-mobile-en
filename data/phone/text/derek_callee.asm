@@ -1,25 +1,25 @@
-DerekAnswerPhoneText:
+UnknownText_0x1b69a8:
 	text "Hi, <PLAY_G>?"
 
 	para "Good morning pika."
 	line "What's up pika?"
 	done
 
-DerekAnswerPhoneDayText:
+UnknownText_0x1b69d2:
 	text "Hi, <PLAY_G>?"
 
 	para "Good day pika,"
 	line "what's up pika?"
 	done
 
-DerekAnswerPhoneNiteText:
+UnknownText_0x1b69f8:
 	text "Hi, <PLAY_G>?"
 
 	para "Good evening pika,"
 	line "what's up pika?"
 	done
 
-DerekGreetText:
+UnknownText_0x1b6a22:
 	text "<PLAY_G> pika, good"
 	line "morning!"
 
@@ -29,7 +29,7 @@ DerekGreetText:
 	line "pika are you?"
 	done
 
-DerekGreetDayText:
+UnknownText_0x1b6a56:
 	text "<PLAY_G> pika, good"
 	line "pika day!"
 
@@ -39,7 +39,7 @@ DerekGreetDayText:
 	line "pika are you?"
 	done
 
-DerekGreetNiteText:
+UnknownText_0x1b6a8b:
 	text "<PLAY_G> pika, good"
 	line "evening!"
 
@@ -49,7 +49,7 @@ DerekGreetNiteText:
 	line "you pika awake?"
 	done
 
-DerekGenericText:
+UnknownText_0x1b6ac2:
 	text "You have to hear"
 	line "this! My lovable"
 

@@ -1,6 +1,6 @@
 _DoItemEffect::
 	ld a, [wCurItem]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetItemName
 	call CopyName1
 	ld a, 1
@@ -12,8 +12,7 @@ _DoItemEffect::
 	ret
 
 ItemEffects:
-; entries correspond to item ids (see constants/item_constants.asm)
-	table_width 2, ItemEffects
+; entries correspond to item ids
 	dw PokeBallEffect      ; MASTER_BALL
 	dw PokeBallEffect      ; ULTRA_BALL
 	dw NoEffect            ; BRIGHTPOWDER
@@ -111,7 +110,7 @@ ItemEffects:
 	dw NoEffect            ; MYSTIC_WATER
 	dw NoEffect            ; TWISTEDSPOON
 	dw NoEffect            ; WHT_APRICORN
-	dw NoEffect            ; BLACKBELT_I
+	dw NoEffect            ; BLACKBELT
 	dw NoEffect            ; BLK_APRICORN
 	dw NoEffect            ; ITEM_64
 	dw NoEffect            ; PNK_APRICORN
@@ -193,24 +192,8 @@ ItemEffects:
 	dw PokeBallEffect      ; PARK_BALL
 	dw NoEffect            ; RAINBOW_WING
 	dw NoEffect            ; ITEM_B3
-	assert_table_length ITEM_B3
-; The items past ITEM_B3 do not have effect entries:
-;	BRICK_PIECE
-;	SURF_MAIL
-;	LITEBLUEMAIL
-;	PORTRAITMAIL
-;	LOVELY_MAIL
-;	EON_MAIL
-;	MORPH_MAIL
-;	BLUESKY_MAIL
-;	MUSIC_MAIL
-;	MIRAGE_MAIL
-;	ITEM_BE
-; They all have the ITEMMENU_NOUSE attribute so they can't be used anyway.
-; NoEffect would be appropriate, with the table then being NUM_ITEMS long.
 
 PokeBallEffect:
-; BUG: The Dude's catching tutorial may crash if his Poké Ball can't be used (see docs/bugs_and_glitches.md)
 	ld a, [wBattleMode]
 	dec a
 	jp nz, UseBallInTrainerBattle
@@ -220,14 +203,13 @@ PokeBallEffect:
 	jr nz, .room_in_party
 
 	ld a, BANK(sBoxCount)
-	call OpenSRAM
+	call GetSRAMBank
 	ld a, [sBoxCount]
 	cp MONS_PER_BOX
 	call CloseSRAM
 	jp z, Ball_BoxIsFullMessage
 
 .room_in_party
-; BUG: Using a Park Ball in non-Contest battles has a corrupt animation (see docs/bugs_and_glitches.md)
 	xor a
 	ld [wWildMon], a
 	ld a, [wCurItem]
@@ -236,7 +218,7 @@ PokeBallEffect:
 
 	ld hl, wOptions
 	res NO_TEXT_SCROLL, [hl]
-	ld hl, ItemUsedText
+	ld hl, UsedItemText
 	call PrintText
 
 	ld a, [wEnemyMonCatchRate]
@@ -336,12 +318,17 @@ PokeBallEffect:
 	jr nz, .statuscheck
 	ld a, 1
 .statuscheck
-; BUG: BRN/PSN/PAR do not affect catch rate (see docs/bugs_and_glitches.md)
+; This routine is buggy. It was intended that SLP and FRZ provide a higher
+; catch rate than BRN/PSN/PAR, which in turn provide a higher catch rate than
+; no status effect at all. But instead, it makes BRN/PSN/PAR provide no
+; benefit.
+; Uncomment the line below to fix this.
 	ld b, a
 	ld a, [wEnemyMonStatus]
-	and 1 << FRZ | SLP_MASK
+	and 1 << FRZ | SLP
 	ld c, 10
 	jr nz, .addstatus
+	; ld a, [wEnemyMonStatus]
 	and a
 	ld c, 5
 	jr nz, .addstatus
@@ -353,10 +340,13 @@ PokeBallEffect:
 	ld a, $ff
 .max_1
 
-; BUG: HELD_CATCH_CHANCE has no effect (see docs/bugs_and_glitches.md)
+	; BUG: farcall overwrites a, and GetItemHeldEffect takes b anyway.
+	; This is probably the reason the HELD_CATCH_CHANCE effect is never used.
+	; Uncomment the line below to fix.
 	ld d, a
 	push de
 	ld a, [wBattleMonItem]
+	; ld b, a
 	farcall GetItemHeldEffect
 	ld a, b
 	cp HELD_CATCH_CHANCE
@@ -370,7 +360,7 @@ PokeBallEffect:
 
 .skip_hp_calc
 	ld b, a
-	ld [wFinalCatchRate], a
+	ld [wBuffer1], a
 	call Random
 
 	cp b
@@ -400,28 +390,28 @@ PokeBallEffect:
 	ld [wFXAnimID + 1], a
 	xor a
 	ldh [hBattleTurn], a
-	ld [wThrownBallWobbleCount], a
+	ld [wBuffer2], a
 	ld [wNumHits], a
 	predef PlayBattleAnim
 
 	ld a, [wWildMon]
 	and a
 	jr nz, .caught
-	ld a, [wThrownBallWobbleCount]
-	cp 1
-	ld hl, BallBrokeFreeText
+	ld a, [wBuffer2]
+	cp $1
+	ld hl, Text_NoShake
 	jp z, .shake_and_break_free
-	cp 2
-	ld hl, BallAppearedCaughtText
+	cp $2
+	ld hl, Text_OneShake
 	jp z, .shake_and_break_free
-	cp 3
-	ld hl, BallAlmostHadItText
+	cp $3
+	ld hl, Text_TwoShakes
 	jp z, .shake_and_break_free
-	cp 4
-	ld hl, BallSoCloseText
+	cp $4
+	ld hl, Text_ThreeShakes
 	jp z, .shake_and_break_free
-
 .caught
+
 	ld hl, wEnemyMonStatus
 	ld a, [hli]
 	push af
@@ -440,7 +430,9 @@ PokeBallEffect:
 	push af
 	set SUBSTATUS_TRANSFORMED, [hl]
 
-; BUG: Catching a Transformed Pokémon always catches a Ditto (see docs/bugs_and_glitches.md)
+; This code is buggy. Any wild Pokémon that has Transformed will be
+; caught as a Ditto, even if it was something else like Mew.
+; To fix, do not set [wTempEnemyMonSpecies] to DITTO.
 	bit SUBSTATUS_TRANSFORMED, a
 	jr nz, .ditto
 	jr .not_ditto
@@ -525,7 +517,7 @@ PokeBallEffect:
 	call CheckReceivedDex
 	jr z, .skip_pokedex
 
-	ld hl, NewDexDataText
+	ld hl, Text_AddedToPokedex
 	call PrintText
 
 	call ClearSprites
@@ -570,11 +562,11 @@ PokeBallEffect:
 	ld [hl], a
 
 .SkipPartyMonFriendBall:
-	ld hl, AskGiveNicknameText
+	ld hl, Text_AskNicknameNewlyCaughtMon
 	call PrintText
 
 	ld a, [wCurPartySpecies]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 
 	call YesNoBox
@@ -613,7 +605,7 @@ PokeBallEffect:
 	farcall SetBoxMonCaughtData
 
 	ld a, BANK(sBoxCount)
-	call OpenSRAM
+	call GetSRAMBank
 
 	ld a, [sBoxCount]
 	cp MONS_PER_BOX
@@ -630,11 +622,11 @@ PokeBallEffect:
 .SkipBoxMonFriendBall:
 	call CloseSRAM
 
-	ld hl, AskGiveNicknameText
+	ld hl, Text_AskNicknameNewlyCaughtMon
 	call PrintText
 
 	ld a, [wCurPartySpecies]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 
 	call YesNoBox
@@ -649,7 +641,7 @@ PokeBallEffect:
 	farcall NamingScreen
 
 	ld a, BANK(sBoxMonNicknames)
-	call OpenSRAM
+	call GetSRAMBank
 
 	ld hl, wMonOrItemNameBuffer
 	ld de, sBoxMonNicknames
@@ -664,7 +656,7 @@ PokeBallEffect:
 
 .SkipBoxMonNickname:
 	ld a, BANK(sBoxMonNicknames)
-	call OpenSRAM
+	call GetSRAMBank
 
 	ld hl, sBoxMonNicknames
 	ld de, wMonOrItemNameBuffer
@@ -673,7 +665,7 @@ PokeBallEffect:
 
 	call CloseSRAM
 
-	ld hl, BallSentToPCText
+	ld hl, Text_SentToBillsPC
 	call PrintText
 
 	call RotateThreePalettesRight
@@ -705,12 +697,12 @@ PokeBallEffect:
 	jr z, .toss
 
 	call ClearBGPalettes
-	call ClearTilemap
+	call ClearTileMap
 
 .toss
 	ld hl, wNumItems
 	inc a
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	jp TossItem
 
 .used_park_ball
@@ -752,8 +744,7 @@ ParkBallMultiplier:
 	ld b, $ff
 	ret
 
-HeavyBall_GetDexEntryBank:
-; BUG: Heavy Ball uses wrong weight value for three Pokémon (see docs/bugs_and_glitches.md)
+GetPokedexEntryBank:
 	push hl
 	push de
 	ld a, [wEnemyMonSpecies]
@@ -780,7 +771,7 @@ HeavyBallMultiplier:
 ; else add 0 to catch rate if weight < 204.8 kg
 ; else add 20 to catch rate if weight < 307.2 kg
 ; else add 30 to catch rate if weight < 409.6 kg
-; else add 40 to catch rate
+; else add 40 to catch rate (never happens)
 	ld a, [wEnemyMonSpecies]
 	ld hl, PokedexDataPointerTable
 	dec a
@@ -789,20 +780,20 @@ HeavyBallMultiplier:
 	add hl, de
 	add hl, de
 	ld a, BANK(PokedexDataPointerTable)
-	call GetFarWord
+	call GetFarHalfword
 
 .SkipText:
-	call HeavyBall_GetDexEntryBank
+	call GetPokedexEntryBank
 	call GetFarByte
 	inc hl
 	cp "@"
 	jr nz, .SkipText
 
-	call HeavyBall_GetDexEntryBank
+	call GetPokedexEntryBank
 	push bc
 	inc hl
 	inc hl
-	call GetFarWord
+	call GetFarHalfword
 
 	srl h
 	rr l
@@ -894,6 +885,9 @@ LureBallMultiplier:
 	ret
 
 MoonBallMultiplier:
+; This function is buggy.
+; Intent:  multiply catch rate by 4 if mon evolves with moon stone
+; Reality: no boost
 	push bc
 	ld a, [wTempEnemyMonSpecies]
 	dec a
@@ -903,7 +897,7 @@ MoonBallMultiplier:
 	add hl, bc
 	add hl, bc
 	ld a, BANK(EvosAttacksPointers)
-	call GetFarWord
+	call GetFarHalfword
 	pop bc
 
 	push bc
@@ -917,7 +911,9 @@ MoonBallMultiplier:
 	inc hl
 	inc hl
 
-; BUG: Moon Ball does not boost catch rate (see docs/bugs_and_glitches.md)
+; Moon Stone's constant from Pokémon Red is used.
+; No Pokémon evolve with Burn Heal,
+; so Moon Balls always have a catch rate of 1×.
 	push bc
 	ld a, BANK("Evolutions and Attacks")
 	call GetFarByte
@@ -935,6 +931,9 @@ MoonBallMultiplier:
 	ret
 
 LoveBallMultiplier:
+; This function is buggy.
+; Intent:  multiply catch rate by 8 if mons are of same species, different sex
+; Reality: multiply catch rate by 8 if mons are of same species, same sex
 
 	; does species match?
 	ld a, [wTempEnemyMonSpecies]
@@ -955,9 +954,9 @@ LoveBallMultiplier:
 	jr c, .done1 ; no effect on genderless
 
 	ld d, 0 ; male
-	jr nz, .got_player_gender
+	jr nz, .playermale
 	inc d   ; female
-.got_player_gender
+.playermale
 
 	; check wild mon species
 	push de
@@ -969,16 +968,15 @@ LoveBallMultiplier:
 	jr c, .done2 ; no effect on genderless
 
 	ld d, 0 ; male
-	jr nz, .got_wild_gender
+	jr nz, .wildmale
 	inc d   ; female
-.got_wild_gender
+.wildmale
 
-; BUG: Love Ball boosts catch rate for the wrong gender (see docs/bugs_and_glitches.md)
 	ld a, d
 	pop de
 	cp d
 	pop bc
-	ret nz
+	ret nz ; for the intended effect, this should be "ret z"
 
 	sla b
 	jr c, .max
@@ -998,13 +996,17 @@ LoveBallMultiplier:
 	ret
 
 FastBallMultiplier:
+; This function is buggy.
+; Intent:  multiply catch rate by 4 if enemy mon is in one of the three
+;          FleeMons tables.
+; Reality: multiply catch rate by 4 if enemy mon is one of the first three in
+;          the first FleeMons table.
 	ld a, [wTempEnemyMonSpecies]
 	ld c, a
 	ld hl, FleeMons
 	ld d, 3
 
 .loop
-; BUG: Fast Ball only boosts catch rate for three Pokémon (see docs/bugs_and_glitches.md)
 	ld a, BANK(FleeMons)
 	call GetFarByte
 
@@ -1012,7 +1014,7 @@ FastBallMultiplier:
 	cp -1
 	jr z, .next
 	cp c
-	jr nz, .next
+	jr nz, .next ; for the intended effect, this should be "jr nz, .loop"
 	sla b
 	jr c, .max
 
@@ -1056,35 +1058,42 @@ LevelBallMultiplier:
 	ld b, $ff
 	ret
 
-; BallDodgedText and BallMissedText were used in Gen 1.
+; These two texts were carried over from gen 1.
+; They are not used in gen 2, and are dummied out.
 
-BallDodgedText: ; unreferenced
-	text_far _BallDodgedText
+Text_RBY_CatchMarowak:
+	; It dodged the thrown BALL! This #MON can't be caught!
+	text_far UnknownText_0x1c5a5a
 	text_end
 
-BallMissedText: ; unreferenced
-	text_far _BallMissedText
+Text_RBY_NoShake:
+	; You missed the #MON!
+	text_far UnknownText_0x1c5a90
 	text_end
 
-BallBrokeFreeText:
-	text_far _BallBrokeFreeText
+Text_NoShake:
+	; Oh no! The #MON broke free!
+	text_far UnknownText_0x1c5aa6
 	text_end
 
-BallAppearedCaughtText:
-	text_far _BallAppearedCaughtText
+Text_OneShake:
+	; Aww! It appeared to be caught!
+	text_far UnknownText_0x1c5ac3
 	text_end
 
-BallAlmostHadItText:
-	text_far _BallAlmostHadItText
+Text_TwoShakes:
+	; Aargh! Almost had it!
+	text_far UnknownText_0x1c5ae3
 	text_end
 
-BallSoCloseText:
-	text_far _BallSoCloseText
+Text_ThreeShakes:
+	; Shoot! It was so close too!
+	text_far UnknownText_0x1c5afa
 	text_end
 
 Text_GotchaMonWasCaught:
 	; Gotcha! @ was caught!@ @
-	text_far Text_BallCaught
+	text_far UnknownText_0x1c5b17
 	text_asm
 	call WaitSFX
 	push bc
@@ -1094,23 +1103,27 @@ Text_GotchaMonWasCaught:
 	ld de, MUSIC_CAPTURE
 	call PlayMusic
 	pop bc
-	ld hl, WaitButtonText
+	ld hl, TextJump_Waitbutton
 	ret
 
-WaitButtonText:
-	text_far _WaitButtonText
+TextJump_Waitbutton:
+	; @
+	text_far Text_Waitbutton_2
 	text_end
 
-BallSentToPCText:
-	text_far _BallSentToPCText
+Text_SentToBillsPC:
+	; was sent to BILL's PC.
+	text_far UnknownText_0x1c5b38
 	text_end
 
-NewDexDataText:
-	text_far _NewDexDataText
+Text_AddedToPokedex:
+	; 's data was newly added to the #DEX.@ @
+	text_far UnknownText_0x1c5b53
 	text_end
 
-AskGiveNicknameText:
-	text_far _AskGiveNicknameText
+Text_AskNicknameNewlyCaughtMon:
+	; Give a nickname to @ ?
+	text_far UnknownText_0x1c5b7f
 	text_end
 
 ReturnToBattle_UseBall:
@@ -1138,7 +1151,7 @@ EvoStoneEffect:
 	cp EVERSTONE
 	jr z, .NoEffect
 
-	ld a, TRUE
+	ld a, $1
 	ld [wForceEvolution], a
 	farcall EvolvePokemon
 
@@ -1191,7 +1204,7 @@ VitaminEffect:
 
 	call Play_SFX_FULL_HEAL
 
-	ld hl, ItemStatRoseText
+	ld hl, Text_StatRose
 	call PrintText
 
 	ld c, HAPPINESS_USEDITEM
@@ -1200,7 +1213,7 @@ VitaminEffect:
 	jp UseDisposableItem
 
 NoEffectMessage:
-	ld hl, ItemWontHaveEffectText
+	ld hl, WontHaveAnyEffectText
 	call PrintText
 	jp ClearPalettes
 
@@ -1219,8 +1232,9 @@ RareCandy_StatBooster_ExitMenu:
 	ld [wItemEffectSucceeded], a
 	jp ClearPalettes
 
-ItemStatRoseText:
-	text_far _ItemStatRoseText
+Text_StatRose:
+	; 's @  rose.
+	text_far UnknownText_0x1c5b9a
 	text_end
 
 StatStrings:
@@ -1238,7 +1252,7 @@ StatStrings:
 
 GetStatExpRelativePointer:
 	ld a, [wCurItem]
-	ld hl, StatExpItemPointerOffsets
+	ld hl, Table_eeeb
 .next
 	cp [hl]
 	inc hl
@@ -1252,7 +1266,7 @@ GetStatExpRelativePointer:
 	ld b, 0
 	ret
 
-StatExpItemPointerOffsets:
+Table_eeeb:
 	db HP_UP,    MON_HP_EXP - MON_STAT_EXP
 	db PROTEIN, MON_ATK_EXP - MON_STAT_EXP
 	db IRON,    MON_DEF_EXP - MON_STAT_EXP
@@ -1270,7 +1284,7 @@ RareCandy_StatBooster_GetParameters:
 	call GetBaseData
 	ld a, [wCurPartyMon]
 	ld hl, wPartyMonNicknames
-	call GetNickname
+	call GetNick
 	ret
 
 RareCandyEffect:
@@ -1370,16 +1384,17 @@ HealPowderEffect:
 	jp c, StatusHealer_ExitMenu
 
 	call UseStatusHealer
-	cp FALSE
-	jr nz, .not_used
 
+	cp $0
+	jr nz, .asm_efc9
 	ld c, HAPPINESS_BITTERPOWDER
 	farcall ChangeHappiness
+
 	call LooksBitterMessage
 
 	ld a, $0
 
-.not_used
+.asm_efc9
 	jp StatusHealer_Jumptable
 
 StatusHealingEffect:
@@ -1393,7 +1408,7 @@ FullyHealStatus:
 
 UseStatusHealer:
 	call IsMonFainted
-	ld a, TRUE
+	ld a, $1
 	ret z
 	call GetItemHealingAction
 	ld a, MON_STATUS
@@ -1402,7 +1417,7 @@ UseStatusHealer:
 	and c
 	jr nz, .good
 	call IsItemUsedOnConfusedMon
-	ld a, TRUE
+	ld a, $1
 	ret nc
 	ld b, PARTYMENUTEXT_HEAL_CONFUSION
 .good
@@ -1414,7 +1429,7 @@ UseStatusHealer:
 	call Play_SFX_FULL_HEAL
 	call ItemActionTextWaitButton
 	call UseDisposableItem
-	ld a, FALSE
+	ld a, $0
 	ret
 
 IsItemUsedOnConfusedMon:
@@ -1504,16 +1519,15 @@ RevivalHerbEffect:
 	jp c, StatusHealer_ExitMenu
 
 	call RevivePokemon
-	cp FALSE
-	jr nz, .not_used
+	cp 0
+	jr nz, .asm_f0c5
 
 	ld c, HAPPINESS_REVIVALHERB
 	farcall ChangeHappiness
 	call LooksBitterMessage
+	ld a, 0
 
-	ld a, $0
-
-.not_used
+.asm_f0c5
 	jp StatusHealer_Jumptable
 
 ReviveEffect:
@@ -1526,7 +1540,7 @@ ReviveEffect:
 
 RevivePokemon:
 	call IsMonFainted
-	ld a, TRUE
+	ld a, 1
 	ret nz
 	ld a, [wBattleMode]
 	and a
@@ -1567,7 +1581,7 @@ RevivePokemon:
 	ld [wPartyMenuActionText], a
 	call ItemActionTextWaitButton
 	call UseDisposableItem
-	ld a, FALSE
+	ld a, 0
 	ret
 
 FullRestoreEffect:
@@ -1758,7 +1772,7 @@ ItemActionTextWaitButton:
 	xor a
 	ldh [hBGMapMode], a
 	hlcoord 0, 0
-	ld bc, wTilemapEnd - wTilemap
+	ld bc, wTileMapEnd - wTileMap
 	ld a, " "
 	call ByteFill
 	ld a, [wPartyMenuActionText]
@@ -1811,7 +1825,7 @@ ContinueRevive:
 	ld [hl], d
 	inc hl
 	ld [hl], e
-	jp LoadCurHPIntoBuffer3
+	jp LoadCurHPIntoBuffer5
 
 RestoreHealth:
 	ld a, MON_HP + 1
@@ -1823,7 +1837,7 @@ RestoreHealth:
 	adc d
 	ld [hl], a
 	jr c, .full_hp
-	call LoadCurHPIntoBuffer3
+	call LoadCurHPIntoBuffer5
 	ld a, MON_HP + 1
 	call GetPartyParamLocation
 	ld d, h
@@ -1856,21 +1870,21 @@ RemoveHP:
 	ld [hld], a
 	ld [hl], a
 .okay
-	call LoadCurHPIntoBuffer3
+	call LoadCurHPIntoBuffer5
 	ret
 
 IsMonFainted:
 	push de
-	call LoadMaxHPIntoBuffer1
-	call LoadCurHPIntoBuffer2
-	call LoadHPFromBuffer2
+	call LoadMaxHPToBuffer1
+	call LoadCurHPToBuffer3
+	call LoadHPFromBuffer3
 	ld a, d
 	or e
 	pop de
 	ret
 
 IsMonAtFullHealth:
-	call LoadHPFromBuffer2
+	call LoadHPFromBuffer3
 	ld h, d
 	ld l, e
 	call LoadHPFromBuffer1
@@ -1880,60 +1894,60 @@ IsMonAtFullHealth:
 	sbc d
 	ret
 
-LoadCurHPIntoBuffer3:
+LoadCurHPIntoBuffer5:
 	ld a, MON_HP
 	call GetPartyParamLocation
 	ld a, [hli]
-	ld [wHPBuffer3 + 1], a
+	ld [wBuffer6], a
 	ld a, [hl]
-	ld [wHPBuffer3], a
+	ld [wBuffer5], a
 	ret
 
-LoadHPIntoBuffer3: ; unreferenced
+LoadHPIntoBuffer5:
 	ld a, d
-	ld [wHPBuffer3 + 1], a
+	ld [wBuffer6], a
 	ld a, e
-	ld [wHPBuffer3], a
+	ld [wBuffer5], a
 	ret
 
-LoadHPFromBuffer3: ; unreferenced
-	ld a, [wHPBuffer3 + 1]
+LoadHPFromBuffer5:
+	ld a, [wBuffer6]
 	ld d, a
-	ld a, [wHPBuffer3]
+	ld a, [wBuffer5]
 	ld e, a
 	ret
 
-LoadCurHPIntoBuffer2:
+LoadCurHPToBuffer3:
 	ld a, MON_HP
 	call GetPartyParamLocation
 	ld a, [hli]
-	ld [wHPBuffer2 + 1], a
+	ld [wBuffer4], a
 	ld a, [hl]
-	ld [wHPBuffer2], a
+	ld [wBuffer3], a
 	ret
 
-LoadHPFromBuffer2:
-	ld a, [wHPBuffer2 + 1]
+LoadHPFromBuffer3:
+	ld a, [wBuffer4]
 	ld d, a
-	ld a, [wHPBuffer2]
+	ld a, [wBuffer3]
 	ld e, a
 	ret
 
-LoadMaxHPIntoBuffer1:
+LoadMaxHPToBuffer1:
 	push hl
 	ld a, MON_MAXHP
 	call GetPartyParamLocation
 	ld a, [hli]
-	ld [wHPBuffer1 + 1], a
+	ld [wBuffer2], a
 	ld a, [hl]
-	ld [wHPBuffer1], a
+	ld [wBuffer1], a
 	pop hl
 	ret
 
 LoadHPFromBuffer1:
-	ld a, [wHPBuffer1 + 1]
+	ld a, [wBuffer2]
 	ld d, a
-	ld a, [wHPBuffer1]
+	ld a, [wBuffer1]
 	ld e, a
 	ret
 
@@ -2041,13 +2055,14 @@ Softboiled_MilkDrinkFunction:
 
 .cant_use
 	push bc
-	ld hl, .ItemCantUseOnMonText
+	ld hl, .Text_CantBeUsed
 	call MenuTextboxBackup
 	pop bc
 	jr .loop
 
-.ItemCantUseOnMonText:
-	text_far _ItemCantUseOnMonText
+.Text_CantBeUsed:
+	; That can't be used on this #MON.
+	text_far UnknownText_0x1c5bac
 	text_end
 
 EscapeRopeEffect:
@@ -2074,15 +2089,16 @@ RepelEffect:
 UseRepel:
 	ld a, [wRepelEffect]
 	and a
-	ld hl, RepelUsedEarlierIsStillInEffectText
+	ld hl, TextJump_RepelUsedEarlierIsStillInEffect
 	jp nz, PrintText
 
 	ld a, b
 	ld [wRepelEffect], a
 	jp UseItemText
 
-RepelUsedEarlierIsStillInEffectText:
-	text_far _RepelUsedEarlierIsStillInEffectText
+TextJump_RepelUsedEarlierIsStillInEffect:
+	; The REPEL used earlier is still in effect.
+	text_far Text_RepelUsedEarlierIsStillInEffect
 	text_end
 
 XAccuracyEffect:
@@ -2094,9 +2110,9 @@ XAccuracyEffect:
 
 PokeDollEffect:
 	ld a, [wBattleMode]
-	dec a ; WILD_BATTLE?
-	jr nz, .not_wild
-	inc a ; TRUE
+	dec a
+	jr nz, .asm_f4a6
+	inc a
 	ld [wForcedSwitch], a
 	ld a, [wBattleResult]
 	and BATTLERESULT_BITMASK
@@ -2104,7 +2120,7 @@ PokeDollEffect:
 	ld [wBattleResult], a
 	jp UseItemText
 
-.not_wild
+.asm_f4a6
 	xor a
 	ld [wItemEffectSucceeded], a
 	ret
@@ -2160,14 +2176,13 @@ INCLUDE "data/items/x_stats.asm"
 PokeFluteEffect:
 	ld a, [wBattleMode]
 	and a
-	jr nz, .in_battle
-	; overworld flute code was dummied out here
+	jr nz, .dummy
+.dummy
 
-.in_battle
 	xor a
-	ld [wPokeFluteCuredSleep], a
+	ld [wd002], a
 
-	ld b, ~SLP_MASK
+	ld b, $ff ^ SLP
 
 	ld hl, wPartyMon1Status
 	call .CureSleep
@@ -2188,31 +2203,31 @@ PokeFluteEffect:
 	and b
 	ld [hl], a
 
-	ld a, [wPokeFluteCuredSleep]
+	ld a, [wd002]
 	and a
-	ld hl, .PlayedFluteText
+	ld hl, .CatchyTune
 	jp z, PrintText
 	ld hl, .PlayedTheFlute
 	call PrintText
 
 	ld a, [wLowHealthAlarm]
 	and 1 << DANGER_ON_F
-	jr nz, .dummy
-	; more code was dummied out here
-.dummy
-	ld hl, .FluteWakeUpText
+	jr nz, .dummy2
+.dummy2
+	ld hl, .AllSleepingMonWokeUp
 	jp PrintText
 
 .CureSleep:
 	ld de, PARTYMON_STRUCT_LENGTH
 	ld c, PARTY_LENGTH
+
 .loop
 	ld a, [hl]
 	push af
-	and SLP_MASK
+	and SLP
 	jr z, .not_asleep
-	ld a, TRUE
-	ld [wPokeFluteCuredSleep], a
+	ld a, 1
+	ld [wd002], a
 .not_asleep
 	pop af
 	and b
@@ -2222,17 +2237,19 @@ PokeFluteEffect:
 	jr nz, .loop
 	ret
 
-.PlayedFluteText:
-	text_far _PlayedFluteText
+.CatchyTune:
+	; Played the # FLUTE. Now, that's a catchy tune!
+	text_far UnknownText_0x1c5bf9
 	text_end
 
-.FluteWakeUpText:
-	text_far _FluteWakeUpText
+.AllSleepingMonWokeUp:
+	; All sleeping #MON woke up.
+	text_far UnknownText_0x1c5c28
 	text_end
 
 .PlayedTheFlute:
 	; played the # FLUTE.@ @
-	text_far Text_PlayedPokeFlute
+	text_far UnknownText_0x1c5c44
 	text_asm
 	ld a, [wBattleMode]
 	and a
@@ -2245,22 +2262,22 @@ PokeFluteEffect:
 	pop de
 
 .battle
-	jp PokeFluteTerminator
+	jp PokeFluteTerminatorCharacter
 
 BlueCardEffect:
-	ld hl, .BlueCardBalanceText
+	ld hl, .bluecardtext
 	jp MenuTextboxWaitButton
 
-.BlueCardBalanceText:
-	text_far _BlueCardBalanceText
+.bluecardtext
+	text_far UnknownText_0x1c5c5e
 	text_end
 
 CoinCaseEffect:
-	ld hl, .CoinCaseCountText
+	ld hl, .coincasetext
 	jp MenuTextboxWaitButton
 
-.CoinCaseCountText:
-	text_far _CoinCaseCountText
+.coincasetext
+	text_far UnknownText_0x1c5c7b
 	text_end
 
 OldRodEffect:
@@ -2285,7 +2302,7 @@ ItemfinderEffect:
 
 RestorePPEffect:
 	ld a, [wCurItem]
-	ld [wTempRestorePPItem], a
+	ld [wd002], a
 
 .loop
 	; Party Screen opens to choose on which mon to use the Item
@@ -2294,17 +2311,17 @@ RestorePPEffect:
 	jp c, PPRestoreItem_Cancel
 
 .loop2
-	ld a, [wTempRestorePPItem]
+	ld a, [wd002]
 	cp MAX_ELIXER
 	jp z, Elixer_RestorePPofAllMoves
 	cp ELIXER
 	jp z, Elixer_RestorePPofAllMoves
 
-	ld hl, RaiseThePPOfWhichMoveText
-	ld a, [wTempRestorePPItem]
+	ld hl, TextJump_RaiseThePPOfWhichMove
+	ld a, [wd002]
 	cp PP_UP
 	jr z, .ppup
-	ld hl, RestoreThePPOfWhichMoveText
+	ld hl, TextJump_RestoreThePPOfWhichMove
 
 .ppup
 	call PrintText
@@ -2327,12 +2344,12 @@ RestorePPEffect:
 
 	push hl
 	ld a, [hl]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetMoveName
 	call CopyName1
 	pop hl
 
-	ld a, [wTempRestorePPItem]
+	ld a, [wd002]
 	cp PP_UP
 	jp nz, Not_PP_Up
 
@@ -2347,7 +2364,8 @@ RestorePPEffect:
 	jr c, .do_ppup
 
 .CantUsePPUpOnSketch:
-	ld hl, PPIsMaxedOutText
+.pp_is_maxed_out
+	ld hl, TextJump_PPIsMaxedOut
 	call PrintText
 	jr .loop2
 
@@ -2360,7 +2378,7 @@ RestorePPEffect:
 	call ApplyPPUp
 	call Play_SFX_FULL_HEAL
 
-	ld hl, PPsIncreasedText
+	ld hl, TextJump_PPsIncreased
 	call PrintText
 
 FinishPPRestore:
@@ -2383,7 +2401,7 @@ BattleRestorePP:
 
 .not_in_battle
 	call Play_SFX_FULL_HEAL
-	ld hl, PPRestoredText
+	ld hl, UnknownText_0xf739
 	call PrintText
 	jr FinishPPRestore
 
@@ -2481,7 +2499,7 @@ RestorePP:
 	cp b
 	jr nc, .dont_restore
 
-	ld a, [wTempRestorePPItem]
+	ld a, [wd002]
 	cp MAX_ELIXER
 	jr z, .restore_all
 	cp MAX_ETHER
@@ -2512,24 +2530,29 @@ RestorePP:
 	xor a
 	ret
 
-RaiseThePPOfWhichMoveText:
-	text_far _RaiseThePPOfWhichMoveText
+TextJump_RaiseThePPOfWhichMove:
+	; Raise the PP of which move?
+	text_far Text_RaiseThePPOfWhichMove
 	text_end
 
-RestoreThePPOfWhichMoveText:
-	text_far _RestoreThePPOfWhichMoveText
+TextJump_RestoreThePPOfWhichMove:
+	; Restore the PP of which move?
+	text_far Text_RestoreThePPOfWhichMove
 	text_end
 
-PPIsMaxedOutText:
-	text_far _PPIsMaxedOutText
+TextJump_PPIsMaxedOut:
+	; 's PP is maxed out.
+	text_far Text_PPIsMaxedOut
 	text_end
 
-PPsIncreasedText:
-	text_far _PPsIncreasedText
+TextJump_PPsIncreased:
+	; 's PP increased.
+	text_far Text_PPsIncreased
 	text_end
 
-PPRestoredText:
-	text_far _PPRestoredText
+UnknownText_0xf739:
+	; PP was restored.
+	text_far UnknownText_0x1c5cf1
 	text_end
 
 SquirtbottleEffect:
@@ -2561,13 +2584,14 @@ GorgeousBoxEffect:
 OpenBox:
 	farcall SetSpecificDecorationFlag
 
-	ld hl, .SentTrophyHomeText
+	ld hl, .text
 	call PrintText
 
 	jp UseDisposableItem
 
-.SentTrophyHomeText:
-	text_far _SentTrophyHomeText
+.text
+	; There was a trophy inside!
+	text_far UnknownText_0x1c5d03
 	text_end
 
 NoEffect:
@@ -2581,14 +2605,14 @@ Play_SFX_FULL_HEAL:
 	ret
 
 UseItemText:
-	ld hl, ItemUsedText
+	ld hl, UsedItemText
 	call PrintText
 	call Play_SFX_FULL_HEAL
 	call WaitPressAorB_BlinkCursor
 UseDisposableItem:
 	ld hl, wNumItems
 	ld a, 1
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	jp TossItem
 
 UseBallInTrainerBattle:
@@ -2603,14 +2627,14 @@ UseBallInTrainerBattle:
 	ldh [hBattleTurn], a
 	ld [wNumHits], a
 	predef PlayBattleAnim
-	ld hl, BallBlockedText
+	ld hl, BlockedTheBallText
 	call PrintText
-	ld hl, BallDontBeAThiefText
+	ld hl, DontBeAThiefText
 	call PrintText
 	jr UseDisposableItem
 
 WontHaveAnyEffect_NotUsedMessage:
-	ld hl, ItemWontHaveEffectText
+	ld hl, WontHaveAnyEffectText
 	call PrintText
 
 	; Item wasn't used.
@@ -2619,11 +2643,11 @@ WontHaveAnyEffect_NotUsedMessage:
 	ret
 
 LooksBitterMessage:
-	ld hl, ItemLooksBitterText
+	ld hl, LooksBitterText
 	jp PrintText
 
 Ball_BoxIsFullMessage:
-	ld hl, BallBoxFullText
+	ld hl, Ball_BoxIsFullText
 	call PrintText
 
 	; Item wasn't used.
@@ -2632,28 +2656,27 @@ Ball_BoxIsFullMessage:
 	ret
 
 CantUseOnEggMessage:
-	ld hl, ItemCantUseOnEggText
+	ld hl, CantUseOnEggText
 	jr CantUseItemMessage
 
 IsntTheTimeMessage:
-	ld hl, ItemOakWarningText
+	ld hl, IsntTheTimeText
 	jr CantUseItemMessage
 
 WontHaveAnyEffectMessage:
-	ld hl, ItemWontHaveEffectText
+	ld hl, WontHaveAnyEffectText
 	jr CantUseItemMessage
 
-BelongsToSomeoneElseMessage: ; unreferenced
-	ld hl, ItemBelongsToSomeoneElseText
+BelongsToSomeoneElseMessage:
+	ld hl, BelongsToSomeoneElseText
 	jr CantUseItemMessage
 
-CyclingIsntAllowedMessage: ; unreferenced
-	ld hl, NoCyclingText
+CyclingIsntAllowedMessage:
+	ld hl, CyclingIsntAllowedText
 	jr CantUseItemMessage
 
-CantGetOnYourBikeMessage: ; unreferenced
-	ld hl, ItemCantGetOnText
-	; fallthrough
+CantGetOnYourBikeMessage:
+	ld hl, CantGetOnYourBikeText
 
 CantUseItemMessage:
 ; Item couldn't be used.
@@ -2661,68 +2684,81 @@ CantUseItemMessage:
 	ld [wItemEffectSucceeded], a
 	jp PrintText
 
-ItemLooksBitterText:
-	text_far _ItemLooksBitterText
+LooksBitterText:
+	; It looks bitter…
+	text_far UnknownText_0x1c5d3e
 	text_end
 
-ItemCantUseOnEggText:
-	text_far _ItemCantUseOnEggText
+CantUseOnEggText:
+	; That can't be used on an EGG.
+	text_far UnknownText_0x1c5d50
 	text_end
 
-ItemOakWarningText:
-	text_far _ItemOakWarningText
+IsntTheTimeText:
+	; OAK:  ! This isn't the time to use that!
+	text_far UnknownText_0x1c5d6e
 	text_end
 
-ItemBelongsToSomeoneElseText:
-	text_far _ItemBelongsToSomeoneElseText
+BelongsToSomeoneElseText:
+	; That belongs to someone else!
+	text_far UnknownText_0x1c5d97
 	text_end
 
-ItemWontHaveEffectText:
-	text_far _ItemWontHaveEffectText
+WontHaveAnyEffectText:
+	; It won't have any effect.
+	text_far UnknownText_0x1c5db6
 	text_end
 
-BallBlockedText:
-	text_far _BallBlockedText
+BlockedTheBallText:
+	; The trainer blocked the BALL!
+	text_far UnknownText_0x1c5dd0
 	text_end
 
-BallDontBeAThiefText:
-	text_far _BallDontBeAThiefText
+DontBeAThiefText:
+	; Don't be a thief!
+	text_far UnknownText_0x1c5def
 	text_end
 
-NoCyclingText:
-	text_far _NoCyclingText
+CyclingIsntAllowedText:
+	; Cycling isn't allowed here.
+	text_far UnknownText_0x1c5e01
 	text_end
 
-ItemCantGetOnText:
-	text_far _ItemCantGetOnText
+CantGetOnYourBikeText:
+	; Can't get on your @  now.
+	text_far UnknownText_0x1c5e1d
 	text_end
 
-BallBoxFullText:
-	text_far _BallBoxFullText
+Ball_BoxIsFullText:
+	; The #MON BOX is full. That can't be used now.
+	text_far UnknownText_0x1c5e3a
 	text_end
 
-ItemUsedText:
-	text_far _ItemUsedText
+UsedItemText:
+	; used the@ .
+	text_far UnknownText_0x1c5e68
 	text_end
 
-ItemGotOnText: ; unreferenced
-	text_far _ItemGotOnText
+GotOnTheItemText:
+	; got on the@ .
+	text_far UnknownText_0x1c5e7b
 	text_end
 
-ItemGotOffText: ; unreferenced
-	text_far _ItemGotOffText
+GotOffTheItemText:
+	; got off@ the @ .
+	text_far UnknownText_0x1c5e90
 	text_end
 
 ApplyPPUp:
 	ld a, MON_MOVES
 	call GetPartyParamLocation
 	push hl
-	ld de, wPPUpPPBuffer
+	ld de, wBuffer1
 	predef FillPP
 	pop hl
 	ld bc, MON_PP - MON_MOVES
 	add hl, bc
-	ld de, wPPUpPPBuffer
+	ld de, wBuffer1
 	ld b, 0
 .loop
 	inc b

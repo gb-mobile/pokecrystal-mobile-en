@@ -1,16 +1,16 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const MAHOGANYGYM_PRYCE
-	const MAHOGANYGYM_BEAUTY1
+	const MAHOGANYGYM_BUENA1
 	const MAHOGANYGYM_ROCKER1
-	const MAHOGANYGYM_BEAUTY2
+	const MAHOGANYGYM_BUENA2
 	const MAHOGANYGYM_ROCKER2
 	const MAHOGANYGYM_ROCKER3
-	const MAHOGANYGYM_GYM_GUIDE
+	const MAHOGANYGYM_GYM_GUY
 
 MahoganyGym_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 MahoganyGymPryceScript:
 	faceplayer
@@ -41,7 +41,7 @@ MahoganyGymPryceScript:
 	setevent EVENT_BEAT_BOARDER_BRAD
 	setevent EVENT_BEAT_BOARDER_DOUGLAS
 	writetext PryceText_GlacierBadgeSpeech
-	promptbutton
+	buttonsound
 	verbosegiveitem TM_ICY_WIND
 	iffalse MahoganyGym_NoRoomForIcyWind
 	setevent EVENT_GOT_TM16_ICY_WIND
@@ -63,10 +63,10 @@ MahoganyGymActivateRockets:
 	end
 
 .GoldenrodRockets:
-	jumpstd GoldenrodRocketsScript
+	jumpstd goldenrodrockets
 
 .RadioTowerRockets:
-	jumpstd RadioTowerRocketsScript
+	jumpstd radiotowerrockets
 
 TrainerSkierRoxanne:
 	trainer SKIER, ROXANNE, EVENT_BEAT_SKIER_ROXANNE, SkierRoxanneSeenText, SkierRoxanneBeatenText, 0, .Script
@@ -123,18 +123,18 @@ TrainerBoarderDouglas:
 	closetext
 	end
 
-MahoganyGymGuideScript:
+MahoganyGymGuyScript:
 	faceplayer
 	opentext
 	checkevent EVENT_BEAT_PRYCE
-	iftrue .MahoganyGymGuideWinScript
-	writetext MahoganyGymGuideText
+	iftrue .MahoganyGymGuyWinScript
+	writetext MahoganyGymGuyText
 	waitbutton
 	closetext
 	end
 
-.MahoganyGymGuideWinScript:
-	writetext MahoganyGymGuideWinText
+.MahoganyGymGuyWinScript:
+	writetext MahoganyGymGuyWinText
 	waitbutton
 	closetext
 	end
@@ -142,10 +142,10 @@ MahoganyGymGuideScript:
 MahoganyGymStatue:
 	checkflag ENGINE_GLACIERBADGE
 	iftrue .Beaten
-	jumpstd GymStatue1Script
+	jumpstd gymstatue1
 .Beaten:
 	gettrainername STRING_BUFFER_4, PRYCE, PRYCE1
-	jumpstd GymStatue2Script
+	jumpstd gymstatue2
 
 PryceText_Intro:
 	text "#MON have many"
@@ -338,7 +338,7 @@ SkierClarissaAfterBattleText:
 	cont "about my skiing…"
 	done
 
-MahoganyGymGuideText:
+MahoganyGymGuyText:
 	text "PRYCE is a veteran"
 	line "who has trained"
 
@@ -358,7 +358,7 @@ MahoganyGymGuideText:
 	line "ambition!"
 	done
 
-MahoganyGymGuideWinText:
+MahoganyGymGuyWinText:
 	text "PRYCE is some-"
 	line "thing, but you're"
 	cont "something else!"
@@ -373,21 +373,21 @@ MahoganyGymGuideWinText:
 MahoganyGym_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  4, 17, MAHOGANY_TOWN, 3
 	warp_event  5, 17, MAHOGANY_TOWN, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event  3, 15, BGEVENT_READ, MahoganyGymStatue
 	bg_event  6, 15, BGEVENT_READ, MahoganyGymStatue
 
-	def_object_events
+	db 7 ; object events
 	object_event  5,  3, SPRITE_PRYCE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MahoganyGymPryceScript, -1
-	object_event  4,  6, SPRITE_BEAUTY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 1, TrainerSkierRoxanne, -1
+	object_event  4,  6, SPRITE_BUENA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 1, TrainerSkierRoxanne, -1
 	object_event  0, 17, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 1, TrainerBoarderRonald, -1
-	object_event  9, 17, SPRITE_BEAUTY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 1, TrainerSkierClarissa, -1
+	object_event  9, 17, SPRITE_BUENA, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 1, TrainerSkierClarissa, -1
 	object_event  5,  9, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 1, TrainerBoarderBrad, -1
 	object_event  2,  4, SPRITE_ROCKER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 1, TrainerBoarderDouglas, -1
-	object_event  7, 15, SPRITE_GYM_GUIDE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MahoganyGymGuideScript, -1
+	object_event  7, 15, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MahoganyGymGuyScript, -1

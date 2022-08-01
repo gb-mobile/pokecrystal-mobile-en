@@ -6,18 +6,15 @@ PhoneRing_CopyTilemapAtOnce:
 	cp $0
 	jp z, WaitBGMap
 
-; The following is a modified version of _CopyTilemapAtOnce
-; that waits for [rLY] to be LY_VBLANK - 1 instead of $80 - 1.
+; What follows is a modified version of CopyTilemapAtOnce.
 	ldh a, [hBGMapMode]
 	push af
 	xor a
 	ldh [hBGMapMode], a
-
 	ldh a, [hMapAnims]
 	push af
 	xor a
 	ldh [hMapAnims], a
-
 .wait
 	ldh a, [rLY]
 	cp LY_VBLANK - 1
@@ -26,13 +23,12 @@ PhoneRing_CopyTilemapAtOnce:
 	di
 	ld a, BANK(vBGMap2)
 	ldh [rVBK], a
-	hlcoord 0, 0, wAttrmap
-	call .CopyBGMapViaStack
+	hlcoord 0, 0, wAttrMap
+	call .CopyTilemapAtOnce
 	ld a, BANK(vBGMap0)
 	ldh [rVBK], a
 	hlcoord 0, 0
-	call .CopyBGMapViaStack
-
+	call .CopyTilemapAtOnce
 .wait2
 	ldh a, [rLY]
 	cp LY_VBLANK - 1
@@ -45,8 +41,7 @@ PhoneRing_CopyTilemapAtOnce:
 	ldh [hBGMapMode], a
 	ret
 
-.CopyBGMapViaStack:
-; Copy all tiles to vBGMap
+.CopyTilemapAtOnce:
 	ld [hSPBuffer], sp
 	ld sp, hl
 	ldh a, [hBGMapAddress + 1]
@@ -60,12 +55,10 @@ PhoneRing_CopyTilemapAtOnce:
 .loop
 rept SCREEN_WIDTH / 2
 	pop de
-; if in v/hblank, wait until not in v/hblank
 .loop\@
 	ldh a, [c]
 	and b
 	jr nz, .loop\@
-; load vBGMap
 	ld [hl], e
 	inc l
 	ld [hl], d

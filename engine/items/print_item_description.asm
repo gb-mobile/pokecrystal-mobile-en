@@ -11,7 +11,7 @@ PrintItemDescription:
 	pop hl
 	ld a, [wTempTMHM]
 	ld [wCurSpecies], a
-	predef PrintMoveDescription
+	predef PrintMoveDesc
 	ret
 
 .not_a_tm

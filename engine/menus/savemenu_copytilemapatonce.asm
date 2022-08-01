@@ -3,37 +3,33 @@ SaveMenu_CopyTilemapAtOnce:
 	and a
 	jp z, WaitBGMap
 
-; The following is a modified version of _CopyTilemapAtOnce
-; that waits for [rLY] to be $60 instead of $80 - 1.
+; The following is a modified version of CopyTilemapAtOnce.
 	ldh a, [hBGMapMode]
 	push af
 	xor a
 	ldh [hBGMapMode], a
-
 	ldh a, [hMapAnims]
 	push af
 	xor a
 	ldh [hMapAnims], a
-
-.wait
+.WaitLY:
 	ldh a, [rLY]
 	cp $60
-	jr c, .wait
+	jr c, .WaitLY
 
 	di
 	ld a, BANK(vBGMap2)
 	ldh [rVBK], a
-	hlcoord 0, 0, wAttrmap
-	call .CopyBGMapViaStack
+	hlcoord 0, 0, wAttrMap
+	call .CopyTilemapAtOnce
 	ld a, BANK(vBGMap0)
 	ldh [rVBK], a
 	hlcoord 0, 0
-	call .CopyBGMapViaStack
-
-.wait2
+	call .CopyTilemapAtOnce
+.WaitLY2:
 	ldh a, [rLY]
 	cp $60
-	jr c, .wait2
+	jr c, .WaitLY2
 	ei
 
 	pop af
@@ -42,8 +38,7 @@ SaveMenu_CopyTilemapAtOnce:
 	ldh [hBGMapMode], a
 	ret
 
-.CopyBGMapViaStack:
-; Copy all tiles to vBGMap
+.CopyTilemapAtOnce:
 	ld [hSPBuffer], sp
 	ld sp, hl
 	ldh a, [hBGMapAddress + 1]
@@ -51,18 +46,16 @@ SaveMenu_CopyTilemapAtOnce:
 	ld l, 0
 	ld a, SCREEN_HEIGHT
 	ldh [hTilesPerCycle], a
-	ld b, 1 << 1 ; not in v/hblank
+	ld b, 1 << 1
 	ld c, LOW(rSTAT)
 
 .loop
 rept SCREEN_WIDTH / 2
 	pop de
-; if in v/hblank, wait until not in v/hblank
 .loop\@
 	ldh a, [c]
 	and b
 	jr nz, .loop\@
-; load vBGMap
 	ld [hl], e
 	inc l
 	ld [hl], d

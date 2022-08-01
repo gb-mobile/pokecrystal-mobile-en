@@ -1,5 +1,5 @@
-DEF TIMESET_UP_ARROW   EQU "♂" ; $ef
-DEF TIMESET_DOWN_ARROW EQU "♀" ; $f5
+TIMESET_UP_ARROW   EQU "♂" ; $ef
+TIMESET_DOWN_ARROW EQU "♀" ; $f5
 
 InitClock:
 ; Ask the player to set the time.
@@ -19,7 +19,7 @@ InitClock:
 	ld c, 8
 	call DelayFrames
 	call RotateFourPalettesLeft
-	call ClearTilemap
+	call ClearTileMap
 	call ClearSprites
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
@@ -41,7 +41,7 @@ InitClock:
 	call .ClearScreen
 	call WaitBGMap
 	call RotateFourPalettesRight
-	ld hl, OakTimeWokeUpText
+	ld hl, Text_WokeUpOak
 	call PrintText
 	ld hl, wTimeSetBuffer
 	ld bc, wTimeSetBufferEnd - wTimeSetBuffer
@@ -51,7 +51,7 @@ InitClock:
 	ld [wInitHourBuffer], a
 
 .loop
-	ld hl, OakTimeWhatTimeIsItText
+	ld hl, Text_WhatTimeIsIt
 	call PrintText
 	hlcoord 3, 7
 	ld b, 2
@@ -74,7 +74,7 @@ InitClock:
 	ld a, [wInitHourBuffer]
 	ld [wStringBuffer2 + 1], a
 	call .ClearScreen
-	ld hl, OakTimeWhatHoursText
+	ld hl, Text_WhatHrs
 	call PrintText
 	call YesNoBox
 	jr nc, .HourIsSet
@@ -82,7 +82,7 @@ InitClock:
 	jr .loop
 
 .HourIsSet:
-	ld hl, OakTimeHowManyMinutesText
+	ld hl, Text_HowManyMinutes
 	call PrintText
 	hlcoord 11, 7
 	lb bc, 2, 7
@@ -104,7 +104,7 @@ InitClock:
 	ld a, [wInitMinuteBuffer]
 	ld [wStringBuffer2 + 2], a
 	call .ClearScreen
-	ld hl, OakTimeWhoaMinutesText
+	ld hl, Text_WhoaMins
 	call PrintText
 	call YesNoBox
 	jr nc, .MinutesAreSet
@@ -196,7 +196,7 @@ DisplayHourOClock:
 	pop hl
 	ret
 
-DisplayHoursMinutesWithMinString: ; unreferenced
+UnreferencedFunction907f1:
 	ld h, d
 	ld l, e
 	push hl
@@ -273,64 +273,69 @@ SetMinutes:
 
 DisplayMinutesWithMinString:
 	ld de, wInitMinuteBuffer
-	call PrintTwoDigitNumberLeftAlign
+	call PrintTwoDigitNumberRightAlign
 	inc hl
 	ld de, String_min
 	call PlaceString
 	ret
 
-PrintTwoDigitNumberLeftAlign:
+PrintTwoDigitNumberRightAlign:
 	push hl
 	ld a, " "
 	ld [hli], a
 	ld [hl], a
 	pop hl
-	lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	lb bc, PRINTNUM_RIGHTALIGN | 1, 2
 	call PrintNum
 	ret
 
-OakTimeWokeUpText:
-	text_far _OakTimeWokeUpText
+Text_WokeUpOak:
+	; Zzz… Hm? Wha…? You woke me up! Will you check the clock for me?
+	text_far _OakTimeText1
 	text_end
 
-OakTimeWhatTimeIsItText:
-	text_far _OakTimeWhatTimeIsItText
+Text_WhatTimeIsIt:
+	; What time is it?
+	text_far _OakTimeText2
 	text_end
 
 String_oclock:
 	db "o'clock@"
 
-OakTimeWhatHoursText:
+Text_WhatHrs:
 	; What?@ @
-	text_far _OakTimeWhatHoursText
+	text_far _OakTimeText3
 	text_asm
 	hlcoord 1, 16
 	call DisplayHourOClock
-	ld hl, .OakTimeHoursQuestionMarkText
+	ld hl, .QuestionMark
 	ret
 
-.OakTimeHoursQuestionMarkText:
-	text_far _OakTimeHoursQuestionMarkText
+.QuestionMark:
+	; ?
+	text_far _OakTimeText4
 	text_end
 
-OakTimeHowManyMinutesText:
-	text_far _OakTimeHowManyMinutesText
+Text_HowManyMinutes:
+	; How many minutes?
+	text_far _OakTimeText5
 	text_end
 
 String_min:
 	db "min.@"
 
-OakTimeWhoaMinutesText:
+Text_WhoaMins:
 	; Whoa!@ @
-	text_far _OakTimeWhoaMinutesText
+	text_far _OakTimeText6
 	text_asm
 	hlcoord 7, 14
 	call DisplayMinutesWithMinString
-	ld hl, .OakTimeMinutesQuestionMarkText
+	ld hl, .QuestionMark
 	ret
 
-.OakTimeMinutesQuestionMarkText:
-	text_far _OakTimeMinutesQuestionMarkText
+.QuestionMark:
+	; ?
+	text_far _OakTimeText7
 	text_end
 
 OakText_ResponseToSetTime:
@@ -353,26 +358,29 @@ OakText_ResponseToSetTime:
 	jr c, .morn
 	cp NITE_HOUR
 	jr c, .day
-.nite
-	ld hl, .OakTimeSoDarkText
+.nite:
+	ld hl, .sodark
 	ret
-.morn
-	ld hl, .OakTimeOversleptText
+.morn:
+	ld hl, .overslept
 	ret
-.day
-	ld hl, .OakTimeYikesText
+.day:
+	ld hl, .yikes
 	ret
 
-.OakTimeOversleptText:
-	text_far _OakTimeOversleptText
+.overslept
+	; ! I overslept!
+	text_far _OakTimeText8
 	text_end
 
-.OakTimeYikesText:
-	text_far _OakTimeYikesText
+.yikes
+	; ! Yikes! I over- slept!
+	text_far _OakTimeText11
 	text_end
 
-.OakTimeSoDarkText:
-	text_far _OakTimeSoDarkText
+.sodark
+	; ! No wonder it's so dark!
+	text_far _OakTimeText12
 	text_end
 
 TimeSetBackgroundGFX:
@@ -402,7 +410,7 @@ SetDayOfWeek:
 	lb bc, 4, 18
 	call Textbox
 	call LoadStandardMenuHeader
-	ld hl, .OakTimeWhatDayIsItText
+	ld hl, .WhatDayIsItText
 	call PrintText
 	hlcoord 9, 3
 	ld b, 2
@@ -524,19 +532,21 @@ SetDayOfWeek:
 .Friday:    db " FRIDAY@"
 .Saturday:  db "SATURDAY@"
 
-.OakTimeWhatDayIsItText:
-	text_far _OakTimeWhatDayIsItText
+.WhatDayIsItText:
+	; What day is it?
+	text_far _OakTimeText13
 	text_end
 
 .ConfirmWeekdayText:
 	text_asm
 	hlcoord 1, 14
 	call .PlaceWeekdayString
-	ld hl, .OakTimeIsItText
+	ld hl, .IsIt
 	ret
 
-.OakTimeIsItText:
-	text_far _OakTimeIsItText
+.IsIt:
+	; , is it?
+	text_far _OakTimeText14
 	text_end
 
 InitialSetDSTFlag:
@@ -559,11 +569,12 @@ InitialSetDSTFlag:
 	ld c, a
 	decoord 1, 14
 	farcall PrintHoursMins
-	ld hl, .DSTIsThatOKText
+	ld hl, .DSTIsThatOK
 	ret
 
-.DSTIsThatOKText:
-	text_far _DSTIsThatOKText
+.DSTIsThatOK:
+	; DST, is that OK?
+	text_far Text_DSTIsThatOK
 	text_end
 
 InitialClearDSTFlag:
@@ -586,14 +597,15 @@ InitialClearDSTFlag:
 	ld c, a
 	decoord 1, 14
 	farcall PrintHoursMins
-	ld hl, .TimeAskOkayText
+	ld hl, .IsThatOK
 	ret
 
-.TimeAskOkayText:
-	text_far _TimeAskOkayText
+.IsThatOK:
+	; , is that OK?
+	text_far UnknownText_0x1c5ff1
 	text_end
 
-MrChrono: ; unreferenced
+DebugDisplayTime:
 	hlcoord 1, 14
 	lb bc, 3, SCREEN_WIDTH - 2
 	call ClearBox
@@ -653,8 +665,7 @@ MrChrono: ; unreferenced
 	ret
 
 .NowOnDebug:
-	text_start
-	para "Now on DEBUG…"
+	text "<PARA>Now on DEBUG…"
 	prompt
 
 .PrintTime:
@@ -683,9 +694,9 @@ PrintHour:
 	inc hl
 	pop bc
 	call AdjustHourForAMorPM
-	ld [wTextDecimalByte], a
-	ld de, wTextDecimalByte
-	call PrintTwoDigitNumberLeftAlign
+	ld [wDeciramBuffer], a
+	ld de, wDeciramBuffer
+	call PrintTwoDigitNumberRightAlign
 	ret
 
 GetTimeOfDayString:

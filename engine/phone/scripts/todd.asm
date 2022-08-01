@@ -1,6 +1,6 @@
 ToddPhoneCalleeScript:
 	gettrainername STRING_BUFFER_3, CAMPER, TODD1
-	checkflag ENGINE_TODD_READY_FOR_REMATCH
+	checkflag ENGINE_TODD
 	iftrue .WantsBattle
 	farscall PhoneScript_AnswerPhone_Male
 	checkflag ENGINE_TODD_SATURDAY_MORNING
@@ -13,19 +13,19 @@ ToddPhoneCalleeScript:
 .NotSaturday:
 	checkflag ENGINE_GOLDENROD_DEPT_STORE_SALE_IS_ON
 	iftrue .SaleOn
-	farsjump ToddNoItemScript
+	farsjump UnknownScript_0xa0958
 
 .WantsBattle:
-	getlandmarkname STRING_BUFFER_5, LANDMARK_ROUTE_34
-	farsjump ToddForwardScript
+	getlandmarkname STRING_BUFFER_5, ROUTE_34
+	farsjump UnknownScript_0xa0a64
 
 .SaleOn:
-	farsjump ToddHurryScript
+	farsjump UnknownScript_0xa0b04
 
 ToddPhoneCallerScript:
 	gettrainername STRING_BUFFER_3, CAMPER, TODD1
 	farscall PhoneScript_GreetPhone_Male
-	checkflag ENGINE_TODD_READY_FOR_REMATCH
+	checkflag ENGINE_TODD
 	iftrue .TryForSale
 	checkflag ENGINE_TODD_SATURDAY_MORNING
 	iftrue .TryForSale
@@ -47,8 +47,8 @@ ToddSaturdayMorning:
 	setflag ENGINE_TODD_SATURDAY_MORNING
 
 ToddWantsBattle:
-	getlandmarkname STRING_BUFFER_5, LANDMARK_ROUTE_34
-	setflag ENGINE_TODD_READY_FOR_REMATCH
+	getlandmarkname STRING_BUFFER_5, ROUTE_34
+	setflag ENGINE_TODD
 	farsjump PhoneScript_WantsToBattle_Male
 
 ToddFoundRare:
@@ -56,4 +56,4 @@ ToddFoundRare:
 
 ToddDeptStoreSale:
 	setflag ENGINE_GOLDENROD_DEPT_STORE_SALE_IS_ON
-	farsjump ToddItemScript
+	farsjump UnknownScript_0xa0644

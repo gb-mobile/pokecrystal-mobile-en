@@ -69,8 +69,8 @@ MagnetTrain:
 	ld [wRequested2bppSource + 1], a
 	ld [wRequested2bppDest], a
 	ld [wRequested2bppDest + 1], a
-	ld [wRequested2bppSize], a
-	call ClearTilemap
+	ld [wRequested2bpp], a
+	call ClearTileMap
 
 	pop af
 	ldh [hSCY], a
@@ -78,7 +78,6 @@ MagnetTrain:
 	ldh [hSCX], a
 	xor a
 	ldh [hBGMapMode], a
-
 	pop af
 	ldh [rSVBK], a
 	ret
@@ -128,7 +127,7 @@ MagnetTrain_LoadGFX_PlayMusic:
 	ldh [hSCX], a
 	ldh [hSCY], a
 
-	; Load the player sprite's standing frames
+	; Load the player sprite
 	ldh a, [rSVBK]
 	push af
 	ld a, BANK(wPlayerGender)
@@ -140,7 +139,7 @@ MagnetTrain_LoadGFX_PlayMusic:
 	ld c, 4
 	call Request2bpp
 
-	; Load the player sprite's walking frames
+	; Load the trainer walking frame
 	ld hl, 12 tiles
 	add hl, de
 	ld d, h
@@ -272,7 +271,16 @@ SetMagnetTrainPals:
 	ret
 
 MagnetTrain_Jumptable:
-	jumptable .Jumptable, wJumptableIndex
+	ld a, [wJumptableIndex]
+	ld e, a
+	ld d, 0
+	ld hl, .Jumptable
+	add hl, de
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	jp hl
 
 .Jumptable:
 	dw .InitPlayerSpriteAnim
@@ -305,7 +313,7 @@ MagnetTrain_Jumptable:
 	pop af
 	ldh [rSVBK], a
 	ld a, b
-	call InitSpriteAnimStruct
+	call _InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
 	ld [hl], 0

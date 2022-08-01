@@ -202,9 +202,9 @@ EvolveAfterBattle_MasterLoop:
 	ld [wEvolutionNewSpecies], a
 	ld a, [wCurPartyMon]
 	ld hl, wPartyMonNicknames
-	call GetNickname
+	call GetNick
 	call CopyName1
-	ld hl, EvolvingText
+	ld hl, Text_WhatEvolving
 	call PrintText
 
 	ld c, 50
@@ -227,7 +227,7 @@ EvolveAfterBattle_MasterLoop:
 	pop af
 	jp c, CancelEvolution
 
-	ld hl, CongratulationsYourPokemonText
+	ld hl, Text_CongratulationsYourPokemon
 	call PrintText
 
 	pop hl
@@ -236,11 +236,11 @@ EvolveAfterBattle_MasterLoop:
 	ld [wCurSpecies], a
 	ld [wTempMonSpecies], a
 	ld [wEvolutionNewSpecies], a
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 
 	push hl
-	ld hl, EvolvedIntoText
+	ld hl, Text_EvolvedIntoPKMN
 	call PrintTextboxText
 	farcall StubbedTrainerRankings_MonsEvolved
 
@@ -253,7 +253,7 @@ EvolveAfterBattle_MasterLoop:
 	ld c, 40
 	call DelayFrames
 
-	call ClearTilemap
+	call ClearTileMap
 	call UpdateSpeciesNameIfNotNicknamed
 	call GetBaseData
 
@@ -327,7 +327,7 @@ EvolveAfterBattle_MasterLoop:
 	inc hl
 	jp .loop
 
-.UnusedReturnToMap: ; unreferenced
+; unused
 	pop hl
 .ReturnToMap:
 	pop de
@@ -348,7 +348,7 @@ UpdateSpeciesNameIfNotNicknamed:
 	ld a, [wCurSpecies]
 	push af
 	ld a, [wBaseDexNo]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	pop af
 	ld [wCurSpecies], a
@@ -369,7 +369,7 @@ UpdateSpeciesNameIfNotNicknamed:
 	call AddNTimes
 	push hl
 	ld a, [wCurSpecies]
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	ld hl, wStringBuffer1
 	pop de
@@ -377,9 +377,9 @@ UpdateSpeciesNameIfNotNicknamed:
 	jp CopyBytes
 
 CancelEvolution:
-	ld hl, StoppedEvolvingText
+	ld hl, Text_StoppedEvolving
 	call PrintText
-	call ClearTilemap
+	call ClearTileMap
 	pop hl
 	jp EvolveAfterBattle_MasterLoop
 
@@ -394,20 +394,24 @@ IsMonHoldingEverstone:
 	pop hl
 	ret
 
-CongratulationsYourPokemonText:
-	text_far _CongratulationsYourPokemonText
+Text_CongratulationsYourPokemon:
+	; Congratulations! Your @ @
+	text_far UnknownText_0x1c4b92
 	text_end
 
-EvolvedIntoText:
-	text_far _EvolvedIntoText
+Text_EvolvedIntoPKMN:
+	; evolved into @ !
+	text_far UnknownText_0x1c4baf
 	text_end
 
-StoppedEvolvingText:
-	text_far _StoppedEvolvingText
+Text_StoppedEvolving:
+	; Huh? @ stopped evolving!
+	text_far UnknownText_0x1c4bc5
 	text_end
 
-EvolvingText:
-	text_far _EvolvingText
+Text_WhatEvolving:
+	; What? @ is evolving!
+	text_far UnknownText_0x1c4be3
 	text_end
 
 LearnLevelMoves:
@@ -462,7 +466,7 @@ LearnLevelMoves:
 .learn
 	ld a, d
 	ld [wPutativeTMHMMove], a
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	call GetMoveName
 	call CopyName1
 	predef LearnMove
@@ -509,10 +513,10 @@ FillMoves:
 	ld a, [wCurPartyLevel]
 	cp b
 	jp c, .done
-	ld a, [wSkipMovesBeforeLevelUp]
+	ld a, [wEvolutionOldSpecies]
 	and a
 	jr z, .CheckMove
-	ld a, [wPrevPartyLevel]
+	ld a, [wd002]
 	cp b
 	jr nc, .GetMove
 

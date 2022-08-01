@@ -14,11 +14,11 @@ CanLearnTMHMMove:
 	and a
 	jr z, .end
 	cp b
-	jr z, .found
+	jr z, .asm_11659
 	inc c
 	jr .loop
 
-.found
+.asm_11659
 	pop hl
 	ld b, CHECK_FLAG
 	push de

@@ -8,9 +8,9 @@ SelectQuantityToBuy:
 	farcall GetItemPrice
 RooftopSale_SelectQuantityToBuy:
 	ld a, d
-	ld [wBuySellItemPrice + 0], a
+	ld [wBuffer1], a
 	ld a, e
-	ld [wBuySellItemPrice + 1], a
+	ld [wBuffer2], a
 	ld hl, BuyItem_MenuHeader
 	call LoadMenuHeader
 	call Toss_Sell_Loop
@@ -19,9 +19,9 @@ RooftopSale_SelectQuantityToBuy:
 SelectQuantityToSell:
 	farcall GetItemPrice
 	ld a, d
-	ld [wBuySellItemPrice + 0], a
+	ld [wBuffer1], a
 	ld a, e
-	ld [wBuySellItemPrice + 1], a
+	ld [wBuffer2], a
 	ld hl, SellItem_MenuHeader
 	call LoadMenuHeader
 	call Toss_Sell_Loop
@@ -29,7 +29,7 @@ SelectQuantityToSell:
 
 Toss_Sell_Loop:
 	ld a, 1
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 .loop
 	call BuySellToss_UpdateQuantityDisplay ; update display
 	call BuySellToss_InterpretJoypad       ; joy action
@@ -71,10 +71,10 @@ BuySellToss_InterpretJoypad:
 	ret
 
 .down
-	ld hl, wItemQuantityChange
+	ld hl, wItemQuantityChangeBuffer
 	dec [hl]
 	jr nz, .finish_down
-	ld a, [wItemQuantity]
+	ld a, [wItemQuantityBuffer]
 	ld [hl], a
 
 .finish_down
@@ -82,9 +82,9 @@ BuySellToss_InterpretJoypad:
 	ret
 
 .up
-	ld hl, wItemQuantityChange
+	ld hl, wItemQuantityChangeBuffer
 	inc [hl]
-	ld a, [wItemQuantity]
+	ld a, [wItemQuantityBuffer]
 	cp [hl]
 	jr nc, .finish_up
 	ld [hl], 1
@@ -94,7 +94,7 @@ BuySellToss_InterpretJoypad:
 	ret
 
 .left
-	ld a, [wItemQuantityChange]
+	ld a, [wItemQuantityChangeBuffer]
 	sub 10
 	jr c, .load_1
 	jr z, .load_1
@@ -104,22 +104,22 @@ BuySellToss_InterpretJoypad:
 	ld a, 1
 
 .finish_left
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	and a
 	ret
 
 .right
-	ld a, [wItemQuantityChange]
+	ld a, [wItemQuantityChangeBuffer]
 	add 10
 	ld b, a
-	ld a, [wItemQuantity]
+	ld a, [wItemQuantityBuffer]
 	cp b
 	jr nc, .finish_right
 	ld b, a
 
 .finish_right
 	ld a, b
-	ld [wItemQuantityChange], a
+	ld [wItemQuantityChangeBuffer], a
 	and a
 	ret
 
@@ -130,7 +130,7 @@ BuySellToss_UpdateQuantityDisplay:
 	add hl, de
 	ld [hl], "×"
 	inc hl
-	ld de, wItemQuantityChange
+	ld de, wItemQuantityChangeBuffer
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 2
 	call PrintNum
 	ld a, [wMenuDataPointer]
@@ -141,8 +141,7 @@ BuySellToss_UpdateQuantityDisplay:
 	call FarCall_de
 	ret
 
-NoPriceToDisplay:
-; Does nothing.
+ret_25097:
 	ret
 
 DisplayPurchasePrice:
@@ -159,11 +158,11 @@ DisplaySellingPrice:
 BuySell_MultiplyPrice:
 	xor a
 	ldh [hMultiplicand + 0], a
-	ld a, [wBuySellItemPrice + 0]
+	ld a, [wBuffer1]
 	ldh [hMultiplicand + 1], a
-	ld a, [wBuySellItemPrice + 1]
+	ld a, [wBuffer2]
 	ldh [hMultiplicand + 2], a
-	ld a, [wItemQuantityChange]
+	ld a, [wItemQuantityChangeBuffer]
 	ldh [hMultiplier], a
 	push hl
 	call Multiply
@@ -205,7 +204,7 @@ BuySell_DisplaySubtotal:
 TossItem_MenuHeader:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 15, 9, SCREEN_WIDTH - 1, TEXTBOX_Y - 1
-	dw NoPriceToDisplay
+	dw ret_25097
 	db 0 ; default option
 
 BuyItem_MenuHeader:

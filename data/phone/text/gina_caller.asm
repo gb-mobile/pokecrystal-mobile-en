@@ -1,4 +1,4 @@
-GinaGettingInSyncWithMonText:
+UnknownText_0x1771fd:
 	text "My @"
 	text_ram wStringBuffer4
 	text " and"
@@ -8,7 +8,7 @@ GinaGettingInSyncWithMonText:
 	line "other."
 	done
 
-GinaDefeatedMonText:
+UnknownText_0x177237:
 	text "We battled a wild"
 	line "@"
 	text_ram wStringBuffer4
@@ -21,7 +21,7 @@ GinaDefeatedMonText:
 	line "the groove!"
 	done
 
-GinaLostAMonText:
+UnknownText_0x177297:
 	text "But, you know?"
 
 	para "I still haven't"
@@ -33,7 +33,7 @@ GinaLostAMonText:
 	line "frustrating…"
 	done
 
-GinaBattleRematchText:
+UnknownText_0x1772e2:
 	text "Would you be my"
 	line "practice partner"
 	cont "again sometime?"
@@ -48,12 +48,12 @@ GinaBattleRematchText:
 	cont "me next time?"
 	done
 
-GinaHangUpText:
+UnknownText_0x177361:
 	text "Bye! Let's chat"
 	line "again!"
 	done
 
-GinaRocketTakeoverRumorText:
+UnknownText_0x177378:
 	text "Have you heard"
 	line "about TEAM ROCKET?"
 
@@ -65,7 +65,7 @@ GinaRocketTakeoverRumorText:
 	line "inside safe?"
 	done
 
-GinaFoundItemText:
+UnknownText_0x1773e7:
 	text "I picked up some-"
 	line "thing nice today."
 
@@ -81,7 +81,7 @@ GinaFoundItemText:
 	line "where I am."
 	done
 
-GinaHaventFoundAnythingYetText:
+UnknownText_0x177465:
 	text "Sorry, I haven't"
 	line "found anything"
 
@@ -92,7 +92,7 @@ GinaHaventFoundAnythingYetText:
 	line "can have it!"
 	done
 
-GinaReminderText:
+UnknownText_0x1774c1:
 	text "Oh, <PLAY_G>!"
 	line "How soon can I"
 
@@ -105,7 +105,7 @@ GinaReminderText:
 	text "!"
 	done
 
-GinaComePickUpText:
+UnknownText_0x17750e:
 	text "I'm getting really"
 	line "impatient, waiting"
 

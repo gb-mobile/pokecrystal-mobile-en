@@ -1,8 +1,8 @@
-DEF MANIA_OT_ID EQU 00518
+MANIA_OT_ID EQU 00518
 
 GiveShuckle:
 ; Adding to the party.
-	xor a ; PARTYMON
+	xor a
 	ld [wMonType], a
 
 ; Level 15 Shuckle.
@@ -15,7 +15,7 @@ GiveShuckle:
 	jr nc, .NotGiven
 
 ; Caught data.
-	ld b, CAUGHT_BY_UNKNOWN
+	ld b, 0
 	farcall SetGiftPartyMonCaughtData
 
 ; Holding a Berry.
@@ -42,13 +42,13 @@ GiveShuckle:
 	dec a
 	ld hl, wPartyMonNicknames
 	call SkipNames
-	ld de, SpecialShuckleNickname
+	ld de, SpecialShuckleNick
 	call CopyName2
 
 ; OT.
 	ld a, [wPartyCount]
 	dec a
-	ld hl, wPartyMonOTs
+	ld hl, wPartyMonOT
 	call SkipNames
 	ld de, SpecialShuckleOT
 	call CopyName2
@@ -68,10 +68,10 @@ GiveShuckle:
 SpecialShuckleOT:
 	db "MANIA@"
 
-SpecialShuckleNickname:
+SpecialShuckleNick:
 	db "SHUCKIE@"
 
-ReturnShuckie:
+ReturnShuckle:
 	farcall SelectMonFromParty
 	jr c, .refused
 
@@ -94,7 +94,7 @@ ReturnShuckie:
 
 ; OT
 	ld a, [wCurPartyMon]
-	ld hl, wPartyMonOTs
+	ld hl, wPartyMonOT
 	call SkipNames
 	ld de, SpecialShuckleOT
 .CheckOT:

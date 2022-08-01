@@ -8,7 +8,7 @@ ToddLooksCuteLikeMeText:
 	line "getting cuter!"
 	done
 
-ToddDefeatedMonText:
+UnknownText_0x176e9c:
 	text "And, you know?"
 
 	para "Now we can KO"
@@ -20,7 +20,7 @@ ToddDefeatedMonText:
 	line "the GOLDENROD GYM."
 	done
 
-ToddLostAMonText:
+UnknownText_0x176eee:
 	text "And, you know?"
 	line "We just failed to"
 
@@ -36,7 +36,7 @@ ToddLostAMonText:
 	line "yet…"
 	done
 
-ToddBattleRematchText:
+UnknownText_0x176f60:
 	text "You must be a lot"
 	line "better now, huh?"
 
@@ -52,11 +52,11 @@ ToddBattleRematchText:
 	text "."
 	done
 
-ToddHangUpText:
+UnknownText_0x176fdb:
 	text "See you later!"
 	done
 
-ToddDepartmentStoreBargainSaleText:
+UnknownText_0x176feb:
 	text "This is it--the"
 	line "one we've all been"
 	cont "waiting for!"
@@ -82,7 +82,7 @@ ToddDepartmentStoreBargainSaleText:
 	cont "soon as you can!"
 	done
 
-ToddSavingUpForBargainSaleText:
+UnknownText_0x1770fb:
 	text "I'm saving up for"
 	line "the next bargain"
 
@@ -90,7 +90,7 @@ ToddSavingUpForBargainSaleText:
 	line "next one?"
 	done
 
-ToddLookingForwardToBattleText:
+UnknownText_0x177138:
 	text "Where are you?"
 
 	para "Let's have our"
@@ -102,7 +102,7 @@ ToddLookingForwardToBattleText:
 	text "."
 	done
 
-ToddHaveYouGoneToDepartmentStoreText:
+UnknownText_0x17717c:
 	text "Haven't you gone"
 	line "to GOLDENROD DEPT."
 

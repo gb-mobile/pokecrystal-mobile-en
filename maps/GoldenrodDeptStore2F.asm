@@ -1,4 +1,4 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const GOLDENRODDEPTSTORE2F_CLERK1
 	const GOLDENRODDEPTSTORE2F_CLERK2
 	const GOLDENRODDEPTSTORE2F_YOUNGSTER
@@ -6,9 +6,9 @@
 	const GOLDENRODDEPTSTORE2F_GENTLEMAN
 
 GoldenrodDeptStore2F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 GoldenrodDeptStore2FClerk1Script:
 	faceplayer
@@ -37,9 +37,10 @@ GoldenrodDeptStore2FDirectory:
 	jumptext GoldenrodDeptStore2FDirectoryText
 
 GoldenrodDeptStore2FElevatorButton:
-	jumpstd ElevatorButtonScript
+	jumpstd elevatorbutton
 
-GoldenrodDeptStore2FUnusedText1: ; unreferenced
+GoldenrodDeptStore2FUnusedText1:
+; unused
 	text "We intend to sell"
 	line "items for #MON"
 	cont "to hold."
@@ -49,7 +50,8 @@ GoldenrodDeptStore2FUnusedText1: ; unreferenced
 	cont "MON hold it."
 	done
 
-GoldenrodDeptStore2FUnusedText2: ; unreferenced
+GoldenrodDeptStore2FUnusedText2:
+; unused
 	text "By giving #MON"
 	line "items to hold, I"
 
@@ -99,18 +101,18 @@ GoldenrodDeptStore2FDirectoryText:
 GoldenrodDeptStore2F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event 12,  0, GOLDENROD_DEPT_STORE_3F, 1
 	warp_event 15,  0, GOLDENROD_DEPT_STORE_1F, 3
 	warp_event  2,  0, GOLDENROD_DEPT_STORE_ELEVATOR, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 2 ; bg events
 	bg_event 14,  0, BGEVENT_READ, GoldenrodDeptStore2FDirectory
 	bg_event  3,  0, BGEVENT_READ, GoldenrodDeptStore2FElevatorButton
 
-	def_object_events
+	db 5 ; object events
 	object_event 13,  5, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, GoldenrodDeptStore2FClerk1Script, -1
 	object_event 13,  6, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, GoldenrodDeptStore2FClerk2Script, -1
 	object_event  9,  6, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, GoldenrodDeptStore2FYoungsterScript, -1

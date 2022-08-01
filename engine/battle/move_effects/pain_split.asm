@@ -1,4 +1,6 @@
 BattleCommand_PainSplit:
+; painsplit
+
 	ld a, [wAttackMissed]
 	and a
 	jp nz, .ButItFailed
@@ -14,13 +16,13 @@ BattleCommand_PainSplit:
 	predef AnimateHPBar
 	ld hl, wEnemyMonHP
 	ld a, [hli]
-	ld [wHPBuffer2 + 1], a
+	ld [wBuffer4], a
 	ld a, [hli]
-	ld [wHPBuffer2], a
+	ld [wBuffer3], a
 	ld a, [hli]
-	ld [wHPBuffer1 + 1], a
+	ld [wBuffer2], a
 	ld a, [hl]
-	ld [wHPBuffer1], a
+	ld [wBuffer1], a
 	call .EnemyShareHP
 	xor a
 	ld [wWhichHPBar], a
@@ -34,14 +36,14 @@ BattleCommand_PainSplit:
 
 .PlayerShareHP:
 	ld a, [hld]
-	ld [wHPBuffer1], a
+	ld [wBuffer1], a
 	ld a, [hld]
-	ld [wHPBuffer1 + 1], a
+	ld [wBuffer2], a
 	ld a, [hld]
 	ld b, a
-	ld [wHPBuffer2], a
+	ld [wBuffer3], a
 	ld a, [hl]
-	ld [wHPBuffer2 + 1], a
+	ld [wBuffer4], a
 	dec de
 	dec de
 	ld a, [de]
@@ -81,10 +83,10 @@ BattleCommand_PainSplit:
 .skip
 	ld a, c
 	ld [hld], a
-	ld [wHPBuffer3], a
+	ld [wBuffer5], a
 	ld a, b
 	ld [hli], a
-	ld [wHPBuffer3 + 1], a
+	ld [wBuffer6], a
 	ret
 
 .ButItFailed:

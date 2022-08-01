@@ -1,4 +1,5 @@
 BattleCommand_Attract:
+; attract
 	ld a, [wAttackMissed]
 	and a
 	jr nz, .failed

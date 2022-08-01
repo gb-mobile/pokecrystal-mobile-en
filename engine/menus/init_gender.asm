@@ -10,11 +10,12 @@ InitCrystalData:
 	ld [wd478], a
 	ld [wd002], a
 	ld [wd003], a
+	; could have done "ld a, [wd479] \ and %11111100", saved four operations
 	ld a, [wd479]
-	res 0, a ; ???
+	res 0, a
 	ld [wd479], a
 	ld a, [wd479]
-	res 1, a ; ???
+	res 1, a
 	ld [wd479], a
 	ret
 
@@ -26,7 +27,7 @@ InitGender:
 	call LoadGenderScreenLightBlueTile
 	call WaitBGMap2
 	call SetPalettes
-	ld hl, AreYouABoyOrAreYouAGirlText
+	ld hl, TextJump_AreYouABoyOrAreYouAGirl
 	call PrintText
 	ld hl, .MenuHeader
 	call LoadMenuHeader
@@ -52,16 +53,17 @@ InitGender:
 	db "Boy@"
 	db "Girl@"
 
-AreYouABoyOrAreYouAGirlText:
-	text_far _AreYouABoyOrAreYouAGirlText
+TextJump_AreYouABoyOrAreYouAGirl:
+	; Are you a boy? Or are you a girl?
+	text_far Text_AreYouABoyOrAreYouAGirl
 	text_end
 
 InitGenderScreen:
 	ld a, $10
 	ld [wMusicFade], a
-	ld a, LOW(MUSIC_NONE)
+	ld a, MUSIC_NONE
 	ld [wMusicFadeID], a
-	ld a, HIGH(MUSIC_NONE)
+	ld a, $0
 	ld [wMusicFadeID + 1], a
 	ld c, 8
 	call DelayFrames
@@ -72,7 +74,7 @@ InitGenderScreen:
 	ld bc, SCREEN_HEIGHT * SCREEN_WIDTH
 	ld a, $0
 	call ByteFill
-	hlcoord 0, 0, wAttrmap
+	hlcoord 0, 0, wAttrMap
 	ld bc, SCREEN_HEIGHT * SCREEN_WIDTH
 	xor a
 	call ByteFill

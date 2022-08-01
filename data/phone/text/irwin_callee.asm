@@ -1,4 +1,4 @@
-IrwinAnswerPhoneText:
+UnknownText_0x1b638c:
 	text "Hello? @"
 	text_ram wStringBuffer3
 	text_start
@@ -7,7 +7,7 @@ IrwinAnswerPhoneText:
 	para "Hey, <PLAY_G>!"
 	done
 
-IrwinAnswerPhoneDayText:
+UnknownText_0x1b63a8:
 	text "Hello? @"
 	text_ram wStringBuffer3
 	text_start
@@ -16,7 +16,7 @@ IrwinAnswerPhoneDayText:
 	para "Wow, <PLAY_G>!"
 	done
 
-IrwinAnswerPhoneNiteText:
+UnknownText_0x1b63c4:
 	text "Hello? @"
 	text_ram wStringBuffer3
 	text_start
@@ -25,7 +25,7 @@ IrwinAnswerPhoneNiteText:
 	para "Yippee, <PLAY_G>!"
 	done
 
-IrwinGreetText:
+UnknownText_0x1b63e3:
 	text "Uh, hello."
 	line "<PLAY_G>?"
 
@@ -35,7 +35,7 @@ IrwinGreetText:
 	text "!"
 	done
 
-IrwinGreetDayText:
+UnknownText_0x1b6407:
 	text "Uh, hello,"
 	line "<PLAY_G>?"
 
@@ -45,7 +45,7 @@ IrwinGreetDayText:
 	text "!"
 	done
 
-IrwinGreetNiteText:
+UnknownText_0x1b642c:
 	text "Uh, hello,"
 	line "<PLAY_G>?"
 

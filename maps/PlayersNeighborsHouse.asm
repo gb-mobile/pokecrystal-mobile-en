@@ -1,11 +1,11 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const PLAYERSNEIGHBORSHOUSE_COOLTRAINER_F
 	const PLAYERSNEIGHBORSHOUSE_POKEFAN_F
 
 PlayersNeighborsHouse_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 PlayersNeighborsDaughterScript:
 	jumptextfaceplayer PlayersNeighborsDaughterText
@@ -14,7 +14,7 @@ PlayersNeighborScript:
 	jumptextfaceplayer PlayersNeighborText
 
 PlayersNeighborsHouseBookshelfScript:
-	jumpstd MagazineBookshelfScript
+	jumpstd magazinebookshelf
 
 PlayersNeighborsHouseRadioScript:
 	checkevent EVENT_GOT_A_POKEMON_FROM_ELM
@@ -36,7 +36,7 @@ PlayersNeighborsHouseRadioScript:
 	setevent EVENT_LISTENED_TO_INITIAL_RADIO
 	end
 .NormalRadio:
-	jumpstd Radio1Script
+	jumpstd radio1
 .AbbreviatedRadio:
 	opentext
 	writetext PlayerNeighborRadioText4
@@ -99,17 +99,17 @@ PlayerNeighborRadioText4:
 PlayersNeighborsHouse_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, NEW_BARK_TOWN, 3
 	warp_event  3,  7, NEW_BARK_TOWN, 3
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event  0,  1, BGEVENT_READ, PlayersNeighborsHouseBookshelfScript
 	bg_event  1,  1, BGEVENT_READ, PlayersNeighborsHouseBookshelfScript
 	bg_event  7,  1, BGEVENT_READ, PlayersNeighborsHouseRadioScript
 
-	def_object_events
+	db 2 ; object events
 	object_event  2,  3, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, PlayersNeighborsDaughterScript, -1
 	object_event  5,  3, SPRITE_POKEFAN_F, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, PlayersNeighborScript, EVENT_PLAYERS_NEIGHBORS_HOUSE_NEIGHBOR

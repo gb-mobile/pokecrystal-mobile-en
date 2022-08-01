@@ -41,9 +41,9 @@ LoadMenuMonIcon:
 	dw Trade_LoadMonIconGFX             ; MONICON_TRADE
 	dw Mobile_InitAnimatedMonIcon       ; MONICON_MOBILE1
 	dw Mobile_InitPartyMenuBGPal71      ; MONICON_MOBILE2
-	dw Unused_GetPartyMenuMonIcon       ; MONICON_UNUSED
+	dw .GetPartyMenuMonIcon             ; MONICON_UNUSED
 
-Unused_GetPartyMenuMonIcon:
+.GetPartyMenuMonIcon:
 	call InitPartyMenuIcon
 	call .GetPartyMonItemGFX
 	call SetPartyMonIconAnimSpeed
@@ -51,7 +51,7 @@ Unused_GetPartyMenuMonIcon:
 
 .GetPartyMonItemGFX:
 	push bc
-	ldh a, [hObjectStructIndex]
+	ldh a, [hObjectStructIndexBuffer]
 	ld hl, wPartyMon1Item
 	ld bc, PARTYMON_STRUCT_LENGTH
 	call AddNTimes
@@ -88,11 +88,11 @@ Mobile_InitAnimatedMonIcon:
 	ld [hl], a
 	ld hl, SPRITEANIMSTRUCT_XCOORD
 	add hl, bc
-	ld a, 9 * 8
+	ld a, 6 * 8
 	ld [hl], a
 	ld hl, SPRITEANIMSTRUCT_YCOORD
 	add hl, bc
-	ld a, 9 * 8
+	ld a, 16 * 8
 	ld [hl], a
 	ret
 
@@ -109,7 +109,7 @@ Mobile_InitPartyMenuBGPal71:
 	ld [hl], a
 	ld hl, SPRITEANIMSTRUCT_YCOORD
 	add hl, bc
-	ld a, 12 * 8
+	ld a, 9 * 8
 	ld [hl], a
 	ld a, c
 	ld [wc608], a
@@ -125,7 +125,7 @@ PartyMenu_InitAnimatedMonIcon:
 
 .SpawnItemIcon:
 	push bc
-	ldh a, [hObjectStructIndex]
+	ldh a, [hObjectStructIndexBuffer]
 	ld hl, wPartyMon1Item
 	ld bc, PARTYMON_STRUCT_LENGTH
 	call AddNTimes
@@ -154,7 +154,7 @@ PartyMenu_InitAnimatedMonIcon:
 InitPartyMenuIcon:
 	ld a, [wCurIconTile]
 	push af
-	ldh a, [hObjectStructIndex]
+	ldh a, [hObjectStructIndexBuffer]
 	ld hl, wPartySpecies
 	ld e, a
 	ld d, 0
@@ -163,7 +163,7 @@ InitPartyMenuIcon:
 	call ReadMonMenuIcon
 	ld [wCurIcon], a
 	call GetMemIconGFX
-	ldh a, [hObjectStructIndex]
+	ldh a, [hObjectStructIndexBuffer]
 ; y coord
 	add a
 	add a
@@ -175,7 +175,7 @@ InitPartyMenuIcon:
 	ld e, $10
 ; type is partymon icon
 	ld a, SPRITE_ANIM_INDEX_PARTY_MON
-	call _InitSpriteAnimStruct
+	call InitSpriteAnimStruct
 	pop af
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
@@ -184,7 +184,7 @@ InitPartyMenuIcon:
 
 SetPartyMonIconAnimSpeed:
 	push bc
-	ldh a, [hObjectStructIndex]
+	ldh a, [hObjectStructIndexBuffer]
 	ld b, a
 	call .getspeed
 	ld a, b
@@ -194,7 +194,7 @@ SetPartyMonIconAnimSpeed:
 	ld [hl], a
 	rlca
 	rlca
-	ld hl, SPRITEANIMSTRUCT_VAR2
+	ld hl, SPRITEANIMSTRUCT_0D
 	add hl, bc
 	ld [hl], a
 	ret
@@ -222,7 +222,7 @@ NamingScreen_InitAnimatedMonIcon:
 	call GetIconGFX
 	depixel 4, 4, 4, 0
 	ld a, SPRITE_ANIM_INDEX_PARTY_MON
-	call _InitSpriteAnimStruct
+	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_ANIM_SEQ_ID
 	add hl, bc
 	ld [hl], SPRITE_ANIM_SEQ_NULL
@@ -237,7 +237,7 @@ MoveList_InitAnimatedMonIcon:
 	ld d, 3 * 8 + 2 ; depixel 3, 4, 2, 4
 	ld e, 4 * 8 + 4
 	ld a, SPRITE_ANIM_INDEX_PARTY_MON
-	call _InitSpriteAnimStruct
+	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_ANIM_SEQ_ID
 	add hl, bc
 	ld [hl], SPRITE_ANIM_SEQ_NULL
@@ -273,7 +273,7 @@ FlyFunction_GetMonIcon:
 	call GetIcon_a
 	ret
 
-GetMonIconDE: ; unreferenced
+Unreferenced_GetMonIcon2:
 	push de
 	ld a, [wTempIconSpecies]
 	call ReadMonMenuIcon
@@ -347,7 +347,7 @@ GetGFXUnlessMobile:
 	ld a, [wLinkMode]
 	cp LINK_MOBILE
 	jp nz, Request2bpp
-	jp Get2bppViaHDMA
+	jp Get2bpp_2
 
 FreezeMonIcons:
 	ld hl, wSpriteAnimationStructs

@@ -1,4 +1,4 @@
-ArnieMonIsSoCuteText:
+ArnieLovesTheCuteText:
 	text "I'm always with my"
 	line "@"
 	text_ram wStringBuffer4
@@ -8,7 +8,7 @@ ArnieMonIsSoCuteText:
 	line "I just love it!"
 	done
 
-ArnieDefeatedMonText:
+UnknownText_0x64a13:
 	text "Changing the topic"
 	line "here, I saw this"
 
@@ -21,7 +21,7 @@ ArnieDefeatedMonText:
 	line "beat, actually."
 	done
 
-ArnieLostAMonText:
+UnknownText_0x64a71:
 	text "I was wondering,"
 	line "do you happen to"
 	cont "have @"
@@ -35,7 +35,7 @@ ArnieLostAMonText:
 	line "wonder."
 	done
 
-ArnieBattleRematchText:
+UnknownText_0x64ada:
 	text "Hey, let's battle"
 	line "our #MON!"
 
@@ -51,12 +51,12 @@ ArnieBattleRematchText:
 	text "!"
 	done
 
-ArnieHangUpText:
+UnknownText_0x64b48:
 	text "Let's talk again,"
 	line "huh?"
 	done
 
-ArnieSwarmText:
+UnknownText_0x64b5f:
 	text "Boy, am I glad I"
 	line "caught you!"
 
@@ -74,7 +74,7 @@ ArnieSwarmText:
 	line "this!"
 	done
 
-ArnieHaventSeenRareMonText:
+UnknownText_0x64bc6:
 	text "I haven't had any"
 	line "luck seeing rare"
 	cont "#MON lately…"
@@ -83,7 +83,7 @@ ArnieHaventSeenRareMonText:
 	line "out there!"
 	done
 
-ArnieReminderText:
+UnknownText_0x64c13:
 	text "Hey, where are you"
 	line "now?"
 
@@ -94,7 +94,7 @@ ArnieReminderText:
 	text "!"
 	done
 
-ArnieHurryText:
+UnknownText_0x64c5a:
 	text "Hello? Are you"
 	line "coming or what?"
 

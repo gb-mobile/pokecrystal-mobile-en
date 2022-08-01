@@ -1,4 +1,6 @@
 BattleCommand_Mimic:
+; mimic
+
 	call ClearLastMove
 	call BattleCommand_MoveDelay
 	ld a, [wAttackMissed]
@@ -35,13 +37,13 @@ BattleCommand_Mimic:
 	ld a, BATTLE_VARS_LAST_COUNTER_MOVE_OPP
 	call GetBattleVar
 	ld [hl], a
-	ld [wNamedObjectIndex], a
+	ld [wNamedObjectIndexBuffer], a
 	ld bc, wBattleMonPP - wBattleMonMoves
 	add hl, bc
 	ld [hl], 5
 	call GetMoveName
 	call AnimateCurrentMove
-	ld hl, MimicLearnedMoveText
+	ld hl, LearnedMoveText
 	jp StdBattleTextbox
 
 .fail

@@ -156,7 +156,7 @@ Until this document is filled out, the [G/S Scripting Compendium](https://hax.ii
 ## `$2C`: <code>checkpoke <i>mon_id</i></code>
 
 
-## `$2D`: <code>givepoke <i>mon_id</i>, <i>level</i>[, <i>item</i>=0[, <i>ot_name</i>, <i>nickname</i>]]</code>
+## `$2D`: <code>givepoke <i>mon_id</i>, <i>level</i>[, <i>item</i>=0[, <i>trainer</i>=0, <i>ot_name</i>, <i>nickname</i>]]</code>
 
 
 ## `$2E`: <code>giveegg <i>mon_id</i>, <i>level</i></code>
@@ -263,9 +263,9 @@ If <code><i>item_id</i></code> = `USE_SCRIPT_VAR`, then it uses `[wScriptVar]` i
 ## `$49`: `closetext`
 
 
-## `$4A`: <code>writeunusedbyte <i>byte</i></code>
+## `$4A`: <code>writeunusedbytebuffer <i>byte</i></code>
 
-<code>[<i>wUnusedScriptByte</i>] = <i>byte</i></code>
+<code>[<i>wUnusedScriptByteBuffer</i>] = <i>byte</i></code>
 
 
 ## `$4B`: <code>farwritetext <i>text_pointer</i></code>
@@ -298,7 +298,7 @@ If <code><i>item_id</i></code> = `USE_SCRIPT_VAR`, then it uses `[wScriptVar]` i
 ## `$54`: `waitbutton`
 
 
-## `$55`: `promptbutton`
+## `$55`: `buttonsound`
 
 
 ## `$56`: <code>pokepic <i>mon_id</i></code>
@@ -470,7 +470,7 @@ If <code><i>item_id</i></code> = `USE_SCRIPT_VAR`, then it uses `[wScriptVar]` i
 ## `$8C`: <code>deactivatefacing <i>length</i></code>
 
 
-## `$8D`: <code>sdefer <i>script</i></code>
+## `$8D`: <code>prioritysjump <i>script</i></code>
 
 
 ## `$8E`: `warpcheck`
@@ -479,13 +479,13 @@ If <code><i>item_id</i></code> = `USE_SCRIPT_VAR`, then it uses `[wScriptVar]` i
 ## `$8F`: <code>stopandsjump <i>script</i></code>
 
 
-## `$90`: `endcallback`
+## `$90`: `return`
 
 
 ## `$91`: `end`
 
 
-## `$92`: <code>reloadend <i>which_method</i></code>
+## `$92`: <code>reloadandreturn <i>which_method</i></code>
 
 
 ## `$93`: `endall`

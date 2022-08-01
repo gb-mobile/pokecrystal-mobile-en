@@ -1,4 +1,4 @@
-JackAnswerPhoneText:
+UnknownText_0x1b4dc5:
 	text "Hello. This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -8,7 +8,7 @@ JackAnswerPhoneText:
 	line "<PLAY_G>!"
 	done
 
-JackAnswerPhoneDayText:
+UnknownText_0x1b4ded:
 	text "Hello. This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -18,7 +18,7 @@ JackAnswerPhoneDayText:
 	line "<PLAY_G>?"
 	done
 
-JackAnswerPhoneNiteText:
+UnknownText_0x1b4e16:
 	text "Hello. This is"
 	line "@"
 	text_ram wStringBuffer3
@@ -28,7 +28,7 @@ JackAnswerPhoneNiteText:
 	line "<PLAY_G>!"
 	done
 
-JackGreetText:
+UnknownText_0x1b4e3e:
 	text "<PLAY_G>, good"
 	line "morning!"
 
@@ -38,7 +38,7 @@ JackGreetText:
 	line "How are you doing?"
 	done
 
-JackGreetDayText:
+UnknownText_0x1b4e72:
 	text "<PLAY_G>, howdy!"
 
 	para "It's me, @"
@@ -47,7 +47,7 @@ JackGreetDayText:
 	line "Isn't it nice out?"
 	done
 
-JackGreetNiteText:
+UnknownText_0x1b4e9e:
 	text "<PLAY_G>, good"
 	line "evening!"
 
@@ -57,7 +57,7 @@ JackGreetNiteText:
 	line "Got a minute?"
 	done
 
-JackGenericText:
+UnknownText_0x1b4ecd:
 	text "How are your"
 	line "#MON doing?"
 

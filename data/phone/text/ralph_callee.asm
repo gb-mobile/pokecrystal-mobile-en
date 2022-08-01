@@ -1,4 +1,4 @@
-RalphAnswerPhoneText:
+UnknownText_0x1b5c10:
 	text "Yes? Ah, <PLAY_G>."
 
 	para "You're courteous"
@@ -8,7 +8,7 @@ RalphAnswerPhoneText:
 	line "call on the phone."
 	done
 
-RalphAnswerPhoneDayText:
+UnknownText_0x1b5c63:
 	text "Yes? Ah, <PLAY_G>."
 
 	para "You're courteous"
@@ -18,7 +18,7 @@ RalphAnswerPhoneDayText:
 	line "call on the phone."
 	done
 
-RalphAnswerPhoneNiteText:
+UnknownText_0x1b5cb6:
 	text "Yes? Ah, <PLAY_G>."
 
 	para "You're courteous"
@@ -28,28 +28,28 @@ RalphAnswerPhoneNiteText:
 	line "call on the phone."
 	done
 
-RalphGreetText:
+UnknownText_0x1b5d09:
 	text "Hiya, it's Uncle"
 	line "@"
 	text_ram wStringBuffer3
 	text "."
 	done
 
-RalphGreetDayText:
+UnknownText_0x1b5d21:
 	text "Hiya, it's Uncle"
 	line "@"
 	text_ram wStringBuffer3
 	text "."
 	done
 
-RalphGreetNiteText:
+UnknownText_0x1b5d39:
 	text "Hiya, it's Uncle"
 	line "@"
 	text_ram wStringBuffer3
 	text "."
 	done
 
-RalphGenericText:
+UnknownText_0x1b5d51:
 	text "Are you taking"
 	line "good care of your"
 

@@ -1,35 +1,35 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const RUINSOFALPHRESEARCHCENTER_SCIENTIST1
 	const RUINSOFALPHRESEARCHCENTER_SCIENTIST2
 	const RUINSOFALPHRESEARCHCENTER_SCIENTIST3
 
 RuinsOfAlphResearchCenter_MapScripts:
-	def_scene_scripts
-	scene_script .DummyScene0, SCENE_RUINSOFALPHRESEARCHCENTER_NOOP
-	scene_script .GetUnownDex, SCENE_RUINSOFALPHRESEARCHCENTER_GET_UNOWN_DEX
+	db 2 ; scene scripts
+	scene_script .DummyScene0 ; SCENE_RUINSOFALPHRESEARCHCENTER_NOTHING
+	scene_script .GetUnownDex ; SCENE_RUINSOFALPHRESEARCHCENTER_GET_UNOWN_DEX
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_OBJECTS, .ScientistCallback
 
 .DummyScene0:
 	end
 
 .GetUnownDex:
-	sdefer .GetUnownDexScript
+	prioritysjump .GetUnownDexScript
 	end
 
 .ScientistCallback:
 	checkscene
 	ifequal SCENE_RUINSOFALPHRESEARCHCENTER_GET_UNOWN_DEX, .ShowScientist
-	endcallback
+	return
 
 .ShowScientist:
 	moveobject RUINSOFALPHRESEARCHCENTER_SCIENTIST3, 3, 7
 	appear RUINSOFALPHRESEARCHCENTER_SCIENTIST3
-	endcallback
+	return
 
 .GetUnownDexScript:
-	applymovement RUINSOFALPHRESEARCHCENTER_SCIENTIST3, RuinsOfAlphResearchCenterApproachesComputerMovement
+	applymovement RUINSOFALPHRESEARCHCENTER_SCIENTIST3, MovementData_0x5926f
 	playsound SFX_BOOT_PC
 	pause 60
 	playsound SFX_SWITCH_POKEMON
@@ -43,7 +43,7 @@ RuinsOfAlphResearchCenter_MapScripts:
 	writetext RuinsOfAlphResearchCenterModifiedDexText
 	waitbutton
 	closetext
-	applymovement RUINSOFALPHRESEARCHCENTER_SCIENTIST3, RuinsOfAlphResearchCenterApproachesPlayerMovement
+	applymovement RUINSOFALPHRESEARCHCENTER_SCIENTIST3, MovementData_0x59274
 	opentext
 	writetext RuinsOfAlphResearchCenterDexUpgradedText
 	playsound SFX_ITEM
@@ -52,8 +52,8 @@ RuinsOfAlphResearchCenter_MapScripts:
 	writetext RuinsOfAlphResearchCenterScientist3Text
 	waitbutton
 	closetext
-	applymovement RUINSOFALPHRESEARCHCENTER_SCIENTIST3, RuinsOfAlphResearchCenterLeavesPlayerMovement
-	setscene SCENE_RUINSOFALPHRESEARCHCENTER_NOOP
+	applymovement RUINSOFALPHRESEARCHCENTER_SCIENTIST3, MovementData_0x59276
+	setscene SCENE_RUINSOFALPHRESEARCHCENTER_NOTHING
 	special RestartMapMusic
 	end
 
@@ -113,19 +113,27 @@ RuinsOfAlphResearchCenterScientist2Script:
 	ifequal NUM_UNOWN, .GotAllUnown
 	checkevent EVENT_MADE_UNOWN_APPEAR_IN_RUINS
 	iftrue .UnownAppeared
-	writetext RuinsOfAlphResearchCenterScientist2Text
+	writetext RuinsOfAlphResearchCenterScientist2Text ; 50D2
 	waitbutton
 	closetext
 	end
 
 .UnownAppeared:
-	writetext RuinsOfAlphResearchCenterScientist2Text_UnownAppeared
+	writetext RuinsOfAlphResearchCenterScientist2Text_UnownAppeared ; 50FC
 	waitbutton
 	closetext
 	end
 
 .GotAllUnown:
-	writetext RuinsOfAlphResearchCenterScientist2Text_GotAllUnown
+	special Mobile_DummyReturnFalse
+	iftrue .mobile
+	writetext RuinsOfAlphResearchCenterUnusedText1 ; 5141
+	waitbutton
+	closetext
+	end
+
+.mobile
+	writetext RuinsOfAlphResearchCenterUnusedText2 ; 517F
 	waitbutton
 	closetext
 	end
@@ -167,24 +175,25 @@ RuinsOfAlphResearchCenterPrinter:
 	closetext
 	end
 
-RuinsOfAlphResearchCenterPhoto: ; unreferenced
+RuinsOfAlphResearchCenterPhoto: ; 5208
+; unreferenced
 	jumptext RuinsOfAlphResearchCenterProfSilktreePhotoText
 
 RuinsOfAlphResearchCenterBookshelf:
 	jumptext RuinsOfAlphResearchCenterAcademicBooksText
 
-RuinsOfAlphResearchCenterApproachesComputerMovement:
+MovementData_0x5926f:
 	step UP
 	step UP
 	step LEFT
 	turn_head UP
 	step_end
 
-RuinsOfAlphResearchCenterApproachesPlayerMovement:
+MovementData_0x59274:
 	step DOWN
 	step_end
 
-RuinsOfAlphResearchCenterLeavesPlayerMovement:
+MovementData_0x59276:
 	step UP
 	step_end
 
@@ -306,7 +315,8 @@ RuinsOfAlphResearchCenterScientist2Text_UnownAppeared:
 	cont "kinds of them…"
 	done
 
-RuinsOfAlphResearchCenterUnusedText1: ; unreferenced
+RuinsOfAlphResearchCenterUnusedText1:
+; unused
 	text "We think something"
 	line "caused the cryptic"
 
@@ -317,7 +327,8 @@ RuinsOfAlphResearchCenterUnusedText1: ; unreferenced
 	line "studies on that."
 	done
 
-RuinsOfAlphResearchCenterUnusedText2: ; unreferenced
+RuinsOfAlphResearchCenterUnusedText2:
+; unused
 	text "According to my"
 	line "research…"
 
@@ -356,7 +367,7 @@ RuinsOfAlphResearchCenterComputerText_GotAllUnown:
 	text "Mystery #MON"
 	line "Name: UNOWN"
 
-	para "A total of {d:NUM_UNOWN}"
+	para "A total of 26"
 	line "kinds found."
 	done
 
@@ -371,6 +382,7 @@ RuinsOfAlphResearchCenterUnownPrinterText:
 	done
 
 RuinsOfAlphResearchCenterProfSilktreePhotoText:
+; unused
 	text "It's a photo of"
 	line "the RESEARCH"
 
@@ -390,18 +402,18 @@ RuinsOfAlphResearchCenterAcademicBooksText:
 RuinsOfAlphResearchCenter_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 2 ; warp events
 	warp_event  2,  7, RUINS_OF_ALPH_OUTSIDE, 6
 	warp_event  3,  7, RUINS_OF_ALPH_OUTSIDE, 6
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 3 ; bg events
 	bg_event  6,  5, BGEVENT_READ, RuinsOfAlphResearchCenterBookshelf
 	bg_event  3,  4, BGEVENT_READ, RuinsOfAlphResearchCenterComputer
 	bg_event  7,  1, BGEVENT_READ, RuinsOfAlphResearchCenterPrinter
 
-	def_object_events
+	db 3 ; object events
 	object_event  4,  5, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, RuinsOfAlphResearchCenterScientist1Script, -1
 	object_event  5,  2, SPRITE_SCIENTIST, SPRITEMOVEDATA_WANDER, 2, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, RuinsOfAlphResearchCenterScientist2Script, -1
 	object_event  2,  5, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, RuinsOfAlphResearchCenterScientist3Script, EVENT_RUINS_OF_ALPH_RESEARCH_CENTER_SCIENTIST

@@ -6,11 +6,12 @@
 	const PAL_TOWNMAP_POI      ; 4
 	const PAL_TOWNMAP_POI_MTN  ; 5
 
-MACRO townmappals
-	rept _NARG / 2
-		dn PAL_TOWNMAP_\2, PAL_TOWNMAP_\1
-		shift 2
-	endr
+townmappals: MACRO
+rept _NARG / 2
+	dn PAL_TOWNMAP_\2, PAL_TOWNMAP_\1
+	shift
+	shift
+endr
 ENDM
 
 ; gfx/pokegear/town_map.png

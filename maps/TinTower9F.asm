@@ -1,26 +1,28 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const TINTOWER9F_POKE_BALL
 
 TinTower9F_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 0 ; callbacks
 
 TinTower9FHPUp:
 	itemball HP_UP
 
-TinTower9FUnusedHoOhText: ; unreferenced
+TinTower9FUnusedHoOhText:
+; unused
 	text "HO-OH: Shaoooh!"
 	done
 
-TinTower9FUnusedLugiaText: ; unreferenced
+TinTower9FUnusedLugiaText:
+; unused
 	text "LUGIA: Gyaaan!"
 	done
 
 TinTower9F_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 7 ; warp events
 	warp_event 12,  3, TIN_TOWER_8F, 2
 	warp_event  2,  5, TIN_TOWER_8F, 3
 	warp_event 12,  7, TIN_TOWER_8F, 4
@@ -29,9 +31,9 @@ TinTower9F_MapEvents:
 	warp_event  6, 13, TIN_TOWER_8F, 5
 	warp_event  8, 13, TIN_TOWER_8F, 6
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 0 ; bg events
 
-	def_object_events
+	db 1 ; object events
 	object_event  9,  1, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, TinTower9FHPUp, EVENT_TIN_TOWER_9F_HP_UP

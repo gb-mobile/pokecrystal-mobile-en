@@ -1,16 +1,16 @@
-	object_const_def
+	object_const_def ; object_event constants
 	const PALLETTOWN_TEACHER
 	const PALLETTOWN_FISHER
 
 PalletTown_MapScripts:
-	def_scene_scripts
+	db 0 ; scene scripts
 
-	def_callbacks
+	db 1 ; callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPoint
 
 .FlyPoint:
 	setflag ENGINE_FLYPOINT_PALLET
-	endcallback
+	return
 
 PalletTownTeacherScript:
 	jumptextfaceplayer PalletTownTeacherText
@@ -70,19 +70,19 @@ BluesHouseSignText:
 PalletTown_MapEvents:
 	db 0, 0 ; filler
 
-	def_warp_events
+	db 3 ; warp events
 	warp_event  5,  5, REDS_HOUSE_1F, 1
 	warp_event 13,  5, BLUES_HOUSE, 1
 	warp_event 12, 11, OAKS_LAB, 1
 
-	def_coord_events
+	db 0 ; coord events
 
-	def_bg_events
+	db 4 ; bg events
 	bg_event  7,  9, BGEVENT_READ, PalletTownSign
 	bg_event  3,  5, BGEVENT_READ, RedsHouseSign
 	bg_event 13, 13, BGEVENT_READ, OaksLabSign
 	bg_event 11,  5, BGEVENT_READ, BluesHouseSign
 
-	def_object_events
+	db 2 ; object events
 	object_event  3,  8, SPRITE_TEACHER, SPRITEMOVEDATA_WANDER, 2, 2, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, PalletTownTeacherScript, -1
 	object_event 12, 14, SPRITE_FISHER, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 2, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, PalletTownFisherScript, -1

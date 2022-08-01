@@ -57,13 +57,13 @@ Serial::
 
 	xor a
 	ldh [rSB], a
-
 	ld a, 3
 	ldh [rDIV], a
-.delay_loop
+
+.wait_bit_7
 	ldh a, [rDIV]
 	bit 7, a
-	jr nz, .delay_loop
+	jr nz, .wait_bit_7
 
 	ld a, (0 << rSC_ON) | (0 << rSC_CLOCK)
 	ldh [rSC], a
@@ -89,10 +89,8 @@ Serial::
 	reti
 
 Serial_ExchangeBytes::
-; send bc bytes from hl, receive bc bytes to de
-	ld a, TRUE
+	ld a, $1
 	ldh [hSerialIgnoringInitialData], a
-
 .loop
 	ld a, [hl]
 	ldh [hSerialSend], a
@@ -100,12 +98,10 @@ Serial_ExchangeBytes::
 	push bc
 	ld b, a
 	inc hl
-
-	ld a, 48
+	ld a, $30
 .wait
 	dec a
 	jr nz, .wait
-
 	ldh a, [hSerialIgnoringInitialData]
 	and a
 	ld a, b
@@ -128,7 +124,7 @@ Serial_ExchangeBytes::
 	ret
 
 Serial_ExchangeByte::
-.timeout_loop
+.loop
 	xor a
 	ldh [hSerialReceivedNewData], a
 	ldh a, [hSerialConnectionStatus]
@@ -139,16 +135,16 @@ Serial_ExchangeByte::
 	ld a, (1 << rSC_ON) | (1 << rSC_CLOCK)
 	ldh [rSC], a
 .not_player_2
-.loop
+.loop2
 	ldh a, [hSerialReceivedNewData]
 	and a
-	jr nz, .await_new_data
+	jr nz, .reset_ffca
 	ldh a, [hSerialConnectionStatus]
 	cp USING_EXTERNAL_CLOCK
-	jr nz, .not_player_1_or_timed_out
-	call CheckLinkTimeoutFramesNonzero
-	jr z, .not_player_1_or_timed_out
-	call .ShortDelay
+	jr nz, .not_player_1_or_wLinkTimeoutFrames_zero
+	call CheckwLinkTimeoutFramesNonzero
+	jr z, .not_player_1_or_wLinkTimeoutFrames_zero
+	call .delay_15_cycles
 	push hl
 	ld hl, wLinkTimeoutFrames + 1
 	inc [hl]
@@ -158,52 +154,51 @@ Serial_ExchangeByte::
 
 .no_rollover_up
 	pop hl
-	call CheckLinkTimeoutFramesNonzero
-	jr nz, .loop
+	call CheckwLinkTimeoutFramesNonzero
+	jr nz, .loop2
 	jp SerialDisconnected
 
-.not_player_1_or_timed_out
+.not_player_1_or_wLinkTimeoutFrames_zero
 	ldh a, [rIE]
 	and (1 << SERIAL) | (1 << TIMER) | (1 << LCD_STAT) | (1 << VBLANK)
 	cp 1 << SERIAL
-	jr nz, .loop
-	ld a, [wLinkByteTimeout]
+	jr nz, .loop2
+	ld a, [wcf5d]
 	dec a
-	ld [wLinkByteTimeout], a
-	jr nz, .loop
-	ld a, [wLinkByteTimeout + 1]
+	ld [wcf5d], a
+	jr nz, .loop2
+	ld a, [wcf5d + 1]
 	dec a
-	ld [wLinkByteTimeout + 1], a
-	jr nz, .loop
+	ld [wcf5d + 1], a
+	jr nz, .loop2
 	ldh a, [hSerialConnectionStatus]
 	cp USING_EXTERNAL_CLOCK
-	jr z, .await_new_data
+	jr z, .reset_ffca
 
 	ld a, 255
-.long_delay_loop
+.delay_255_cycles
 	dec a
-	jr nz, .long_delay_loop
+	jr nz, .delay_255_cycles
 
-.await_new_data
+.reset_ffca
 	xor a
 	ldh [hSerialReceivedNewData], a
 	ldh a, [rIE]
 	and (1 << SERIAL) | (1 << TIMER) | (1 << LCD_STAT) | (1 << VBLANK)
 	sub 1 << SERIAL
-	jr nz, .non_serial_interrupts_enabled
+	jr nz, .rIE_not_equal_8
 
-	; a == 0
-	assert LOW(SERIAL_LINK_BYTE_TIMEOUT) == 0
-	ld [wLinkByteTimeout], a
-	ld a, HIGH(SERIAL_LINK_BYTE_TIMEOUT)
-	ld [wLinkByteTimeout + 1], a
+	; LOW($5000)
+	ld [wcf5d], a
+	ld a, HIGH($5000)
+	ld [wcf5d + 1], a
 
-.non_serial_interrupts_enabled
+.rIE_not_equal_8
 	ldh a, [hSerialReceive]
 	cp SERIAL_NO_DATA_BYTE
 	ret nz
-	call CheckLinkTimeoutFramesNonzero
-	jr z, .timed_out
+	call CheckwLinkTimeoutFramesNonzero
+	jr z, .linkTimeoutFrames_zero
 	push hl
 	ld hl, wLinkTimeoutFrames + 1
 	ld a, [hl]
@@ -215,10 +210,10 @@ Serial_ExchangeByte::
 
 .no_rollover
 	pop hl
-	call CheckLinkTimeoutFramesNonzero
+	call CheckwLinkTimeoutFramesNonzero
 	jr z, SerialDisconnected
 
-.timed_out
+.linkTimeoutFrames_zero
 	ldh a, [rIE]
 	and (1 << SERIAL) | (1 << TIMER) | (1 << LCD_STAT) | (1 << VBLANK)
 	cp 1 << SERIAL
@@ -227,16 +222,16 @@ Serial_ExchangeByte::
 	ld a, [hl]
 	ldh [hSerialSend], a
 	call DelayFrame
-	jp .timeout_loop
+	jp .loop
 
-.ShortDelay:
+.delay_15_cycles
 	ld a, 15
-.short_delay_loop
+.delay_cycles
 	dec a
-	jr nz, .short_delay_loop
+	jr nz, .delay_cycles
 	ret
 
-CheckLinkTimeoutFramesNonzero::
+CheckwLinkTimeoutFramesNonzero::
 	push hl
 	ld hl, wLinkTimeoutFrames
 	ld a, [hli]
@@ -244,22 +239,21 @@ CheckLinkTimeoutFramesNonzero::
 	pop hl
 	ret
 
-; This sets wLinkTimeoutFrames to $ffff, since
-; a is always 0 when it is called.
 SerialDisconnected::
-	dec a
+	dec a ; a is always 0 when this is called
 	ld [wLinkTimeoutFrames], a
 	ld [wLinkTimeoutFrames + 1], a
 	ret
 
-; This is used to check that both players entered the same Cable Club room.
-Serial_ExchangeSyncBytes::
-	ld hl, wLinkPlayerSyncBuffer
-	ld de, wLinkReceivedSyncBuffer
+; This is used to exchange the button press and selected menu item on the link menu.
+; The data is sent thrice and read twice to increase reliability.
+Serial_ExchangeLinkMenuSelection::
+	ld hl, wPlayerLinkAction
+	ld de, wOtherPlayerLinkMode
 	ld c, 2
 	ld a, TRUE
 	ldh [hSerialIgnoringInitialData], a
-.exchange
+.asm_847
 	call DelayFrame
 	ld a, [hl]
 	ldh [hSerialSend], a
@@ -270,33 +264,34 @@ Serial_ExchangeSyncBytes::
 	and a
 	ld a, FALSE
 	ldh [hSerialIgnoringInitialData], a
-	jr nz, .exchange
+	jr nz, .asm_847
 	ld a, b
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .exchange
+	jr nz, .asm_847
 	ret
 
 Serial_PrintWaitingTextAndSyncAndExchangeNybble::
-	call LoadTilemapToTempTilemap
+	call LoadTileMapToTempTileMap
 	callfar PlaceWaitingText
 	call WaitLinkTransfer
-	jp SafeLoadTempTilemapToTilemap
+	jp Call_LoadTempTileMapToTileMap
 
-Serial_SyncAndExchangeNybble:: ; unreferenced
-	call LoadTilemapToTempTilemap
+Serial_SyncAndExchangeNybble::
+	call LoadTileMapToTempTileMap
 	callfar PlaceWaitingText
-	jp WaitLinkTransfer ; pointless
+	jp WaitLinkTransfer
+
+; One "giant" leap for machinekind
 
 WaitLinkTransfer::
-	vc_hook Wireless_WaitLinkTransfer
 	ld a, $ff
 	ld [wOtherPlayerLinkAction], a
 .loop
 	call LinkTransfer
 	call DelayFrame
-	call CheckLinkTimeoutFramesNonzero
+	call CheckwLinkTimeoutFramesNonzero
 	jr z, .check
 	push hl
 	ld hl, wLinkTimeoutFrames + 1
@@ -318,26 +313,14 @@ WaitLinkTransfer::
 	inc a
 	jr z, .loop
 
-	vc_patch Wireless_net_delay_1
-if DEF(_CRYSTAL11_VC)
-	ld b, 26
-else
 	ld b, 10
-endc
-	vc_patch_end
 .receive
 	call DelayFrame
 	call LinkTransfer
 	dec b
 	jr nz, .receive
 
-	vc_patch Wireless_net_delay_2
-if DEF(_CRYSTAL11_VC)
-	ld b, 26
-else
 	ld b, 10
-endc
-	vc_patch_end
 .acknowledge
 	call DelayFrame
 	call LinkDataReceived
@@ -346,7 +329,6 @@ endc
 
 	ld a, [wOtherPlayerLinkAction]
 	ld [wOtherPlayerLinkMode], a
-	vc_hook Wireless_WaitLinkTransfer_ret
 	ret
 
 LinkTransfer::
@@ -406,8 +388,7 @@ LinkDataReceived::
 	ldh [rSC], a
 	ret
 
-SetBitsForTimeCapsuleRequestIfNotLinked:: ; unreferenced
-; Similar to SetBitsForTimeCapsuleRequest (see engine/link/link.asm).
+Unreferenced_Function919::
 	ld a, [wLinkMode]
 	and a
 	ret nz
