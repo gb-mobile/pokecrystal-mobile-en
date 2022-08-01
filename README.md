@@ -1,12 +1,16 @@
-WIP Pokemon Crystal mobile restoration and localization, the most complete one as far as I know.
-Contains code disassembled from the Japanese ROM.
+WIP Pokemon Crystal mobile restoration and localization. Built on Matze's substantial work 
+restoring mobile functionality to Pokemon Crystal using code disassembled from the Japanese ROM.
+
+Matze's original project can be found here: https://github.com/Sudel-Matze/pokecrystal
+
 Old version of RGBDS required, 0.3.8 should work.
 
-Things that still need work:
-- Easy Chat is not localized yet
-- many graphics still need localization
-- some random NPCs throughout the game might not have their original text restored yet
-- translations could be a lot better
+Primary To-Do List:
+- Adjust Easy Chat to function with other languages.
+ - Requires trimming word count from 6 to 4 and increasing word length from 5 to 8.
+- Graphical changes to accomodate other languages.
+- Some languages could have minor bugs.
+- Testing is needed from native speakers of other languages, preferably anyone able to assess issues in assembly.
 
 To use this properly with an already existing save file for normal Crystal:
 - let the emulator create a new save for this mod, start a new game and save once you can
@@ -58,3 +62,19 @@ Other disassembly projects:
 [irc]: https://kiwiirc.com/client/irc.freenode.net/?#pret
 [travis]: https://travis-ci.org/pret/pokecrystal
 [travis-badge]: https://travis-ci.org/pret/pokecrystal.svg?branch=master
+
+## Primary Contributors
+
+- Matze          : Mobile Restoration & Japanese Code Disassembly
+
+- Darkshade      : Graphics and Project Management
+- Ryuzac         : Code and Japanese Translation
+
+- Arves          : Italian Mobile Translation
+- Federx         : Italian Mobile Translation
+- FerozElMejor   : Spanish Mobile Translation
+- FrenchOrange   : French Mobile Translation
+- LesserKuma     : German Mobile Translation
+- Muffet         : German Mobile Translation
+
+- REON Community : Support and Assistance
