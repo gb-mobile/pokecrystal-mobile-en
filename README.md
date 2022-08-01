@@ -6,8 +6,7 @@ Matze's original project can be found here: https://github.com/Sudel-Matze/pokec
 Old version of RGBDS required, 0.3.8 should work.
 
 Primary To-Do List:
-- Adjust Easy Chat to function with other languages.
- - Requires trimming word count from 6 to 4 and increasing word length from 5 to 8.
+- Adjust Easy Chat to function with other languages. Trim word count from 6 to 4 and increase word length from 5 to 8.
 - Graphical changes to accomodate other languages.
 - Some languages could have minor bugs.
 - Testing is needed from native speakers of other languages, preferably anyone able to assess issues in assembly.
