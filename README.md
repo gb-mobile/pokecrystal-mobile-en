@@ -73,7 +73,7 @@ Other disassembly projects:
 - Federx         : Italian Mobile Translation
 - FerozElMejor   : Spanish Mobile Translation
 - FrenchOrange   : French Mobile Translation
-- LesserKuma     : German Mobile Translation
+- Lesserkuma     : German Mobile Translation
 - Muffet         : German Mobile Translation
 
 - REON Community : Support and Assistance
