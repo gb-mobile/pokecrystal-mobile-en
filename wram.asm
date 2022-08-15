@@ -1192,6 +1192,7 @@ wcd33:: ds 1
 wcd34:: ds 1
 wcd35:: ds 1
 
+UNION
 ; current time for link/mobile?
 wcd36:: db ; hours
 wcd37:: db ; mins
@@ -1200,12 +1201,30 @@ wcd38:: db ; secs
 wcd39:: ds 1
 wcd3a:: ds 1
 wcd3b:: ds 1
-wcd3c:: ds 1
+wcd3c::
+wBattleTowerRoomMenu2JumptableIndex:: ds 1
 wcd3d:: ds 1
 wcd3e:: ds 1
 wcd3f:: ds 1
 wcd40:: ds 1
 wcd41:: ds 1
+
+NEXTU
+
+wEZChatWords::
+; format:
+;	db CATEGORY
+;	db WHICH_WORD
+
+wEZChatWord1:: dw
+wEZChatWord2:: dw
+wEZChatWord3:: dw
+wEZChatWord4:: dw
+wEZChatWord5:: dw
+wEZChatWord6:: dw
+
+ENDU
+
 wcd42:: ds 1
 wcd43:: ds 1
 
