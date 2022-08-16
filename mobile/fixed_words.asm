@@ -741,50 +741,28 @@ EZChatMenu_ChatWords: ; EZChat Word Menu
 
 .up
 	ld a, [hl]
-if 1
 	cp 2
 	ret c
 	sub 2
-else
-	cp 3
-	ret c
-	sub 3
-endc
 	jr .finish_dpad
 .down
 	ld a, [hl]
-if 1
 	cp 4
 	ret nc
 	add 2
-else
-	cp 6
-	ret nc
-	add 3
-endc
 	jr .finish_dpad
 .left
 	ld a, [hl]
-if 1
 	and a ; cp a, 0
 	ret z
 	cp 2
 	ret z
 	cp 4
 	ret z
-else
-	and a
-	ret z
-	cp $3
-	ret z
-	cp $6
-	ret z
-endc
 	dec a
 	jr .finish_dpad
 .right
 	ld a, [hl]
-if 1
 ; rightmost side of everything
 	cp 1
 	ret z
@@ -792,14 +770,6 @@ if 1
 	ret z
 	cp 6
 	ret z
-else
-	cp 2
-	ret z
-	cp 5
-	ret z
-	cp 8
-	ret z
-endc
 	inc a
 .finish_dpad
 	ld [hl], a
@@ -1404,7 +1374,6 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	ret
 
 EZChatCoord_WordSubmenu: ; Word coordinates (within category submenu)
-if 1
 	dwcoord  2,  8
 	dwcoord  11,  8 ; 8, 8 MENU_WIDTH
 	dwcoord  2, 10
@@ -1413,20 +1382,6 @@ if 1
 	dwcoord  11, 12 ; 8, 12 MENU_WIDTH
 	dwcoord  2, 14
 	dwcoord  11, 14 ; 8, 14 MENU_WIDTH
-else
-	dwcoord  2,  8
-	dwcoord  8,  8 ; MENU_WIDTH
-	dwcoord 14,  8 ; MENU_WIDTH
-	dwcoord  2, 10
-	dwcoord  8, 10 ; MENU_WIDTH
-	dwcoord 14, 10 ; MENU_WIDTH
-	dwcoord  2, 12
-	dwcoord  8, 12 ; MENU_WIDTH
-	dwcoord 14, 12 ; MENU_WIDTH
-	dwcoord  2, 14
-	dwcoord  8, 14 ; MENU_WIDTH
-	dwcoord 14, 14 ; MENU_WIDTH
-endc
 	dw -1
 
 EZChatMenu_WordSubmenuBottom: ; Seems to handle the bottom of the word menu.
@@ -1620,21 +1575,12 @@ EZChat_ClearWords:
 	ret
 
 EZChatCoord_ChatWords: ; EZChat Message Coordinates
-if 1
 	dwcoord  1,  2
 	dwcoord 10,  2 ;  7, 2
 	;dwcoord  7,  7 ; 13, 2 (Pushed under 'Combine 4 words' menu) WORD_COUNT
 	dwcoord  1,  4
 	dwcoord 10,  4 ;  7, 4
 	;dwcoord 12, 12 ; 13, 4 (Pushed under 'Combine 4 words' menu) WORD_COUNT
-else
-	dwcoord  1,  2
-	dwcoord  7,  2
-	dwcoord 13,  2
-	dwcoord  1,  4
-	dwcoord  7,  4
-	dwcoord 13,  4
-endc
 
 Function11c992: ; Likely related to the word submenu, references the first word position
 	ld a, $8
@@ -1766,11 +1712,7 @@ EZChatMenu_EraseWordsAccept:
 	call EZChatDraw_EraseWordsLoop
 	pop af
 	inc a
-if 1
-	cp $4 ; 6 WORD_COUNT
-else
-	cp 6
-endc
+	cp EZCHAT_WORD_COUNT
 	jr nz, .loop
 	ret
 
