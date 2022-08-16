@@ -1519,7 +1519,7 @@ MobileString_Next:
 
 Function11c8f6:
 	ld a, [wEZChatSelection]
-	call Function11c95d
+	call EZChat_ClearWords
 	push hl
 	ld a, [wcd2b]
 	and a
@@ -1587,7 +1587,7 @@ Function11c8f6:
 	ld d, a
 	jr .asm_11c912
 
-Function11c95d: ; Possibly draws words at the top for EZ chat
+EZChat_ClearWords:
 	sla a
 	ld c, a
 	ld b, 0
@@ -1600,19 +1600,19 @@ Function11c95d: ; Possibly draws words at the top for EZ chat
 	push bc
 	push bc
 	pop hl
-	ld a, $5 ; Was changed to $7?
+	ld a, EZCHAT_WORD_LENGTH
 	ld c, a
-	ld a, $7f
+	ld a, " "
 .asm_11c972
 	ld [hli], a
 	dec c
 	jr nz, .asm_11c972
 	dec hl
-	ld bc, -20
+	ld bc, -SCREEN_WIDTH
 	add hl, bc
-	ld a, $5 ; Was changed to $7?
+	ld a, EZCHAT_WORD_LENGTH
 	ld c, a
-	ld a, $7f
+	ld a, " "
 .asm_11c980
 	ld [hld], a
 	dec c
@@ -1784,7 +1784,7 @@ EZChatDraw_EraseWordsLoop:
 	ld [hl], b
 	inc hl
 	ld [hl], b
-	call Function11c95d
+	call EZChat_ClearWords
 	ld de, EZChatString_EmptyWord
 	call PlaceString
 	ret
