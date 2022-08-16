@@ -69,6 +69,8 @@ Other disassembly projects:
 - Darkshade      : Graphics and Project Management
 - Ryuzac         : Code and Japanese Translation
 
+- Zumilsawhat?   : Code (Large amounts of work on the EZ Chat system)
+
 - Arves          : Italian Mobile Translation
 - Federx         : Italian Mobile Translation
 - FerozElMejor   : Spanish Mobile Translation
