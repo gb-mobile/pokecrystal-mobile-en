@@ -1,5 +1,8 @@
 EZCHAT_WORD_COUNT equ 4
 EZCHAT_WORD_LENGTH equ 8
+EZCHAT_WORDS_PER_ROW equ 2
+EZCHAT_WORDS_PER_COL equ 4
+EZCHAT_WORDS_IN_MENU equ EZCHAT_WORDS_PER_ROW * EZCHAT_WORDS_PER_COL
 
 ; These functions seem to be related to the selection of preset phrases
 ; for use in mobile communications.  Annoyingly, they separate the
@@ -317,7 +320,7 @@ Function11c1b9:
 	ld [wcd23], a
 	ld [wEZChatSelection], a
 	ld [wEZChatCategorySelection], a
-	ld [wcd22], a
+	ld [wEZChatSortedSelection], a
 	ld [wcd35], a
 	ld [wcd2b], a
 	ld a, $ff
@@ -819,7 +822,7 @@ EZChat_MoveToCategoryOrSortMenu:
 
 .to_sort_menu
 	xor a
-	ld [wcd22], a
+	ld [wEZChatSortedSelection], a
 	ld a, EZCHAT_DRAW_SORT_BY_CHARACTER
 	ret
 
@@ -907,7 +910,7 @@ EZChatMenu_CategoryMenu: ; Category Menu Controls
 .start
 	ld hl, wcd24
 	set 0, [hl]
-	ld a, $8
+	ld a, EZCHAT_MAIN_OK
 	ld [wEZChatSelection], a
 
 .b
@@ -1074,53 +1077,51 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	jr nz, .b
 	ld a, [de]
 	and START
-	jr nz, .start
+	jr nz, .next_page
 	ld a, [de]
 	and SELECT
-	jr z, .select
+	jr z, .check_joypad
 
-	ld a, [wcd26]
+; select
+	ld a, [wEZChatPageOffset]
 	and a
 	ret z
-	sub $c ; EZCHAT_WORD_COUNT * 2 ?
-	jr nc, .asm_11c699
+	sub EZCHAT_WORDS_IN_MENU
+	jr nc, .prev_page
+; page 0
 	xor a
-.asm_11c699
-	ld [wcd26], a
-	jr .asm_11c6c4
+.prev_page
+	ld [wEZChatPageOffset], a
+	jr .navigate_to_page
 
-.start
-	ld hl, wcd28
-	ld a, [wcd26]
-if 1
-	add $8 ; $c Skips down in the menu? MENU_WIDTH
-else
-	add 12 ; EZCHAT_WORD_COUNT * 2
-endc
+.next_page
+	ld hl, wEZChatLoadedItems
+	ld a, [wEZChatPageOffset]
+	add EZCHAT_WORDS_IN_MENU
 	cp [hl]
 	ret nc
-	ld [wcd26], a
+	ld [wEZChatPageOffset], a
 	ld a, [hl]
 	ld b, a
 	ld hl, wEZChatWordSelection
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	add [hl]
 	jr c, .asm_11c6b9
 	cp b
-	jr c, .asm_11c6c4
+	jr c, .navigate_to_page
 .asm_11c6b9
-	ld a, [wcd28]
-	ld hl, wcd26
+	ld a, [wEZChatLoadedItems]
+	ld hl, wEZChatPageOffset
 	sub [hl]
 	dec a
 	ld [wEZChatWordSelection], a
-.asm_11c6c4
+.navigate_to_page
 	call Function11c992
 	call Function11c7bc
 	call EZChatMenu_WordSubmenuBottom
 	ret
 
-.select
+.check_joypad
 	ld de, hJoyLast
 	ld a, [de]
 	and D_UP
@@ -1138,17 +1139,19 @@ endc
 
 .a
 	call Function11c8f6
-	ld a, $4
+	ld a, EZCHAT_DRAW_CHAT_WORDS
 	ld [wcd35], a
 	jr .jump_to_index
+
 .b
 	ld a, [wcd2b]
 	and a
-	jr nz, .asm_11c6fa
-	ld a, $6
+	jr nz, .to_sorted_menu
+	ld a, EZCHAT_DRAW_CATEGORY_MENU
 	jr .jump_to_index
-.asm_11c6fa
-	ld a, $15
+
+.to_sorted_menu
+	ld a, EZCHAT_DRAW_SORT_BY_CHARACTER
 .jump_to_index
 	ld [wJumptableIndex], a
 	ld hl, wcd24
@@ -1158,112 +1161,72 @@ endc
 
 .up
 	ld a, [hl]
-if 1
-	cp $2 ; MENU_WIDTH
-	jr c, .asm_11c711
-	sub $2 ; 3 MENU_WIDTH
-else
-	cp 3
-	jr c, .asm_11c711
-	sub 3
-endc
+	cp EZCHAT_WORDS_PER_ROW
+	jr c, .move_menu_up
+	sub EZCHAT_WORDS_PER_ROW
 	jr .finish_dpad
 
-.asm_11c711
-	ld a, [wcd26]
-if 1
-	sub $2 ; 3 MENU_WIDTH
-else
-	sub 3
-endc
+.move_menu_up
+	ld a, [wEZChatPageOffset]
+	sub EZCHAT_WORDS_PER_ROW
 	ret c
-	ld [wcd26], a
-	jr .asm_11c6c4
+	ld [wEZChatPageOffset], a
+	jr .navigate_to_page
 
-.asm_11c71c
-	ld hl, wcd28
-	ld a, [wcd26]
-if 1
-	add $8 ; $c Skips down in the menu on SELECT? 
-else
-	add 12 ; EZCHAT_WORD_COUNT * 2
-endc
+.move_menu_down
+	ld hl, wEZChatLoadedItems
+	ld a, [wEZChatPageOffset]
+	add EZCHAT_WORDS_IN_MENU
 	ret c
 	cp [hl]
 	ret nc
-	ld a, [wcd26]
-if 1
-	add $2 ; 3 MENU_WIDTH
-else
-	add 3
-endc
-	ld [wcd26], a
-	jr .asm_11c6c4
+	ld a, [wEZChatPageOffset]
+	add EZCHAT_WORDS_PER_ROW
+	ld [wEZChatPageOffset], a
+	jr .navigate_to_page
 
 .down
-	ld a, [wcd28]
+	ld a, [wEZChatLoadedItems]
 	ld b, a
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	add [hl]
-if 1
-	add $2 ; 3 MENU_WIDTH
+	add EZCHAT_WORDS_PER_ROW
 	cp b
 	ret nc
 	ld a, [hl]
-	cp $8 ; 9 MENU_WIDTH
-	jr nc, .asm_11c71c
-	add $2 ; 3 MENU_WIDTH
-else
-	add 3
-	cp b
-	ret nc
-	ld a, [hl]
-	cp 9
-	jr nc, .asm_11c71c
-	add 3
-endc
+	cp EZCHAT_WORDS_IN_MENU - EZCHAT_WORDS_PER_ROW
+	jr nc, .move_menu_down
+	add EZCHAT_WORDS_PER_ROW
 	jr .finish_dpad
 
 .left
 	ld a, [hl]
-	and a
+	and a ; cp a, 0
 	ret z
-	cp $3
+x = EZCHAT_WORDS_PER_ROW
+rept EZCHAT_WORDS_PER_COL - 1
+	cp x
 	ret z
-	cp $6
-	ret z
-	cp $9
-	ret z
+x = x + EZCHAT_WORDS_PER_ROW
+endr
 	dec a
 	jr .finish_dpad
 
 .right
-	ld a, [wcd28]
+	ld a, [wEZChatLoadedItems]
 	ld b, a
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	add [hl]
 	inc a
 	cp b
 	ret nc
 	ld a, [hl]
-if 1
-	cp $1 ; 2 MENU_WIDTH
+x = EZCHAT_WORDS_PER_ROW
+rept EZCHAT_WORDS_PER_COL
+	cp x - 1
 	ret z
-	cp $4 ; 5 MENU_WIDTH
-	ret z
-	cp $7 ; 8 MENU_WIDTH
-	ret z
-	cp $a ; b MENU_WIDTH
-else
-	cp 2
-	ret z
-	cp 5
-	ret z
-	cp 8
-	ret z
-	cp 11
-endc
-	ret z
+x = x + EZCHAT_WORDS_PER_ROW
+endr
 	inc a
 
 .finish_dpad
@@ -1273,7 +1236,7 @@ endc
 Function11c770:
 	xor a
 	ld [wEZChatWordSelection], a
-	ld [wcd26], a
+	ld [wEZChatPageOffset], a
 	ld [wcd27], a
 	ld a, [wcd2b]
 	and a
@@ -1289,7 +1252,7 @@ Function11c770:
 	ld b, 0
 	add hl, bc
 	ld a, [hli]
-	ld [wcd28], a
+	ld [wEZChatLoadedItems], a
 	ld a, [hl]
 .load
 	ld [wcd29], a
@@ -1298,13 +1261,9 @@ Function11c770:
 .cd21_is_zero
 	; compute from [wc7d2]
 	ld a, [wc7d2]
-	ld [wcd28], a
+	ld [wEZChatLoadedItems], a
 .div_12
-if 1
-	ld c, 8 ; 12 Number of words to draw in word submenu? MENU_WIDTH
-else
-	ld c, 12 ; EZCHAT_WORD_COUNT * 2
-endc
+	ld c, EZCHAT_WORDS_IN_MENU
 	call SimpleDivide
 	and a
 	jr nz, .no_need_to_floor
@@ -1316,13 +1275,13 @@ endc
 .cd2b_is_nonzero
 	; compute from [c6a8 + 2 * [cd22]]
 	ld hl, $c6a8 ; $c68a + 30
-	ld a, [wcd22]
+	ld a, [wEZChatSortedSelection]
 	ld c, a
 	ld b, 0
 	add hl, bc
 	add hl, bc
 	ld a, [hl]
-	ld [wcd28], a
+	ld [wEZChatLoadedItems], a
 	jr .div_12
 
 Function11c7bc: ; Related to drawing words in the lower menu after picking a category
@@ -1334,7 +1293,7 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	ld d, a
 	and a
 	jr z, .asm_11c7e9
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	ld e, a
 .asm_11c7d0
 	ld a, [bc]
@@ -1352,14 +1311,14 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	pop de
 	pop bc
 	inc e
-	ld a, [wcd28]
+	ld a, [wEZChatLoadedItems]
 	cp e
 	jr nz, .asm_11c7d0
 	ret
 
 .asm_11c7e9
 	ld hl, wListPointer
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	ld e, a
 	add hl, de
 .asm_11c7f1
@@ -1383,7 +1342,7 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	pop hl
 	pop de
 	inc e
-	ld a, [wcd28]
+	ld a, [wEZChatLoadedItems]
 	cp e
 	jr nz, .asm_11c7f1
 	ret
@@ -1395,7 +1354,7 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 
 .asm_11c814
 	ld hl, $c648
-	ld a, [wcd22]
+	ld a, [wEZChatSortedSelection]
 	ld e, a
 	ld d, $0
 	add hl, de
@@ -1406,12 +1365,12 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	ld d, a
 	push de
 	pop hl
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	ld e, a
 	ld d, $0
 	add hl, de
 	add hl, de
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	ld e, a
 .asm_11c831
 	push de
@@ -1435,7 +1394,7 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	pop hl
 	pop de
 	inc e
-	ld a, [wcd28]
+	ld a, [wEZChatLoadedItems]
 	cp e
 	jr nz, .asm_11c831
 	ret
@@ -1472,7 +1431,7 @@ endc
 	dw -1
 
 EZChatMenu_WordSubmenuBottom: ; Seems to handle the bottom of the word menu.
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	and a
 	jr z, .asm_11c88a
 	hlcoord 1, 17 	; Draw PREV string (2, 17)
@@ -1496,8 +1455,8 @@ EZChatMenu_WordSubmenuBottom: ; Seems to handle the bottom of the word menu.
 	dec c
 	jr nz, .asm_11c891
 .asm_11c895
-	ld hl, wcd28
-	ld a, [wcd26]
+	ld hl, wEZChatLoadedItems
+	ld a, [wEZChatPageOffset]
 	add $c ; EZCHAT_WORD_COUNT * 2 ?
 	jr c, .asm_11c8b7
 	cp [hl]
@@ -1569,7 +1528,7 @@ Function11c8f6:
 	ld d, a
 	and a
 	jr z, .asm_11c927
-	ld hl, wcd26
+	ld hl, wEZChatPageOffset
 	ld a, [wEZChatWordSelection]
 	add [hl]
 .asm_11c911
@@ -1591,7 +1550,7 @@ Function11c8f6:
 	ret
 
 .asm_11c927
-	ld hl, wcd26
+	ld hl, wEZChatPageOffset
 	ld a, [wEZChatWordSelection]
 	add [hl]
 	ld c, a
@@ -1602,7 +1561,7 @@ Function11c8f6:
 	jr .asm_11c911
 .asm_11c938
 	ld hl, $c648
-	ld a, [wcd22]
+	ld a, [wEZChatSortedSelection]
 	ld e, a
 	ld d, $0
 	add hl, de
@@ -1613,7 +1572,7 @@ Function11c8f6:
 	ld d, a
 	push de
 	pop hl
-	ld a, [wcd26]
+	ld a, [wEZChatPageOffset]
 	ld e, a
 	ld d, $0
 	add hl, de
@@ -2238,12 +2197,12 @@ EZChatDraw_SortByCharacter: ; Sort by Character Menu
 	call Function11cfb5
 
 EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
-	ld a, [wcd22]
+	ld a, [wEZChatSortedSelection] ; x 4
 	sla a
 	sla a
 	ld c, a
 	ld b, 0
-	ld hl, Unknown_11ceb9
+	ld hl, .NeighboringCharacters
 	add hl, bc
 
 	ld de, hJoypadPressed
@@ -2277,7 +2236,7 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 	ret
 
 .a
-	ld a, [wcd22]
+	ld a, [wEZChatSortedSelection]
 	cp NUM_KANA
 	jr c, .place
 	sub NUM_KANA
@@ -2289,21 +2248,21 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 .start
 	ld hl, wcd24
 	set 0, [hl]
-	ld a, $8
+	ld a, EZCHAT_MAIN_OK
 	ld [wEZChatSelection], a
 .b
-	ld a, $4
+	ld a, EZCHAT_DRAW_CHAT_WORDS
 	jr .load
 
 .select
 	ld a, [wcd2b]
 	xor $1
 	ld [wcd2b], a
-	ld a, $6
+	ld a, EZCHAT_DRAW_CATEGORY_MENU
 	jr .load
 
 .place
-	ld a, $8
+	ld a, EZCHAT_DRAW_WORD_SUBMENU
 	jr .load
 
 .mode
@@ -2331,107 +2290,59 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 	ld a, [hl]
 	cp $ff
 	ret z
-	ld [wcd22], a
+	ld [wEZChatSortedSelection], a
 	ret
 
-Unknown_11ceb9: ; Sort Menu Letter tile values or coordinates?
-	; up left down right
-	db $ff, $01 ; 255, 1
-	db $05, $ff ;  5, 255
-	db $ff, $02 ; 255, 2
-	db $06, $00 ;  6, 0
-	db $ff, $03 ; 255, 3
-	db $07, $01 ;  7, 1
-	db $ff, $04 ; 255, 4
-	db $08, $02 ;  8, 2
-	db $ff, $14 ; 255, 20
-	db $09, $03 ;  9, 3
-	db $00, $06 ;  0, 6
-	db $0a, $ff ; 10, 255
-	db $01, $07 ;  1, 7
-	db $0b, $05 ; 11, 5
-	db $02, $08 ;  2, 8
-	db $0c, $06 ; 12, 6
-	db $03, $09 ;  3, 9
-	db $0d, $07 ; 13, 7
-	db $04, $19 ;  4, 25
-	db $0e, $08 ; 14, 8
-	db $05, $0b ;  5, 11
-	db $0f, $ff ; 15, 255
-	db $06, $0c ;  6, 12
-	db $10, $0a ; 16, 10
-	db $07, $0d ;  7, 13
-	db $11, $0b ; 17, 11
-	db $08, $0e ;  8, 14
-	db $12, $0c ; 18, 12
-	db $09, $1e ;  9, 15
-	db $13, $0d ; 19, 13
-	db $0a, $10 ; 10, 16
-	db $2d, $ff ; 45, 255
-	db $0b, $11 ; 11, 17
-	db $2d, $0f ; 45, 15
-	db $0c, $12 ; 12, 18
-	db $2d, $10 ; 45, 16
-	db $0d, $13 ; 13, 19
-	db $2d, $11 ; 45, 17
-	db $0e, $26 ; 14, 38
-	db $2d, $12 ; 45, 18
-	db $ff, $15 ; 255, 21
-	db $19, $04 ; 25, 4
-	db $ff, $16 ; 255, 22
-	db $1a, $14 ; 26, 20
-	db $ff, $17 ; 255, 23
-	db $1b, $15 ; 27, 21
-	db $ff, $18 ; 255, 24
-	db $1c, $16 ; 28, 22
-	db $ff, $23 ; 255, 35
-	db $1d, $17 ; 29, 23
-	db $14, $1a ; 20, 26
-	db $1e, $09 ; 30, 9
-	db $15, $1b ; 21, 27
-	db $1f, $19 ; 31, 25
-	db $16, $1c ; 22, 28
-	db $20, $1a ; 32, 26
-	db $17, $1d ; 23, 29
-	db $21, $1b ; 33, 27
-	db $18, $2b ; 24, 43
-	db $22, $1c ; 34, 28
-	db $19, $1f ; 25, 31
-	db $26, $0e ; 38, 14
-	db $1a, $20 ; 26, 32
-	db $27, $1e ; 39, 30
-	db $1b, $21 ; 27, 33
-	db $28, $1f ; 40, 31
-	db $1c, $22 ; 28, 34
-	db $29, $20 ; 41, 32
-	db $1d, $2c ; 29, 44
-	db $2a, $21 ; 42, 33
-	db $ff, $24 ; 255, 36
-	db $2b, $18 ; 43, 24
-	db $ff, $25 ; 255, 37
-	db $2b, $23 ; 43, 35
-	db $ff, $ff ; 255, 255
-	db $2b, $24 ; 43, 36
-	db $1e, $27 ; 30, 39
-	db $2e, $13 ; 46, 19
-	db $1f, $28 ; 31, 40
-	db $2e, $26 ; 46, 38
-	db $20, $29 ; 32, 41
-	db $2e, $27 ; 46, 39
-	db $21, $2a ; 33, 42
-	db $2e, $28 ; 46, 40
-	db $22, $ff ; 34, 255
-	db $2e, $29 ; 46, 41
-	db $23, $ff ; 35, 255
-	db $2c, $1d ; 44, 29
-	db $2b, $ff ; 43, 255
-	db $2f, $22 ; 47, 34
-	db $0f, $2e ; 15, 46
-	db $ff, $ff ; 255, 255
-	db $26, $2f ; 38, 47
-	db $ff, $2d ; 255, 45
-	db $2c, $ff ; 44, 255
-	db $ff, $2e ; 255, 46
+.NeighboringCharacters: ; Sort Menu Letter tile values or coordinates?
+	;  up   rgt  dwn  lft
+	db $ff, $01, $05, $ff ;  5, 255
+	db $ff, $02, $06, $00 ;  6, 0
+	db $ff, $03, $07, $01 ;  7, 1
+	db $ff, $04, $08, $02 ;  8, 2
+	db $ff, $14, $09, $03 ;  9, 3
+	db $00, $06, $0a, $ff ; 10, 255
+	db $01, $07, $0b, $05 ; 11, 5
+	db $02, $08, $0c, $06 ; 12, 6
+	db $03, $09, $0d, $07 ; 13, 7
+	db $04, $19, $0e, $08 ; 14, 8
+	db $05, $0b, $0f, $ff ; 15, 255
+	db $06, $0c, $10, $0a ; 16, 10
+	db $07, $0d, $11, $0b ; 17, 11
+	db $08, $0e, $12, $0c ; 18, 12
+	db $09, $1e, $13, $0d ; 19, 13
+	db $0a, $10, $2d, $ff ; 45, 255
+	db $0b, $11, $2d, $0f ; 45, 15
+	db $0c, $12, $2d, $10 ; 45, 16
+	db $0d, $13, $2d, $11 ; 45, 17
+	db $0e, $26, $2d, $12 ; 45, 18
+	db $ff, $15, $19, $04 ; 25, 4
+	db $ff, $16, $1a, $14 ; 26, 20
+	db $ff, $17, $1b, $15 ; 27, 21
+	db $ff, $18, $1c, $16 ; 28, 22
+	db $ff, $23, $1d, $17 ; 29, 23
+	db $14, $1a, $1e, $09 ; 30, 9
+	db $15, $1b, $1f, $19 ; 31, 25
+	db $16, $1c, $20, $1a ; 32, 26
+	db $17, $1d, $21, $1b ; 33, 27
+	db $18, $2b, $22, $1c ; 34, 28
+	db $19, $1f, $26, $0e ; 38, 14
+	db $1a, $20, $27, $1e ; 39, 30
+	db $1b, $21, $28, $1f ; 40, 31
+	db $1c, $22, $29, $20 ; 41, 32
+	db $1d, $2c, $2a, $21 ; 42, 33
+	db $ff, $24, $2b, $18 ; 43, 24
+	db $ff, $25, $2b, $23 ; 43, 35
+	db $ff, $ff, $2b, $24 ; 43, 36
+	db $1e, $27, $2e, $13 ; 46, 19
+	db $1f, $28, $2e, $26 ; 46, 38
+	db $20, $29, $2e, $27 ; 46, 39
+	db $21, $2a, $2e, $28 ; 46, 40
+	db $22, $ff, $2e, $29 ; 46, 41
+	db $23, $ff, $2c, $1d ; 44, 29
+	db $2b, $ff, $2f, $22 ; 47, 34
+	db $0f, $2e, $ff, $ff ; 255, 255
+	db $26, $2f, $ff, $2d ; 255, 45
+	db $2c, $ff, $ff, $2e ; 255, 46
 
 EZChatScript_SortByCharacterTable: ; Hiragana table, used when sorting alphabetically
 ; Hiragana table
@@ -2713,14 +2624,14 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 
 .two ; Sort By Letter Menu
 	ld hl, .FramesetsIDs_Two
-	ld a, [wcd22]
+	ld a, [wEZChatSortedSelection]
 	ld e, a
 	ld d, $0 ; Message Menu Index (?)
 	add hl, de
 	ld a, [hl]
 	call ReinitSpriteAnimFrame
 
-	ld a, [wcd22]
+	ld a, [wEZChatSortedSelection]
 	sla a
 	ld hl, .Coords_Two
 	ld e, $4 ; Yes/No Menu Index (?)
@@ -2881,7 +2792,6 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	ret
 
 .Coords_Zero: ; EZChat Message Menu
-if 1
 	dbpixel  1,  3, 5, 2 ; Message 1 - 00
 	dbpixel 10,  3, 5, 2 ; Message 2 - 01
 	dbpixel  1,  5, 5, 2 ; Message 3 - 02
@@ -2889,17 +2799,6 @@ if 1
 	dbpixel  1, 17, 5, 2 ; RESET     - 04
 	dbpixel  7, 17, 5, 2 ; QUIT      - 05
 	dbpixel 13, 17, 5, 2 ; OK        - 06
-else
-	dbpixel  1,  3, 5, 2 ; Message 1
-	dbpixel  7,  3, 5, 2 ; Message 2
-	dbpixel 13,  3, 5, 2 ; Message 3
-	dbpixel  1,  5, 5, 2 ; Message 4
-	dbpixel  7,  5, 5, 2 ; Message 5
-	dbpixel 13,  5, 5, 2 ; Message 6
-	dbpixel  1, 17, 5, 2 ; RESET
-	dbpixel  7, 17, 5, 2 ; QUIT
-	dbpixel 13, 17, 5, 2 ; OK
-endc
 
 .Coords_One: ; Category Menu
 	dbpixel  1,  8, 5, 2 ; PKMN
@@ -2972,33 +2871,14 @@ endc
 	dbpixel 13, 18, 5, 2 ; 2f
 
 .Coords_Three: ; Words Submenu Arrow Positions
-if 1
 	dbpixel  2, 10 
 	dbpixel  11, 10 ; 8, 10 MENU_WIDTH
-	;dbpixel 14, 10
 	dbpixel  2, 12
 	dbpixel  11, 12 ; 8, 12 MENU_WIDTH
-	;dbpixel 14, 12
 	dbpixel  2, 14
 	dbpixel  11, 14 ; 8, 14 MENU_WIDTH
-	;dbpixel 14, 14
 	dbpixel  2, 16
 	dbpixel  11, 16 ; 8, 16 MENU_WIDTH
-	;dbpixel 14, 16
-else
-	dbpixel  2, 10 
-	dbpixel  8, 10 ; MENU_WIDTH
-	dbpixel 14, 10
-	dbpixel  2, 12
-	dbpixel  8, 12 ; MENU_WIDTH
-	dbpixel 14, 12
-	dbpixel  2, 14
-	dbpixel  8, 14 ; MENU_WIDTH
-	dbpixel 14, 14
-	dbpixel  2, 16
-	dbpixel  8, 16 ; MENU_WIDTH
-	dbpixel 14, 16
-endc
 
 .Coords_Four: ; Yes/No Box
 	dbpixel 16, 10 ; YES
@@ -3390,7 +3270,7 @@ EZChat_GetSeenPokemonByKana: ; From here all the way down to roughly 3236 is the
 EZChat_GetCategoryWordsByKana:
 	ldh a, [rSVBK]
 	push af
-	ld a, $3
+	ld a, BANK(w3_d000)
 	ldh [rSVBK], a
 
 	; load pointers
@@ -3404,7 +3284,7 @@ EZChat_GetCategoryWordsByKana:
 	ld [wcd2e], a
 
 	; enter the first loop
-	ld a, 14
+	ld a, 14 ; number of categories
 .loop1
 	push af
 
@@ -3429,7 +3309,7 @@ EZChat_GetCategoryWordsByKana:
 	push af
 	push hl
 
-	; load offset at [hl]
+	; load word placement offset at [hl]
 	ld a, [hli]
 	ld e, a
 	ld a, [hl]
