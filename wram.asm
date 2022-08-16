@@ -761,7 +761,12 @@ NEXTU
 
 wEZChatWordBuffer:: ds NAME_LENGTH
 
-	ds 36
+	ds 53
+
+wEZChatSortedWordPointers:: ds 2
+wc64a:: ds 2
+ds $5c
+wc6a8:: ds 2
 
 ENDU ; c6d0
 
@@ -1193,6 +1198,7 @@ wMobileMonSpeciesBuffer::
 wcd2a:: db
 
 wTempOddEggNickname:: ; ds 11
+wEZChatCategoryMode:: ; 0 = grouped, 1 = sorted
 wcd2b:: ds 1
 wcd2c:: ds 1
 wcd2d:: ds 1
@@ -3165,6 +3171,7 @@ ENDU ; d462
 
 SECTION "Mobile RAM", WRAMX
 
+wEZChatSortedWords::
 w5_d800:: ds $200
 w5_da00:: ds $200
 w5_dc00:: ds $d
