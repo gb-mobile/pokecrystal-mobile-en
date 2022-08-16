@@ -761,6 +761,8 @@ NEXTU
 
 wEZChatWordBuffer:: ds NAME_LENGTH
 
+	ds 36
+
 ENDU ; c6d0
 
 ; This union spans 280 bytes from c6d0 to c7e8.
@@ -1174,13 +1176,16 @@ wEZChatSelection:: ; cd20
 wcd20:: ds 1
 wEZChatCategorySelection::
 wcd21:: ds 1
+wEZChatSortedSelection::
 wcd22:: ds 1
 wcd23:: ds 1
 wcd24:: ds 1
 wEZChatWordSelection::
 wMobileCommsJumptableIndex:: ds 1 ; cd25
+wEZChatPageOffset::
 wcd26:: ds 1
 wcd27:: ds 1
+wEZChatLoadedItems::
 wcd28:: ds 1
 wcd29:: ds 1
 
