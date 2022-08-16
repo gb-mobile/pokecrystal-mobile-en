@@ -2237,9 +2237,9 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 
 .a
 	ld a, [wEZChatSortedSelection]
-	cp NUM_KANA
+	cp $19 ; index of ERASE option
 	jr c, .place
-	sub NUM_KANA
+	sub $19 ; index of ERASE option
 	jr z, .done
 	dec a
 	jr z, .mode
@@ -2295,61 +2295,42 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 
 .NeighboringCharacters: ; Sort Menu Letter tile values or coordinates?
 	;  up   rgt  dwn  lft
-	db $ff, $01, $05, $ff ;  5, 255
-	db $ff, $02, $06, $00 ;  6, 0
-	db $ff, $03, $07, $01 ;  7, 1
-	db $ff, $04, $08, $02 ;  8, 2
-	db $ff, $14, $09, $03 ;  9, 3
-	db $00, $06, $0a, $ff ; 10, 255
-	db $01, $07, $0b, $05 ; 11, 5
-	db $02, $08, $0c, $06 ; 12, 6
-	db $03, $09, $0d, $07 ; 13, 7
-	db $04, $19, $0e, $08 ; 14, 8
-	db $05, $0b, $0f, $ff ; 15, 255
-	db $06, $0c, $10, $0a ; 16, 10
-	db $07, $0d, $11, $0b ; 17, 11
-	db $08, $0e, $12, $0c ; 18, 12
-	db $09, $1e, $13, $0d ; 19, 13
-	db $0a, $10, $2d, $ff ; 45, 255
-	db $0b, $11, $2d, $0f ; 45, 15
-	db $0c, $12, $2d, $10 ; 45, 16
-	db $0d, $13, $2d, $11 ; 45, 17
-	db $0e, $26, $2d, $12 ; 45, 18
-	db $ff, $15, $19, $04 ; 25, 4
-	db $ff, $16, $1a, $14 ; 26, 20
-	db $ff, $17, $1b, $15 ; 27, 21
-	db $ff, $18, $1c, $16 ; 28, 22
-	db $ff, $23, $1d, $17 ; 29, 23
-	db $14, $1a, $1e, $09 ; 30, 9
-	db $15, $1b, $1f, $19 ; 31, 25
-	db $16, $1c, $20, $1a ; 32, 26
-	db $17, $1d, $21, $1b ; 33, 27
-	db $18, $2b, $22, $1c ; 34, 28
-	db $19, $1f, $26, $0e ; 38, 14
-	db $1a, $20, $27, $1e ; 39, 30
-	db $1b, $21, $28, $1f ; 40, 31
-	db $1c, $22, $29, $20 ; 41, 32
-	db $1d, $2c, $2a, $21 ; 42, 33
-	db $ff, $24, $2b, $18 ; 43, 24
-	db $ff, $25, $2b, $23 ; 43, 35
-	db $ff, $ff, $2b, $24 ; 43, 36
-	db $1e, $27, $2e, $13 ; 46, 19
-	db $1f, $28, $2e, $26 ; 46, 38
-	db $20, $29, $2e, $27 ; 46, 39
-	db $21, $2a, $2e, $28 ; 46, 40
-	db $22, $ff, $2e, $29 ; 46, 41
-	db $23, $ff, $2c, $1d ; 44, 29
-	db $2b, $ff, $2f, $22 ; 47, 34
-	db $0f, $2e, $ff, $ff ; 255, 255
-	db $26, $2f, $ff, $2d ; 255, 45
-	db $2c, $ff, $ff, $2e ; 255, 46
+	db $ff, $01, $09, $ff ; A 00
+	db $ff, $02, $0a, $00 ; B 01
+	db $ff, $03, $0b, $01 ; C 02
+	db $ff, $04, $0c, $02 ; D 03
+	db $ff, $05, $0d, $03 ; E 04
+	db $ff, $06, $0e, $04 ; F 05
+	db $ff, $07, $0f, $05 ; G 06
+	db $ff, $08, $10, $06 ; H 07
+	db $ff, $ff, $11, $07 ; I 08
+	db $00, $0a, $12, $ff ; J 09
+	db $01, $0b, $13, $09 ; K 0A
+	db $02, $0c, $14, $0a ; L 0B
+	db $03, $0d, $15, $0b ; M 0C
+	db $04, $0e, $16, $0c ; N 0D
+	db $05, $0f, $1a, $0d ; O 0E
+	db $06, $10, $17, $0e ; P 0F 
+	db $07, $11, $1b, $0f ; Q 10
+	db $08, $ff, $1b, $10 ; R 11
+	db $09, $13, $18, $ff ; S 12
+	db $0a, $14, $18, $12 ; T 13
+	db $0b, $15, $19, $13 ; U 14
+	db $0c, $16, $1a, $14 ; V 15
+	db $0d, $17, $1a, $15 ; W 16
+	;db $0e, $ff, $ff, $ff ; X 17 (n/a)
+	db $0f, $ff, $1b, $16 ; Y 18 / 17
+	;db $10, $ff, $ff, $ff ; Z 19 (n/a)
+	db $12, $01, $19, $ff ; ETC.   1A / 18
+	db $18, $1a, $ff, $ff ; ERASE  1B / 19
+	db $15, $1b, $ff, $19 ; MODE   1C / 1A
+	db $17, $ff, $ff, $1a ; CANCEL 1D / 1B
 
-EZChatScript_SortByCharacterTable: ; Hiragana table, used when sorting alphabetically
-; Hiragana table
-	db   "ABCDE　FGHIJ　-　-　-" ;"あいうえお　なにぬねの　や　ゆ　よ"
-	next "KLMNO　PQRST　-" ; "かきくけこ　はひふへほ　わ"
-	next "UVWXY　Z----　ETC" ; "さしすせそ　まみむめも　そのた"
-	next "-----　-----" ;"たちつてと　らりるれろ"
+EZChatScript_SortByCharacterTable:
+	db   "A B C D E F G H I"
+	next "J K L M N O P Q R"
+	next "S T U V W - Y -"
+	next "ETC"
 	db   "@"
 
 Function11cfb5:
@@ -2821,54 +2802,36 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dbpixel 13, 18, 5, 2 ; CANCEL
 
 .Coords_Two: ; Sort By Letter Menu
-	dbpixel  2,  9       ; 00
-	dbpixel  3,  9       ; 01
-	dbpixel  4,  9       ; 02
-	dbpixel  5,  9       ; 03
-	dbpixel  6,  9       ; 04
-	dbpixel  2, 11       ; 05
-	dbpixel  3, 11       ; 06
-	dbpixel  4, 11       ; 07
-	dbpixel  5, 11       ; 08
-	dbpixel  6, 11       ; 09
-	dbpixel  2, 13       ; 0a
-	dbpixel  3, 13       ; 0b
-	dbpixel  4, 13       ; 0c
-	dbpixel  5, 13       ; 0d
-	dbpixel  6, 13       ; 0e
-	dbpixel  2, 15       ; 0f
-	dbpixel  3, 15       ; 10
-	dbpixel  4, 15       ; 11
-	dbpixel  5, 15       ; 12
-	dbpixel  6, 15       ; 13
-	dbpixel  8,  9       ; 14
-	dbpixel  9,  9       ; 15
-	dbpixel 10,  9       ; 16
-	dbpixel 11,  9       ; 17
-	dbpixel 12,  9       ; 18
-	dbpixel  8, 11       ; 19
-	dbpixel  9, 11       ; 1a
-	dbpixel 10, 11       ; 1b
-	dbpixel 11, 11       ; 1c
-	dbpixel 12, 11       ; 1d
-	dbpixel  8, 13       ; 1e
-	dbpixel  9, 13       ; 1f
-	dbpixel 10, 13       ; 20
-	dbpixel 11, 13       ; 21
-	dbpixel 12, 13       ; 22
-	dbpixel 14,  9       ; 23
-	dbpixel 16,  9       ; 24
-	dbpixel 18,  9       ; 25
-	dbpixel  8, 15       ; 26
-	dbpixel  9, 15       ; 27
-	dbpixel 10, 15       ; 28
-	dbpixel 11, 15       ; 29
-	dbpixel 12, 15       ; 2a
-	dbpixel 14, 11       ; 2b
-	dbpixel 14, 13       ; 2c
-	dbpixel  1, 18, 5, 2 ; 2d
-	dbpixel  7, 18, 5, 2 ; 2e
-	dbpixel 13, 18, 5, 2 ; 2f
+	dbpixel  2,  9 ; A
+	dbpixel  4,  9 ; B
+	dbpixel  6,  9 ; C
+	dbpixel  8,  9 ; D
+	dbpixel 10,  9 ; E
+	dbpixel 12,  9 ; F
+	dbpixel 14,  9 ; G
+	dbpixel 16,  9 ; H
+	dbpixel 18,  9 ; I
+	dbpixel  2, 11 ; J
+	dbpixel  4, 11 ; K
+	dbpixel  6, 11 ; L
+	dbpixel  8, 11 ; M
+	dbpixel 10, 11 ; N
+	dbpixel 12, 11 ; O
+	dbpixel 14, 11 ; P
+	dbpixel 16, 11 ; Q
+	dbpixel 18, 11 ; R
+	dbpixel  2, 13 ; S
+	dbpixel  4, 13 ; T
+	dbpixel  6, 13 ; U
+	dbpixel  8, 13 ; V
+	dbpixel 10, 13 ; W
+;	dbpixel 12, 13 ; X
+	dbpixel 14, 13 ; Y
+;	dbpixel 16, 13 ; Z
+	dbpixel  2, 15 ; ETC.
+	dbpixel  1, 18, 5, 2 ; ERASE
+	dbpixel  7, 18, 5, 2 ; MODE
+	dbpixel 13, 18, 5, 2 ; CANCEL
 
 .Coords_Three: ; Words Submenu Arrow Positions
 	dbpixel  2, 10 
@@ -2913,30 +2876,10 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 15 (Letter selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 16 (Letter selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 17 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 18 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 19 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 1a (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 1b (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 1c (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 1d (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 1e (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 1f (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 20 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 21 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 22 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 23 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 24 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 25 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 26 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 27 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 28 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 29 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 2a (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 2b (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_4 ; 2c (Misc selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 2d (Bottom Menu Selection box?)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 2e (Bottom Menu Selection box?)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 2f (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_4 ; 18 (Misc selection box for the sort by menu)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 19 (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1a (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1b (Bottom Menu Selection box?)
 
 .UpdateObjectFlags:
 	ld hl, wcd24
@@ -3364,7 +3307,7 @@ INCBIN "gfx/pokedex/slowpoke_mobile.2bpp.lz"
 
 MobileEZChatCategoryNames:
 ; Fixed message categories
-	db "PKMN@@" 	; 00 ; Pokemon 		; "ポケモン@@"
+	db "PKMN@@" 	; 00 ; Pokemon 		; "ポケモン@@" ; this could've also been rendered as <PK><MN> but it looks odd
 	db "TYPES@" 	; 01 ; Types		; "タイプ@@@"
 	db "GREET@" 	; 02 ; Greetings	; "あいさつ@@"
 	db "HUMAN@" 	; 03 ; People		; "ひと@@@@"
