@@ -756,6 +756,11 @@ wc668:: ds 32
 wc688:: ds 2
 wc68a:: ds 4
 	ds 66
+
+NEXTU
+
+wEZChatWordBuffer:: ds NAME_LENGTH
+
 ENDU ; c6d0
 
 ; This union spans 280 bytes from c6d0 to c7e8.
@@ -1165,11 +1170,14 @@ wMobileMonMailPointerBuffer:: dw
 
 NEXTU ; cd20
 ; more mobile data
+wEZChatSelection:: ; cd20
 wcd20:: ds 1
+wEZChatCategorySelection::
 wcd21:: ds 1
 wcd22:: ds 1
 wcd23:: ds 1
 wcd24:: ds 1
+wEZChatWordSelection::
 wMobileCommsJumptableIndex:: ds 1 ; cd25
 wcd26:: ds 1
 wcd27:: ds 1
