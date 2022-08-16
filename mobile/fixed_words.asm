@@ -3404,790 +3404,790 @@ ezchat_word: MACRO
 ENDM
 
 .Types:
-	ezchat_word "DARK@@@@", $026 ; あく@@@,
-	ezchat_word "ROCK@@@@", $0aa ; いわ@@@,
-	ezchat_word "PSYCHIC@", $0da ; エスパー@,
-	ezchat_word "FIGHTING", $14e ; かくとう@,
-	ezchat_word "GRASS@@@", $1ba ; くさ@@@,
-	ezchat_word "GHOST@@@", $1e4 ; ゴースト@,
-	ezchat_word "ICE@@@@@", $1e6 ; こおり@@,
-	ezchat_word "GROUND@@", $268 ; じめん@@,
-	ezchat_word "TYPE@@@@", $2e8 ; タイプ@@,
-	ezchat_word "ELECTRIC", $38e ; でんき@@,
-	ezchat_word "POISON@@", $3ae ; どく@@@,
-	ezchat_word "DRAGON@@", $3bc ; ドラゴン@,
-	ezchat_word "NORMAL@@", $422 ; ノーマル@,
-	ezchat_word "STEEL@@@", $436 ; はがね@@,
-	ezchat_word "FLYING@@", $45e ; ひこう@@,
-	ezchat_word "FIRE@@@@", $4b2 ; ほのお@@,
-	ezchat_word "WATER@@@", $4f4 ; みず@@@,
-	ezchat_word "BUG@@@@@", $512 ; むし@@@,
+	ezchat_word "DARK@@@@", $110
+	ezchat_word "ROCK@@@@", $3fe
+	ezchat_word "PSYCHIC@", $3da
+	ezchat_word "FIGHTING", $1a0
+	ezchat_word "GRASS@@@", $20e
+	ezchat_word "GHOST@@@", $1d8
+	ezchat_word "ICE@@@@@", $294
+	ezchat_word "GROUND@@", $214
+	ezchat_word "TYPE@@@@", $518
+	ezchat_word "ELECTRIC", $15e
+	ezchat_word "POISON@@", $3ca
+	ezchat_word "DRAGON@@", $146
+	ezchat_word "NORMAL@@", $372
+	ezchat_word "STEEL@@@", $474
+	ezchat_word "FLYING@@", $1b2
+	ezchat_word "FIRE@@@@", $1a8
+	ezchat_word "WATER@@@", $558
+	ezchat_word "BUG@@@@@", $0ae
 
 .Greetings:
-	ezchat_word "THANKS@@", $058 ; ありがと@,
-	ezchat_word "THANK U@", $05a ; ありがとう,
-	ezchat_word "LETS GO!", $080 ; いくぜ！@,
-	ezchat_word "GO ON!@@", $082 ; いくよ！@,
-	ezchat_word "DO IT!@@", $084 ; いくわよ！,
-	ezchat_word "YEAH@@@@", $0a6 ; いやー@@,
-	ezchat_word "HOW DO@@", $10a ; おっす@@,
-	ezchat_word "HOWDY!@@", $122 ; おはつです,
-	ezchat_word "CONGRATS", $12a ; おめでとう,
-	ezchat_word "SORRY@@@", $1f8 ; ごめん@@,
-	ezchat_word "SORRY!@@", $1fa ; ごめんよ@,
-	ezchat_word "HI THERE", $1fc ; こらっ@@,
-	ezchat_word "HI!@@@@@", $20a ; こんちは！,
-	ezchat_word "HELLO@@@", $210 ; こんにちは,
-	ezchat_word "GOOD-BYE", $228 ; さようなら,
-	ezchat_word "CHEERS@@", $22e ; サンキュー,
-	ezchat_word "I'M HERE", $230 ; さんじょう,
-	ezchat_word "PARDON@@", $248 ; しっけい@,
-	ezchat_word "EXCUSE@@", $24c ; しつれい@,
-	ezchat_word "SEE YA@@", $26c ; じゃーね@,
-	ezchat_word "YO!@@@@@", $28c ; すいません,
-	ezchat_word "WELL...@", $2ca ; それじゃ@,
-	ezchat_word "GRATEFUL", $3a6 ; どうも@@,
-	ezchat_word "WASSUP?@", $3ee ; なんじゃ@,
-	ezchat_word "HI@@@@@@", $42c ; ハーイ@@,
+		ezchat_word "THANKS@@", $4a8
+	ezchat_word "THANK U@", $4a6
+	ezchat_word "LETS GO!", $2da
+	ezchat_word "GO ON!@@", $1f2
+	ezchat_word "DO IT!@@", $136
+	ezchat_word "YEAH@@@@", $5be
+	ezchat_word "HOW DO@@", $278
+	ezchat_word "HOWDY!@@", $27a
+	ezchat_word "CONGRATS", $0ee
+	ezchat_word "SORRY@@@", $468
+	ezchat_word "SORRY!@@", $46a
+	ezchat_word "HI THERE", $250
+	ezchat_word "HI!@@@@@", $252
+	ezchat_word "HELLO@@@", $23e
+	ezchat_word "GOOD-BYE", $1fe
+	ezchat_word "CHEERS@@", $0d2
+	ezchat_word "I'M HERE", $290
+	ezchat_word "PARDON@@", $3ac
+	ezchat_word "EXCUSE@@", $180
+	ezchat_word "SEE YA@@", $416
+	ezchat_word "YO!@@@@@", $5c6
+	ezchat_word "WELL...@", $56e
+	ezchat_word "GRATEFUL", $210
+	ezchat_word "WASSUP?@", $556
+	ezchat_word "HI@@@@@@", $24e
 ; rgbds 0.4.1 weird quirk where "," inside a string within a macro is parsed as if it's outside it
-	db "YEA, YEA" ; はいはい@,
-	dw $432
+	db "YEA, YEA"
+	dw $5bc
 	db 0
-	ezchat_word "BYE-BYE@", $434 ; バイバイ@,
-	ezchat_word "HEY@@@@@", $48a ; へイ@@@,
-	ezchat_word "SMELL@@@", $4de ; またね@@,
-	ezchat_word "TUNED IN", $532 ; もしもし@,
-	ezchat_word "HOO-HAH@", $53e ; やあ@@@,
-	ezchat_word "YAHOO@@@", $54e ; やっほー@,
-	ezchat_word "YO@@@@@@", $562 ; よう@@@,
-	ezchat_word "GO OVER@", $564 ; ようこそ@,
-	ezchat_word "COUNT ON", $580 ; よろしく@,
-	ezchat_word "WELCOME@", $594 ; らっしゃい,
+	ezchat_word "BYE-BYE@", $0b4
+	ezchat_word "HEY@@@@@", $24a
+	ezchat_word "SMELL@@@", $452
+	ezchat_word "TUNED IN", $514
+	ezchat_word "HOO-HAH@", $272
+	ezchat_word "YAHOO@@@", $5b8
+	ezchat_word "YO@@@@@@", $5c4
+	ezchat_word "GO OVER@", $1f4
+	ezchat_word "COUNT ON", $0fc
+	ezchat_word "WELCOME@", $56a
 
 .People:
-	ezchat_word "OPPONENT", $01c ; あいて@@,
-	ezchat_word "I@@@@@@@", $036 ; あたし@@,
-	ezchat_word "YOU@@@@@", $040 ; あなた@@,
-	ezchat_word "YOURS@@@", $042 ; あなたが@,
-	ezchat_word "SON@@@@@", $044 ; あなたに@,
-	ezchat_word "YOUR@@@@", $046 ; あなたの@,
-	ezchat_word "YOU'RE@@", $048 ; あなたは@,
-	ezchat_word "YOU'VE@@", $04a ; あなたを@,
-	ezchat_word "MOM@@@@@", $0e8 ; おかあさん,
-	ezchat_word "GRANDPA@", $0fc ; おじいさん,
-	ezchat_word "UNCLE@@@", $102 ; おじさん@,
-	ezchat_word "DAD@@@@@", $10e ; おとうさん,
-	ezchat_word "BOY@@@@@", $110 ; おとこのこ,
-	ezchat_word "ADULT@@@", $114 ; おとな@@,
-	ezchat_word "BROTHER@", $116 ; おにいさん,
-	ezchat_word "SISTER@@", $118 ; おねえさん,
-	ezchat_word "GRANDMA@", $11c ; おばあさん,
-	ezchat_word "AUNT@@@@", $120 ; おばさん@,
-	ezchat_word "ME@@@@@@", $134 ; おれさま@,
-	ezchat_word "GIRL@@@@", $13a ; おんなのこ,
-	ezchat_word "BABE@@@@", $140 ; ガール@@,
-	ezchat_word "FAMILY@@", $152 ; かぞく@@,
-	ezchat_word "HER@@@@@", $172 ; かのじょ@,
-	ezchat_word "HIM@@@@@", $17c ; かれ@@@,
-	ezchat_word "HE@@@@@@", $19a ; きみ@@@,
-	ezchat_word "PLACE@@@", $19c ; きみが@@,
-	ezchat_word "DAUGHTER", $19e ; きみに@@,
-	ezchat_word "HIS@@@@@", $1a0 ; きみの@@,
-	ezchat_word "HE'S@@@@", $1a2 ; きみは@@,
-	ezchat_word "AREN'T@@", $1a4 ; きみを@@,
-	ezchat_word "GAL@@@@@", $1ae ; ギャル@@,
-	ezchat_word "SIBLINGS", $1b2 ; きょうだい,
-	ezchat_word "CHILDREN", $1f0 ; こども@@,
-	ezchat_word "MYSELF@@", $254 ; じぶん@@,
-	ezchat_word "I WAS@@@", $256 ; じぶんが@,
-	ezchat_word "TO ME@@@", $258 ; じぶんに@,
-	ezchat_word "MY@@@@@@", $25a ; じぶんの@,
-	ezchat_word "I AM@@@@", $25c ; じぶんは@,
-	ezchat_word "I'VE@@@@", $25e ; じぶんを@,
-	ezchat_word "WHO@@@@@", $318 ; だれ@@@,
-	ezchat_word "SOMEONE@", $31a ; だれか@@,
-	ezchat_word "WHO WAS@", $31c ; だれが@@,
-	ezchat_word "TO WHOM@", $31e ; だれに@@,
-	ezchat_word "WHOSE@@@", $320 ; だれの@@,
-	ezchat_word "WHO IS@@", $322 ; だれも@@,
-	ezchat_word "IT'S@@@@", $324 ; だれを@@,
-	ezchat_word "LADY@@@@", $338 ; ちゃん@@,
-	ezchat_word "FRIEND@@", $3b8 ; ともだち@,
-	ezchat_word "ALLY@@@@", $3d4 ; なかま@@,
-	ezchat_word "PEOPLE@@", $462 ; ひと@@@,
-	ezchat_word "DUDE@@@@", $498 ; ボーイ@@,
-	ezchat_word "THEY@@@@", $4a0 ; ボク@@@,
-	ezchat_word "THEY ARE", $4a2 ; ボクが@@,
-	ezchat_word "TO THEM@", $4a4 ; ボクに@@,
-	ezchat_word "THEIR@@@", $4a6 ; ボクの@@,
-	ezchat_word "THEY'RE@", $4a8 ; ボクは@@,
-	ezchat_word "THEY'VE@", $4aa ; ボクを@@,
-	ezchat_word "WE@@@@@@", $504 ; みんな@@,
-	ezchat_word "BEEN@@@@", $506 ; みんなが@,
-	ezchat_word "TO US@@@", $508 ; みんなに@,
-	ezchat_word "OUR@@@@@", $50a ; みんなの@,
-	ezchat_word "WE'RE@@@", $50c ; みんなは@,
-	ezchat_word "RIVAL@@@", $58a ; ライバル@,
-	ezchat_word "SHE@@@@@", $5c2 ; わたし@@,
-	ezchat_word "SHE WAS@", $5c4 ; わたしが@,
-	ezchat_word "TO HER@@", $5c6 ; わたしに@,
-	ezchat_word "HERS@@@@", $5c8 ; わたしの@,
-	ezchat_word "SHE IS@@", $5ca ; わたしは@,
-	ezchat_word "SOME@@@@", $5cc ; わたしを@,
+	ezchat_word "OPPONENT", $39a
+	ezchat_word "I@@@@@@@", $284
+	ezchat_word "YOU@@@@@", $5c8
+	ezchat_word "YOURS@@@", $5d2
+	ezchat_word "SON@@@@@", $462
+	ezchat_word "YOUR@@@@", $5d0
+	ezchat_word "YOU'RE@@", $5cc
+	ezchat_word "YOU'VE@@", $5ce
+	ezchat_word "MOM@@@@@", $324
+	ezchat_word "GRANDPA@", $20c
+	ezchat_word "UNCLE@@@", $522
+	ezchat_word "DAD@@@@@", $108
+	ezchat_word "BOY@@@@@", $0a8
+	ezchat_word "ADULT@@@", $026
+	ezchat_word "BROTHER@", $0ac
+	ezchat_word "SISTER@@", $442
+	ezchat_word "GRANDMA@", $20a
+	ezchat_word "AUNT@@@@", $06c
+	ezchat_word "ME@@@@@@", $30e
+	ezchat_word "GIRL@@@@", $1e0
+	ezchat_word "BABE@@@@", $078
+	ezchat_word "FAMILY@@", $190
+	ezchat_word "HER@@@@@", $240
+	ezchat_word "HIM@@@@@", $25a
+	ezchat_word "HE@@@@@@", $22c
+	ezchat_word "PLACE@@@", $3ba
+	ezchat_word "DAUGHTER", $116
+	ezchat_word "HIS@@@@@", $25c
+	ezchat_word "HE'S@@@@", $22e
+	ezchat_word "AREN'T@@", $05e
+	ezchat_word "GAL@@@@@", $1d0
+	ezchat_word "SIBLINGS", $43a
+	ezchat_word "CHILDREN", $0d6
+	ezchat_word "MYSELF@@", $346
+	ezchat_word "I WAS@@@", $28a
+	ezchat_word "TO ME@@@", $4e0
+	ezchat_word "MY@@@@@@", $344
+	ezchat_word "I AM@@@@", $286
+	ezchat_word "I'VE@@@@", $292
+	ezchat_word "WHO@@@@@", $580
+	ezchat_word "SOMEONE@", $45e
+	ezchat_word "WHO WAS@", $584
+	ezchat_word "TO WHOM@", $4e6
+	ezchat_word "WHOSE@@@", $58a
+	ezchat_word "WHO IS@@", $582
+	ezchat_word "IT'S@@@@", $2b2
+	ezchat_word "LADY@@@@", $2c6
+	ezchat_word "FRIEND@@", $1c4
+	ezchat_word "ALLY@@@@", $034
+	ezchat_word "PEOPLE@@", $3b4
+	ezchat_word "DUDE@@@@", $14e
+	ezchat_word "THEY@@@@", $4be
+	ezchat_word "THEY ARE", $4c0
+	ezchat_word "TO THEM@", $4e2
+	ezchat_word "THEIR@@@", $4b8
+	ezchat_word "THEY'RE@", $4c2
+	ezchat_word "THEY'VE@", $4c4
+	ezchat_word "WE@@@@@@", $55a
+	ezchat_word "BEEN@@@@", $08a
+	ezchat_word "TO US@@@", $4e4
+	ezchat_word "OUR@@@@@", $3a0
+	ezchat_word "WE'RE@@@", $55c
+	ezchat_word "RIVAL@@@", $3fc
+	ezchat_word "SHE@@@@@", $426
+	ezchat_word "SHE WAS@", $42a
+	ezchat_word "TO HER@@", $4de
+	ezchat_word "HERS@@@@", $248
+	ezchat_word "SHE IS@@", $428
+	ezchat_word "SOME@@@@", $45a
 
 .Battle:
-	ezchat_word "MATCH UP", $018 ; あいしょう,
-	ezchat_word "GO!@@@@@", $088 ; いけ！@@,
-	ezchat_word "NO. 1@@@", $096 ; いちばん@,
-	ezchat_word "DECIDE@@", $14c ; かくご@@,
-	ezchat_word "I WIN@@@", $154 ; かたせて@,
-	ezchat_word "WINS@@@@", $156 ; かち@@@,
-	ezchat_word "WIN@@@@@", $158 ; かつ@@@,
-	ezchat_word "WON@@@@@", $160 ; かった@@,
-	ezchat_word "IF I WIN", $162 ; かったら@,
-	ezchat_word "I'LL WIN", $164 ; かって@@,
-	ezchat_word "CANT WIN", $166 ; かてない@,
-	ezchat_word "CAN WIN@", $168 ; かてる@@,
-	ezchat_word "NO MATCH", $170 ; かなわない,
-	ezchat_word "SPIRIT@@", $184 ; きあい@@,
-	ezchat_word "DECIDED@", $1a8 ; きめた@@,
-	ezchat_word "ACE CARD", $1b6 ; きりふだ@,
-	ezchat_word "HI-YA!@@", $1c2 ; くらえ@@,
-	ezchat_word "COME ON@", $1da ; こい！@@,
-	ezchat_word "ATTACK@@", $1e0 ; こうげき@,
-	ezchat_word "GIVE UP@", $1e2 ; こうさん@,
-	ezchat_word "GUTS@@@@", $208 ; こんじょう,
-	ezchat_word "TALENT@@", $216 ; さいのう@,
-	ezchat_word "STRATEGY", $21a ; さくせん@,
-	ezchat_word "SMITE@@@", $222 ; さばき@@,
-	ezchat_word "MATCH@@@", $27e ; しょうぶ@,
-	ezchat_word "VICTORY@", $280 ; しょうり@,
-	ezchat_word "OFFENSE@", $2b4 ; せめ@@@,
-	ezchat_word "SENSE@@@", $2b6 ; センス@@,
-	ezchat_word "VERSUS@@", $2e6 ; たいせん@,
-	ezchat_word "FIGHTS@@", $2f6 ; たたかい@,
-	ezchat_word "POWER@@@", $332 ; ちから@@,
-	ezchat_word "TASK@@@@", $336 ; チャレンジ,
-	ezchat_word "STRONG@@", $358 ; つよい@@,
-	ezchat_word "TOO MUCH", $35a ; つよすぎ@,
-	ezchat_word "HARD@@@@", $35c ; つらい@@,
-	ezchat_word "TERRIBLE", $35e ; つらかった,
-	ezchat_word "GO EASY@", $36c ; てかげん@,
-	ezchat_word "FOE@@@@@", $36e ; てき@@@,
-	ezchat_word "GENIUS@@", $390 ; てんさい@,
-	ezchat_word "LEGEND@@", $394 ; でんせつ@,
-	ezchat_word "TRAINER@", $3c6 ; トレーナー,
-	ezchat_word "ESCAPE@@", $404 ; にげ@@@,
-	ezchat_word "LUKEWARM", $410 ; ぬるい@@,
-	ezchat_word "AIM@@@@@", $416 ; ねらう@@,
-	ezchat_word "BATTLE@@", $44a ; バトル@@,
-	ezchat_word "FIGHT@@@", $472 ; ファイト@,
-	ezchat_word "REVIVE@@", $478 ; ふっかつ@,
-	ezchat_word "POINTS@@", $494 ; ポイント@,
-	ezchat_word "POKÉMON@", $4ac ; ポケモン@,
-	ezchat_word "SERIOUS@", $4bc ; ほんき@@,
-	ezchat_word "OH NO!@@", $4c4 ; まいった！,
-	ezchat_word "LOSS@@@@", $4c8 ; まけ@@@,
-	ezchat_word "YOU LOSE", $4ca ; まけたら@,
-	ezchat_word "LOST@@@@", $4cc ; まけて@@,
-	ezchat_word "LOSE@@@@", $4ce ; まける@@,
-	ezchat_word "GUARD@@@", $4ea ; まもり@@,
-	ezchat_word "PARTNER@", $4f2 ; みかた@@,
-	ezchat_word "REJECT@@", $4fe ; みとめない,
-	ezchat_word "ACCEPT@@", $500 ; みとめる@,
-	ezchat_word "UNBEATEN", $516 ; むてき@@,
-	ezchat_word "GOT IT!@", $53c ; もらった！,
-	ezchat_word "EASY@@@@", $57a ; よゆう@@,
-	ezchat_word "WEAK@@@@", $582 ; よわい@@,
-	ezchat_word "TOO WEAK", $584 ; よわすぎ@,
-	ezchat_word "PUSHOVER", $58e ; らくしょう,
-	ezchat_word "CHIEF@@@", $59e ; りーダー@,
-	ezchat_word "RULE@@@@", $5a0 ; ルール@@,
-	ezchat_word "LEVEL@@@", $5a6 ; レべル@@,
-	ezchat_word "MOVE@@@@", $5be ; わざ@@@,
+	ezchat_word "MATCH UP", $30a
+	ezchat_word "GO!@@@@@", $1f6
+	ezchat_word "NO. 1@@@", $36a
+	ezchat_word "DECIDE@@", $122
+	ezchat_word "I WIN@@@", $28c
+	ezchat_word "WINS@@@@", $594
+	ezchat_word "WIN@@@@@", $592
+	ezchat_word "WON@@@@@", $59e
+	ezchat_word "IF I WIN", $29c
+	ezchat_word "I'LL WIN", $28e
+	ezchat_word "CANT WIN", $0be
+	ezchat_word "CAN WIN@", $0b8
+	ezchat_word "NO MATCH", $366
+	ezchat_word "SPIRIT@@", $46c
+	ezchat_word "DECIDED@", $124
+	ezchat_word "ACE CARD", $022
+	ezchat_word "HI-YA!@@", $254
+	ezchat_word "COME ON@", $0e8
+	ezchat_word "ATTACK@@", $06a
+	ezchat_word "GIVE UP@", $1e4
+	ezchat_word "GUTS@@@@", $21a
+	ezchat_word "TALENT@@", $490
+	ezchat_word "STRATEGY", $47a
+	ezchat_word "SMITE@@@", $454
+	ezchat_word "MATCH@@@", $308
+	ezchat_word "VICTORY@", $53c
+	ezchat_word "OFFENSE@", $380
+	ezchat_word "SENSE@@@", $420
+	ezchat_word "VERSUS@@", $538
+	ezchat_word "FIGHTS@@", $1a2
+	ezchat_word "POWER@@@", $3d0
+	ezchat_word "TASK@@@@", $492
+	ezchat_word "STRONG@@", $47c
+	ezchat_word "TOO MUCH", $4f2
+	ezchat_word "HARD@@@@", $224
+	ezchat_word "TERRIBLE", $49e
+	ezchat_word "GO EASY@", $1ee
+	ezchat_word "FOE@@@@@", $1b4
+	ezchat_word "GENIUS@@", $1d4
+	ezchat_word "LEGEND@@", $2d2
+	ezchat_word "TRAINER@", $502
+	ezchat_word "ESCAPE@@", $170
+	ezchat_word "LUKEWARM", $2fe
+	ezchat_word "AIM@@@@@", $02e
+	ezchat_word "BATTLE@@", $082
+	ezchat_word "FIGHT@@@", $19e
+	ezchat_word "REVIVE@@", $3fa
+	ezchat_word "POINTS@@", $3c8
+	ezchat_word "POKéMON@", $3cc ; small e to conform better to existing style
+	ezchat_word "SERIOUS@", $422
+	ezchat_word "OH NO!@@", $382
+	ezchat_word "LOSS@@@@", $2f4
+	ezchat_word "YOU LOSE", $5ca
+	ezchat_word "LOST@@@@", $2f6
+	ezchat_word "LOSE@@@@", $2f2
+	ezchat_word "GUARD@@@", $218
+	ezchat_word "PARTNER@", $3ae
+	ezchat_word "REJECT@@", $3f4
+	ezchat_word "ACCEPT@@", $020
+	ezchat_word "UNBEATEN", $520
+	ezchat_word "GOT IT!@", $202
+	ezchat_word "EASY@@@@", $152
+	ezchat_word "WEAK@@@@", $55e
+	ezchat_word "TOO WEAK", $4f4
+	ezchat_word "PUSHOVER", $3dc
+	ezchat_word "CHIEF@@@", $0d4
+	ezchat_word "RULE@@@@", $402
+	ezchat_word "LEVEL@@@", $2dc
+	ezchat_word "MOVE@@@@", $334
 
 .Exclamations:
-	ezchat_word "!@@@@@@@", $000 ; ！@@@@,
-	ezchat_word "!!@@@@@@", $002 ; ！！@@@,
-	ezchat_word "!?@@@@@@", $004 ; ！？@@@,
-	ezchat_word "?@@@@@@@", $006 ; ？@@@@,
-	ezchat_word "…@@@@@@@", $008 ; ⋯@@@@,
-	ezchat_word "…!@@@@@@", $00a ; ⋯！@@@,
-	ezchat_word "………@@@@@", $00c ; ⋯⋯⋯@@,
-	ezchat_word "-@@@@@@@", $00e ; ー@@@@,
-	ezchat_word "- - -@@@", $010 ; ーーー@@,
-	ezchat_word "UH-OH@@@", $014 ; あーあ@@,
-	ezchat_word "WAAAH@@@", $016 ; あーん@@,
-	ezchat_word "AHAHA@@@", $052 ; あははー@,
-	ezchat_word "OH?@@@@@", $054 ; あら@@@,
-	ezchat_word "NOPE@@@@", $072 ; いえ@@@,
-	ezchat_word "YES@@@@@", $074 ; イエス@@,
-	ezchat_word "URGH@@@@", $0ac ; うう@@@,
-	ezchat_word "HMM@@@@@", $0ae ; うーん@@,
-	ezchat_word "WHOAH@@@", $0b0 ; うおー！@,
-	ezchat_word "WROOAAR!", $0b2 ; うおりゃー,
-	ezchat_word "WOW@@@@@", $0bc ; うひょー@,
-	ezchat_word "GIGGLES@", $0be ; うふふ@@,
-	ezchat_word "SHOCKING", $0ca ; うわー@@,
-	ezchat_word "CRIES@@@", $0cc ; うわーん@,
-	ezchat_word "AGREE@@@", $0d2 ; ええ@@@,
-	ezchat_word "EH?@@@@@", $0d4 ; えー@@@,
-	ezchat_word "CRY@@@@@", $0d6 ; えーん@@,
-	ezchat_word "EHEHE@@@", $0dc ; えへへ@@,
-	ezchat_word "HOLD ON!", $0e0 ; おいおい@,
-	db "OH, YEAH" ; おお@@@,
-	dw $0e2
+	ezchat_word "!@@@@@@@", $000
+	ezchat_word "!!@@@@@@", $002
+	ezchat_word "!?@@@@@@", $004
+	ezchat_word "?@@@@@@@", $006
+	ezchat_word "…@@@@@@@", $008
+	ezchat_word "…!@@@@@@", $00a
+	ezchat_word "………@@@@@", $00c
+	ezchat_word "-@@@@@@@", $00e
+	ezchat_word "- - -@@@", $010
+	ezchat_word "UH-OH@@@", $51c
+	ezchat_word "WAAAH@@@", $53e
+	ezchat_word "AHAHA@@@", $02c
+	ezchat_word "OH?@@@@@", $38a
+	ezchat_word "NOPE@@@@", $370
+	ezchat_word "YES@@@@@", $5c0
+	ezchat_word "URGH@@@@", $52a
+	ezchat_word "HMM@@@@@", $264
+	ezchat_word "WHOAH@@@", $586
+	ezchat_word "WROOAAR!", $5b2
+	ezchat_word "WOW@@@@@", $5ae
+	ezchat_word "GIGGLES@", $1dc
+	ezchat_word "SHOCKING", $430
+	ezchat_word "CRIES@@@", $0fe
+	ezchat_word "AGREE@@@", $02a
+	ezchat_word "EH?@@@@@", $15a
+	ezchat_word "CRY@@@@@", $102
+	ezchat_word "EHEHE@@@", $15c
+	ezchat_word "HOLD ON!", $26c
+	db "OH, YEAH"
+	dw $386
 	db 0
-	ezchat_word "OOPS@@@@", $10c ; おっと@@,
-	ezchat_word "SHOCKED@", $142 ; がーん@@,
-	ezchat_word "EEK@@@@@", $1aa ; キャー@@,
-	ezchat_word "GRAAAH@@", $1ac ; ギャー@@,
-	ezchat_word "HE-HE-HE", $1bc ; ぐふふふふ,
-	ezchat_word "ICK!@@@@", $1ce ; げっ@@@,
-	ezchat_word "WEEP@@@@", $23e ; しくしく@,
-	ezchat_word "HMPH@@@@", $32e ; ちえっ@@,
-	ezchat_word "BLUSH@@@", $386 ; てへ@@@,
-	ezchat_word "NO@@@@@@", $420 ; ノー@@@,
-	ezchat_word "HUH?@@@@", $42a ; はあー@@,
-	ezchat_word "YUP@@@@@", $430 ; はい@@@,
-	ezchat_word "HAHAHA@@", $448 ; はっはっは,
-	ezchat_word "AIYEEH@@", $456 ; ひいー@@,
-	ezchat_word "HIYAH@@@", $46a ; ひゃあ@@,
-	ezchat_word "FUFU@@@@", $47c ; ふっふっふ,
-	ezchat_word "MUTTER@@", $47e ; ふにゃ@@,
-	ezchat_word "LOL@@@@@", $480 ; ププ@@@,
-	ezchat_word "SNORT@@@", $482 ; ふふん@@,
-	ezchat_word "HUMPH@@@", $488 ; ふん@@@,
-	ezchat_word "HEHEHE@@", $48e ; へっへっへ,
-	ezchat_word "HEHE@@@@", $490 ; へへー@@,
-	ezchat_word "HOHOHO@@", $49c ; ほーほほほ,
-	ezchat_word "UH-HUH@@", $4b6 ; ほら@@@,
-	db "OH, DEAR" ; まあ@@@,
-	dw $4c0
+	ezchat_word "OOPS@@@@", $398
+	ezchat_word "SHOCKED@", $42e
+	ezchat_word "EEK@@@@@", $158
+	ezchat_word "GRAAAH@@", $208
+	ezchat_word "HE-HE-HE", $230
+	ezchat_word "ICK!@@@@", $296
+	ezchat_word "WEEP@@@@", $566
+	ezchat_word "HMPH@@@@", $266
+	ezchat_word "BLUSH@@@", $09e
+	ezchat_word "NO@@@@@@", $364
+	ezchat_word "HUH?@@@@", $27e
+	ezchat_word "YUP@@@@@", $5d4
+	ezchat_word "HAHAHA@@", $21e
+	ezchat_word "AIYEEH@@", $030
+	ezchat_word "HIYAH@@@", $260
+	ezchat_word "FUFU@@@@", $1c8
+	ezchat_word "MUTTER@@", $342
+	ezchat_word "LOL@@@@@", $2ec
+	ezchat_word "SNORT@@@", $456
+	ezchat_word "HUMPH@@@", $280
+	ezchat_word "HEHEHE@@", $23c
+	ezchat_word "HEHE@@@@", $23a
+	ezchat_word "HOHOHO@@", $26a
+	ezchat_word "UH-HUH@@", $51a
+	db "OH, DEAR"
+	dw $384
 	db 0
-	ezchat_word "ARRGH!@@", $510 ; むきー！！,
-	ezchat_word "MUFU@@@@", $518 ; むふー@@,
-	ezchat_word "MUFUFU@@", $51a ; むふふ@@,
-	ezchat_word "MMM@@@@@", $51c ; むむ@@@,
-	ezchat_word "OH-KAY@@", $56a ; よーし@@,
-	ezchat_word "OKAY!@@@", $572 ; よし！@@,
-	ezchat_word "LALALA@@", $598 ; ラララ@@,
-	ezchat_word "YAY@@@@@", $5ac ; わーい@@,
-	ezchat_word "AWW!@@@@", $5b0 ; わーん！！,
-	ezchat_word "WOWEE@@@", $5b2 ; ワオ@@@,
-	ezchat_word "GWAH!@@@", $5ce ; わっ！！@,
-	ezchat_word "WAHAHA!@", $5d0 ; わははは！,
+	ezchat_word "ARRGH!@@", $062
+	ezchat_word "MUFU@@@@", $33a
+	ezchat_word "MUFUFU@@", $33c
+	ezchat_word "MMM@@@@@", $320
+	ezchat_word "OH-KAY@@", $388
+	ezchat_word "OKAY!@@@", $390
+	ezchat_word "LALALA@@", $2c8
+	ezchat_word "YAY@@@@@", $5ba
+	ezchat_word "AWW!@@@@", $074
+	ezchat_word "WOWEE@@@", $5b0
+	ezchat_word "GWAH!@@@", $21c
+	ezchat_word "WAHAHA!@", $540
 
 .Conversation:
-	ezchat_word "LISTEN@@", $050 ; あのね@@,
-	ezchat_word "NOT VERY", $06e ; あんまり@,
-	ezchat_word "MEAN@@@@", $08e ; いじわる@,
-	ezchat_word "LIE@@@@@", $0b6 ; うそ@@@,
-	ezchat_word "LAY@@@@@", $0c4 ; うむ@@@,
-	ezchat_word "OI@@@@@@", $0e4 ; おーい@@,
-	ezchat_word "SUGGEST@", $106 ; おすすめ@,
-	ezchat_word "NITWIT@@", $11e ; おばかさん,
-	ezchat_word "QUITE@@@", $16e ; かなり@@,
-	ezchat_word "FROM@@@@", $17a ; から@@@,
-	ezchat_word "FEELING@", $198 ; きぶん@@,
-	ezchat_word "BUT@@@@@", $1d6 ; けど@@@,
-	ezchat_word "HOWEVER@", $1ea ; こそ@@@,
-	ezchat_word "CASE@@@@", $1ee ; こと@@@,
-	ezchat_word "MISS@@@@", $212 ; さあ@@@,
-	ezchat_word "HOW@@@@@", $21e ; さっぱり@,
-	ezchat_word "HIT@@@@@", $220 ; さて@@@,
-	ezchat_word "ENOUGH@@", $272 ; じゅうぶん,
-	ezchat_word "SOON@@@@", $294 ; すぐ@@@,
-	ezchat_word "A LOT@@@", $298 ; すごく@@,
-	ezchat_word "A LITTLE", $29a ; すこしは@,
-	ezchat_word "AMAZING@", $2a0 ; すっっごい,
-	ezchat_word "ENTIRELY", $2b0 ; ぜーんぜん,
-	ezchat_word "FULLY@@@", $2b2 ; ぜったい@,
-	ezchat_word "AND SO@@", $2ce ; それで@@,
-	ezchat_word "ONLY@@@@", $2f2 ; だけ@@@,
-	ezchat_word "AROUND@@", $2fc ; だって@@,
-	ezchat_word "PROBABLY", $306 ; たぶん@@,
-	ezchat_word "IF@@@@@@", $314 ; たら@@@,
-	ezchat_word "VERY@@@@", $33a ; ちょー@@,
-	ezchat_word "A BIT@@@", $33c ; ちょっと@,
-	ezchat_word "WILD@@@@", $34e ; ったら@@,
-	ezchat_word "THAT'S@@", $350 ; って@@@,
-	ezchat_word "I MEAN@@", $362 ; ていうか@,
-	db "EVEN SO," ; でも@@@,
-	dw $388
+	ezchat_word "LISTEN@@", $2e6
+	ezchat_word "NOT VERY", $376
+	ezchat_word "MEAN@@@@", $310
+	ezchat_word "LIE@@@@@", $2de
+	ezchat_word "LAY@@@@@", $2ce
+	ezchat_word "OI@@@@@@", $38c
+	ezchat_word "SUGGEST@", $480
+	ezchat_word "NITWIT@@", $362
+	ezchat_word "QUITE@@@", $3e0
+	ezchat_word "FROM@@@@", $1c6
+	ezchat_word "FEELING@", $19a
+	ezchat_word "BUT@@@@@", $0b2
+	ezchat_word "HOWEVER@", $27c
+	ezchat_word "CASE@@@@", $0c8
+	ezchat_word "MISS@@@@", $31c
+	ezchat_word "HOW@@@@@", $276
+	ezchat_word "HIT@@@@@", $25e
+	ezchat_word "ENOUGH@@", $16a
+	ezchat_word "SOON@@@@", $466
+	ezchat_word "A LOT@@@", $01a
+	ezchat_word "A LITTLE", $018
+	ezchat_word "AMAZING@", $040
+	ezchat_word "ENTIRELY", $16c
+	ezchat_word "FULLY@@@", $1cc
+	ezchat_word "AND SO@@", $046
+	ezchat_word "ONLY@@@@", $396
+	ezchat_word "AROUND@@", $060
+	ezchat_word "PROBABLY", $3d6
+	ezchat_word "IF@@@@@@", $29a
+	ezchat_word "VERY@@@@", $53a
+	ezchat_word "A BIT@@@", $016
+	ezchat_word "WILD@@@@", $58e
+	ezchat_word "THAT'S@@", $4b2
+	ezchat_word "I MEAN@@", $288
+	db "EVEN SO,"
+	dw $172
 	db 0
-	ezchat_word "MUST BE@", $39c ; どうしても,
-	ezchat_word "NATURALY", $3a0 ; とうぜん@,
-	ezchat_word "GO AHEAD", $3a2 ; どうぞ@@,
-	db "FOR NOW," ; とりあえず,
-	dw $3be
+	ezchat_word "MUST BE@", $340
+	ezchat_word "NATURALY", $34e
+	ezchat_word "GO AHEAD", $1ec
+	db "FOR NOW,"
+	dw $1b8
 	db 0
-	ezchat_word "HEY?@@@@", $3cc ; なあ@@@,
-	ezchat_word "JOKING@@", $3f4 ; なんて@@,
-	ezchat_word "READY@@@", $3fc ; なんでも@,
-	ezchat_word "SOMEHOW@", $3fe ; なんとか@,
-	ezchat_word "ALTHOUGH", $408 ; には@@@,
-	ezchat_word "PERFECT@", $446 ; バッチり@,
-	ezchat_word "FIRMLY@@", $452 ; ばりばり@,
-	ezchat_word "EQUAL TO", $4b0 ; ほど@@@,
-	ezchat_word "REALLY@@", $4be ; ほんと@@,
-	ezchat_word "TRULY@@@", $4d0 ; まさに@@,
-	ezchat_word "SURELY@@", $4d2 ; マジ@@@,
-	ezchat_word "FOR SURE", $4d4 ; マジで@@,
-	ezchat_word "TOTALLY@", $4e4 ; まったく@,
-	ezchat_word "UNTIL@@@", $4e6 ; まで@@@,
-	ezchat_word "AS IF@@@", $4ec ; まるで@@,
-	ezchat_word "MOOD@@@@", $50e ; ムード@@,
-	ezchat_word "RATHER@@", $514 ; むしろ@@,
-	ezchat_word "NO WAY@@", $524 ; めちゃ@@,
-	ezchat_word "AWFULLY@", $528 ; めっぽう@,
-	ezchat_word "ALMOST@@", $52c ; もう@@@,
-	ezchat_word "MODE@@@@", $52e ; モード@@,
-	ezchat_word "MORE@@@@", $536 ; もっと@@,
-	ezchat_word "TOO LATE", $538 ; もはや@@,
-	ezchat_word "FINALLY@", $54a ; やっと@@,
-	ezchat_word "ANY@@@@@", $54c ; やっぱり@,
-	ezchat_word "INSTEAD@", $57c ; より@@@,
-	ezchat_word "TERRIFIC", $5a4 ; れば@@@,
+	ezchat_word "HEY?@@@@", $24c
+	ezchat_word "JOKING@@", $2b6
+	ezchat_word "READY@@@", $3e8
+	ezchat_word "SOMEHOW@", $45c
+	ezchat_word "ALTHOUGH", $03c
+	ezchat_word "PERFECT@", $3b6
+	ezchat_word "FIRMLY@@", $1aa
+	ezchat_word "EQUAL TO", $16e
+	ezchat_word "REALLY@@", $3ee
+	ezchat_word "TRULY@@@", $50c
+	ezchat_word "SURELY@@", $488
+	ezchat_word "FOR SURE", $1ba
+	ezchat_word "TOTALLY@", $4f6
+	ezchat_word "UNTIL@@@", $526
+	ezchat_word "AS IF@@@", $066
+	ezchat_word "MOOD@@@@", $32e
+	ezchat_word "RATHER@@", $3e6
+	ezchat_word "NO WAY@@", $368
+	ezchat_word "AWFULLY@", $072
+	ezchat_word "ALMOST@@", $036
+	ezchat_word "MODE@@@@", $322
+	ezchat_word "MORE@@@@", $330
+	ezchat_word "TOO LATE", $4f0
+	ezchat_word "FINALLY@", $1a6
+	ezchat_word "ANY@@@@@", $052
+	ezchat_word "INSTEAD@", $2a6
+	ezchat_word "TERRIFIC", $4a0
 
 .Feelings:
-	ezchat_word "MEET@@@@", $01a ; あいたい@,
-	ezchat_word "PLAY@@@@", $032 ; あそびたい,
-	ezchat_word "GOES@@@@", $07c ; いきたい@,
-	ezchat_word "GIDDY@@@", $0b4 ; うかれて@,
-	ezchat_word "HAPPY@@@", $0c6 ; うれしい@,
-	ezchat_word "GLEE@@@@", $0c8 ; うれしさ@,
-	ezchat_word "EXCITE@@", $0d8 ; エキサイト,
-	ezchat_word "CRUCIAL@", $0de ; えらい@@,
-	ezchat_word "FUNNY@@@", $0ec ; おかしい@,
-	ezchat_word "GOT@@@@@", $108 ; オッケー@,
-	ezchat_word "GO HOME@", $148 ; かえりたい,
-	ezchat_word "FAILS@@@", $15a ; がっくし@,
-	ezchat_word "SAD@@@@@", $16c ; かなしい@,
-	ezchat_word "TRY@@@@@", $180 ; がんばって,
-	ezchat_word "HEARS@@@", $186 ; きがしない,
-	ezchat_word "THINK@@@", $188 ; きがする@,
-	ezchat_word "HEAR@@@@", $18a ; ききたい@,
-	ezchat_word "WANTS@@@", $190 ; きになる@,
-	ezchat_word "MISHEARD", $196 ; きのせい@,
-	ezchat_word "DISLIKE@", $1b4 ; きらい@@,
-	ezchat_word "ANGRY@@@", $1be ; くやしい@,
-	ezchat_word "ANGER@@@", $1c0 ; くやしさ@,
-	ezchat_word "LONESOME", $224 ; さみしい@,
-	ezchat_word "FAIL@@@@", $232 ; ざんねん@,
-	ezchat_word "JOY@@@@@", $236 ; しあわせ@,
-	ezchat_word "GETS@@@@", $244 ; したい@@,
-	ezchat_word "NEVER@@@", $246 ; したくない,
-	ezchat_word "DARN@@@@", $264 ; しまった@,
-	ezchat_word "DOWNCAST", $282 ; しょんぼり,
-	ezchat_word "LIKES@@@", $292 ; すき@@@,
-	ezchat_word "DISLIKES", $2da ; だいきらい,
-	ezchat_word "BORING@@", $2dc ; たいくつ@,
-	ezchat_word "CARE@@@@", $2de ; だいじ@@,
-	ezchat_word "ADORE@@@", $2e4 ; だいすき@,
-	ezchat_word "DISASTER", $2ea ; たいへん@,
-	ezchat_word "ENJOY@@@", $300 ; たのしい@,
-	ezchat_word "ENJOYS@@", $302 ; たのしすぎ,
-	ezchat_word "EAT@@@@@", $308 ; たべたい@,
-	ezchat_word "USELESS@", $30e ; ダメダメ@,
-	ezchat_word "LACKING@", $316 ; たりない@,
-	ezchat_word "BAD@@@@@", $334 ; ちくしょー,
-	ezchat_word "SHOULD@@", $39e ; どうしよう,
-	ezchat_word "EXCITING", $3ac ; ドキドキ@,
-	ezchat_word "NICE@@@@", $3d0 ; ナイス@@,
-	ezchat_word "DRINK@@@", $426 ; のみたい@,
-	ezchat_word "SURPRISE", $460 ; びっくり@,
-	ezchat_word "FEAR@@@@", $474 ; ふあん@@,
-	ezchat_word "WOBBLY@@", $486 ; ふらふら@,
-	ezchat_word "WANT@@@@", $4ae ; ほしい@@,
-	ezchat_word "SHREDDED", $4b8 ; ボロボロ@,
-	ezchat_word "YET@@@@@", $4e0 ; まだまだ@,
-	ezchat_word "WAIT@@@@", $4e8 ; まてない@,
-	ezchat_word "CONTENT@", $4f0 ; まんぞく@,
-	ezchat_word "SEE@@@@@", $4f8 ; みたい@@,
-	ezchat_word "RARE@@@@", $522 ; めずらしい,
-	ezchat_word "FIERY@@@", $52a ; メラメラ@,
-	ezchat_word "NEGATIVE", $546 ; やだ@@@,
-	ezchat_word "DONE@@@@", $548 ; やったー@,
-	ezchat_word "DANGER@@", $550 ; やばい@@,
-	ezchat_word "DONE FOR", $552 ; やばすぎる,
-	ezchat_word "DEFEATED", $554 ; やられた@,
-	ezchat_word "BEAT@@@@", $556 ; やられて@,
-	ezchat_word "GREAT@@@", $56e ; よかった@,
-	ezchat_word "DOTING@@", $596 ; ラブラブ@,
-	ezchat_word "ROMANTIC", $5a8 ; ロマン@@,
-	ezchat_word "QUESTION", $5aa ; ろんがい@,
-	ezchat_word "REALIZE@", $5b4 ; わから@@,
-	ezchat_word "REALIZES", $5b6 ; わかり@@,
-	ezchat_word "SUSPENSE", $5ba ; わくわく@,
+	ezchat_word "MEET@@@@", $312
+	ezchat_word "PLAY@@@@", $3be
+	ezchat_word "GOES@@@@", $1f8
+	ezchat_word "GIDDY@@@", $1da
+	ezchat_word "HAPPY@@@", $222
+	ezchat_word "GLEE@@@@", $1e8
+	ezchat_word "EXCITE@@", $17c
+	ezchat_word "CRUCIAL@", $100
+	ezchat_word "FUNNY@@@", $1ce
+	ezchat_word "GOT@@@@@", $200
+	ezchat_word "GO HOME@", $1f0
+	ezchat_word "FAILS@@@", $188
+	ezchat_word "SAD@@@@@", $408
+	ezchat_word "TRY@@@@@", $510
+	ezchat_word "HEARS@@@", $238
+	ezchat_word "THINK@@@", $4ca
+	ezchat_word "HEAR@@@@", $234
+	ezchat_word "WANTS@@@", $550
+	ezchat_word "MISHEARD", $31a
+	ezchat_word "DISLIKE@", $130
+	ezchat_word "ANGRY@@@", $04c
+	ezchat_word "ANGER@@@", $048
+	ezchat_word "LONESOME", $2ee
+	ezchat_word "FAIL@@@@", $186
+	ezchat_word "JOY@@@@@", $2ba
+	ezchat_word "GETS@@@@", $1d6
+	ezchat_word "NEVER@@@", $356
+	ezchat_word "DARN@@@@", $112
+	ezchat_word "DOWNCAST", $144
+	ezchat_word "LIKES@@@", $2e2
+	ezchat_word "DISLIKES", $132
+	ezchat_word "BORING@@", $0a6
+	ezchat_word "CARE@@@@", $0c6
+	ezchat_word "ADORE@@@", $024
+	ezchat_word "DISASTER", $12e
+	ezchat_word "ENJOY@@@", $166
+	ezchat_word "ENJOYS@@", $168
+	ezchat_word "EAT@@@@@", $154
+	ezchat_word "USELESS@", $52e
+	ezchat_word "LACKING@", $2c2
+	ezchat_word "BAD@@@@@", $07a
+	ezchat_word "SHOULD@@", $434
+	ezchat_word "EXCITING", $17e
+	ezchat_word "NICE@@@@", $35c
+	ezchat_word "DRINK@@@", $14a
+	ezchat_word "SURPRISE", $48a
+	ezchat_word "FEAR@@@@", $198
+	ezchat_word "WOBBLY@@", $59c
+	ezchat_word "WANT@@@@", $54e
+	ezchat_word "SHREDDED", $438
+	ezchat_word "YET@@@@@", $5c2
+	ezchat_word "WAIT@@@@", $542
+	ezchat_word "CONTENT@", $0f0
+	ezchat_word "SEE@@@@@", $414
+	ezchat_word "RARE@@@@", $3e4
+	ezchat_word "FIERY@@@", $19c
+	ezchat_word "NEGATIVE", $354
+	ezchat_word "DONE@@@@", $13c
+	ezchat_word "DANGER@@", $10e
+	ezchat_word "DONE FOR", $13e
+	ezchat_word "DEFEATED", $128
+	ezchat_word "BEAT@@@@", $086
+	ezchat_word "GREAT@@@", $212
+	ezchat_word "DOTING@@", $140
+	ezchat_word "ROMANTIC", $400
+	ezchat_word "QUESTION", $3de
+	ezchat_word "REALIZE@", $3ea
+	ezchat_word "REALIZES", $3ec
+	ezchat_word "SUSPENSE", $48c
 
 .Conditions:
-	ezchat_word "HOT@@@@@", $038 ; あつい@@,
-	ezchat_word "EXISTS@@", $03a ; あった@@,
-	ezchat_word "APPROVED", $056 ; あり@@@,
-	ezchat_word "HAS@@@@@", $05e ; ある@@@,
-	ezchat_word "HURRIED@", $06a ; あわてて@,
-	ezchat_word "GOOD@@@@", $070 ; いい@@@,
-	ezchat_word "LESS@@@@", $076 ; いか@@@,
-	ezchat_word "MEGA@@@@", $078 ; イカス@@,
-	ezchat_word "MOMENTUM", $07a ; いきおい@,
-	ezchat_word "GOING@@@", $08a ; いける@@,
-	ezchat_word "WEIRD@@@", $08c ; いじょう@,
-	ezchat_word "BUSY@@@@", $090 ; いそがしい,
-	ezchat_word "TOGETHER", $09a ; いっしょに,
-	ezchat_word "FULL@@@@", $09c ; いっぱい@,
-	ezchat_word "ABSENT@@", $0a0 ; いない@@,
-	ezchat_word "BEING@@@", $0a4 ; いや@@@,
-	ezchat_word "NEED@@@@", $0a8 ; いる@@@,
-	ezchat_word "TASTY@@@", $0c0 ; うまい@@,
-	ezchat_word "SKILLED@", $0c2 ; うまく@@,
-	ezchat_word "BIG@@@@@", $0e6 ; おおきい@,
-	ezchat_word "LATE@@@@", $0f2 ; おくれ@@,
-	ezchat_word "CLOSE@@@", $0fa ; おしい@@,
-	ezchat_word "AMUSING@", $12c ; おもしろい,
-	ezchat_word "ENGAGING", $12e ; おもしろく,
-	ezchat_word "COOL@@@@", $15c ; かっこいい,
-	ezchat_word "CUTE@@@@", $17e ; かわいい@,
-	ezchat_word "FLAWLESS", $182 ; かんぺき@,
-	ezchat_word "PRETTY@@", $1d0 ; けっこう@,
-	ezchat_word "HEALTHY@", $1d8 ; げんき@@,
-	ezchat_word "SCARY@@@", $206 ; こわい@@,
-	ezchat_word "SUPERB@@", $214 ; さいこう@,
-	ezchat_word "COLD@@@@", $226 ; さむい@@,
-	ezchat_word "LIVELY@@", $22c ; さわやか@,
-	ezchat_word "FATED@@@", $238 ; しかたない,
-	ezchat_word "MUCH@@@@", $296 ; すごい@@,
-	ezchat_word "IMMENSE@", $29c ; すごすぎ@,
-	ezchat_word "FABULOUS", $2a4 ; すてき@@,
-	ezchat_word "ELSE@@@@", $2e0 ; たいした@,
-	ezchat_word "ALRIGHT@", $2e2 ; だいじょぶ,
-	ezchat_word "COSTLY@@", $2ec ; たかい@@,
-	ezchat_word "CORRECT@", $2f8 ; ただしい@,
-	ezchat_word "UNLIKELY", $30c ; だめ@@@,
-	ezchat_word "SMALL@@@", $32c ; ちいさい@,
-	ezchat_word "VARIED@@", $330 ; ちがう@@,
-	ezchat_word "TIRED@@@", $348 ; つかれ@@,
-	ezchat_word "SKILL@@@", $3b0 ; とくい@@,
-	ezchat_word "NON-STOP", $3b6 ; とまらない,
-	ezchat_word "NONE@@@@", $3ce ; ない@@@,
-	ezchat_word "NOTHING@", $3d2 ; なかった@,
-	ezchat_word "NATURAL@", $3d8 ; なし@@@,
-	ezchat_word "BECOMES@", $3dc ; なって@@,
-	ezchat_word "FAST@@@@", $450 ; はやい@@,
-	ezchat_word "SHINE@@@", $45a ; ひかる@@,
-	ezchat_word "LOW@@@@@", $45c ; ひくい@@,
-	ezchat_word "AWFUL@@@", $464 ; ひどい@@,
-	ezchat_word "ALONE@@@", $466 ; ひとりで@,
-	ezchat_word "BORED@@@", $468 ; ひま@@@,
-	ezchat_word "LACKS@@@", $476 ; ふそく@@,
-	ezchat_word "LOUSY@@@", $48c ; へた@@@,
-	ezchat_word "MISTAKE@", $4e2 ; まちがって,
-	ezchat_word "KIND@@@@", $542 ; やさしい@,
-	ezchat_word "WELL@@@@", $570 ; よく@@@,
-	ezchat_word "WEAKENED", $586 ; よわって@,
-	ezchat_word "SIMPLE@@", $58c ; らく@@@,
-	ezchat_word "SEEMS@@@", $590 ; らしい@@,
-	ezchat_word "BADLY@@@", $5d4 ; わるい@@,
+	ezchat_word "HOT@@@@@", $274
+	ezchat_word "EXISTS@@", $182
+	ezchat_word "APPROVED", $05a
+	ezchat_word "HAS@@@@@", $226
+	ezchat_word "HURRIED@", $282
+	ezchat_word "GOOD@@@@", $1fc
+	ezchat_word "LESS@@@@", $2d4
+	ezchat_word "MEGA@@@@", $316
+	ezchat_word "MOMENTUM", $326
+	ezchat_word "GOING@@@", $1fa
+	ezchat_word "WEIRD@@@", $568
+	ezchat_word "BUSY@@@@", $0b0
+	ezchat_word "TOGETHER", $4ea
+	ezchat_word "FULL@@@@", $1ca
+	ezchat_word "ABSENT@@", $01e
+	ezchat_word "BEING@@@", $08e
+	ezchat_word "NEED@@@@", $352
+	ezchat_word "TASTY@@@", $494
+	ezchat_word "SKILLED@", $446
+	ezchat_word "BIG@@@@@", $09a
+	ezchat_word "LATE@@@@", $2ca
+	ezchat_word "CLOSE@@@", $0e0
+	ezchat_word "AMUSING@", $042
+	ezchat_word "ENGAGING", $164
+	ezchat_word "COOL@@@@", $0f2
+	ezchat_word "CUTE@@@@", $106
+	ezchat_word "FLAWLESS", $1ae
+	ezchat_word "PRETTY@@", $3d4
+	ezchat_word "HEALTHY@", $232
+	ezchat_word "SCARY@@@", $40e
+	ezchat_word "SUPERB@@", $486
+	ezchat_word "COLD@@@@", $0e2
+	ezchat_word "LIVELY@@", $2e8
+	ezchat_word "FATED@@@", $196
+	ezchat_word "MUCH@@@@", $338
+	ezchat_word "IMMENSE@", $2a0
+	ezchat_word "FABULOUS", $184
+	ezchat_word "ELSE@@@@", $160
+	ezchat_word "ALRIGHT@", $03a
+	ezchat_word "COSTLY@@", $0f6
+	ezchat_word "CORRECT@", $0f4
+	ezchat_word "UNLIKELY", $524
+	ezchat_word "SMALL@@@", $450
+	ezchat_word "VARIED@@", $536
+	ezchat_word "TIRED@@@", $4da
+	ezchat_word "SKILL@@@", $444
+	ezchat_word "NON-STOP", $36c
+	ezchat_word "NONE@@@@", $36e
+	ezchat_word "NOTHING@", $378
+	ezchat_word "NATURAL@", $34c
+	ezchat_word "BECOMES@", $088
+	ezchat_word "FAST@@@@", $194
+	ezchat_word "SHINE@@@", $42c
+	ezchat_word "LOW@@@@@", $2fa
+	ezchat_word "AWFUL@@@", $070
+	ezchat_word "ALONE@@@", $038
+	ezchat_word "BORED@@@", $0a4
+	ezchat_word "LACKS@@@", $2c4
+	ezchat_word "LOUSY@@@", $2f8
+	ezchat_word "MISTAKE@", $31e
+	ezchat_word "KIND@@@@", $2bc
+	ezchat_word "WELL@@@@", $56c
+	ezchat_word "WEAKENED", $560
+	ezchat_word "SIMPLE@@", $43c
+	ezchat_word "SEEMS@@@", $41a
+	ezchat_word "BADLY@@@", $07c
 
 .Life:
-	ezchat_word "CHORES@@", $064 ; アルバイト,
-	ezchat_word "HOME@@@@", $0ba ; うち@@@,
-	ezchat_word "MONEY@@@", $0ee ; おかね@@,
-	ezchat_word "SAVINGS@", $0f4 ; おこづかい,
-	ezchat_word "BATH@@@@", $124 ; おふろ@@,
-	ezchat_word "SCHOOL@@", $15e ; がっこう@,
-	ezchat_word "REMEMBER", $192 ; きねん@@,
-	ezchat_word "GROUP@@@", $1c6 ; グループ@,
-	ezchat_word "GOTCHA@@", $1d2 ; ゲット@@,
-	ezchat_word "EXCHANGE", $1de ; こうかん@,
-	ezchat_word "WORK@@@@", $240 ; しごと@@,
-	ezchat_word "TRAINING", $274 ; しゅぎょう,
-	ezchat_word "CLASS@@@", $276 ; じゅぎょう,
-	ezchat_word "LESSONS@", $278 ; じゅく@@,
-	ezchat_word "EVOLVE@@", $288 ; しんか@@,
-	ezchat_word "HANDBOOK", $290 ; ずかん@@,
-	ezchat_word "LIVING@@", $2ae ; せいかつ@,
-	ezchat_word "TEACHER@", $2b8 ; せんせい@,
-	ezchat_word "CENTER@@", $2ba ; センター@,
-	ezchat_word "TOWER@@@", $328 ; タワー@@,
-	ezchat_word "LINK@@@@", $340 ; つうしん@,
-	ezchat_word "TEST@@@@", $37e ; テスト@@,
-	ezchat_word "TV@@@@@@", $38c ; テレビ@@,
-	ezchat_word "PHONE@@@", $396 ; でんわ@@,
-	ezchat_word "ITEM@@@@", $39a ; どうぐ@@,
-	ezchat_word "TRADE@@@", $3c4 ; トレード@,
-	ezchat_word "NAME@@@@", $3e8 ; なまえ@@,
-	ezchat_word "NEWS@@@@", $40a ; ニュース@,
-	ezchat_word "POPULAR@", $40c ; にんき@@,
-	ezchat_word "PARTY@@@", $42e ; パーティー,
-	ezchat_word "STUDY@@@", $492 ; べんきょう,
-	ezchat_word "MACHINE@", $4d6 ; マシン@@,
-	ezchat_word "CARD@@@@", $51e ; めいし@@,
-	ezchat_word "MESSAGE@", $526 ; メッセージ,
-	ezchat_word "MAKEOVER", $53a ; もようがえ,
-	ezchat_word "DREAM@@@", $55a ; ゆめ@@@,
-	ezchat_word "DAY CARE", $566 ; ようちえん,
-	ezchat_word "RADIO@@@", $592 ; ラジオ@@,
-	ezchat_word "WORLD@@@", $5ae ; ワールド@,
+	ezchat_word "CHORES@@", $0dc
+	ezchat_word "HOME@@@@", $270
+	ezchat_word "MONEY@@@", $32a
+	ezchat_word "SAVINGS@", $40c
+	ezchat_word "BATH@@@@", $080
+	ezchat_word "SCHOOL@@", $410
+	ezchat_word "REMEMBER", $3f8
+	ezchat_word "GROUP@@@", $216
+	ezchat_word "GOTCHA@@", $204
+	ezchat_word "EXCHANGE", $17a
+	ezchat_word "WORK@@@@", $5a2
+	ezchat_word "TRAINING", $504
+	ezchat_word "CLASS@@@", $0de
+	ezchat_word "LESSONS@", $2d6
+	ezchat_word "EVOLVE@@", $178
+	ezchat_word "HANDBOOK", $220
+	ezchat_word "LIVING@@", $2ea
+	ezchat_word "TEACHER@", $498
+	ezchat_word "CENTER@@", $0cc
+	ezchat_word "TOWER@@@", $4f8
+	ezchat_word "LINK@@@@", $2e4
+	ezchat_word "TEST@@@@", $4a2
+	ezchat_word "TV@@@@@@", $516
+	ezchat_word "PHONE@@@", $3b8
+	ezchat_word "ITEM@@@@", $2b4
+	ezchat_word "TRADE@@@", $4fe
+	ezchat_word "NAME@@@@", $348
+	ezchat_word "NEWS@@@@", $358
+	ezchat_word "POPULAR@", $3ce
+	ezchat_word "PARTY@@@", $3b0
+	ezchat_word "STUDY@@@", $47e
+	ezchat_word "MACHINE@", $300
+	ezchat_word "CARD@@@@", $0c2
+	ezchat_word "MESSAGE@", $318
+	ezchat_word "MAKEOVER", $304
+	ezchat_word "DREAM@@@", $148
+	ezchat_word "DAY CARE", $11a
+	ezchat_word "RADIO@@@", $3e2
+	ezchat_word "WORLD@@@", $5a8
 
 .Hobbies:
-	ezchat_word "IDOL@@@@", $01e ; アイドル@,
-	ezchat_word "ANIME@@@", $04c ; アニメ@@,
-	ezchat_word "SONG@@@@", $0b8 ; うた@@@,
-	ezchat_word "MOVIE@@@", $0d0 ; えいが@@,
-	ezchat_word "CANDY@@@", $0ea ; おかし@@,
-	ezchat_word "CHAT@@@@", $104 ; おしゃべり,
-	ezchat_word "TOYHOUSE", $128 ; おままごと,
-	ezchat_word "TOYS@@@@", $130 ; おもちゃ@,
-	ezchat_word "MUSIC@@@", $138 ; おんがく@,
-	ezchat_word "CARDS@@@", $13e ; カード@@,
-	ezchat_word "SHOPPING", $146 ; かいもの@,
-	ezchat_word "GOURMET@", $1c8 ; グルメ@@,
-	ezchat_word "GAME@@@@", $1cc ; ゲーム@@,
-	ezchat_word "MAGAZINE", $21c ; ざっし@@,
-	ezchat_word "WALK@@@@", $234 ; さんぽ@@,
-	ezchat_word "BIKE@@@@", $250 ; じてんしゃ,
-	ezchat_word "HOBBIES@", $27a ; しゅみ@@,
-	ezchat_word "SPORTS@@", $2a8 ; スポーツ@,
-	ezchat_word "DIET@@@@", $2d8 ; ダイエット,
-	ezchat_word "TREASURE", $2f0 ; たからもの,
-	ezchat_word "TRAVEL@@", $304 ; たび@@@,
-	ezchat_word "DANCE@@@", $32a ; ダンス@@,
-	ezchat_word "FISHING@", $360 ; つり@@@,
-	ezchat_word "DATE@@@@", $36a ; デート@@,
-	ezchat_word "TRAIN@@@", $392 ; でんしゃ@,
-	ezchat_word "PLUSHIE@", $40e ; ぬいぐるみ,
-	ezchat_word "PC@@@@@@", $43e ; パソコン@,
-	ezchat_word "FLOWERS@", $44c ; はな@@@,
-	ezchat_word "HERO@@@@", $458 ; ヒーロー@,
-	ezchat_word "NAP@@@@@", $46e ; ひるね@@,
-	ezchat_word "HEROINE@", $470 ; ヒロイン@,
-	ezchat_word "JOURNEY@", $496 ; ぼうけん@,
-	ezchat_word "BOARD@@@", $49a ; ボード@@,
-	ezchat_word "BALL@@@@", $49e ; ボール@@,
-	ezchat_word "BOOK@@@@", $4ba ; ほん@@@,
-	ezchat_word "MANGA@@@", $4ee ; マンガ@@,
-	ezchat_word "PROMISE@", $540 ; やくそく@,
-	ezchat_word "HOLIDAY@", $544 ; やすみ@@,
-	ezchat_word "PLANS@@@", $574 ; よてい@@,
+	ezchat_word "IDOL@@@@", $298
+	ezchat_word "ANIME@@@", $04e
+	ezchat_word "SONG@@@@", $464
+	ezchat_word "MOVIE@@@", $336
+	ezchat_word "CANDY@@@", $0bc
+	ezchat_word "CHAT@@@@", $0d0
+	ezchat_word "TOYHOUSE", $4fa
+	ezchat_word "TOYS@@@@", $4fc
+	ezchat_word "MUSIC@@@", $33e
+	ezchat_word "CARDS@@@", $0c4
+	ezchat_word "SHOPPING", $432
+	ezchat_word "GOURMET@", $206
+	ezchat_word "GAME@@@@", $1d2
+	ezchat_word "MAGAZINE", $302
+	ezchat_word "WALK@@@@", $548
+	ezchat_word "BIKE@@@@", $09c
+	ezchat_word "HOBBIES@", $268
+	ezchat_word "SPORTS@@", $46e
+	ezchat_word "DIET@@@@", $12c
+	ezchat_word "TREASURE", $50a
+	ezchat_word "TRAVEL@@", $508
+	ezchat_word "DANCE@@@", $10c
+	ezchat_word "FISHING@", $1ac
+	ezchat_word "DATE@@@@", $114
+	ezchat_word "TRAIN@@@", $500
+	ezchat_word "PLUSHIE@", $3c6
+	ezchat_word "PC@@@@@@", $3b2
+	ezchat_word "FLOWERS@", $1b0
+	ezchat_word "HERO@@@@", $244
+	ezchat_word "NAP@@@@@", $34a
+	ezchat_word "HEROINE@", $246
+	ezchat_word "JOURNEY@", $2b8
+	ezchat_word "BOARD@@@", $0a0
+	ezchat_word "BALL@@@@", $07e
+	ezchat_word "BOOK@@@@", $0a2
+	ezchat_word "MANGA@@@", $306
+	ezchat_word "PROMISE@", $3d8
+	ezchat_word "HOLIDAY@", $26e
+	ezchat_word "PLANS@@@", $3bc
 
 .Actions:
-	ezchat_word "MEETS@@@", $020 ; あう@@@,
-	ezchat_word "CONCEDE@", $024 ; あきらめ@,
-	ezchat_word "GIVE@@@@", $028 ; あげる@@,
-	ezchat_word "GIVES@@@", $02e ; あせる@@,
-	ezchat_word "PLAYED@@", $030 ; あそび@@,
-	ezchat_word "PLAYS@@@", $034 ; あそぶ@@,
-	ezchat_word "COLLECT@", $03e ; あつめ@@,
-	ezchat_word "WALKING@", $060 ; あるき@@,
-	ezchat_word "WALKS@@@", $062 ; あるく@@,
-	ezchat_word "WENT@@@@", $07e ; いく@@@,
-	ezchat_word "GO@@@@@@", $086 ; いけ@@@,
-	ezchat_word "WAKE UP@", $0f0 ; おき@@@,
-	ezchat_word "WAKES UP", $0f6 ; おこり@@,
-	ezchat_word "ANGERS@@", $0f8 ; おこる@@,
-	ezchat_word "TEACH@@@", $0fe ; おしえ@@,
-	ezchat_word "TEACHES@", $100 ; おしえて@,
-	ezchat_word "PLEASE@@", $11a ; おねがい@,
-	ezchat_word "LEARN@@@", $126 ; おぼえ@@,
-	ezchat_word "CHANGE@@", $14a ; かえる@@,
-	ezchat_word "TRUST@@@", $174 ; がまん@@,
-	ezchat_word "HEARING@", $18c ; きく@@@,
-	ezchat_word "TRAINS@@", $18e ; きたえ@@,
-	ezchat_word "CHOOSE@@", $1a6 ; きめ@@@,
-	ezchat_word "COME@@@@", $1c4 ; くる@@@,
-	ezchat_word "SEARCH@@", $218 ; さがし@@,
-	ezchat_word "CAUSE@@@", $22a ; さわぎ@@,
-	ezchat_word "THESE@@@", $242 ; した@@@,
-	ezchat_word "KNOW@@@@", $24a ; しって@@,
-	ezchat_word "KNOWS@@@", $24e ; して@@@,
-	ezchat_word "REFUSE@@", $252 ; しない@@,
-	ezchat_word "STORES@@", $260 ; しまう@@,
-	ezchat_word "BRAG@@@@", $266 ; じまん@@,
-	ezchat_word "IGNORANT", $284 ; しらない@,
-	ezchat_word "THINKS@@", $286 ; しる@@@,
-	ezchat_word "BELIEVE@", $28a ; しんじて@,
-	ezchat_word "SLIDE@@@", $2aa ; する@@@,
-	ezchat_word "EATS@@@@", $30a ; たべる@@,
-	ezchat_word "USE@@@@@", $342 ; つかう@@,
-	ezchat_word "USES@@@@", $344 ; つかえ@@,
-	ezchat_word "USING@@@", $346 ; つかって@,
-	ezchat_word "COULDN'T", $370 ; できない@,
-	ezchat_word "CAPABLE@", $372 ; できる@@,
-	ezchat_word "VANISH@@", $384 ; でない@@,
-	ezchat_word "APPEAR@@", $38a ; でる@@@,
-	ezchat_word "THROW@@@", $3d6 ; なげる@@,
-	ezchat_word "WORRY@@@", $3ea ; なやみ@@,
-	ezchat_word "SLEPT@@@", $418 ; ねられ@@,
-	ezchat_word "SLEEP@@@", $41a ; ねる@@@,
-	ezchat_word "RELEASE@", $424 ; のがし@@,
-	ezchat_word "DRINKS@@", $428 ; のむ@@@,
-	ezchat_word "RUNS@@@@", $43a ; はしり@@,
-	ezchat_word "RUN@@@@@", $43c ; はしる@@,
-	ezchat_word "WORKS@@@", $440 ; はたらき@,
-	ezchat_word "WORKING@", $442 ; はたらく@,
-	ezchat_word "SINK@@@@", $44e ; はまって@,
-	ezchat_word "SMACK@@@", $47a ; ぶつけ@@,
-	ezchat_word "PRAISE@@", $4b4 ; ほめ@@@,
-	ezchat_word "SHOW@@@@", $4f6 ; みせて@@,
-	ezchat_word "LOOKS@@@", $4fc ; みて@@@,
-	ezchat_word "SEES@@@@", $502 ; みる@@@,
-	ezchat_word "SEEK@@@@", $520 ; めざす@@,
-	ezchat_word "OWN@@@@@", $534 ; もって@@,
-	ezchat_word "TAKE@@@@", $558 ; ゆずる@@,
-	ezchat_word "ALLOW@@@", $55c ; ゆるす@@,
-	ezchat_word "FORGET@@", $55e ; ゆるせ@@,
-	ezchat_word "FORGETS@", $59a ; られない@,
-	ezchat_word "APPEARS@", $59c ; られる@@,
-	ezchat_word "FAINT@@@", $5b8 ; わかる@@,
-	ezchat_word "FAINTED@", $5c0 ; わすれ@@,
+	ezchat_word "MEETS@@@", $314
+	ezchat_word "CONCEDE@", $0ea
+	ezchat_word "GIVE@@@@", $1e2
+	ezchat_word "GIVES@@@", $1e6
+	ezchat_word "PLAYED@@", $3c0
+	ezchat_word "PLAYS@@@", $3c2
+	ezchat_word "COLLECT@", $0e4
+	ezchat_word "WALKING@", $54a
+	ezchat_word "WALKS@@@", $54c
+	ezchat_word "WENT@@@@", $570
+	ezchat_word "GO@@@@@@", $1ea
+	ezchat_word "WAKE UP@", $544
+	ezchat_word "WAKES UP", $546
+	ezchat_word "ANGERS@@", $04a
+	ezchat_word "TEACH@@@", $496
+	ezchat_word "TEACHES@", $49a
+	ezchat_word "PLEASE@@", $3c4
+	ezchat_word "LEARN@@@", $2d0
+	ezchat_word "CHANGE@@", $0ce
+	ezchat_word "TRUST@@@", $50e
+	ezchat_word "HEARING@", $236
+	ezchat_word "TRAINS@@", $506
+	ezchat_word "CHOOSE@@", $0da
+	ezchat_word "COME@@@@", $0e6
+	ezchat_word "SEARCH@@", $412
+	ezchat_word "CAUSE@@@", $0ca
+	ezchat_word "THESE@@@", $4bc
+	ezchat_word "KNOW@@@@", $2be
+	ezchat_word "KNOWS@@@", $2c0
+	ezchat_word "REFUSE@@", $3f2
+	ezchat_word "STORES@@", $478
+	ezchat_word "BRAG@@@@", $0aa
+	ezchat_word "IGNORANT", $29e
+	ezchat_word "THINKS@@", $4cc
+	ezchat_word "BELIEVE@", $090
+	ezchat_word "SLIDE@@@", $44c
+	ezchat_word "EATS@@@@", $156
+	ezchat_word "USE@@@@@", $52c
+	ezchat_word "USES@@@@", $530
+	ezchat_word "USING@@@", $532
+	ezchat_word "COULDN'T", $0fa
+	ezchat_word "CAPABLE@", $0c0
+	ezchat_word "VANISH@@", $534
+	ezchat_word "APPEAR@@", $056
+	ezchat_word "THROW@@@", $4d4
+	ezchat_word "WORRY@@@", $5aa
+	ezchat_word "SLEPT@@@", $44a
+	ezchat_word "SLEEP@@@", $448
+	ezchat_word "RELEASE@", $3f6
+	ezchat_word "DRINKS@@", $14c
+	ezchat_word "RUNS@@@@", $406
+	ezchat_word "RUN@@@@@", $404
+	ezchat_word "WORKS@@@", $5a6
+	ezchat_word "WORKING@", $5a4
+	ezchat_word "SINK@@@@", $440
+	ezchat_word "SMACK@@@", $44e
+	ezchat_word "PRAISE@@", $3d2
+	ezchat_word "SHOW@@@@", $436
+	ezchat_word "LOOKS@@@", $2f0
+	ezchat_word "SEES@@@@", $41e
+	ezchat_word "SEEK@@@@", $418
+	ezchat_word "OWN@@@@@", $3aa
+	ezchat_word "TAKE@@@@", $48e
+	ezchat_word "ALLOW@@@", $032
+	ezchat_word "FORGET@@", $1be
+	ezchat_word "FORGETS@", $1c0
+	ezchat_word "APPEARS@", $058
+	ezchat_word "FAINT@@@", $18a
+	ezchat_word "FAINTED@", $18c
 
 .Time:
-	ezchat_word "FALL@@@@", $022 ; あき@@@,
-	ezchat_word "MORNING@", $02a ; あさ@@@,
-	ezchat_word "TOMORROW", $02c ; あした@@,
-	ezchat_word "DAY@@@@@", $094 ; いちにち@,
-	ezchat_word "SOMETIME", $098 ; いつか@@,
-	ezchat_word "ALWAYS@@", $09e ; いつも@@,
-	ezchat_word "CURRENT@", $0a2 ; いま@@@,
-	ezchat_word "FOREVER@", $0ce ; えいえん@,
-	ezchat_word "DAYS@@@@", $112 ; おととい@,
-	ezchat_word "END@@@@@", $136 ; おわり@@,
-	ezchat_word "TUESDAY@", $178 ; かようび@,
-	ezchat_word "Y'DAY@@@", $194 ; きのう@@,
-	ezchat_word "TODAY@@@", $1b0 ; きょう@@,
-	ezchat_word "FRIDAY@@", $1b8 ; きんようび,
-	ezchat_word "MONDAY@@", $1d4 ; げつようび,
-	ezchat_word "LATER@@@", $1f4 ; このあと@,
-	ezchat_word "EARLIER@", $1f6 ; このまえ@,
-	ezchat_word "ANOTHER@", $20c ; こんど@@,
-	ezchat_word "TIME@@@@", $23c ; じかん@@,
-	ezchat_word "DECADE@@", $270 ; じゅうねん,
-	ezchat_word "WEDNSDAY", $28e ; すいようび,
-	ezchat_word "START@@@", $29e ; スタート@,
-	ezchat_word "MONTH@@@", $2a2 ; ずっと@@,
-	ezchat_word "STOP@@@@", $2a6 ; ストップ@,
-	ezchat_word "NOW@@@@@", $2c4 ; そのうち@,
-	ezchat_word "FINAL@@@", $33e ; ついに@@,
-	ezchat_word "NEXT@@@@", $34a ; つぎ@@@,
-	ezchat_word "SATURDAY", $3ba ; どようび@,
-	ezchat_word "SUMMER@@", $3da ; なつ@@@,
-	ezchat_word "SUNDAY@@", $406 ; にちようび,
-	ezchat_word "OUTSET@@", $438 ; はじめ@@,
-	ezchat_word "SPRING@@", $454 ; はる@@@,
-	ezchat_word "DAYTIME@", $46c ; ひる@@@,
-	ezchat_word "WINTER@@", $484 ; ふゆ@@@,
-	ezchat_word "DAILY@@@", $4c6 ; まいにち@,
-	ezchat_word "THURSDAY", $530 ; もくようび,
-	ezchat_word "NITETIME", $576 ; よなか@@,
-	ezchat_word "NIGHT@@@", $57e ; よる@@@,
-	ezchat_word "WEEK@@@@", $588 ; らいしゅう,
+	ezchat_word "FALL@@@@", $18e
+	ezchat_word "MORNING@", $332
+	ezchat_word "TOMORROW", $4ec
+	ezchat_word "DAY@@@@@", $118
+	ezchat_word "SOMETIME", $460
+	ezchat_word "ALWAYS@@", $03e
+	ezchat_word "CURRENT@", $104
+	ezchat_word "FOREVER@", $1bc
+	ezchat_word "DAYS@@@@", $11c
+	ezchat_word "END@@@@@", $162
+	ezchat_word "TUESDAY@", $512
+	ezchat_word "Y'DAY@@@", $5b4
+	ezchat_word "TODAY@@@", $4e8
+	ezchat_word "FRIDAY@@", $1c2
+	ezchat_word "MONDAY@@", $328
+	ezchat_word "LATER@@@", $2cc
+	ezchat_word "EARLIER@", $150
+	ezchat_word "ANOTHER@", $050
+	ezchat_word "TIME@@@@", $4d8
+	ezchat_word "DECADE@@", $120
+	ezchat_word "WEDNSDAY", $562
+	ezchat_word "START@@@", $472
+	ezchat_word "MONTH@@@", $32c
+	ezchat_word "STOP@@@@", $476
+	ezchat_word "NOW@@@@@", $37a
+	ezchat_word "FINAL@@@", $1a4
+	ezchat_word "NEXT@@@@", $35a
+	ezchat_word "SATURDAY", $40a
+	ezchat_word "SUMMER@@", $482
+	ezchat_word "SUNDAY@@", $484
+	ezchat_word "OUTSET@@", $3a4
+	ezchat_word "SPRING@@", $470
+	ezchat_word "DAYTIME@", $11e
+	ezchat_word "WINTER@@", $596
+	ezchat_word "DAILY@@@", $10a
+	ezchat_word "THURSDAY", $4d6
+	ezchat_word "NITETIME", $360
+	ezchat_word "NIGHT@@@", $35e
+	ezchat_word "WEEK@@@@", $564
 
 .Farewells:
-	ezchat_word "WILL@@@@", $092 ; いたします,
-	ezchat_word "AYE@@@@@", $132 ; おります@,
-	ezchat_word "?!@@@@@@", $13c ; か！？@@,
-	ezchat_word "HM?@@@@@", $144 ; かい？@@,
-	ezchat_word "Y'THINK?", $150 ; かしら？@,
-	ezchat_word "IS IT?@@", $16a ; かな？@@,
-	ezchat_word "BE@@@@@@", $176 ; かも@@@,
-	ezchat_word "GIMME@@@", $1ca ; くれ@@@,
-	ezchat_word "COULD@@@", $1e8 ; ございます,
-	ezchat_word "TEND TO@", $23a ; しがち@@,
-	ezchat_word "WOULD@@@", $262 ; します@@,
-	ezchat_word "IS@@@@@@", $26a ; じゃ@@@,
-	ezchat_word "ISNT IT?", $26e ; じゃん@@,
-	ezchat_word "LET'S@@@", $27c ; しよう@@,
-	ezchat_word "OTHER@@@", $2ac ; ぜ！@@@,
-	ezchat_word "ARE@@@@@", $2bc ; ぞ！@@@,
-	ezchat_word "WAS@@@@@", $2d4 ; た@@@@,
-	ezchat_word "WERE@@@@", $2d6 ; だ@@@@,
-	ezchat_word "THOSE@@@", $2ee ; だからね@,
-	ezchat_word "ISN'T@@@", $2f4 ; だぜ@@@,
-	ezchat_word "WON'T@@@", $2fa ; だった@@,
-	ezchat_word "CAN'T@@@", $2fe ; だね@@@,
-	ezchat_word "CAN@@@@@", $310 ; だよ@@@,
-	ezchat_word "DON'T@@@", $312 ; だよねー！,
-	ezchat_word "DO@@@@@@", $326 ; だわ@@@,
-	ezchat_word "DOES@@@@", $34c ; ッス@@@,
-	ezchat_word "WHOM@@@@", $352 ; ってかんじ,
-	ezchat_word "WHICH@@@", $354 ; っぱなし@,
-	ezchat_word "WASN'T@@", $356 ; つもり@@,
-	ezchat_word "WEREN'T@", $364 ; ていない@,
-	ezchat_word "HAVE@@@@", $366 ; ている@@,
-	ezchat_word "HAVEN'T@", $368 ; でーす！@,
-	ezchat_word "A@@@@@@@", $374 ; でした@@,
-	ezchat_word "AN@@@@@@", $376 ; でしょ？@,
-	ezchat_word "NOT@@@@@", $378 ; でしょー！,
-	ezchat_word "THERE@@@", $37a ; です@@@,
-	ezchat_word "OK?@@@@@", $37c ; ですか？@,
-	ezchat_word "SO@@@@@@", $380 ; ですよ@@,
-	ezchat_word "MAYBE@@@", $382 ; ですわ@@,
-	ezchat_word "ABOUT@@@", $3a4 ; どうなの？,
-	ezchat_word "OVER@@@@", $3a8 ; どうよ？@,
-	ezchat_word "IT@@@@@@", $3aa ; とかいって,
-	ezchat_word "FOR@@@@@", $3e0 ; なの@@@,
-	ezchat_word "ON@@@@@@", $3e2 ; なのか@@,
-	ezchat_word "OFF@@@@@", $3e4 ; なのだ@@,
-	ezchat_word "AS@@@@@@", $3e6 ; なのよ@@,
-	ezchat_word "TO@@@@@@", $3f2 ; なんだね@,
-	ezchat_word "WITH@@@@", $3f8 ; なんです@,
-	ezchat_word "BETTER@@", $3fa ; なんてね@,
-	ezchat_word "EVER@@@@", $412 ; ね@@@@,
-	ezchat_word "SINCE@@@", $414 ; ねー@@@,
-	ezchat_word "OF@@@@@@", $41c ; の@@@@,
-	ezchat_word "BELONG@@", $41e ; の？@@@,
-	ezchat_word "AT@@@@@@", $444 ; ばっかり@,
-	ezchat_word "IN@@@@@@", $4c2 ; まーす！@,
-	ezchat_word "OUT@@@@@", $4d8 ; ます@@@,
-	ezchat_word "TOO@@@@@", $4da ; ますわ@@,
-	ezchat_word "LIKE@@@@", $4dc ; ません@@,
-	ezchat_word "DID@@@@@", $4fa ; みたいな@,
-	ezchat_word "WITHOUT@", $560 ; よ！@@@,
-	ezchat_word "AFTER@@@", $568 ; よー@@@,
-	ezchat_word "BEFORE@@", $56c ; よーん@@,
-	ezchat_word "WHILE@@@", $578 ; よね@@@,
-	ezchat_word "THAN@@@@", $5a2 ; るよ@@@,
-	ezchat_word "ONCE@@@@", $5bc ; わけ@@@,
-	ezchat_word "ANYWHERE", $5d2 ; わよ！@@,
+	ezchat_word "WILL@@@@", $590
+	ezchat_word "AYE@@@@@", $076
+	ezchat_word "?!@@@@@@", $012
+	ezchat_word "HM?@@@@@", $262
+	ezchat_word "Y'THINK?", $5b6
+	ezchat_word "IS IT?@@", $2aa
+	ezchat_word "BE@@@@@@", $084
+	ezchat_word "GIMME@@@", $1de
+	ezchat_word "COULD@@@", $0f8
+	ezchat_word "TEND TO@", $49c
+	ezchat_word "WOULD@@@", $5ac
+	ezchat_word "IS@@@@@@", $2a8
+	ezchat_word "ISNT IT?", $2ae
+	ezchat_word "LET'S@@@", $2d8
+	ezchat_word "OTHER@@@", $39e
+	ezchat_word "ARE@@@@@", $05c
+	ezchat_word "WAS@@@@@", $552
+	ezchat_word "WERE@@@@", $572
+	ezchat_word "THOSE@@@", $4d2
+	ezchat_word "ISN'T@@@", $2ac
+	ezchat_word "WON'T@@@", $5a0
+	ezchat_word "CAN'T@@@", $0ba
+	ezchat_word "CAN@@@@@", $0b6
+	ezchat_word "DON'T@@@", $13a
+	ezchat_word "DO@@@@@@", $134
+	ezchat_word "DOES@@@@", $138
+	ezchat_word "WHOM@@@@", $588
+	ezchat_word "WHICH@@@", $57c
+	ezchat_word "WASN'T@@", $554
+	ezchat_word "WEREN'T@", $574
+	ezchat_word "HAVE@@@@", $228
+	ezchat_word "HAVEN'T@", $22a
+	ezchat_word "A@@@@@@@", $014
+	ezchat_word "AN@@@@@@", $044
+	ezchat_word "NOT@@@@@", $374
+	ezchat_word "THERE@@@", $4ba
+	ezchat_word "OK?@@@@@", $38e
+	ezchat_word "SO@@@@@@", $458
+	ezchat_word "MAYBE@@@", $30c
+	ezchat_word "ABOUT@@@", $01c
+	ezchat_word "OVER@@@@", $3a8
+	ezchat_word "IT@@@@@@", $2b0
+	ezchat_word "FOR@@@@@", $1b6
+	ezchat_word "ON@@@@@@", $392
+	ezchat_word "OFF@@@@@", $37e
+	ezchat_word "AS@@@@@@", $064
+	ezchat_word "TO@@@@@@", $4dc
+	ezchat_word "WITH@@@@", $598
+	ezchat_word "BETTER@@", $098
+	ezchat_word "EVER@@@@", $174
+	ezchat_word "SINCE@@@", $43e
+	ezchat_word "OF@@@@@@", $37c
+	ezchat_word "BELONG@@", $092
+	ezchat_word "AT@@@@@@", $068
+	ezchat_word "IN@@@@@@", $2a2
+	ezchat_word "OUT@@@@@", $3a2
+	ezchat_word "TOO@@@@@", $4ee
+	ezchat_word "LIKE@@@@", $2e0
+	ezchat_word "DID@@@@@", $12a
+	ezchat_word "WITHOUT@", $59a
+	ezchat_word "AFTER@@@", $028
+	ezchat_word "BEFORE@@", $08c
+	ezchat_word "WHILE@@@", $57e
+	ezchat_word "THAN@@@@", $4a4
+	ezchat_word "ONCE@@@@", $394
+	ezchat_word "ANYWHERE", $054
 
 .ThisAndThat:
-	ezchat_word "HIGHS@@@", $012 ; ああ@@@,
-	ezchat_word "LOWS@@@@", $03c ; あっち@@,
-	ezchat_word "UM@@@@@@", $04e ; あの@@@,
-	ezchat_word "REAR@@@@", $05c ; ありゃ@@,
-	ezchat_word "THINGS@@", $066 ; あれ@@@,
-	ezchat_word "THING@@@", $068 ; あれは@@,
-	ezchat_word "BELOW@@@", $06c ; あんな@@,
-	ezchat_word "HIGH@@@@", $1dc ; こう@@@,
-	ezchat_word "HERE@@@@", $1ec ; こっち@@,
-	ezchat_word "INSIDE@@", $1f2 ; この@@@,
-	ezchat_word "OUTSIDE@", $1fe ; こりゃ@@,
-	ezchat_word "BESIDE@@", $200 ; これ@@@,
-	ezchat_word "THIS ONE", $202 ; これだ！@,
-	ezchat_word "THIS@@@@", $204 ; これは@@,
-	ezchat_word "EVERY@@@", $20e ; こんな@@,
-	ezchat_word "SEEMS SO", $2be ; そう@@@,
-	ezchat_word "DOWN@@@@", $2c0 ; そっち@@,
-	ezchat_word "THAT@@@@", $2c2 ; その@@@,
-	ezchat_word "THAT IS@", $2c6 ; そりゃ@@,
-	ezchat_word "THAT ONE", $2c8 ; それ@@@,
-	ezchat_word "THATS IT", $2cc ; それだ！@,
-	ezchat_word "THAT'S..", $2d0 ; それは@@,
-	ezchat_word "THAT WAS", $2d2 ; そんな@@,
-	ezchat_word "UP@@@@@@", $398 ; どう@@@,
-	ezchat_word "CHOICE@@", $3b2 ; どっち@@,
-	ezchat_word "FAR@@@@@", $3b4 ; どの@@@,
-	ezchat_word "AWAY@@@@", $3c0 ; どりゃ@@,
-	ezchat_word "NEAR@@@@", $3c2 ; どれ@@@,
-	ezchat_word "WHERE@@@", $3c8 ; どれを@@,
-	ezchat_word "WHEN@@@@", $3ca ; どんな@@,
-	ezchat_word "WHAT@@@@", $3de ; なに@@@,
-	ezchat_word "DEEP@@@@", $3ec ; なんか@@,
-	ezchat_word "SHALLOW@", $3f0 ; なんだ@@,
-	ezchat_word "WHY@@@@@", $3f6 ; なんで@@,
-	ezchat_word "CONFUSED", $400 ; なんなんだ,
-	ezchat_word "OPPOSITE", $402 ; なんの@@,
+	ezchat_word "HIGHS@@@", $258
+	ezchat_word "LOWS@@@@", $2fc
+	ezchat_word "UM@@@@@@", $51e
+	ezchat_word "REAR@@@@", $3f0
+	ezchat_word "THINGS@@", $4c8
+	ezchat_word "THING@@@", $4c6
+	ezchat_word "BELOW@@@", $094
+	ezchat_word "HIGH@@@@", $256
+	ezchat_word "HERE@@@@", $242
+	ezchat_word "INSIDE@@", $2a4
+	ezchat_word "OUTSIDE@", $3a6
+	ezchat_word "BESIDE@@", $096
+	ezchat_word "THIS ONE", $4d0
+	ezchat_word "THIS@@@@", $4ce
+	ezchat_word "EVERY@@@", $176
+	ezchat_word "SEEMS SO", $41c
+	ezchat_word "DOWN@@@@", $142
+	ezchat_word "THAT@@@@", $4aa
+	ezchat_word "THAT IS@", $4ac
+	ezchat_word "THAT ONE", $4ae
+	ezchat_word "THATS IT", $4b6
+	ezchat_word "THAT'S..", $4b4
+	ezchat_word "THAT WAS", $4b0
+	ezchat_word "UP@@@@@@", $528
+	ezchat_word "CHOICE@@", $0d8
+	ezchat_word "FAR@@@@@", $192
+	ezchat_word "AWAY@@@@", $06e
+	ezchat_word "NEAR@@@@", $350
+	ezchat_word "WHERE@@@", $57a
+	ezchat_word "WHEN@@@@", $578
+	ezchat_word "WHAT@@@@", $576
+	ezchat_word "DEEP@@@@", $126
+	ezchat_word "SHALLOW@", $424
+	ezchat_word "WHY@@@@@", $58c
+	ezchat_word "CONFUSED", $0ec
+	ezchat_word "OPPOSITE", $39c
 
 MobileEZChatData_WordAndPageCounts:
 macro_11f220: MACRO
@@ -4225,51 +4225,33 @@ macro_11f23c: MACRO
 	dw x - w3_d000, \1
 x = x + 2 * \1
 ENDM
-x = $d012
-	macro_11f23c $2f ; a
-	macro_11f23c $1e ; i
-	macro_11f23c $11 ; u
-	macro_11f23c $09 ; e
-	macro_11f23c $2e ; o
-	macro_11f23c $24 ; ka_ga
-	macro_11f23c $1b ; ki_gi
-	macro_11f23c $09 ; ku_gu
-	macro_11f23c $07 ; ke_ge
-	macro_11f23c $1c ; ko_go
-	macro_11f23c $12 ; sa_za
-	macro_11f23c $2b ; shi_ji
-	macro_11f23c $10 ; su_zu
-	macro_11f23c $08 ; se_ze
-	macro_11f23c $0c ; so_zo
-	macro_11f23c $2c ; ta_da
-	macro_11f23c $09 ; chi_dhi
-	macro_11f23c $12 ; tsu_du
-	macro_11f23c $1b ; te_de
-	macro_11f23c $1a ; to_do
-	macro_11f23c $1c ; na
-	macro_11f23c $05 ; ni
-	macro_11f23c $02 ; nu
-	macro_11f23c $05 ; ne
-	macro_11f23c $07 ; no
-	macro_11f23c $16 ; ha_ba_pa
-	macro_11f23c $0e ; hi_bi_pi
-	macro_11f23c $0c ; fu_bu_pu
-	macro_11f23c $05 ; he_be_pe
-	macro_11f23c $16 ; ho_bo_po
-	macro_11f23c $19 ; ma
-	macro_11f23c $0e ; mi
-	macro_11f23c $08 ; mu
-	macro_11f23c $07 ; me
-	macro_11f23c $09 ; mo
-	macro_11f23c $0d ; ya
-	macro_11f23c $04 ; yu
-	macro_11f23c $14 ; yo
-	macro_11f23c $0b ; ra
-	macro_11f23c $01 ; ri
-	macro_11f23c $02 ; ru
-	macro_11f23c $02 ; re
-	macro_11f23c $02 ; ro
-	macro_11f23c $15 ; wa
+x = $d014
+	macro_11f23c  50 ; A
+	macro_11f23c  31 ; B
+	macro_11f23c  41 ; C
+	macro_11f23c  36 ; D
+	macro_11f23c  26 ; E
+	macro_11f23c  38 ; F
+	macro_11f23c  39 ; G
+	macro_11f23c  51 ; H
+	macro_11f23c  25 ; I
+	macro_11f23c   3 ; J
+	macro_11f23c   3 ; K
+	macro_11f23c  31 ; L
+	macro_11f23c  36 ; M
+	macro_11f23c  26 ; N
+	macro_11f23c  24 ; O
+	macro_11f23c  25 ; P
+	macro_11f23c   2 ; Q
+	macro_11f23c  19 ; R
+	macro_11f23c  67 ; S
+	macro_11f23c  70 ; T
+	macro_11f23c  13 ; U
+	macro_11f23c   5 ; V
+	macro_11f23c  59 ; W
+;	macro_11f23c   0 ; X
+	macro_11f23c  17 ; Y
+;	macro_11f23c   0 ; Z
 x = $d000
-	macro_11f23c $09 ; end = MISC
+	macro_11f23c  10 ; !?
 .End
