@@ -1,7 +1,13 @@
+EZCHAT_WORD_COUNT equ 4
+EZCHAT_WORD_LENGTH equ 8
+
 ; These functions seem to be related to the selection of preset phrases
 ; for use in mobile communications.  Annoyingly, they separate the
 ; Battle Tower function above from the data it references.
-Function11c05d:
+
+EZChat_RenderOneWord:
+; hl = where to place it to
+; d,e = params?
 	ld a, e
 	or d
 	jr z, .error
@@ -27,8 +33,8 @@ Function11c075:
 	ld a, c
 	call Function11c254
 	pop de
-	ld bc, wcd36
-	call Function11c08f
+	ld bc, wEZChatWords ; (?)
+	call EZChat_RenderWords
 	ret
 
 Function11c082: ; unreferenced
@@ -36,15 +42,20 @@ Function11c082: ; unreferenced
 	ld a, c
 	call Function11c254
 	pop de
-	ld bc, wcd36
+	ld bc, wEZChatWords
 	call PrintEZChatBattleMessage
 	ret
 
 Function11c08f:
+EZChat_RenderWords:
 	ld l, e
 	ld h, d
 	push hl
-	ld a, 3 ; Determines the number of easy chat words displayed before going onto the next line
+if 1
+	ld a, 2 ; Determines the number of easy chat words displayed before going onto the next line
+else
+	ld a, 3
+endc
 .loop
 	push af
 	ld a, [bc]
@@ -54,7 +65,7 @@ Function11c08f:
 	ld d, a
 	inc bc
 	push bc
-	call Function11c05d
+	call EZChat_RenderOneWord
 	jr c, .okay
 	inc bc
 
@@ -78,7 +89,7 @@ Function11c08f:
 	ld d, a
 	inc bc
 	push bc
-	call Function11c05d
+	call EZChat_RenderOneWord
 	jr c, .okay2
 	inc bc
 
@@ -111,7 +122,7 @@ PrintEZChatBattleMessage:
 	ld [wJumptableIndex], a
 	ld a, 18
 	ld [wcf64], a
-	ld a, $6 ; 6 WORD_COUNT
+	ld a, EZCHAT_WORD_COUNT
 .loop
 	push af
 	; load the 2-byte word data pointed to by bc
@@ -178,7 +189,7 @@ PrintEZChatBattleMessage:
 	; deduct the length of the word
 	sub e
 	ld [wcf64], a
-	ld de, $c608
+	ld de, wEZChatWordBuffer
 .place_string_loop
 	; load the string from de to hl
 	ld a, [de]
@@ -209,7 +220,7 @@ PrintEZChatBattleMessage:
 
 GetLengthOfWordAtC608: ; Finds the length of the word being stored for EZChat?
 	ld c, $0
-	ld hl, $c608
+	ld hl, wEZChatWordBuffer
 .loop
 	ld a, [hli]
 	cp "@"
@@ -223,38 +234,47 @@ CopyMobileEZChatToC608:
 	ld a, $1
 	ldh [rSVBK], a
 	ld a, "@"
-	ld hl, $c608
-	ld bc, NAME_LENGTH
+	ld hl, wEZChatWordBuffer
+	ld bc, EZCHAT_WORD_LENGTH + 1
 	call ByteFill
 	ld a, d
 	and a
 	jr z, .get_name
+; load in name
 	ld hl, MobileEZChatCategoryPointers
 	dec d
 	sla d
 	ld c, d
 	ld b, $0
 	add hl, bc
+; got category pointer
 	ld a, [hli]
 	ld c, a
 	ld a, [hl]
 	ld b, a
+; bc -> hl
 	push bc
 	pop hl
 	ld c, e
 	ld b, $0
-	sla c
-	rl b
-	sla c
-	rl b
-	sla c
-	rl b
+; got which word
+; bc * (5 + 1 + 1 + 1) = bc * 8
+;	sla c
+;	rl b
+;	sla c
+;	rl b
+;	sla c
+;	rl b
+;	add hl, bc
+rept EZCHAT_WORD_LENGTH + 3 ; fuck it, do (bc * 11) this way
 	add hl, bc
-	ld bc, NAME_LENGTH_JAPANESE - 1 ; WORD_LENGTH
+endr
+; got word address
+	ld bc, EZCHAT_WORD_LENGTH
 .copy_string
-	ld de, $c608
+	ld de, wEZChatWordBuffer
 	call CopyBytes
-	ld de, $c608
+	ld de, wEZChatWordBuffer
 	pop af
 	ldh [rSVBK], a
 	ret
@@ -264,7 +284,7 @@ CopyMobileEZChatToC608:
 	ld [wNamedObjectIndexBuffer], a
 	call GetPokemonName
 	ld hl, wStringBuffer1
-	ld bc, MON_NAME_LENGTH - 1 ; (Change to cap at 8 character)
+	ld bc, EZCHAT_WORD_LENGTH
 	jr .copy_string
 
 Function11c1ab:
@@ -295,8 +315,8 @@ Function11c1b9:
 	ld [wcf65], a
 	ld [wcf66], a
 	ld [wcd23], a
-	ld [wcd20], a
-	ld [wcd21], a
+	ld [wEZChatSelection], a
+	ld [wEZChatCategorySelection], a
 	ld [wcd22], a
 	ld [wcd35], a
 	ld [wcd2b], a
@@ -351,8 +371,8 @@ Function11c254:
 	ld c, a
 	ld b, $0
 	add hl, bc
-	ld de, wcd36
-	ld bc, 12
+	ld de, wEZChatWords
+	ld bc, EZCHAT_WORD_COUNT * 2
 	call CopyBytes
 	call CloseSRAM
 	ret
@@ -385,31 +405,78 @@ EZChat_MasterLoop:
 .DoJumptableFunction:
 	jumptable .Jumptable, wJumptableIndex
 
-.Jumptable:
+.Jumptable: ; and jumptable constants
+	const_def
+	
+	const EZCHAT_SPAWN_OBJECTS
 	dw .SpawnObjects ; 00
+	
+	const EZCHAT_INIT_RAM
 	dw .InitRAM ; 01
+	
+	const EZCHAT_02
 	dw Function11c35f ; 02
+	
+	const EZCHAT_03
 	dw Function11c373 ; 03
+	
+	const EZCHAT_DRAW_CHAT_WORDS
 	dw EZChatDraw_ChatWords ; 04
+	
+	const EZCHAT_MENU_CHAT_WORDS
 	dw EZChatMenu_ChatWords ; 05
+	
+	const EZCHAT_DRAW_CATEGORY_MENU
 	dw EZChatDraw_CategoryMenu ; 06
+	
+	const EZCHAT_MENU_CATEOGRY_MENU
 	dw EZChatMenu_CategoryMenu ; 07
+	
+	const EZCHAT_DRAW_WORD_SUBMENU
 	dw EZChatDraw_WordSubmenu ; 08
+	
+	const EZCHAT_MENU_WORD_SUBMENU
 	dw EZChatMenu_WordSubmenu ; 09
+	
+	const EZCHAT_DRAW_ERASE_SUBMENU
 	dw EZChatDraw_EraseSubmenu ; 0a
+	
+	const EZCHAT_MENU_ERASE_SUBMENU
 	dw EZChatMenu_EraseSubmenu ; 0b
+	
+	const EZCHAT_DRAW_EXIT_SUBMENU
 	dw EZChatDraw_ExitSubmenu ; 0c
+	
+	const EZCHAT_MENU_EXIT_SUBMENU
 	dw EZChatMenu_ExitSubmenu ; 0d
+	
+	const EZCHAT_DRAW_MESSAGE_TYPE_MENU
 	dw EZChatDraw_MessageTypeMenu ; 0e
+	
+	const EZCHAT_MENU_MESSAGE_TYPE_MENU
 	dw EZChatMenu_MessageTypeMenu ; 0f
+	
+	const EZCHAT_10
 	dw Function11cbf5 ; 10 (Something related to sound)
-	dw Function11ccef ; 11 (Something related to SortBy menus)
+	
+	const EZCHAT_MENU_WARN_EMPTY_MESSAGE
+	dw EZChatMenu_WarnEmptyMessage ; 11 (Something related to SortBy menus)
+	
+	const EZCHAT_12
 	dw Function11cd04 ; 12 (Something related to input)
+	
+	const EZCHAT_DRAW_SORT_BY_MENU
 	dw EZChatDraw_SortByMenu ; 13
+	
+	const EZCHAT_MENU_SORT_BY_MENU
 	dw EZChatMenu_SortByMenu ; 14
+	
+	const EZCHAT_DRAW_SORT_BY_CHARACTER
 	dw EZChatDraw_SortByCharacter ; 15
+	
+	const EZCHAT_MENU_SORT_BY_CHARACTER
 	dw EZChatMenu_SortByCharacter ; 16
-
+	
 .SpawnObjects:
 	depixel 3, 1, 2, 5
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
@@ -468,7 +535,7 @@ EZChat_MasterLoop:
 	ld [wcd2f], a
 	ld [wcd30], a
 	ld de, wcd2d
-	call Function11cfce
+	call EZChat_Textbox
 	jp Function11cfb5
 
 Function11c35f:
@@ -480,7 +547,7 @@ Function11c35f:
 	dec [hl]
 	push af
 	ld de, wcd2d
-	call Function11cfce
+	call EZChat_Textbox
 	pop af
 	ret nz
 	jp Function11cfb5
@@ -494,7 +561,7 @@ Function11c373:
 	dec [hl]
 	push af
 	ld de, wcd2d
-	call Function11cfce
+	call EZChat_Textbox
 	pop af
 	ret nz
 	call EZChatMenu_MessageSetup
@@ -502,8 +569,8 @@ Function11c373:
 
 EZChatMenu_MessageSetup:
 	ld hl, EZChatCoord_ChatWords
-	ld bc, wcd36
-	ld a, $6 ; MENU_WIDTH Must be changed to match the number of dwcoords in EZChatCoord_ChatWords
+	ld bc, wEZChatWords
+	ld a, EZCHAT_WORD_COUNT
 .asm_11c392
 	push af
 	ld a, [hli]
@@ -526,7 +593,7 @@ EZChatMenu_MessageSetup:
 	and d
 	cp $ff
 	jr z, .emptystring
-	call Function11c05d
+	call EZChat_RenderOneWord
 	jr .asm_11c3b5
 .emptystring
 	ld de, EZChatString_EmptyWord
@@ -540,12 +607,12 @@ EZChatMenu_MessageSetup:
 	ret
 
 EZChatString_EmptyWord: ; EZChat Unassigned Words
-	db "-----@" ; "--------@"
+	db "--------@"
 
 EZChatDraw_ChatWords: ; Switches between menus?, not sure which.
 	call EZChat_ClearBottom12Rows
 	ld de, EZChatBKG_ChatExplanation
-	call Function11d035
+	call EZChat_Textbox2
 	hlcoord 1, 7 ; Location of EZChatString_ChatExplanation
 	ld de, EZChatString_ChatExplanation
 	call PlaceString
@@ -559,139 +626,201 @@ EZChatDraw_ChatWords: ; Switches between menus?, not sure which.
 	res 0, [hl]
 	call Function11cfb5
 
+; ezchat main options
+	const_def
+	const EZCHAT_MAIN_WORD1
+	const EZCHAT_MAIN_WORD2
+	const EZCHAT_MAIN_WORD3
+	const EZCHAT_MAIN_WORD4
+	;const EZCHAT_MAIN_WORD5
+	;const EZCHAT_MAIN_WORD6
+	
+	const EZCHAT_MAIN_RESET
+	const EZCHAT_MAIN_QUIT
+	const EZCHAT_MAIN_OK
+
 EZChatMenu_ChatWords: ; EZChat Word Menu
-	ld hl, wcd20 ; wcd20
+
+; ----- (00) ----- (01) ----- (02)
+; ----- (03) ----- (04) ----- (05)
+; RESET (06)  QUIT (07)   OK  (08)
+
+; to
+
+; -------- (00) -------- (01)
+; -------- (02) -------- (03)
+; RESET (04)  QUIT (05)   OK  (06)
+
+	ld hl, wEZChatSelection
 	ld de, hJoypadPressed
 	ld a, [de]
-	and $8
-	jr nz, .asm_11c426
+	and START
+	jr nz, .select_ok
 	ld a, [de]
-	and $2 ; A
-	jr nz, .clicksound ; play sound
+	and B_BUTTON
+	jr nz, .click_sound_and_quit
 	ld a, [de]
-	and $1 ; B
-	jr nz, .asm_11c42c
+	and A_BUTTON
+	jr nz, .select_option
 	ld de, hJoyLast
 	ld a, [de]
-	and $40 ; UP
+	and D_UP
 	jr nz, .up
 	ld a, [de]
-	and $80 ; DOWN
+	and D_DOWN
 	jr nz, .down
 	ld a, [de]
-	and $20 ; LEFT
+	and D_LEFT
 	jr nz, .left
 	ld a, [de]
-	and $10 ; RIGHT
+	and D_RIGHT
 	jr nz, .right
 	ret
 
-.clicksound ; play sound
+.click_sound_and_quit
 	call PlayClickSFX
-.asm_11c41d
+.to_quit_prompt
 	ld hl, wcd24
 	set 0, [hl]
-	ld a, $c
-	jr .asm_11c475
-.asm_11c426
-	ld a, $8
-	ld [wcd20], a ; wcd20
+	ld a, EZCHAT_DRAW_EXIT_SUBMENU
+	jr .move_jumptable_index
+
+.select_ok
+	ld a, EZCHAT_MAIN_OK
+	ld [wEZChatSelection], a
 	ret
 
-.asm_11c42c
-	ld a, [wcd20] ; wcd20
-	cp $6 ; WORD_COUNT?
-	jr c, .asm_11c472
-	sub $6 ; WORD_COUNT?
-	jr z, .asm_11c469
+.select_option
+	ld a, [wEZChatSelection]
+	cp EZCHAT_MAIN_RESET
+	jr c, .to_word_select
+	sub EZCHAT_MAIN_RESET
+	jr z, .to_reset_prompt
 	dec a
-	jr z, .asm_11c41d
-	ld hl, wcd36
-	ld c, $c
+	jr z, .to_quit_prompt
+; ok prompt
+	ld hl, wEZChatWords
+	ld c, EZCHAT_WORD_COUNT * 2
 	xor a
-.asm_11c440
+.go_through_all_words
 	or [hl]
 	inc hl
 	dec c
-	jr nz, .asm_11c440
+	jr nz, .go_through_all_words
 	and a
-	jr z, .asm_11c460
+	jr z, .if_all_empty
+
+; filled out
 	ld de, EZChatBKG_ChatWords
-	call Function11cfce
+	call EZChat_Textbox
 	decoord 1, 2
-	ld bc, wcd36
-	call Function11c08f
+	ld bc, wEZChatWords
+	call EZChat_RenderWords
 	ld hl, wcd24
 	set 0, [hl]
-	ld a, $e
-	jr .asm_11c475
-.asm_11c460
+	ld a, EZCHAT_DRAW_MESSAGE_TYPE_MENU
+	jr .move_jumptable_index
+
+.if_all_empty
 	ld hl, wcd24
 	set 0, [hl]
-	ld a, $11
-	jr .asm_11c475
-.asm_11c469
+	ld a, EZCHAT_MENU_WARN_EMPTY_MESSAGE
+	jr .move_jumptable_index
+
+.to_reset_prompt
 	ld hl, wcd24
 	set 0, [hl]
-	ld a, $a
-	jr .asm_11c475
-.asm_11c472
-	call Function11c4a5
-.asm_11c475
+	ld a, EZCHAT_DRAW_ERASE_SUBMENU
+	jr .move_jumptable_index
+
+.to_word_select
+	call EZChat_MoveToCategoryOrSortMenu
+.move_jumptable_index
 	ld [wJumptableIndex], a
 	call PlayClickSFX
 	ret
 
 .up
 	ld a, [hl]
-	cp $3 ; 3 MENU_WIDTH
+if 1
+	cp 2
 	ret c
-	sub $3 ; 3 MENU_WIDTH
+	sub 2
+else
+	cp 3
+	ret c
+	sub 3
+endc
 	jr .finish_dpad
 .down
 	ld a, [hl]
-	cp $6 ; 6 MENU_WIDTH
+if 1
+	cp 4
 	ret nc
-	add $3 ; 3 MENU_WIDTH
+	add 2
+else
+	cp 6
+	ret nc
+	add 3
+endc
 	jr .finish_dpad
 .left
 	ld a, [hl]
+if 1
+	and a ; cp a, 0
+	ret z
+	cp 2
+	ret z
+	cp 4
+	ret z
+else
 	and a
 	ret z
 	cp $3
 	ret z
 	cp $6
 	ret z
+endc
 	dec a
 	jr .finish_dpad
 .right
 	ld a, [hl]
-	cp $2 ; $2 MENU_WIDTH
+if 1
+; rightmost side of everything
+	cp 1
 	ret z
-	cp $5 ; $5 MENU_WIDTH
+	cp 3
 	ret z
-	cp $8 ; $8 MENU_WIDTH
+	cp 6
 	ret z
+else
+	cp 2
+	ret z
+	cp 5
+	ret z
+	cp 8
+	ret z
+endc
 	inc a
 .finish_dpad
 	ld [hl], a
 	ret
 
-Function11c4a5:
+EZChat_MoveToCategoryOrSortMenu:
 	ld hl, wcd23
 	res 0, [hl]
 	ld a, [wcd2b]
 	and a
-	jr nz, .asm_11c4b7
+	jr nz, .to_sort_menu
 	xor a
-	ld [wcd21], a
-	ld a, $6 ; Not related to word count, changing it breaks the message selection menu
+	ld [wEZChatCategorySelection], a
+	ld a, EZCHAT_DRAW_CATEGORY_MENU ; from where this is called, it sets jumptable stuff
 	ret
 
-.asm_11c4b7
+.to_sort_menu
 	xor a
 	ld [wcd22], a
-	ld a, $15
+	ld a, EZCHAT_DRAW_SORT_BY_CHARACTER
 	ret
 
 EZChatDrawBKG_ChatWords:
@@ -707,16 +836,17 @@ EZChatDrawBKG_ChatWords:
 	ret
 
 EZChatString_ChatExplanation: ; Explanation string 
-	db   "Combine 6 words.";"６つのことば¯くみあわせます"
+	db   "Combine 4 words.";"６つのことば¯くみあわせます"
 	next "Select the space";"かえたいところ¯えらぶと　でてくる"
 	next "to change and";"ことばのグループから　いれかえたい"
 	next "choose a new word.";"たんご¯えらんでください"
 	db   "@"
 
 EZChatString_ChatExplanationBottom: ; Explanation commands string
-	db "RESET　QUIT　　OK@";"ぜんぶけす　やめる　　　けってい@"
+	db "RESET　QUIT  　OK@";"ぜんぶけす　やめる　　　けってい@"
 
 EZChatDraw_CategoryMenu: ; Open category menu
+; might need no change here
 	call EZChat_ClearBottom12Rows
 	call EZChat_PlaceCategoryNames
 	call Function11c618
@@ -725,7 +855,7 @@ EZChatDraw_CategoryMenu: ; Open category menu
 	call Function11cfb5
 
 EZChatMenu_CategoryMenu: ; Category Menu Controls
-	ld hl, wcd21
+	ld hl, wEZChatCategorySelection
 	ld de, hJoypadPressed
 
 	ld a, [de]
@@ -765,10 +895,10 @@ EZChatMenu_CategoryMenu: ; Category Menu Controls
 	ret
 
 .a
-	ld a, [wcd21]
+	ld a, [wEZChatCategorySelection]
 	cp 15
 	jr c, .got_category
-	sub $f
+	sub 15
 	jr z, .done
 	dec a
 	jr z, .mode
@@ -778,25 +908,25 @@ EZChatMenu_CategoryMenu: ; Category Menu Controls
 	ld hl, wcd24
 	set 0, [hl]
 	ld a, $8
-	ld [wcd20], a ; wcd20
+	ld [wEZChatSelection], a
 
 .b
-	ld a, $4
+	ld a, EZCHAT_DRAW_CHAT_WORDS
 	jr .go_to_function
 
 .select
 	ld a, [wcd2b]
-	xor $1
+	xor 1
 	ld [wcd2b], a
-	ld a, $15
+	ld a, EZCHAT_DRAW_SORT_BY_CHARACTER
 	jr .go_to_function
 
 .mode
-	ld a, $13
+	ld a, EZCHAT_DRAW_SORT_BY_MENU
 	jr .go_to_function
 
 .got_category
-	ld a, $8
+	ld a, EZCHAT_DRAW_WORD_SUBMENU
 
 .go_to_function
 	ld hl, wcd24
@@ -806,7 +936,7 @@ EZChatMenu_CategoryMenu: ; Category Menu Controls
 	ret
 
 .done
-	ld a, [wcd20] ; wcd20
+	ld a, [wEZChatSelection]
 	call EZChatDraw_EraseWordsLoop
 	call PlayClickSFX
 	ret
@@ -925,8 +1055,8 @@ EZChatDraw_WordSubmenu: ; Opens/Draws Word Submenu
 	call EZChat_ClearBottom12Rows
 	call Function11c770
 	ld de, EZChatBKG_WordSubmenu
-	call Function11d035
-	call Function11c9ab
+	call EZChat_Textbox2
+	call EZChat_WhiteOutLowerMenu
 	call Function11c7bc
 	call EZChatMenu_WordSubmenuBottom
 	ld hl, wcd24
@@ -934,7 +1064,7 @@ EZChatDraw_WordSubmenu: ; Opens/Draws Word Submenu
 	call Function11cfb5
 
 EZChatMenu_WordSubmenu: ; Word Submenu Controls
-	ld hl, wMobileCommsJumptableIndex
+	ld hl, wEZChatWordSelection
 	ld de, hJoypadPressed
 	ld a, [de]
 	and A_BUTTON
@@ -952,7 +1082,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld a, [wcd26]
 	and a
 	ret z
-	sub $c
+	sub $c ; EZCHAT_WORD_COUNT * 2 ?
 	jr nc, .asm_11c699
 	xor a
 .asm_11c699
@@ -962,13 +1092,17 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 .start
 	ld hl, wcd28
 	ld a, [wcd26]
-	add $c ; $c Skips down in the menu? MENU_WIDTH
+if 1
+	add $8 ; $c Skips down in the menu? MENU_WIDTH
+else
+	add 12 ; EZCHAT_WORD_COUNT * 2
+endc
 	cp [hl]
 	ret nc
 	ld [wcd26], a
 	ld a, [hl]
 	ld b, a
-	ld hl, wMobileCommsJumptableIndex
+	ld hl, wEZChatWordSelection
 	ld a, [wcd26]
 	add [hl]
 	jr c, .asm_11c6b9
@@ -979,7 +1113,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld hl, wcd26
 	sub [hl]
 	dec a
-	ld [wMobileCommsJumptableIndex], a
+	ld [wEZChatWordSelection], a
 .asm_11c6c4
 	call Function11c992
 	call Function11c7bc
@@ -1006,16 +1140,16 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	call Function11c8f6
 	ld a, $4
 	ld [wcd35], a
-	jr .asm_11c6fc
+	jr .jump_to_index
 .b
 	ld a, [wcd2b]
 	and a
 	jr nz, .asm_11c6fa
 	ld a, $6
-	jr .asm_11c6fc
+	jr .jump_to_index
 .asm_11c6fa
 	ld a, $15
-.asm_11c6fc
+.jump_to_index
 	ld [wJumptableIndex], a
 	ld hl, wcd24
 	set 3, [hl]
@@ -1024,14 +1158,24 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 
 .up
 	ld a, [hl]
-	cp $3 ; MENU_WIDTH
+if 1
+	cp $2 ; MENU_WIDTH
 	jr c, .asm_11c711
-	sub $3 ; MENU_WIDTH
+	sub $2 ; 3 MENU_WIDTH
+else
+	cp 3
+	jr c, .asm_11c711
+	sub 3
+endc
 	jr .finish_dpad
 
 .asm_11c711
 	ld a, [wcd26]
-	sub $3 ; MENU_WIDTH
+if 1
+	sub $2 ; 3 MENU_WIDTH
+else
+	sub 3
+endc
 	ret c
 	ld [wcd26], a
 	jr .asm_11c6c4
@@ -1039,12 +1183,20 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 .asm_11c71c
 	ld hl, wcd28
 	ld a, [wcd26]
-	add $c ; Skips down in the menu on SELECT? 
+if 1
+	add $8 ; $c Skips down in the menu on SELECT? 
+else
+	add 12 ; EZCHAT_WORD_COUNT * 2
+endc
 	ret c
 	cp [hl]
 	ret nc
 	ld a, [wcd26]
-	add $3 ; MENU_WIDTH
+if 1
+	add $2 ; 3 MENU_WIDTH
+else
+	add 3
+endc
 	ld [wcd26], a
 	jr .asm_11c6c4
 
@@ -1053,13 +1205,23 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld b, a
 	ld a, [wcd26]
 	add [hl]
-	add $3 ; 3 MENU_WIDTH
+if 1
+	add $2 ; 3 MENU_WIDTH
 	cp b
 	ret nc
 	ld a, [hl]
-	cp $9 ; 9 MENU_WIDTH
+	cp $8 ; 9 MENU_WIDTH
 	jr nc, .asm_11c71c
-	add $3 ; 3 MENU_WIDTH
+	add $2 ; 3 MENU_WIDTH
+else
+	add 3
+	cp b
+	ret nc
+	ld a, [hl]
+	cp 9
+	jr nc, .asm_11c71c
+	add 3
+endc
 	jr .finish_dpad
 
 .left
@@ -1084,13 +1246,23 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	cp b
 	ret nc
 	ld a, [hl]
-	cp $2 ; 2 MENU_WIDTH
+if 1
+	cp $1 ; 2 MENU_WIDTH
 	ret z
-	cp $5 ; 5 MENU_WIDTH
+	cp $4 ; 5 MENU_WIDTH
 	ret z
-	cp $8 ; 8 MENU_WIDTH
+	cp $7 ; 8 MENU_WIDTH
 	ret z
-	cp $b ; b MENU_WIDTH
+	cp $a ; b MENU_WIDTH
+else
+	cp 2
+	ret z
+	cp 5
+	ret z
+	cp 8
+	ret z
+	cp 11
+endc
 	ret z
 	inc a
 
@@ -1100,13 +1272,13 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 
 Function11c770:
 	xor a
-	ld [wMobileCommsJumptableIndex], a
+	ld [wEZChatWordSelection], a
 	ld [wcd26], a
 	ld [wcd27], a
 	ld a, [wcd2b]
 	and a
 	jr nz, .cd2b_is_nonzero
-	ld a, [wcd21]
+	ld a, [wEZChatCategorySelection]
 	and a
 	jr z, .cd21_is_zero
 	; load from data array
@@ -1128,7 +1300,11 @@ Function11c770:
 	ld a, [wc7d2]
 	ld [wcd28], a
 .div_12
-	ld c, 12 ; 12 Number of words to draw in word submenu? MENU_WIDTH
+if 1
+	ld c, 8 ; 12 Number of words to draw in word submenu? MENU_WIDTH
+else
+	ld c, 12 ; EZCHAT_WORD_COUNT * 2
+endc
 	call SimpleDivide
 	and a
 	jr nz, .no_need_to_floor
@@ -1154,7 +1330,7 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	ld a, [wcd2b]
 	and a
 	jr nz, .asm_11c814
-	ld a, [wcd21]
+	ld a, [wEZChatCategorySelection]
 	ld d, a
 	and a
 	jr z, .asm_11c7e9
@@ -1172,7 +1348,7 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	ret z
 	push bc
 	push de
-	call Function11c05d
+	call EZChat_RenderOneWord
 	pop de
 	pop bc
 	inc e
@@ -1202,7 +1378,7 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	cp $ff
 	jr z, .asm_11c811
 	push bc
-	call Function11c05d
+	call EZChat_RenderOneWord
 	pop bc
 	pop hl
 	pop de
@@ -1254,7 +1430,7 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	cp $ff
 	jr z, .asm_11c851
 	push bc
-	call Function11c05d
+	call EZChat_RenderOneWord
 	pop bc
 	pop hl
 	pop de
@@ -1270,6 +1446,16 @@ Function11c7bc: ; Related to drawing words in the lower menu after picking a cat
 	ret
 
 EZChatCoord_WordSubmenu: ; Word coordinates (within category submenu)
+if 1
+	dwcoord  2,  8
+	dwcoord  11,  8 ; 8, 8 MENU_WIDTH
+	dwcoord  2, 10
+	dwcoord  11, 10 ; 8, 10 MENU_WIDTH
+	dwcoord  2, 12
+	dwcoord  11, 12 ; 8, 12 MENU_WIDTH
+	dwcoord  2, 14
+	dwcoord  11, 14 ; 8, 14 MENU_WIDTH
+else
 	dwcoord  2,  8
 	dwcoord  8,  8 ; MENU_WIDTH
 	dwcoord 14,  8 ; MENU_WIDTH
@@ -1282,6 +1468,7 @@ EZChatCoord_WordSubmenu: ; Word coordinates (within category submenu)
 	dwcoord  2, 14
 	dwcoord  8, 14 ; MENU_WIDTH
 	dwcoord 14, 14 ; MENU_WIDTH
+endc
 	dw -1
 
 EZChatMenu_WordSubmenuBottom: ; Seems to handle the bottom of the word menu.
@@ -1311,7 +1498,7 @@ EZChatMenu_WordSubmenuBottom: ; Seems to handle the bottom of the word menu.
 .asm_11c895
 	ld hl, wcd28
 	ld a, [wcd26]
-	add $c
+	add $c ; EZCHAT_WORD_COUNT * 2 ?
 	jr c, .asm_11c8b7
 	cp [hl]
 	jr nc, .asm_11c8b7
@@ -1372,30 +1559,30 @@ MobileString_Next:
 	db "NEXT@";"つぎ@"
 
 Function11c8f6:
-	ld a, [wcd20] ; wcd20
+	ld a, [wEZChatSelection]
 	call Function11c95d
 	push hl
 	ld a, [wcd2b]
 	and a
 	jr nz, .asm_11c938
-	ld a, [wcd21]
+	ld a, [wEZChatCategorySelection]
 	ld d, a
 	and a
 	jr z, .asm_11c927
 	ld hl, wcd26
-	ld a, [wMobileCommsJumptableIndex]
+	ld a, [wEZChatWordSelection]
 	add [hl]
 .asm_11c911
 	ld e, a
 .asm_11c912
 	pop hl
 	push de
-	call Function11c05d
+	call EZChat_RenderOneWord
 	pop de
-	ld a, [wcd20] ; wcd20
+	ld a, [wEZChatSelection]
 	ld c, a
 	ld b, $0
-	ld hl, wcd36
+	ld hl, wEZChatWords
 	add hl, bc
 	add hl, bc
 	ld [hl], e
@@ -1405,7 +1592,7 @@ Function11c8f6:
 
 .asm_11c927
 	ld hl, wcd26
-	ld a, [wMobileCommsJumptableIndex]
+	ld a, [wEZChatWordSelection]
 	add [hl]
 	ld c, a
 	ld b, $0
@@ -1431,7 +1618,7 @@ Function11c8f6:
 	ld d, $0
 	add hl, de
 	add hl, de
-	ld a, [wMobileCommsJumptableIndex]
+	ld a, [wEZChatWordSelection]
 	ld e, a
 	add hl, de
 	add hl, de
@@ -1454,7 +1641,7 @@ Function11c95d: ; Possibly draws words at the top for EZ chat
 	push bc
 	push bc
 	pop hl
-	ld a, $5
+	ld a, $5 ; Was changed to $7?
 	ld c, a
 	ld a, $7f
 .asm_11c972
@@ -1464,7 +1651,7 @@ Function11c95d: ; Possibly draws words at the top for EZ chat
 	dec hl
 	ld bc, -20
 	add hl, bc
-	ld a, $5
+	ld a, $5 ; Was changed to $7?
 	ld c, a
 	ld a, $7f
 .asm_11c980
@@ -1475,12 +1662,21 @@ Function11c95d: ; Possibly draws words at the top for EZ chat
 	ret
 
 EZChatCoord_ChatWords: ; EZChat Message Coordinates
+if 1
+	dwcoord  1,  2
+	dwcoord 10,  2 ;  7, 2
+	;dwcoord  7,  7 ; 13, 2 (Pushed under 'Combine 4 words' menu) WORD_COUNT
+	dwcoord  1,  4
+	dwcoord 10,  4 ;  7, 4
+	;dwcoord 12, 12 ; 13, 4 (Pushed under 'Combine 4 words' menu) WORD_COUNT
+else
 	dwcoord  1,  2
 	dwcoord  7,  2
 	dwcoord 13,  2
 	dwcoord  1,  4
 	dwcoord  7,  4
 	dwcoord 13,  4
+endc
 
 Function11c992: ; Likely related to the word submenu, references the first word position
 	ld a, $8
@@ -1499,7 +1695,7 @@ Function11c992: ; Likely related to the word submenu, references the first word 
 	jr nz, .asm_11c997
 	ret
 
-Function11c9ab: ; Possibly related to drawing the box around the lower menu
+EZChat_WhiteOutLowerMenu:
 	ld a, $7
 	hlcoord 0, 6, wAttrMap
 	ld bc, $c8
@@ -1534,11 +1730,11 @@ EZChatMenu_EraseSubmenu: ; Erase submenu controls
 	jr nz, .b
 	call EZChatMenu_EraseWordsAccept
 	xor a
-	ld [wcd20], a ; wcd20
+	ld [wEZChatSelection], a
 .b
 	ld hl, wcd24
 	set 4, [hl]
-	ld a, $4
+	ld a, EZCHAT_DRAW_CHAT_WORDS
 	ld [wJumptableIndex], a
 	call PlayClickSFX
 	ret
@@ -1612,12 +1808,16 @@ EZChatMenu_EraseWordsAccept:
 	call EZChatDraw_EraseWordsLoop
 	pop af
 	inc a
-	cp $6 ; 6 WORD_COUNT
+if 1
+	cp $4 ; 6 WORD_COUNT
+else
+	cp 6
+endc
 	jr nz, .loop
 	ret
 
 EZChatDraw_EraseWordsLoop:
-	ld hl, wcd36
+	ld hl, wEZChatWords
 	ld c, a
 	ld b, $0
 	add hl, bc
@@ -1633,9 +1833,9 @@ EZChatDraw_EraseWordsLoop:
 EZChatDraw_ConfirmationSubmenu:
 	push de
 	ld de, EZChatBKG_SortBy
-	call Function11cfce
+	call EZChat_Textbox
 	ld de, EZChatBKG_SortByConfirmation
-	call Function11cfce
+	call EZChat_Textbox
 	hlcoord 1, 14
 	pop de
 	call PlaceString
@@ -1692,7 +1892,7 @@ EZChatMenu_ExitSubmenu: ; Exit Message menu
 
 .asm_11caf3
 	ld hl, wJumptableIndex
-	set 7, [hl]
+	set 7, [hl] ; exit
 	ret
 
 .b
@@ -1700,7 +1900,7 @@ EZChatMenu_ExitSubmenu: ; Exit Message menu
 .asm_11cafc
 	ld hl, wcd24
 	set 4, [hl]
-	ld a, $4
+	ld a, EZCHAT_DRAW_CHAT_WORDS
 	ld [wJumptableIndex], a
 	ld a, [wcd35]
 	cp $ff
@@ -1781,8 +1981,8 @@ EZChatMenu_MessageTypeMenu: ; Message Type Menu Controls (Intro/Battle Start/Win
 	ld c, a
 	ld b, $0
 	add hl, bc
-	ld de, wcd36
-	ld c, $c
+	ld de, wEZChatWords
+	ld c, EZCHAT_WORD_COUNT * 2
 .asm_11cba2
 	ld a, [de]
 	ld [hli], a
@@ -1792,7 +1992,7 @@ EZChatMenu_MessageTypeMenu: ; Message Type Menu Controls (Intro/Battle Start/Win
 	call CloseSRAM
 	call PlayClickSFX
 	ld de, EZChatBKG_SortBy
-	call Function11cfce
+	call EZChat_Textbox
 	ld hl, EZChatString_MessageSet
 	ld a, [wMenuCursorY]
 .asm_11cbba
@@ -1819,11 +2019,11 @@ EZChatMenu_MessageTypeMenu: ; Message Type Menu Controls (Intro/Battle Start/Win
 	call PlayClickSFX
 .b
 	ld de, EZChatBKG_ChatWords
-	call Function11cfce
+	call EZChat_Textbox
 	call EZChatMenu_MessageSetup
 	ld hl, wcd24
 	set 4, [hl]
-	ld a, $4
+	ld a, EZCHAT_DRAW_CHAT_WORDS
 	ld [wJumptableIndex], a
 	ret
 
@@ -1894,9 +2094,9 @@ EZChatString_MessageBattleLoseSet:
 	db   "MESSAGE set!@";"たいせん　<NI>まけたとき　の"
 	;next "あいさつ¯とうろくした！@"
 
-Function11ccef:
+EZChatMenu_WarnEmptyMessage:
 	ld de, EZChatBKG_SortBy
-	call Function11cfce
+	call EZChat_Textbox
 	hlcoord 1, 14
 	ld de, EZChatString_EnterSomeWords
 	call PlaceString
@@ -1908,7 +2108,7 @@ Function11cd04:
 	ld a, [de]
 	and a
 	ret z
-	ld a, $4
+	ld a, EZCHAT_DRAW_CHAT_WORDS
 	ld [wJumptableIndex], a
 	ret
 
@@ -1919,7 +2119,7 @@ EZChatString_EnterSomeWords:
 EZChatDraw_SortByMenu: ; Draws/Opens Sort By Menu
 	call EZChat_ClearBottom12Rows
 	ld de, EZChatBKG_SortBy
-	call Function11cfce
+	call EZChat_Textbox
 	hlcoord 1, 14
 	ld a, [wcd2b]
 	ld [wcd2c], a
@@ -1963,12 +2163,12 @@ EZChatMenu_SortByMenu: ; Sort Menu Controls
 	ld a, [wcd2b]
 	and a
 	jr nz, .asm_11cd7d
-	ld a, $6
-	jr .asm_11cd7f
+	ld a, EZCHAT_DRAW_CATEGORY_MENU
+	jr .jump_to_index
 
 .asm_11cd7d
-	ld a, $15
-.asm_11cd7f
+	ld a, EZCHAT_DRAW_SORT_BY_CHARACTER
+.jump_to_index
 	ld [wJumptableIndex], a
 	ld hl, wcd24
 	set 5, [hl]
@@ -1992,7 +2192,7 @@ EZChatMenu_SortByMenu: ; Sort Menu Controls
 .asm_11cd9b
 	push de
 	ld de, EZChatBKG_SortBy
-	call Function11cfce
+	call EZChat_Textbox
 	pop de
 	hlcoord 1, 14
 	call PlaceString
@@ -2090,7 +2290,7 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 	ld hl, wcd24
 	set 0, [hl]
 	ld a, $8
-	ld [wcd20], a ; wcd20
+	ld [wEZChatSelection], a
 .b
 	ld a, $4
 	jr .load
@@ -2107,7 +2307,7 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 	jr .load
 
 .mode
-	ld a, $13
+	ld a, EZCHAT_DRAW_SORT_BY_MENU
 .load
 	ld [wJumptableIndex], a
 	ld hl, wcd24
@@ -2116,7 +2316,7 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 	ret
 
 .done
-	ld a, [wcd20] ; wcd20
+	ld a, [wEZChatSelection]
 	call EZChatDraw_EraseWordsLoop
 	call PlayClickSFX
 	ret
@@ -2237,7 +2437,7 @@ EZChatScript_SortByCharacterTable: ; Hiragana table, used when sorting alphabeti
 ; Hiragana table
 	db   "ABCDE　FGHIJ　-　-　-" ;"あいうえお　なにぬねの　や　ゆ　よ"
 	next "KLMNO　PQRST　-" ; "かきくけこ　はひふへほ　わ"
-	next "UVWXY　Z----　MISC" ; "さしすせそ　まみむめも　そのた"
+	next "UVWXY　Z----　ETC" ; "さしすせそ　まみむめも　そのた"
 	next "-----　-----" ;"たちつてと　らりるれろ"
 	db   "@"
 
@@ -2266,7 +2466,7 @@ EZChatBKG_SortByConfirmation:
 	db 14,  7 ; start coords
 	db  6,  5 ; end coords
 
-Function11cfce:
+EZChat_Textbox:
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH
 	ld a, [de]
@@ -2353,7 +2553,7 @@ Function11cfce:
 	ld [hl], a
 	ret
 
-Function11d035:
+EZChat_Textbox2:
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH
 	ld a, [de]
@@ -2487,14 +2687,25 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dw .ten
 
 .zero ; EZChat Message Menu
-	ld a, [wcd20] ; wcd20
+; reinit sprite
+	ld a, [wEZChatSelection]
+	cp EZCHAT_MAIN_RESET
+	jr nc, .shorter_cursor
+	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_8
+	call ReinitSpriteAnimFrame
+	jr .cont0
+.shorter_cursor
+	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_1
+	call ReinitSpriteAnimFrame
+.cont0
+	ld a, [wEZChatSelection]
 	sla a
 	ld hl, .Coords_Zero
 	ld e, $1 ; Category Menu Index (?) (May be the priority of which the selection boxes appear (0 is highest))
 	jr .load
 
 .one ; Category Menu
-	ld a, [wcd21]
+	ld a, [wEZChatCategorySelection]
 	sla a
 	ld hl, .Coords_One
 	ld e, $2 ; Sort by Letter Menu Index (?)
@@ -2518,7 +2729,7 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 .three ; Words Submenu
 	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_2 ; $27
 	call ReinitSpriteAnimFrame
-	ld a, [wMobileCommsJumptableIndex]
+	ld a, [wEZChatWordSelection]
 	sla a
 	ld hl, .Coords_Three
 	ld e, $8
@@ -2670,6 +2881,15 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	ret
 
 .Coords_Zero: ; EZChat Message Menu
+if 1
+	dbpixel  1,  3, 5, 2 ; Message 1 - 00
+	dbpixel 10,  3, 5, 2 ; Message 2 - 01
+	dbpixel  1,  5, 5, 2 ; Message 3 - 02
+	dbpixel 10,  5, 5, 2 ; Message 4 - 03
+	dbpixel  1, 17, 5, 2 ; RESET     - 04
+	dbpixel  7, 17, 5, 2 ; QUIT      - 05
+	dbpixel 13, 17, 5, 2 ; OK        - 06
+else
 	dbpixel  1,  3, 5, 2 ; Message 1
 	dbpixel  7,  3, 5, 2 ; Message 2
 	dbpixel 13,  3, 5, 2 ; Message 3
@@ -2679,6 +2899,7 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dbpixel  1, 17, 5, 2 ; RESET
 	dbpixel  7, 17, 5, 2 ; QUIT
 	dbpixel 13, 17, 5, 2 ; OK
+endc
 
 .Coords_One: ; Category Menu
 	dbpixel  1,  8, 5, 2 ; PKMN
@@ -2751,6 +2972,20 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dbpixel 13, 18, 5, 2 ; 2f
 
 .Coords_Three: ; Words Submenu Arrow Positions
+if 1
+	dbpixel  2, 10 
+	dbpixel  11, 10 ; 8, 10 MENU_WIDTH
+	;dbpixel 14, 10
+	dbpixel  2, 12
+	dbpixel  11, 12 ; 8, 12 MENU_WIDTH
+	;dbpixel 14, 12
+	dbpixel  2, 14
+	dbpixel  11, 14 ; 8, 14 MENU_WIDTH
+	;dbpixel 14, 14
+	dbpixel  2, 16
+	dbpixel  11, 16 ; 8, 16 MENU_WIDTH
+	;dbpixel 14, 16
+else
 	dbpixel  2, 10 
 	dbpixel  8, 10 ; MENU_WIDTH
 	dbpixel 14, 10
@@ -2763,6 +2998,7 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dbpixel  2, 16
 	dbpixel  8, 16 ; MENU_WIDTH
 	dbpixel 14, 16
+endc
 
 .Coords_Four: ; Yes/No Box
 	dbpixel 16, 10 ; YES
@@ -2818,9 +3054,9 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 2a (Letter selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 2b (Letter selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_4 ; 2c (Misc selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_1 ; 2d (Bottom Menu Selection box?)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_1 ; 2e (Bottom Menu Selection box?)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_1 ; 2f (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 2d (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 2e (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 2f (Bottom Menu Selection box?)
 
 .UpdateObjectFlags:
 	ld hl, wcd24
@@ -3180,7 +3416,7 @@ EZChat_GetCategoryWordsByKana:
 	push hl
 
 	; skip to the attributes
-	ld hl, NAME_LENGTH_JAPANESE - 1 ; WORD_LENGTH
+	ld hl, EZCHAT_WORD_LENGTH
 	add hl, de
 
 	; get the number of words in the category
@@ -3215,7 +3451,7 @@ EZChat_GetCategoryWordsByKana:
 
 	; next entry
 	pop hl
-	ld de, 8
+	ld de, EZCHAT_WORD_LENGTH + 3
 	add hl, de
 	pop af
 	dec a
@@ -3278,6 +3514,7 @@ MobileEZChatCategoryPointers:
 	dw .Farewells      ; 0d
 	dw .ThisAndThat    ; 0e
 
+if 0
 .Types:
 	db	"DARK@",	$26,	$0,	$0		; あく@@@,
 	db	"ROCK@",	$aa,	$0,	$0		; いわ@@@,
@@ -4052,14 +4289,789 @@ MobileEZChatCategoryPointers:
 	db	"WHY@@",	$f6, $3, $0		; なんで@@,
 	db	"CONFU",	$0,  $4, $0		; なんなんだ,
 	db	"OPPOS",	$2,	 $4, $0		; なんの@@,
+else
+.Types:
+	db	"DARK@@@@",	$26,	$0,	$0		; あく@@@,
+	db	"ROCK@@@@",	$aa,	$0,	$0		; いわ@@@,
+	db	"PSYCHIC@",	$da,	$0,	$0		; エスパー@,
+	db	"FIGHTING",	$4e,	$1,	$0		; かくとう@,
+	db	"GRASS@@@",	$ba,	$1,	$0		; くさ@@@,
+	db	"GHOST@@@",	$e4,	$1,	$0		; ゴースト@,
+	db	"ICE@@@@@",	$e6,	$1,	$0		; こおり@@,
+	db	"GROUND@@",	$68,	$2,	$0		; じめん@@,
+	db	"TYPE@@@@",	$e8,	$2,	$0		; タイプ@@,
+	db	"ELECTRIC",	$8e,	$3,	$0		; でんき@@,
+	db	"POISON@@",	$ae,	$3,	$0		; どく@@@,
+	db	"DRAGON@@",	$bc,	$3,	$0		; ドラゴン@,
+	db	"NORMAL@@",	$22,	$4,	$0		; ノーマル@,
+	db	"STEEL@@@",	$36,	$4,	$0		; はがね@@,
+	db	"FLYING@@",	$5e,	$4,	$0		; ひこう@@,
+	db	"FIRE@@@@",	$b2,	$4,	$0		; ほのお@@,
+	db	"WATER@@@",	$f4,	$4,	$0		; みず@@@,
+	db	"BUG@@@@@",	$12,	$5,	$0		; むし@@@,
 
+.Greetings:
+	db	"THANKS@@",	$58,	$0,	$0		; ありがと@,
+	db	"THANK U@",	$5a,	$0,	$0		; ありがとう,
+	db	"LETS GO!",	$80,	$0,	$0		; いくぜ！@,
+	db	"GO ON!@@",	$82,	$0,	$0		; いくよ！@,
+	db	"DO IT!@@",	$84,	$0,	$0		; いくわよ！,
+	db	"YEAH@@@@",	$a6,	$0,	$0		; いやー@@,
+	db	"HOW DO@@",	$a,	    $1,	$0		; おっす@@,
+	db	"HOWDY!@@",	$22,	$1,	$0		; おはつです,
+	db	"CONGRATS",	$2a,	$1,	$0		; おめでとう,
+	db	"SORRY@@@",	$f8,	$1,	$0		; ごめん@@,
+	db	"SORRY!@@",	$fa,	$1,	$0		; ごめんよ@,
+	db	"HI THERE",	$fc,	$1,	$0		; こらっ@@,
+	db	"HI!@@@@@",	$a,	    $2,	$0		; こんちは！,
+	db	"HELLO@@@",	$10,	$2,	$0		; こんにちは,
+	db	"GOOD-BYE",	$28,	$2,	$0		; さようなら,
+	db	"CHEERS@@",	$2e,	$2,	$0		; サンキュー,
+	db	"I'M HERE",	$30,	$2,	$0		; さんじょう,
+	db	"PARDON@@",	$48,	$2,	$0		; しっけい@,
+	db	"EXCUSE@@",	$4c,	$2,	$0		; しつれい@,
+	db	"SEE YA@@",	$6c,	$2,	$0		; じゃーね@,
+	db	"YO!@@@@@",	$8c,	$2,	$0		; すいません,
+	db	"WELL...@",	$ca,	$2,	$0		; それじゃ@,
+	db	"GRATEFUL",	$a6,	$3,	$0		; どうも@@,
+	db	"WASSUP?@",	$ee,	$3,	$0		; なんじゃ@,
+	db	"HI@@@@@@",	$2c,	$4,	$0		; ハーイ@@,
+	db	"YEA, YEA",	$32,	$4,	$0		; はいはい@,
+	db	"BYE-BYE@",	$34,	$4,	$0		; バイバイ@,
+	db	"HEY@@@@@",	$8a,	$4,	$0		; へイ@@@,
+	db	"SMELL@@@",	$de,	$4,	$0		; またね@@,
+	db	"TUNED IN",	$32,	$5,	$0		; もしもし@,
+	db	"HOO-HAH@",	$3e,	$5,	$0		; やあ@@@,
+	db	"YAHOO@@@",	$4e,	$5,	$0		; やっほー@,
+	db	"YO@@@@@@",	$62,	$5,	$0		; よう@@@,
+	db	"GO OVER@",	$64,	$5,	$0		; ようこそ@,
+	db	"COUNT ON",	$80,	$5,	$0		; よろしく@,
+	db	"WELCOME@",	$94,	$5,	$0		; らっしゃい,
+
+.People:
+	db	"OPPONENT",	$1c,	$0,	$0		; あいて@@,
+	db	"I@@@@@@@",	$36,	$0,	$0		; あたし@@,
+	db	"YOU@@@@@",	$40,	$0,	$0		; あなた@@,
+	db	"YOURS@@@",	$42,	$0,	$0		; あなたが@,
+	db	"SON@@@@@",	$44,	$0,	$0		; あなたに@,
+	db	"YOUR@@@@",	$46,	$0,	$0		; あなたの@,
+	db	"YOU'RE@@",	$48,	$0,	$0		; あなたは@,
+	db	"YOU'VE@@",	$4a,	$0,	$0		; あなたを@,
+	db	"MOM@@@@@",	$e8,	$0,	$0		; おかあさん,
+	db	"GRANDPA@",	$fc,	$0,	$0		; おじいさん,
+	db	"UNCLE@@@",	$2,	    $1,	$0		; おじさん@,
+	db	"DAD@@@@@",	$e,	    $1,	$0		; おとうさん,
+	db	"BOY@@@@@",	$10,	$1,	$0		; おとこのこ,
+	db	"ADULT@@@",	$14,	$1,	$0		; おとな@@,
+	db	"BROTHER@",	$16,	$1,	$0		; おにいさん,
+	db	"SISTER@@",	$18,	$1,	$0		; おねえさん,
+	db	"GRANDMA@",	$1c,	$1,	$0		; おばあさん,
+	db	"AUNT@@@@",	$20,	$1,	$0		; おばさん@,
+	db	"ME@@@@@@",	$34,	$1,	$0		; おれさま@,
+	db	"GIRL@@@@",	$3a,	$1,	$0		; おんなのこ,
+	db	"BABE@@@@",	$40,	$1,	$0		; ガール@@,
+	db	"FAMILY@@",	$52,	$1,	$0		; かぞく@@,
+	db	"HER@@@@@",	$72,	$1,	$0		; かのじょ@,
+	db	"HIM@@@@@",	$7c,	$1,	$0		; かれ@@@,
+	db	"HE@@@@@@",	$9a,	$1,	$0		; きみ@@@,
+	db	"PLACE@@@",	$9c,	$1,	$0		; きみが@@,
+	db	"DAUGHTER",	$9e,	$1,	$0		; きみに@@,
+	db	"HIS@@@@@",	$a0,	$1,	$0		; きみの@@,
+	db	"HE'S@@@@",	$a2,	$1,	$0		; きみは@@,
+	db	"AREN'T@@",	$a4,	$1,	$0		; きみを@@,
+	db	"GAL@@@@@",	$ae,	$1,	$0		; ギャル@@,
+	db	"SIBLINGS",	$b2,	$1,	$0		; きょうだい,
+	db	"CHILDREN",	$f0,	$1,	$0		; こども@@,
+	db	"MYSELF@@",	$54,	$2,	$0		; じぶん@@,
+	db	"I WAS@@@",	$56,	$2,	$0		; じぶんが@,
+	db	"TO ME@@@",	$58,	$2,	$0		; じぶんに@,
+	db	"MY@@@@@@",	$5a,	$2,	$0		; じぶんの@,
+	db	"I AM@@@@",	$5c,	$2,	$0		; じぶんは@,
+	db	"I'VE@@@@",	$5e,	$2,	$0		; じぶんを@,
+	db	"WHO@@@@@",	$18,	$3,	$0		; だれ@@@,
+	db	"SOMEONE@",	$1a,	$3,	$0		; だれか@@,
+	db	"WHO WAS@",	$1c,	$3,	$0		; だれが@@,
+	db	"TO WHOM@",	$1e,	$3,	$0		; だれに@@,
+	db	"WHOSE@@@",	$20,	$3,	$0		; だれの@@,
+	db	"WHO IS@@",	$22,	$3,	$0		; だれも@@,
+	db	"IT'S@@@@",	$24,	$3,	$0		; だれを@@,
+	db	"LADY@@@@",	$38,	$3,	$0		; ちゃん@@,
+	db	"FRIEND@@",	$b8,	$3,	$0		; ともだち@,
+	db	"ALLY@@@@",	$d4,	$3,	$0		; なかま@@,
+	db	"PEOPLE@@",	$62,	$4,	$0		; ひと@@@,
+	db	"DUDE@@@@",	$98,	$4,	$0		; ボーイ@@,
+	db	"THEY@@@@",	$a0,	$4,	$0		; ボク@@@,
+	db	"THEY ARE",	$a2,	$4,	$0		; ボクが@@,
+	db	"TO THEM@",	$a4,	$4,	$0		; ボクに@@,
+	db	"THEIR@@@",	$a6,	$4,	$0		; ボクの@@,
+	db	"THEY'RE@",	$a8,	$4,	$0		; ボクは@@,
+	db	"THEY'VE@",	$aa,	$4,	$0		; ボクを@@,
+	db	"WE@@@@@@",	$4,	    $5,	$0		; みんな@@,
+	db	"BEEN@@@@",	$6,	    $5,	$0		; みんなが@,
+	db	"TO US@@@",	$8,	    $5,	$0		; みんなに@,
+	db	"OUR@@@@@",	$a,	    $5,	$0		; みんなの@,
+	db	"WE'RE@@@",	$c,	    $5,	$0		; みんなは@,
+	db	"RIVAL@@@",	$8a,	$5,	$0		; ライバル@,
+	db	"SHE@@@@@",	$c2,	$5,	$0		; わたし@@,
+	db	"SHE WAS@",	$c4,	$5,	$0		; わたしが@,
+	db	"TO HER@@",	$c6,	$5,	$0		; わたしに@,
+	db	"HERS@@@@",	$c8,	$5,	$0		; わたしの@,
+	db	"SHE IS@@",	$ca,	$5,	$0		; わたしは@,
+	db	"SOME@@@@",	$cc,	$5,	$0		; わたしを@,
+
+.Battle:
+	db	"MATCH UP",	$18,	$0,	$0		; あいしょう,
+	db	"GO!@@@@@",	$88,	$0,	$0		; いけ！@@,
+	db	"NO. 1@@@",	$96,	$0,	$0		; いちばん@,
+	db	"DECIDE@@",	$4c,	$1,	$0		; かくご@@,
+	db	"I WIN@@@",	$54,	$1,	$0		; かたせて@,
+	db	"WINS@@@@",	$56,	$1,	$0		; かち@@@,
+	db	"WIN@@@@@",	$58,	$1,	$0		; かつ@@@,
+	db	"WON@@@@@",	$60,	$1,	$0		; かった@@,
+	db	"IF I WIN",	$62,	$1,	$0		; かったら@,
+	db	"I'LL WIN",	$64,	$1,	$0		; かって@@,
+	db	"CANT WIN",	$66,	$1,	$0		; かてない@,
+	db	"CAN WIN@",	$68,	$1,	$0		; かてる@@,
+	db	"NO MATCH",	$70,	$1,	$0		; かなわない,
+	db	"SPIRIT@@",	$84,	$1,	$0		; きあい@@,
+	db	"DECIDED@",	$a8,	$1,	$0		; きめた@@,
+	db	"ACE CARD",	$b6,	$1,	$0		; きりふだ@,
+	db	"HI-YA!@@",	$c2,	$1,	$0		; くらえ@@,
+	db	"COME ON@",	$da,	$1,	$0		; こい！@@,
+	db	"ATTACK@@",	$e0,	$1,	$0		; こうげき@,
+	db	"GIVE UP@",	$e2,	$1,	$0		; こうさん@,
+	db	"GUTS@@@@",	$8,	    $2,	$0		; こんじょう,
+	db	"TALENT@@",	$16,	$2,	$0		; さいのう@,
+	db	"STRATEGY",	$1a,	$2,	$0		; さくせん@,
+	db	"SMITE@@@",	$22,	$2,	$0		; さばき@@,
+	db	"MATCH@@@",	$7e,	$2,	$0		; しょうぶ@,
+	db	"VICTORY@",	$80,	$2,	$0		; しょうり@,
+	db	"OFFENSE@",	$b4,	$2,	$0		; せめ@@@,
+	db	"SENSE@@@",	$b6,	$2,	$0		; センス@@,
+	db	"VERSUS@@",	$e6,	$2,	$0		; たいせん@,
+	db	"FIGHTS@@",	$f6,	$2,	$0		; たたかい@,
+	db	"POWER@@@",	$32,	$3,	$0		; ちから@@,
+	db	"TASK@@@@",	$36,	$3,	$0		; チャレンジ,
+	db	"STRONG@@",	$58,	$3,	$0		; つよい@@,
+	db	"TOO MUCH",	$5a,	$3,	$0		; つよすぎ@,
+	db	"HARD@@@@",	$5c,	$3,	$0		; つらい@@,
+	db	"TERRIBLE",	$5e,	$3,	$0		; つらかった,
+	db	"GO EASY@",	$6c,	$3,	$0		; てかげん@,
+	db	"FOE@@@@@",	$6e,	$3,	$0		; てき@@@,
+	db	"GENIUS@@",	$90,	$3,	$0		; てんさい@,
+	db	"LEGEND@@",	$94,	$3,	$0		; でんせつ@,
+	db	"TRAINER@",	$c6,	$3,	$0		; トレーナー,
+	db	"ESCAPE@@",	$4,	    $4,	$0		; にげ@@@,
+	db	"LUKEWARM",	$10,	$4,	$0		; ぬるい@@,
+	db	"AIM@@@@@",	$16,	$4,	$0		; ねらう@@,
+	db	"BATTLE@@",	$4a,	$4,	$0		; バトル@@,
+	db	"FIGHT@@@",	$72,	$4,	$0		; ファイト@,
+	db	"REVIVE@@",	$78,	$4,	$0		; ふっかつ@,
+	db	"POINTS@@",	$94,	$4,	$0		; ポイント@,
+	db	"POKÉMON@",	$ac,	$4,	$0		; ポケモン@,
+	db	"SERIOUS@",	$bc,	$4,	$0		; ほんき@@,
+	db	"OH NO!@@",	$c4,	$4,	$0		; まいった！,
+	db	"LOSS@@@@",	$c8,	$4,	$0		; まけ@@@,
+	db	"YOU LOSE",	$ca,	$4,	$0		; まけたら@,
+	db	"LOST@@@@",	$cc,	$4,	$0		; まけて@@,
+	db	"LOSE@@@@",	$ce,	$4,	$0		; まける@@,
+	db	"GUARD@@@",	$ea,	$4,	$0		; まもり@@,
+	db	"PARTNER@",	$f2,	$4,	$0		; みかた@@,
+	db	"REJECT@@",	$fe,	$4,	$0		; みとめない,
+	db	"ACCEPT@@",	$0,	    $5,	$0		; みとめる@,
+	db	"UNBEATEN",	$16,	$5,	$0		; むてき@@,
+	db	"GOT IT!@",	$3c,	$5,	$0		; もらった！,
+	db	"EASY@@@@",	$7a,	$5,	$0		; よゆう@@,
+	db	"WEAK@@@@",	$82,	$5,	$0		; よわい@@,
+	db	"TOO WEAK",	$84,	$5,	$0		; よわすぎ@,
+	db	"PUSHOVER",	$8e,	$5,	$0		; らくしょう,
+	db	"CHIEF@@@",	$9e,	$5,	$0		; りーダー@,
+	db	"RULE@@@@",	$a0,	$5,	$0		; ルール@@,
+	db	"LEVEL@@@",	$a6,	$5,	$0		; レべル@@,
+	db	"MOVE@@@@",	$be,	$5,	$0		; わざ@@@,
+
+.Exclamations:
+	db	"!@@@@@@@",	$0,	    $0,	$0		; ！@@@@,
+	db	"!!@@@@@@",	$2,	    $0,	$0		; ！！@@@,
+	db	"!?@@@@@@",	$4,	    $0,	$0		; ！？@@@,
+	db	"?@@@@@@@",	$6,	    $0,	$0		; ？@@@@,
+	db	"…@@@@@@@",	$8,	    $0,	$0		; ⋯@@@@,
+	db	"…!@@@@@@",	$a,	    $0,	$0		; ⋯！@@@,
+	db	"………@@@@@",	$c,	    $0,	$0		; ⋯⋯⋯@@,
+	db	"-@@@@@@@",	$e,	    $0,	$0		; ー@@@@,
+	db	"- - -@@@",	$10,	$0,	$0		; ーーー@@,
+	db	"UH-OH@@@",	$14,	$0,	$0		; あーあ@@,
+	db	"WAAAH@@@",	$16,	$0,	$0		; あーん@@,
+	db	"AHAHA@@@",	$52,	$0,	$0		; あははー@,
+	db	"OH?@@@@@",	$54,	$0,	$0		; あら@@@,
+	db	"NOPE@@@@",	$72,	$0,	$0		; いえ@@@,
+	db	"YES@@@@@",	$74,	$0,	$0		; イエス@@,
+	db	"URGH@@@@",	$ac,	$0,	$0		; うう@@@,
+	db	"HMM@@@@@",	$ae,	$0,	$0		; うーん@@,
+	db	"WHOAH@@@",	$b0,	$0,	$0		; うおー！@,
+	db	"WROOAAR!",	$b2,	$0,	$0		; うおりゃー,
+	db	"WOW@@@@@",	$bc,	$0,	$0		; うひょー@,
+	db	"GIGGLES@",	$be,	$0,	$0		; うふふ@@,
+	db	"SHOCKING",	$ca,	$0,	$0		; うわー@@,
+	db	"CRIES@@@",	$cc,	$0,	$0		; うわーん@,
+	db	"AGREE@@@",	$d2,	$0,	$0		; ええ@@@,
+	db	"EH?@@@@@",	$d4,	$0,	$0		; えー@@@,
+	db	"CRY@@@@@",	$d6,	$0,	$0		; えーん@@,
+	db	"EHEHE@@@",	$dc,	$0,	$0		; えへへ@@,
+	db	"HOLD ON!",	$e0,	$0,	$0		; おいおい@,
+	db	"OH, YEAH",	$e2,	$0,	$0		; おお@@@,
+	db	"OOPS@@@@",	$c,	    $1,	$0		; おっと@@,
+	db	"SHOCKED@",	$42,	$1,	$0		; がーん@@,
+	db	"EEK@@@@@",	$aa,	$1,	$0		; キャー@@,
+	db	"GRAAAH@@",	$ac,	$1,	$0		; ギャー@@,
+	db	"HE-HE-HE",	$bc,	$1,	$0		; ぐふふふふ,
+	db	"ICK!@@@@",	$ce,	$1,	$0		; げっ@@@,
+	db	"WEEP@@@@",	$3e,	$2,	$0		; しくしく@,
+	db	"HMPH@@@@",	$2e,	$3,	$0		; ちえっ@@,
+	db	"BLUSH@@@",	$86,	$3,	$0		; てへ@@@,
+	db	"NO@@@@@@",	$20,	$4,	$0		; ノー@@@,
+	db	"HUH?@@@@",	$2a,	$4,	$0		; はあー@@,
+	db	"YUP@@@@@",	$30,	$4,	$0		; はい@@@,
+	db	"HAHAHA@@",	$48,	$4,	$0		; はっはっは,
+	db	"AIYEEH@@",	$56,	$4,	$0		; ひいー@@,
+	db	"HIYAH@@@",	$6a,	$4,	$0		; ひゃあ@@,
+	db	"FUFU@@@@",	$7c,	$4,	$0		; ふっふっふ,
+	db	"MUTTER@@",	$7e,	$4,	$0		; ふにゃ@@,
+	db	"LOL@@@@@",	$80,	$4,	$0		; ププ@@@,
+	db	"SNORT@@@",	$82,	$4,	$0		; ふふん@@,
+	db	"HUMPH@@@",	$88,	$4,	$0		; ふん@@@,
+	db	"HEHEHE@@",	$8e,	$4,	$0		; へっへっへ,
+	db	"HEHE@@@@",	$90,	$4,	$0		; へへー@@,
+	db	"HOHOHO@@",	$9c,	$4,	$0		; ほーほほほ,
+	db	"UH-HUH@@",	$b6,	$4,	$0		; ほら@@@,
+	db	"OH, DEAR",	$c0,	$4,	$0		; まあ@@@,
+	db	"ARRGH!@@",	$10,	$5,	$0		; むきー！！,
+	db	"MUFU@@@@",	$18,	$5,	$0		; むふー@@,
+	db	"MUFUFU@@",	$1a,	$5,	$0		; むふふ@@,
+	db	"MMM@@@@@",	$1c,	$5,	$0		; むむ@@@,
+	db	"OH-KAY@@",	$6a,	$5,	$0		; よーし@@,
+	db	"OKAY!@@@",	$72,	$5,	$0		; よし！@@,
+	db	"LALALA@@",	$98,	$5,	$0		; ラララ@@,
+	db	"YAY@@@@@",	$ac,	$5,	$0		; わーい@@,
+	db	"AWW!@@@@",	$b0,	$5,	$0		; わーん！！,
+	db	"WOWEE@@@",	$b2,	$5,	$0		; ワオ@@@,
+	db	"GWAH!@@@",	$ce,	$5,	$0		; わっ！！@,
+	db	"WAHAHA!@",	$d0,	$5,	$0		; わははは！,
+
+.Conversation:
+	db	"LISTEN@@",	$50,	$0,	$0		; あのね@@,
+	db	"NOT VERY",	$6e,	$0,	$0		; あんまり@,
+	db	"MEAN@@@@",	$8e,	$0,	$0		; いじわる@,
+	db	"LIE@@@@@",	$b6,	$0,	$0		; うそ@@@,
+	db	"LAY@@@@@",	$c4,	$0,	$0		; うむ@@@,
+	db	"OI@@@@@@",	$e4,	$0,	$0		; おーい@@,
+	db	"SUGGEST@",	$6,	    $1,	$0		; おすすめ@,
+	db	"NITWIT@@",	$1e,	$1,	$0		; おばかさん,
+	db	"QUITE@@@",	$6e,	$1,	$0		; かなり@@,
+	db	"FROM@@@@",	$7a,	$1,	$0		; から@@@,
+	db	"FEELING@",	$98,	$1,	$0		; きぶん@@,
+	db	"BUT@@@@@",	$d6,	$1,	$0		; けど@@@,
+	db	"HOWEVER@",	$ea,	$1,	$0		; こそ@@@,
+	db	"CASE@@@@",	$ee,	$1,	$0		; こと@@@,
+	db	"MISS@@@@",	$12,	$2,	$0		; さあ@@@,
+	db	"HOW@@@@@",	$1e,	$2,	$0		; さっぱり@,
+	db	"HIT@@@@@",	$20,	$2,	$0		; さて@@@,
+	db	"ENOUGH@@",	$72,	$2,	$0		; じゅうぶん,
+	db	"SOON@@@@",	$94,	$2,	$0		; すぐ@@@,
+	db	"A LOT@@@",	$98,	$2,	$0		; すごく@@,
+	db	"A LITTLE",	$9a,	$2,	$0		; すこしは@,
+	db	"AMAZING@",	$a0,	$2,	$0		; すっっごい,
+	db	"ENTIRELY",	$b0,	$2,	$0		; ぜーんぜん,
+	db	"FULLY@@@",	$b2,	$2,	$0		; ぜったい@,
+	db	"AND SO@@",	$ce,	$2,	$0		; それで@@,
+	db	"ONLY@@@@",	$f2,	$2,	$0		; だけ@@@,
+	db	"AROUND@@",	$fc,	$2,	$0		; だって@@,
+	db	"PROBABLY",	$6,	    $3,	$0		; たぶん@@,
+	db	"IF@@@@@@",	$14,	$3,	$0		; たら@@@,
+	db	"VERY@@@@",	$3a,	$3,	$0		; ちょー@@,
+	db	"A BIT@@@",	$3c,	$3,	$0		; ちょっと@,
+	db	"WILD@@@@",	$4e,	$3,	$0		; ったら@@,
+	db	"THAT'S@@",	$50,	$3,	$0		; って@@@,
+	db	"I MEAN@@",	$62,	$3,	$0		; ていうか@,
+	db	"EVEN SO,",	$88,	$3,	$0		; でも@@@,
+	db	"MUST BE@",	$9c,	$3,	$0		; どうしても,
+	db	"NATURALY",	$a0,	$3,	$0		; とうぜん@,
+	db	"GO AHEAD",	$a2,	$3,	$0		; どうぞ@@,
+	db	"FOR NOW,",	$be,	$3,	$0		; とりあえず,
+	db	"HEY?@@@@",	$cc,	$3,	$0		; なあ@@@,
+	db	"JOKING@@",	$f4,	$3,	$0		; なんて@@,
+	db	"READY@@@",	$fc,	$3,	$0		; なんでも@,
+	db	"SOMEHOW@",	$fe,	$3,	$0		; なんとか@,
+	db	"ALTHOUGH",	$8,	    $4,	$0		; には@@@,
+	db	"PERFECT@",	$46,	$4,	$0		; バッチり@,
+	db	"FIRMLY@@",	$52,	$4,	$0		; ばりばり@,
+	db	"EQUAL TO",	$b0,	$4,	$0		; ほど@@@,
+	db	"REALLY@@",	$be,	$4,	$0		; ほんと@@,
+	db	"TRULY@@@",	$d0,	$4,	$0		; まさに@@,
+	db	"SURELY@@",	$d2,	$4,	$0		; マジ@@@,
+	db	"FOR SURE",	$d4,	$4,	$0		; マジで@@,
+	db	"TOTALLY@",	$e4,	$4,	$0		; まったく@,
+	db	"UNTIL@@@",	$e6,	$4,	$0		; まで@@@,
+	db	"AS IF@@@",	$ec,	$4,	$0		; まるで@@,
+	db	"MOOD@@@@",	$e,	    $5,	$0		; ムード@@,
+	db	"RATHER@@",	$14,	$5,	$0		; むしろ@@,
+	db	"NO WAY@@",	$24,	$5,	$0		; めちゃ@@,
+	db	"AWFULLY@",	$28,	$5,	$0		; めっぽう@,
+	db	"ALMOST@@",	$2c,	$5,	$0		; もう@@@,
+	db	"MODE@@@@",	$2e,	$5,	$0		; モード@@,
+	db	"MORE@@@@",	$36,	$5,	$0		; もっと@@,
+	db	"TOO LATE",	$38,	$5,	$0		; もはや@@,
+	db	"FINALLY@",	$4a,	$5,	$0		; やっと@@,
+	db	"ANY@@@@@",	$4c,	$5,	$0		; やっぱり@,
+	db	"INSTEAD@",	$7c,	$5,	$0		; より@@@,
+	db	"TERRIFIC",	$a4,	$5,	$0		; れば@@@,
+
+.Feelings:
+	db	"MEET@@@@",	$1a,	$0,	$0		; あいたい@,
+	db	"PLAY@@@@",	$32,	$0,	$0		; あそびたい,
+	db	"GOES@@@@",	$7c,	$0,	$0		; いきたい@,
+	db	"GIDDY@@@",	$b4,	$0,	$0		; うかれて@,
+	db	"HAPPY@@@",	$c6,	$0,	$0		; うれしい@,
+	db	"GLEE@@@@",	$c8,	$0,	$0		; うれしさ@,
+	db	"EXCITE@@",	$d8,	$0,	$0		; エキサイト,
+	db	"CRUCIAL@",	$de,	$0,	$0		; えらい@@,
+	db	"FUNNY@@@",	$ec,	$0,	$0		; おかしい@,
+	db	"GOT@@@@@",	$8,	    $1,	$0		; オッケー@,
+	db	"GO HOME@",	$48,	$1,	$0		; かえりたい,
+	db	"FAILS@@@",	$5a,	$1,	$0		; がっくし@,
+	db	"SAD@@@@@",	$6c,	$1,	$0		; かなしい@,
+	db	"TRY@@@@@",	$80,	$1,	$0		; がんばって,
+	db	"HEARS@@@",	$86,	$1,	$0		; きがしない,
+	db	"THINK@@@",	$88,	$1,	$0		; きがする@,
+	db	"HEAR@@@@",	$8a,	$1,	$0		; ききたい@,
+	db	"WANTS@@@",	$90,	$1,	$0		; きになる@,
+	db	"MISHEARD",	$96,	$1,	$0		; きのせい@,
+	db	"DISLIKE@",	$b4,	$1,	$0		; きらい@@,
+	db	"ANGRY@@@",	$be,	$1,	$0		; くやしい@,
+	db	"ANGER@@@",	$c0,	$1,	$0		; くやしさ@,
+	db	"LONESOME",	$24,	$2,	$0		; さみしい@,
+	db	"FAIL@@@@",	$32,	$2,	$0		; ざんねん@,
+	db	"JOY@@@@@",	$36,	$2,	$0		; しあわせ@,
+	db	"GETS@@@@",	$44,	$2,	$0		; したい@@,
+	db	"NEVER@@@",	$46,	$2,	$0		; したくない,
+	db	"DARN@@@@",	$64,	$2,	$0		; しまった@,
+	db	"DOWNCAST",	$82,	$2,	$0		; しょんぼり,
+	db	"LIKES@@@",	$92,	$2,	$0		; すき@@@,
+	db	"DISLIKES",	$da,	$2,	$0		; だいきらい,
+	db	"BORING@@",	$dc,	$2,	$0		; たいくつ@,
+	db	"CARE@@@@",	$de,	$2,	$0		; だいじ@@,
+	db	"ADORE@@@",	$e4,	$2,	$0		; だいすき@,
+	db	"DISASTER",	$ea,	$2,	$0		; たいへん@,
+	db	"ENJOY@@@",	$0,	    $3,	$0		; たのしい@,
+	db	"ENJOYS@@",	$2,	    $3,	$0		; たのしすぎ,
+	db	"EAT@@@@@",	$8,	    $3,	$0		; たべたい@,
+	db	"USELESS@",	$e,	    $3,	$0		; ダメダメ@,
+	db	"LACKING@",	$16,	$3,	$0		; たりない@,
+	db	"BAD@@@@@",	$34,	$3,	$0		; ちくしょー,
+	db	"SHOULD@@",	$9e,	$3,	$0		; どうしよう,
+	db	"EXCITING",	$ac,	$3,	$0		; ドキドキ@,
+	db	"NICE@@@@",	$d0,	$3,	$0		; ナイス@@,
+	db	"DRINK@@@",	$26,	$4,	$0		; のみたい@,
+	db	"SURPRISE",	$60,	$4,	$0		; びっくり@,
+	db	"FEAR@@@@",	$74,	$4,	$0		; ふあん@@,
+	db	"WOBBLY@@",	$86,	$4,	$0		; ふらふら@,
+	db	"WANT@@@@",	$ae,	$4,	$0		; ほしい@@,
+	db	"SHREDDED",	$b8,	$4,	$0		; ボロボロ@,
+	db	"YET@@@@@",	$e0,	$4,	$0		; まだまだ@,
+	db	"WAIT@@@@",	$e8,	$4,	$0		; まてない@,
+	db	"CONTENT@",	$f0,	$4,	$0		; まんぞく@,
+	db	"SEE@@@@@",	$f8,	$4,	$0		; みたい@@,
+	db	"RARE@@@@",	$22,	$5,	$0		; めずらしい,
+	db	"FIERY@@@",	$2a,	$5,	$0		; メラメラ@,
+	db	"NEGATIVE",	$46,	$5,	$0		; やだ@@@,
+	db	"DONE@@@@",	$48,	$5,	$0		; やったー@,
+	db	"DANGER@@",	$50,	$5,	$0		; やばい@@,
+	db	"DONE FOR",	$52,	$5,	$0		; やばすぎる,
+	db	"DEFEATED",	$54,	$5,	$0		; やられた@,
+	db	"BEAT@@@@",	$56,	$5,	$0		; やられて@,
+	db	"GREAT@@@",	$6e,	$5,	$0		; よかった@,
+	db	"DOTING@@",	$96,	$5,	$0		; ラブラブ@,
+	db	"ROMANTIC",	$a8,	$5,	$0		; ロマン@@,
+	db	"QUESTION",	$aa,	$5,	$0		; ろんがい@,
+	db	"REALIZE@",	$b4,	$5,	$0		; わから@@,
+	db	"REALIZES",	$b6,	$5,	$0		; わかり@@,
+	db	"SUSPENSE",	$ba,	$5,	$0		; わくわく@,
+
+.Conditions:
+	db	"HOT@@@@@",	$38,	$0,	$0		; あつい@@,
+	db	"EXISTS@@",	$3a,	$0,	$0		; あった@@,
+	db	"APPROVED",	$56,	$0,	$0		; あり@@@,
+	db	"HAS@@@@@",	$5e,	$0,	$0		; ある@@@,
+	db	"HURRIED@",	$6a,	$0,	$0		; あわてて@,
+	db	"GOOD@@@@",	$70,	$0,	$0		; いい@@@,
+	db	"LESS@@@@",	$76,	$0,	$0		; いか@@@,
+	db	"MEGA@@@@",	$78,	$0,	$0		; イカス@@,
+	db	"MOMENTUM",	$7a,	$0,	$0		; いきおい@,
+	db	"GOING@@@",	$8a,	$0,	$0		; いける@@,
+	db	"WEIRD@@@",	$8c,	$0,	$0		; いじょう@,
+	db	"BUSY@@@@",	$90,	$0,	$0		; いそがしい,
+	db	"TOGETHER",	$9a,	$0,	$0		; いっしょに,
+	db	"FULL@@@@",	$9c,	$0,	$0		; いっぱい@,
+	db	"ABSENT@@",	$a0,	$0,	$0		; いない@@,
+	db	"BEING@@@",	$a4,	$0,	$0		; いや@@@,
+	db	"NEED@@@@",	$a8,	$0,	$0		; いる@@@,
+	db	"TASTY@@@",	$c0,	$0,	$0		; うまい@@,
+	db	"SKILLED@",	$c2,	$0,	$0		; うまく@@,
+	db	"BIG@@@@@",	$e6,	$0,	$0		; おおきい@,
+	db	"LATE@@@@",	$f2,	$0,	$0		; おくれ@@,
+	db	"CLOSE@@@",	$fa,	$0,	$0		; おしい@@,
+	db	"AMUSING@",	$2c,	$1,	$0		; おもしろい,
+	db	"ENGAGING",	$2e,	$1,	$0		; おもしろく,
+	db	"COOL@@@@",	$5c,	$1,	$0		; かっこいい,
+	db	"CUTE@@@@",	$7e,	$1,	$0		; かわいい@,
+	db	"FLAWLESS",	$82,	$1,	$0		; かんぺき@,
+	db	"PRETTY@@",	$d0,	$1,	$0		; けっこう@,
+	db	"HEALTHY@",	$d8,	$1,	$0		; げんき@@,
+	db	"SCARY@@@",	$6,	    $2,	$0		; こわい@@,
+	db	"SUPERB@@",	$14,	$2,	$0		; さいこう@,
+	db	"COLD@@@@",	$26,	$2,	$0		; さむい@@,
+	db	"LIVELY@@",	$2c,	$2,	$0		; さわやか@,
+	db	"FATED@@@",	$38,	$2,	$0		; しかたない,
+	db	"MUCH@@@@",	$96,	$2,	$0		; すごい@@,
+	db	"IMMENSE@",	$9c,	$2,	$0		; すごすぎ@,
+	db	"FABULOUS",	$a4,	$2,	$0		; すてき@@,
+	db	"ELSE@@@@",	$e0,	$2,	$0		; たいした@,
+	db	"ALRIGHT@",	$e2,	$2,	$0		; だいじょぶ,
+	db	"COSTLY@@",	$ec,	$2,	$0		; たかい@@,
+	db	"CORRECT@",	$f8,	$2,	$0		; ただしい@,
+	db	"UNLIKELY",	$c,	    $3,	$0		; だめ@@@,
+	db	"SMALL@@@",	$2c,	$3,	$0		; ちいさい@,
+	db	"VARIED@@",	$30,	$3,	$0		; ちがう@@,
+	db	"TIRED@@@",	$48,	$3,	$0		; つかれ@@,
+	db	"SKILL@@@",	$b0,	$3,	$0		; とくい@@,
+	db	"NON-STOP",	$b6,	$3,	$0		; とまらない,
+	db	"NONE@@@@",	$ce,	$3,	$0		; ない@@@,
+	db	"NOTHING@",	$d2,	$3,	$0		; なかった@,
+	db	"NATURAL@",	$d8,	$3,	$0		; なし@@@,
+	db	"BECOMES@",	$dc,	$3,	$0		; なって@@,
+	db	"FAST@@@@",	$50,	$4,	$0		; はやい@@,
+	db	"SHINE@@@",	$5a,	$4,	$0		; ひかる@@,
+	db	"LOW@@@@@",	$5c,	$4,	$0		; ひくい@@,
+	db	"AWFUL@@@",	$64,	$4,	$0		; ひどい@@,
+	db	"ALONE@@@",	$66,	$4,	$0		; ひとりで@,
+	db	"BORED@@@",	$68,	$4,	$0		; ひま@@@,
+	db	"LACKS@@@",	$76,	$4,	$0		; ふそく@@,
+	db	"LOUSY@@@",	$8c,	$4,	$0		; へた@@@,
+	db	"MISTAKE@",	$e2,	$4,	$0		; まちがって,
+	db	"KIND@@@@",	$42,	$5,	$0		; やさしい@,
+	db	"WELL@@@@",	$70,	$5,	$0		; よく@@@,
+	db	"WEAKENED",	$86,	$5,	$0		; よわって@,
+	db	"SIMPLE@@",	$8c,	$5,	$0		; らく@@@,
+	db	"SEEMS@@@",	$90,	$5,	$0		; らしい@@,
+	db	"BADLY@@@",	$d4,	$5,	$0		; わるい@@,
+
+.Life:
+	db	"CHORES@@",	$64,	$0,	$0		; アルバイト,
+	db	"HOME@@@@",	$ba,	$0,	$0		; うち@@@,
+	db	"MONEY@@@",	$ee,	$0,	$0		; おかね@@,
+	db	"SAVINGS@",	$f4,	$0,	$0		; おこづかい,
+	db	"BATH@@@@",	$24,	$1,	$0		; おふろ@@,
+	db	"SCHOOL@@",	$5e,	$1,	$0		; がっこう@,
+	db	"REMEMBER",	$92,	$1,	$0		; きねん@@,
+	db	"GROUP@@@",	$c6,	$1,	$0		; グループ@,
+	db	"GOTCHA@@",	$d2,	$1,	$0		; ゲット@@,
+	db	"EXCHANGE",	$de,	$1,	$0		; こうかん@,
+	db	"WORK@@@@",	$40,	$2,	$0		; しごと@@,
+	db	"TRAINING",	$74,	$2,	$0		; しゅぎょう,
+	db	"CLASS@@@",	$76,	$2,	$0		; じゅぎょう,
+	db	"LESSONS@",	$78,	$2,	$0		; じゅく@@,
+	db	"EVOLVE@@",	$88,	$2,	$0		; しんか@@,
+	db	"HANDBOOK",	$90,	$2,	$0		; ずかん@@,
+	db	"LIVING@@",	$ae,	$2,	$0		; せいかつ@,
+	db	"TEACHER@",	$b8,	$2,	$0		; せんせい@,
+	db	"CENTER@@",	$ba,	$2,	$0		; センター@,
+	db	"TOWER@@@",	$28,	$3,	$0		; タワー@@,
+	db	"LINK@@@@",	$40,	$3,	$0		; つうしん@,
+	db	"TEST@@@@",	$7e,	$3,	$0		; テスト@@,
+	db	"TV@@@@@@",	$8c,	$3,	$0		; テレビ@@,
+	db	"PHONE@@@",	$96,	$3,	$0		; でんわ@@,
+	db	"ITEM@@@@",	$9a,	$3,	$0		; どうぐ@@,
+	db	"TRADE@@@",	$c4,	$3,	$0		; トレード@,
+	db	"NAME@@@@",	$e8,	$3,	$0		; なまえ@@,
+	db	"NEWS@@@@",	$a,	    $4,	$0		; ニュース@,
+	db	"POPULAR@",	$c,	    $4,	$0		; にんき@@,
+	db	"PARTY@@@",	$2e,	$4,	$0		; パーティー,
+	db	"STUDY@@@",	$92,	$4,	$0		; べんきょう,
+	db	"MACHINE@",	$d6,	$4,	$0		; マシン@@,
+	db	"CARD@@@@",	$1e,	$5,	$0		; めいし@@,
+	db	"MESSAGE@",	$26,	$5,	$0		; メッセージ,
+	db	"MAKEOVER",	$3a,	$5,	$0		; もようがえ,
+	db	"DREAM@@@",	$5a,	$5,	$0		; ゆめ@@@,
+	db	"DAY CARE",	$66,	$5,	$0		; ようちえん,
+	db	"RADIO@@@",	$92,	$5,	$0		; ラジオ@@,
+	db	"WORLD@@@",	$ae,	$5,	$0		; ワールド@,
+
+.Hobbies:
+	db	"IDOL@@@@",	$1e,	$0,	$0		; アイドル@,
+	db	"ANIME@@@",	$4c,	$0,	$0		; アニメ@@,
+	db	"SONG@@@@",	$b8,	$0,	$0		; うた@@@,
+	db	"MOVIE@@@",	$d0,	$0,	$0		; えいが@@,
+	db	"CANDY@@@",	$ea,	$0,	$0		; おかし@@,
+	db	"CHAT@@@@",	$4,	    $1,	$0		; おしゃべり,
+	db	"TOYHOUSE",	$28,	$1,	$0		; おままごと,
+	db	"TOYS@@@@",	$30,	$1,	$0		; おもちゃ@,
+	db	"MUSIC@@@",	$38,	$1,	$0		; おんがく@,
+	db	"CARDS@@@",	$3e,	$1,	$0		; カード@@,
+	db	"SHOPPING",	$46,	$1,	$0		; かいもの@,
+	db	"GOURMET@",	$c8,	$1,	$0		; グルメ@@,
+	db	"GAME@@@@",	$cc,	$1,	$0		; ゲーム@@,
+	db	"MAGAZINE",	$1c,	$2,	$0		; ざっし@@,
+	db	"WALK@@@@",	$34,	$2,	$0		; さんぽ@@,
+	db	"BIKE@@@@",	$50,	$2,	$0		; じてんしゃ,
+	db	"HOBBIES@",	$7a,	$2,	$0		; しゅみ@@,
+	db	"SPORTS@@",	$a8,	$2,	$0		; スポーツ@,
+	db	"DIET@@@@",	$d8,	$2,	$0		; ダイエット,
+	db	"TREASURE",	$f0,	$2,	$0		; たからもの,
+	db	"TRAVEL@@",	$4,	    $3,	$0		; たび@@@,
+	db	"DANCE@@@",	$2a,	$3,	$0		; ダンス@@,
+	db	"FISHING@",	$60,	$3,	$0		; つり@@@,
+	db	"DATE@@@@",	$6a,	$3,	$0		; デート@@,
+	db	"TRAIN@@@",	$92,	$3,	$0		; でんしゃ@,
+	db	"PLUSHIE@",	$e,	    $4,	$0		; ぬいぐるみ,
+	db	"PC@@@@@@",	$3e,	$4,	$0		; パソコン@,
+	db	"FLOWERS@",	$4c,	$4,	$0		; はな@@@,
+	db	"HERO@@@@",	$58,	$4,	$0		; ヒーロー@,
+	db	"NAP@@@@@",	$6e,	$4,	$0		; ひるね@@,
+	db	"HEROINE@",	$70,	$4,	$0		; ヒロイン@,
+	db	"JOURNEY@",	$96,	$4,	$0		; ぼうけん@,
+	db	"BOARD@@@",	$9a,	$4,	$0		; ボード@@,
+	db	"BALL@@@@",	$9e,	$4,	$0		; ボール@@,
+	db	"BOOK@@@@",	$ba,	$4,	$0		; ほん@@@,
+	db	"MANGA@@@",	$ee,	$4,	$0		; マンガ@@,
+	db	"PROMISE@",	$40,	$5,	$0		; やくそく@,
+	db	"HOLIDAY@",	$44,	$5,	$0		; やすみ@@,
+	db	"PLANS@@@",	$74,	$5,	$0		; よてい@@,
+
+.Actions:
+	db	"MEETS@@@",	$20,	$0,	$0		; あう@@@,
+	db	"CONCEDE@",	$24,	$0,	$0		; あきらめ@,
+	db	"GIVE@@@@",	$28,	$0,	$0		; あげる@@,
+	db	"GIVES@@@",	$2e,	$0,	$0		; あせる@@,
+	db	"PLAYED@@",	$30,	$0,	$0		; あそび@@,
+	db	"PLAYS@@@",	$34,	$0,	$0		; あそぶ@@,
+	db	"COLLECT@",	$3e,	$0,	$0		; あつめ@@,
+	db	"WALKING@",	$60,	$0,	$0		; あるき@@,
+	db	"WALKS@@@",	$62,	$0,	$0		; あるく@@,
+	db	"WENT@@@@",	$7e,	$0,	$0		; いく@@@,
+	db	"GO@@@@@@",	$86,	$0,	$0		; いけ@@@,
+	db	"WAKE UP@",	$f0,	$0,	$0		; おき@@@,
+	db	"WAKES UP",	$f6,	$0,	$0		; おこり@@,
+	db	"ANGERS@@",	$f8,	$0,	$0		; おこる@@,
+	db	"TEACH@@@",	$fe,	$0,	$0		; おしえ@@,
+	db	"TEACHES@",	$0,	    $1,	$0		; おしえて@,
+	db	"PLEASE@@",	$1a,	$1,	$0		; おねがい@,
+	db	"LEARN@@@",	$26,	$1,	$0		; おぼえ@@,
+	db	"CHANGE@@",	$4a,	$1,	$0		; かえる@@,
+	db	"TRUST@@@",	$74,	$1,	$0		; がまん@@,
+	db	"HEARING@",	$8c,	$1,	$0		; きく@@@,
+	db	"TRAINS@@",	$8e,	$1,	$0		; きたえ@@,
+	db	"CHOOSE@@",	$a6,	$1,	$0		; きめ@@@,
+	db	"COME@@@@",	$c4,	$1,	$0		; くる@@@,
+	db	"SEARCH@@",	$18,	$2,	$0		; さがし@@,
+	db	"CAUSE@@@",	$2a,	$2,	$0		; さわぎ@@,
+	db	"THESE@@@",	$42,	$2,	$0		; した@@@,
+	db	"KNOW@@@@",	$4a,	$2,	$0		; しって@@,
+	db	"KNOWS@@@",	$4e,	$2,	$0		; して@@@,
+	db	"REFUSE@@",	$52,	$2,	$0		; しない@@,
+	db	"STORES@@",	$60,	$2,	$0		; しまう@@,
+	db	"BRAG@@@@",	$66,	$2,	$0		; じまん@@,
+	db	"IGNORANT",	$84,	$2,	$0		; しらない@,
+	db	"THINKS@@",	$86,	$2,	$0		; しる@@@,
+	db	"BELIEVE@",	$8a,	$2,	$0		; しんじて@,
+	db	"SLIDE@@@",	$aa,	$2,	$0		; する@@@,
+	db	"EATS@@@@",	$a,	    $3,	$0		; たべる@@,
+	db	"USE@@@@@",	$42,	$3,	$0		; つかう@@,
+	db	"USES@@@@",	$44,	$3,	$0		; つかえ@@,
+	db	"USING@@@",	$46,	$3,	$0		; つかって@,
+	db	"COULDN'T",	$70,	$3,	$0		; できない@,
+	db	"CAPABLE@",	$72,	$3,	$0		; できる@@,
+	db	"VANISH@@",	$84,	$3,	$0		; でない@@,
+	db	"APPEAR@@",	$8a,	$3,	$0		; でる@@@,
+	db	"THROW@@@",	$d6,	$3,	$0		; なげる@@,
+	db	"WORRY@@@",	$ea,	$3,	$0		; なやみ@@,
+	db	"SLEPT@@@",	$18,	$4,	$0		; ねられ@@,
+	db	"SLEEP@@@",	$1a,	$4,	$0		; ねる@@@,
+	db	"RELEASE@",	$24,	$4,	$0		; のがし@@,
+	db	"DRINKS@@",	$28,	$4,	$0		; のむ@@@,
+	db	"RUNS@@@@",	$3a,	$4,	$0		; はしり@@,
+	db	"RUN@@@@@",	$3c,	$4,	$0		; はしる@@,
+	db	"WORKS@@@",	$40,	$4,	$0		; はたらき@,
+	db	"WORKING@",	$42,	$4,	$0		; はたらく@,
+	db	"SINK@@@@",	$4e,	$4,	$0		; はまって@,
+	db	"SMACK@@@",	$7a,	$4,	$0		; ぶつけ@@,
+	db	"PRAISE@@",	$b4,	$4,	$0		; ほめ@@@,
+	db	"SHOW@@@@",	$f6,	$4,	$0		; みせて@@,
+	db	"LOOKS@@@",	$fc,	$4,	$0		; みて@@@,
+	db	"SEES@@@@",	$2,	    $5,	$0		; みる@@@,
+	db	"SEEK@@@@",	$20,	$5,	$0		; めざす@@,
+	db	"OWN@@@@@",	$34,	$5,	$0		; もって@@,
+	db	"TAKE@@@@",	$58,	$5,	$0		; ゆずる@@,
+	db	"ALLOW@@@",	$5c,	$5,	$0		; ゆるす@@,
+	db	"FORGET@@",	$5e,	$5,	$0		; ゆるせ@@,
+	db	"FORGETS@",	$9a,	$5,	$0		; られない@,
+	db	"APPEARS@",	$9c,	$5,	$0		; られる@@,
+	db	"FAINT@@@",	$b8,	$5,	$0		; わかる@@,
+	db	"FAINTED@",	$c0,	$5,	$0		; わすれ@@,
+
+.Time:
+	db	"FALL@@@@",	$22,	$0,	$0		; あき@@@,
+	db	"MORNING@",	$2a,	$0,	$0		; あさ@@@,
+	db	"TOMORROW",	$2c,	$0,	$0		; あした@@,
+	db	"DAY@@@@@",	$94,	$0,	$0		; いちにち@,
+	db	"SOMETIME",	$98,	$0,	$0		; いつか@@,
+	db	"ALWAYS@@",	$9e,	$0,	$0		; いつも@@,
+	db	"CURRENT@",	$a2,	$0,	$0		; いま@@@,
+	db	"FOREVER@",	$ce,	$0,	$0		; えいえん@,
+	db	"DAYS@@@@",	$12,	$1,	$0		; おととい@,
+	db	"END@@@@@",	$36,	$1,	$0		; おわり@@,
+	db	"TUESDAY@",	$78,	$1,	$0		; かようび@,
+	db	"Y'DAY@@@",	$94,	$1,	$0		; きのう@@,
+	db	"TODAY@@@",	$b0,	$1,	$0		; きょう@@,
+	db	"FRIDAY@@",	$b8,	$1,	$0		; きんようび,
+	db	"MONDAY@@",	$d4,	$1,	$0		; げつようび,
+	db	"LATER@@@",	$f4,	$1,	$0		; このあと@,
+	db	"EARLIER@",	$f6,	$1,	$0		; このまえ@,
+	db	"ANOTHER@",	$c,	    $2,	$0		; こんど@@,
+	db	"TIME@@@@",	$3c,	$2,	$0		; じかん@@,
+	db	"DECADE@@",	$70,	$2,	$0		; じゅうねん,
+	db	"WEDNSDAY",	$8e,	$2,	$0		; すいようび,
+	db	"START@@@",	$9e,	$2,	$0		; スタート@,
+	db	"MONTH@@@",	$a2,	$2,	$0		; ずっと@@,
+	db	"STOP@@@@",	$a6,	$2,	$0		; ストップ@,
+	db	"NOW@@@@@",	$c4,	$2,	$0		; そのうち@,
+	db	"FINAL@@@",	$3e,	$3,	$0		; ついに@@,
+	db	"NEXT@@@@",	$4a,	$3,	$0		; つぎ@@@,
+	db	"SATURDAY",	$ba,	$3,	$0		; どようび@,
+	db	"SUMMER@@",	$da,	$3,	$0		; なつ@@@,
+	db	"SUNDAY@@",	$6,	    $4,	$0		; にちようび,
+	db	"OUTSET@@",	$38,	$4,	$0		; はじめ@@,
+	db	"SPRING@@",	$54,	$4,	$0		; はる@@@,
+	db	"DAYTIME@",	$6c,	$4,	$0		; ひる@@@,
+	db	"WINTER@@",	$84,	$4,	$0		; ふゆ@@@,
+	db	"DAILY@@@",	$c6,	$4,	$0		; まいにち@,
+	db	"THURSDAY",	$30,	$5,	$0		; もくようび,
+	db	"NITETIME",	$76,	$5,	$0		; よなか@@,
+	db	"NIGHT@@@",	$7e,	$5,	$0		; よる@@@,
+	db	"WEEK@@@@",	$88,	$5,	$0		; らいしゅう,
+
+.Farewells:
+	db	"WILL@@@@",	$92,	$0,	$0		; いたします,
+	db	"AYE@@@@@",	$32,	$1,	$0		; おります@,
+	db	"?!@@@@@@",	$3c,	$1,	$0		; か！？@@,
+	db	"HM?@@@@@",	$44,	$1,	$0		; かい？@@,
+	db	"Y'THINK?",	$50,	$1,	$0		; かしら？@,
+	db	"IS IT?@@",	$6a,	$1,	$0		; かな？@@,
+	db	"BE@@@@@@",	$76,	$1,	$0		; かも@@@,
+	db	"GIMME@@@",	$ca,	$1,	$0		; くれ@@@,
+	db	"COULD@@@",	$e8,	$1,	$0		; ございます,
+	db	"TEND TO@",	$3a,	$2,	$0		; しがち@@,
+	db	"WOULD@@@",	$62,	$2,	$0		; します@@,
+	db	"IS@@@@@@",	$6a,	$2,	$0		; じゃ@@@,
+	db	"ISNT IT?",	$6e,	$2,	$0		; じゃん@@,
+	db	"LET'S@@@",	$7c,	$2,	$0		; しよう@@,
+	db	"OTHER@@@",	$ac,	$2,	$0		; ぜ！@@@,
+	db	"ARE@@@@@",	$bc,	$2,	$0		; ぞ！@@@,
+	db	"WAS@@@@@",	$d4,	$2,	$0		; た@@@@,
+	db	"WERE@@@@",	$d6,	$2,	$0		; だ@@@@,
+	db	"THOSE@@@",	$ee,	$2,	$0		; だからね@,
+	db	"ISN'T@@@",	$f4,	$2,	$0		; だぜ@@@,
+	db	"WON'T@@@",	$fa,	$2,	$0		; だった@@,
+	db	"CAN'T@@@",	$fe,	$2,	$0		; だね@@@,
+	db	"CAN@@@@@",	$10,	$3,	$0		; だよ@@@,
+	db	"DON'T@@@",	$12,	$3,	$0		; だよねー！,
+	db	"DO@@@@@@",	$26,	$3,	$0		; だわ@@@,
+	db	"DOES@@@@",	$4c,	$3,	$0		; ッス@@@,
+	db	"WHOM@@@@",	$52,	$3,	$0		; ってかんじ,
+	db	"WHICH@@@",	$54,	$3,	$0		; っぱなし@,
+	db	"WASN'T@@",	$56,	$3,	$0		; つもり@@,
+	db	"WEREN'T@",	$64,	$3,	$0		; ていない@,
+	db	"HAVE@@@@",	$66,	$3,	$0		; ている@@,
+	db	"HAVEN'T@",	$68,	$3,	$0		; でーす！@,
+	db	"A@@@@@@@",	$74,	$3,	$0		; でした@@,
+	db	"AN@@@@@@",	$76,	$3,	$0		; でしょ？@,
+	db	"NOT@@@@@",	$78,	$3,	$0		; でしょー！,
+	db	"THERE@@@",	$7a,	$3,	$0		; です@@@,
+	db	"OK?@@@@@",	$7c,	$3,	$0		; ですか？@,
+	db	"SO@@@@@@",	$80,	$3,	$0		; ですよ@@,
+	db	"MAYBE@@@",	$82,	$3,	$0		; ですわ@@,
+	db	"ABOUT@@@",	$a4,	$3,	$0		; どうなの？,
+	db	"OVER@@@@",	$a8,	$3,	$0		; どうよ？@,
+	db	"IT@@@@@@",	$aa,	$3,	$0		; とかいって,
+	db	"FOR@@@@@",	$e0,	$3,	$0		; なの@@@,
+	db	"ON@@@@@@",	$e2,	$3,	$0		; なのか@@,
+	db	"OFF@@@@@",	$e4,	$3,	$0		; なのだ@@,
+	db	"AS@@@@@@",	$e6,	$3,	$0		; なのよ@@,
+	db	"TO@@@@@@",	$f2,	$3,	$0		; なんだね@,
+	db	"WITH@@@@",	$f8,	$3,	$0		; なんです@,
+	db	"BETTER@@",	$fa,	$3,	$0		; なんてね@,
+	db	"EVER@@@@",	$12,	$4,	$0		; ね@@@@,
+	db	"SINCE@@@",	$14,	$4,	$0		; ねー@@@,
+	db	"OF@@@@@@",	$1c,	$4,	$0		; の@@@@,
+	db	"BELONG@@",	$1e,	$4,	$0		; の？@@@,
+	db	"AT@@@@@@",	$44,	$4,	$0		; ばっかり@,
+	db	"IN@@@@@@",	$c2,	$4,	$0		; まーす！@,
+	db	"OUT@@@@@",	$d8,	$4,	$0		; ます@@@,
+	db	"TOO@@@@@",	$da,	$4,	$0		; ますわ@@,
+	db	"LIKE@@@@",	$dc,	$4,	$0		; ません@@,
+	db	"DID@@@@@",	$fa,	$4,	$0		; みたいな@,
+	db	"WITHOUT@",	$60,	$5,	$0		; よ！@@@,
+	db	"AFTER@@@",	$68,	$5,	$0		; よー@@@,
+	db	"BEFORE@@",	$6c,	$5,	$0		; よーん@@,
+	db	"WHILE@@@",	$78,	$5,	$0		; よね@@@,
+	db	"THAN@@@@",	$a2,	$5,	$0		; るよ@@@,
+	db	"ONCE@@@@",	$bc,	$5,	$0		; わけ@@@,
+	db	"ANYWHERE",	$d2,	$5,	$0		; わよ！@@,
+
+.ThisAndThat:
+	db	"HIGHS@@@",	$12,	$0,	$0		; ああ@@@,
+	db	"LOWS@@@@",	$3c,	$0,	$0		; あっち@@,
+	db	"UM@@@@@@",	$4e,	$0,	$0		; あの@@@,
+	db	"REAR@@@@",	$5c,	$0,	$0		; ありゃ@@,
+	db	"THINGS@@",	$66,	$0,	$0		; あれ@@@,
+	db	"THING@@@",	$68,	$0,	$0		; あれは@@,
+	db	"BELOW@@@",	$6c,	$0,	$0		; あんな@@,
+	db	"HIGH@@@@",	$dc,	$1,	$0		; こう@@@,
+	db	"HERE@@@@",	$ec,	$1,	$0		; こっち@@,
+	db	"INSIDE@@",	$f2,	$1,	$0		; この@@@,
+	db	"OUTSIDE@",	$fe,	$1,	$0		; こりゃ@@,
+	db	"BESIDE@@",	$0,	    $2,	$0		; これ@@@,
+	db	"THIS ONE",	$2,	    $2,	$0		; これだ！@,
+	db	"THIS@@@@",	$4,	    $2,	$0		; これは@@,
+	db	"EVERY@@@",	$e,	    $2,	$0		; こんな@@,
+	db	"SEEMS SO",	$be,	$2,	$0		; そう@@@,
+	db	"DOWN@@@@",	$c0,	$2,	$0		; そっち@@,
+	db	"THAT@@@@",	$c2,	$2,	$0		; その@@@,
+	db	"THAT IS@",	$c6,	$2,	$0		; そりゃ@@,
+	db	"THAT ONE",	$c8,	$2,	$0		; それ@@@,
+	db	"THATS IT",	$cc,	$2,	$0		; それだ！@,
+	db	"THAT'S..",	$d0,	$2,	$0		; それは@@,
+	db	"THAT WAS",	$d2,	$2,	$0		; そんな@@,
+	db	"UP@@@@@@",	$98,	$3,	$0		; どう@@@,
+	db	"CHOICE@@",	$b2,	$3,	$0		; どっち@@,
+	db	"FAR@@@@@",	$b4,	$3,	$0		; どの@@@,
+	db	"AWAY@@@@",	$c0,	$3,	$0		; どりゃ@@,
+	db	"NEAR@@@@",	$c2,	$3,	$0		; どれ@@@,
+	db	"WHERE@@@",	$c8,	$3,	$0		; どれを@@,
+	db	"WHEN@@@@",	$ca,	$3,	$0		; どんな@@,
+	db	"WHAT@@@@",	$de,	$3,	$0		; なに@@@,
+	db	"DEEP@@@@",	$ec,	$3,	$0		; なんか@@,
+	db	"SHALLOW@",	$f0,	$3,	$0		; なんだ@@,
+	db	"WHY@@@@@",	$f6,	$3,	$0		; なんで@@,
+	db	"CONFUSED",	$0,	    $4,	$0		; なんなんだ,
+	db	"OPPOSITE",	$2,	    $4,	$0		; なんの@@,
+endc
 MobileEZChatData_WordAndPageCounts:
 macro_11f220: MACRO
 ; parameter: number of words
 	db \1
 ; 12 words per page (0-based indexing)									  
-x = \1 / 12 ; 12 MENU_WIDTH
-if \1 % 12 == 0 ; 12 MENU_WIDTH
+x = \1 / (EZCHAT_WORD_COUNT * 2) ; 12 MENU_WIDTH to 8
+if \1 % (EZCHAT_WORD_COUNT * 2) == 0 ; 12 MENU_WIDTH to 8
 x = x + -1
 endc
 	db x

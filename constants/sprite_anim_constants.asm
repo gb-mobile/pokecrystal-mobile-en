@@ -173,6 +173,8 @@ NUM_SPRITE_ANIM_STRUCTS EQU 10 ; see wSpriteAnimationStructs
 	const SPRITE_ANIM_FRAMESET_INTRO_UNOWN_F            ; 3f
 	const SPRITE_ANIM_FRAMESET_CELEBI_LEFT              ; 40
 	const SPRITE_ANIM_FRAMESET_CELEBI_RIGHT             ; 41
+	const SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_8          ; 
+	const SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9          ; 
 
 ; SpriteAnimOAMData indexes (see data/sprite_anims/oam.asm)
 	const_def
@@ -316,3 +318,5 @@ NUM_SPRITE_ANIM_STRUCTS EQU 10 ; see wSpriteAnimationStructs
 	const SPRITE_ANIM_OAMSET_GAMEFREAK_LOGO_9           ; 89
 	const SPRITE_ANIM_OAMSET_GAMEFREAK_LOGO_10          ; 8a
 	const SPRITE_ANIM_OAMSET_GAMEFREAK_LOGO_11          ; 8b
+	const SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_8            ; 
+	const SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_9            ; 
