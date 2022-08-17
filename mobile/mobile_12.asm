@@ -1441,7 +1441,7 @@ Function48ab5: ; Zip code menu controls
 	call Function48cdc
 	pop de
 	ld a, d
-	cp $4 ; Limits how far you can press D_RIGHT
+	cp $4 ; Limits how far you can press D_RIGHT in the zip code menu
 	jr nc, .asm_48baf
 	inc d
 .asm_48baf
