@@ -282,14 +282,14 @@ asm_4828d:
 	ld hl, MenuHeader_0x484f1
 	call LoadMenuHeader
 	call Function4873c
-	hlcoord 13, 2 ; Gender menu position
+	hlcoord 12, 2 ; Gender menu position
 	ld b, $4
-	ld c, $5
+	ld c, $6
 	call Function48cdc
-	hlcoord 15, 4 ; Position of Male Gender string in Gender menu
+	hlcoord 14, 4 ; Position of Male Gender string in Gender menu
 	ld de, String_484fb
 	call PlaceString
-	hlcoord 15, 6 ; Position of Female Gender string in Gender menu
+	hlcoord 14, 6 ; Position of Female Gender string in Gender menu
 	ld de, String_484ff
 	call PlaceString
 	call WaitBGMap
@@ -798,7 +798,7 @@ Function4873c:
 	ld hl, w2DMenuCursorInitY
 	ld a, 4
 	ld [hli], a
-	ld a, 14 ; x axis position of the gender cursor
+	ld a, 13 ; x axis position of the gender cursor
 	ld [hli], a ; init x
 	ld a, 2
 	ld [hli], a ; num rows
@@ -1239,15 +1239,15 @@ Function48a3a:
 	call Function4873c
 	ld a, $a
 	ld [w2DMenuCursorInitY], a
-	ld a, $8 ; Y Placement of 'Tell Now' 'Tell Later' Cursor
+	ld a, $7 ; Y Placement of 'Tell Now' 'Tell Later' Cursor
 	ld [w2DMenuCursorInitX], a
 	ld a, $1 ; X Placement of 'Later' Cursor
 	ld [wMenuCursorY], a
-	hlcoord 7, 8 ; Placement of 'Tell Now' 'Tell Later' Box
+	hlcoord 6, 8 ; Placement of 'Tell Now' 'Tell Later' Box
 	ld b, $4
-	ld c, $b
+	ld c, $c
 	call Function48cdc
-	hlcoord 9, 10 ; Placement of 'Tell Now' 'Tell Later' Text
+	hlcoord 8, 10 ; Placement of 'Tell Now' 'Tell Later' Text
 	ld de, String_48aa1
 	call PlaceString
 	call StaticMenuJoypad
@@ -1425,7 +1425,7 @@ Function48ab5: ; Zip code menu controls
 	pop af
 	ld b, a
 	and $f
-	cp $9 ; Controls how many strings can be scrolled through from DigitStrings when pressing up on the Zip Code menu
+	cp $9
 	ld a, b
 	jr c, .asm_48b9a
 	and $f0
@@ -1441,7 +1441,7 @@ Function48ab5: ; Zip code menu controls
 	call Function48cdc
 	pop de
 	ld a, d
-	cp $4 ; Limits how far you can press D_RIGHT in the zip code menu
+	cp $4 ; Limits how far you can press D_RIGHT
 	jr nc, .asm_48baf
 	inc d
 .asm_48baf
