@@ -1425,7 +1425,7 @@ Function48ab5: ; Zip code menu controls
 	pop af
 	ld b, a
 	and $f
-	cp $9
+	cp $9 ; Controls how many strings can be scrolled through from DigitStrings when pressing up on the Zip Code menu
 	ld a, b
 	jr c, .asm_48b9a
 	and $f0
