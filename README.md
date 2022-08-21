@@ -70,6 +70,7 @@ Other disassembly projects:
 - Ryuzac         : Code and Japanese Translation
 
 - Zumilsawhat?   : Code (Large amounts of work on the EZ Chat system)
+- mid-kid        : For his previous work on i18n builds.
 
 - Arves          : Italian Mobile Translation
 - Federx         : Italian Mobile Translation
