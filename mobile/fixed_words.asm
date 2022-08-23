@@ -1040,7 +1040,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	jr nz, .a
 	ld a, [de]
 	and B_BUTTON
-	jr nz, .b
+	jp nz, .b
 	ld a, [de]
 	and START
 	jr nz, .next_page
@@ -1100,13 +1100,31 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	jr nz, .left
 	ld a, [de]
 	and D_RIGHT
-	jr nz, .right
+	jp nz, .right
 	ret
 
 .a
 	call Function11c8f6
 	ld a, EZCHAT_DRAW_CHAT_WORDS
 	ld [wcd35], a
+
+; autoselect "OK" if all words filled
+; not when only word #4 is filled
+	push af
+	ld hl, wEZChatWords
+	ld c, EZCHAT_WORD_COUNT
+.check_word
+	ld b, [hl]
+	inc hl
+	ld a, [hli]
+	or b
+	jr z, .check_done
+	dec c
+	jr nz, .check_word
+	ld a, $6 ; OK
+	ld [wEZChatSelection], a
+.check_done
+	pop af
 	jr .jump_to_index
 
 .b
@@ -1149,7 +1167,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld a, [wEZChatPageOffset]
 	add EZCHAT_WORDS_PER_ROW
 	ld [wEZChatPageOffset], a
-	jr .navigate_to_page
+	jp .navigate_to_page
 
 .down
 	ld a, [wEZChatLoadedItems]
