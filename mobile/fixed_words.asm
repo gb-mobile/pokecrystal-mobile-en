@@ -2272,7 +2272,7 @@ EZChatScript_SortByCharacterTable:
 	db   "A B C D E F G H I"
 	next "J K L M N O P Q R"
 	next "S T U V W X Y Z"
-	next "ETC"
+	next "?!"
 	db   "@"
 
 Function11cfb5:

@@ -718,15 +718,13 @@ SpriteAnimOAMData:
 	dsprite  0,  1,  0,  1, $35, 0
 
 .OAMData_EZChatCursor4:
-	db 8
+	db 6
 	dsprite -1,  7, -1,  7, $30, 0
 	dsprite -1,  7,  0,  4, $31, 0
-	dsprite -1,  7,  1,  4, $31, 0
-	dsprite -1,  7,  2,  1, $32, 0
+	dsprite -1,  7,  1,  1, $32, 0
 	dsprite  0,  1, -1,  7, $33, 0
 	dsprite  0,  1,  0,  4, $34, 0
-	dsprite  0,  1,  1,  4, $34, 0
-	dsprite  0,  1,  2,  1, $35, 0
+	dsprite  0,  1,  1,  1, $35, 0
 
 .OAMData_EZChatCursor5:
 	db 1
