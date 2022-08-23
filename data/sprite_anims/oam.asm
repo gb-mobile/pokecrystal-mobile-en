@@ -762,10 +762,19 @@ SpriteAnimOAMData:
 	dsprite  1,  0,  7,  0, $34, 0
 	dsprite  1,  0,  8,  0, $35, 0
 
-; arrow substitute
+; slightly shorter cursor
 .OAMData_EZChatCursor9:
-	db 1
-	dsprite  1,  -2,  -1,  4, $ed, 0
+	db 10
+	dsprite  0,  0,  0,  0, $30, 0
+	dsprite  0,  0,  1,  0, $31, 0
+	dsprite  0,  0,  2,  0, $31, 0
+	dsprite  0,  0,  3,  0, $31, 0
+	dsprite  0,  0,  4,  0, $32, 0
+	dsprite  1,  0,  0,  0, $33, 0
+	dsprite  1,  0,  1,  0, $34, 0
+	dsprite  1,  0,  2,  0, $34, 0
+	dsprite  1,  0,  3,  0, $34, 0
+	dsprite  1,  0,  4,  0, $35, 0
 
 .OAMData_BlueWalk:
 	db 4

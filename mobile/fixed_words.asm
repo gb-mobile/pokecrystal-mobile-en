@@ -1001,7 +1001,7 @@ Function11c618:
 	ret
 
 EZChatString_Stop_Mode_Cancel:
-	db "ERASE　MODE　　CANCEL@";"けす　　　　モード　　　やめる@"
+	db "DEL  　MODE　　BACK@";"けす　　　　モード　　　やめる@"
 
 EZChatCoord_Categories: ; Category Coordinates
 	dwcoord  1,  7 ; PKMN
@@ -2558,6 +2558,17 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 
 .one ; Category Menu
 	ld a, [wEZChatCategorySelection]
+	cp 15
+	push af
+	jr c, .not_menu
+	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9
+	call ReinitSpriteAnimFrame
+	jr .got_sprite
+.not_menu
+	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_1
+	call ReinitSpriteAnimFrame
+.got_sprite
+	pop af
 	sla a
 	ld hl, .Coords_One
 	ld e, $2 ; Sort by Letter Menu Index (?)
