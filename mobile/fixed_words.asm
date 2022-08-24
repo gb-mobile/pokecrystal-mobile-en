@@ -1001,7 +1001,7 @@ Function11c618:
 	ret
 
 EZChatString_Stop_Mode_Cancel:
-	db "ERASE　MODE　　CANCEL@";"けす　　　　モード　　　やめる@"
+	db "DEL  　MODE　　BACK@";"けす　　　　モード　　　やめる@"
 
 EZChatCoord_Categories: ; Category Coordinates
 	dwcoord  1,  7 ; PKMN
@@ -1040,7 +1040,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	jr nz, .a
 	ld a, [de]
 	and B_BUTTON
-	jr nz, .b
+	jp nz, .b
 	ld a, [de]
 	and START
 	jr nz, .next_page
@@ -1100,13 +1100,31 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	jr nz, .left
 	ld a, [de]
 	and D_RIGHT
-	jr nz, .right
+	jp nz, .right
 	ret
 
 .a
 	call Function11c8f6
 	ld a, EZCHAT_DRAW_CHAT_WORDS
 	ld [wcd35], a
+
+; autoselect "OK" if all words filled
+; not when only word #4 is filled
+	push af
+	ld hl, wEZChatWords
+	ld c, EZCHAT_WORD_COUNT
+.check_word
+	ld b, [hl]
+	inc hl
+	ld a, [hli]
+	or b
+	jr z, .check_done
+	dec c
+	jr nz, .check_word
+	ld a, $6 ; OK
+	ld [wEZChatSelection], a
+.check_done
+	pop af
 	jr .jump_to_index
 
 .b
@@ -1149,7 +1167,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld a, [wEZChatPageOffset]
 	add EZCHAT_WORDS_PER_ROW
 	ld [wEZChatPageOffset], a
-	jr .navigate_to_page
+	jp .navigate_to_page
 
 .down
 	ld a, [wEZChatLoadedItems]
@@ -2179,9 +2197,9 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 
 .a
 	ld a, [wEZChatSortedSelection]
-	cp $19 ; index of ERASE option
+	cp $1b ; index of ERASE option
 	jr c, .place
-	sub $19 ; index of ERASE option
+	sub $1b ; index of ERASE option
 	jr z, .done
 	dec a
 	jr z, .mode
@@ -2251,28 +2269,28 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 	db $02, $0c, $14, $0a ; L 0B
 	db $03, $0d, $15, $0b ; M 0C
 	db $04, $0e, $16, $0c ; N 0D
-	db $05, $0f, $1a, $0d ; O 0E
-	db $06, $10, $17, $0e ; P 0F 
-	db $07, $11, $1b, $0f ; Q 10
-	db $08, $ff, $1b, $10 ; R 11
-	db $09, $13, $18, $ff ; S 12
-	db $0a, $14, $18, $12 ; T 13
-	db $0b, $15, $19, $13 ; U 14
-	db $0c, $16, $1a, $14 ; V 15
-	db $0d, $17, $1a, $15 ; W 16
-	;db $0e, $ff, $ff, $ff ; X 17 (n/a)
-	db $0f, $ff, $1b, $16 ; Y 18 / 17
-	;db $10, $ff, $ff, $ff ; Z 19 (n/a)
-	db $12, $01, $19, $ff ; ETC.   1A / 18
-	db $18, $1a, $ff, $ff ; ERASE  1B / 19
-	db $15, $1b, $ff, $19 ; MODE   1C / 1A
-	db $17, $ff, $ff, $1a ; CANCEL 1D / 1B
+	db $05, $0f, $17, $0d ; O 0E
+	db $06, $10, $18, $0e ; P 0F 
+	db $07, $11, $19, $0f ; Q 10
+	db $08, $ff, $1d, $10 ; R 11
+	db $09, $13, $1a, $ff ; S 12
+	db $0a, $14, $1a, $12 ; T 13
+	db $0b, $15, $1b, $13 ; U 14
+	db $0c, $16, $1c, $14 ; V 15
+	db $0d, $17, $1c, $15 ; W 16
+	db $0e, $18, $1d, $16 ; X 17
+	db $0f, $19, $1d, $17 ; Y 18
+	db $10, $ff, $1d, $18 ; Z 19
+	db $12, $01, $1b, $ff ; ETC. 1A
+	db $1a, $1c, $ff, $ff ; ERASE 1B
+	db $15, $1d, $ff, $1b ; MODE 1C
+	db $17, $ff, $ff, $1c ; CANCEL 1D
 
 EZChatScript_SortByCharacterTable:
 	db   "A B C D E F G H I"
 	next "J K L M N O P Q R"
-	next "S T U V W - Y -"
-	next "ETC"
+	next "S T U V W X Y Z"
+	next "!?"
 	db   "@"
 
 Function11cfb5:
@@ -2540,6 +2558,17 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 
 .one ; Category Menu
 	ld a, [wEZChatCategorySelection]
+	cp 15
+	push af
+	jr c, .not_menu
+	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9
+	call ReinitSpriteAnimFrame
+	jr .got_sprite
+.not_menu
+	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_1
+	call ReinitSpriteAnimFrame
+.got_sprite
+	pop af
 	sla a
 	ld hl, .Coords_One
 	ld e, $2 ; Sort by Letter Menu Index (?)
@@ -2767,9 +2796,9 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dbpixel  6, 13 ; U
 	dbpixel  8, 13 ; V
 	dbpixel 10, 13 ; W
-;	dbpixel 12, 13 ; X
+	dbpixel 12, 13 ; X
 	dbpixel 14, 13 ; Y
-;	dbpixel 16, 13 ; Z
+	dbpixel 16, 13 ; Z
 	dbpixel  2, 15 ; ETC.
 	dbpixel  1, 18, 5, 2 ; ERASE
 	dbpixel  7, 18, 5, 2 ; MODE
@@ -2818,10 +2847,12 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 15 (Letter selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 16 (Letter selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 17 (Letter selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_4 ; 18 (Misc selection box for the sort by menu)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 19 (Bottom Menu Selection box?)
-	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1a (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 18 (Letter selection box for the sort by menu)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 19 (Letter selection box for the sort by menu)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_4 ; 1a (Misc selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1b (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1c (Bottom Menu Selection box?)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1d (Bottom Menu Selection box?)
 
 .UpdateObjectFlags:
 	ld hl, wcd24
@@ -3002,6 +3033,17 @@ EZChat_GetSeenPokemonByKana: ; From here all the way down to roughly 3236 is the
 	ld c, a
 	ld a, [hli]
 	ld b, a
+
+; bc == 0?
+	;ld a, b
+	and a
+	jr c, .continue
+	jr nz, .continue
+	ld a, c
+	and a
+	jr z, .save_without_copy
+
+.continue
 ; save the pointer to the next row
 	push hl
 ; add de to w3_d000
@@ -3014,6 +3056,21 @@ EZChat_GetSeenPokemonByKana: ; From here all the way down to roughly 3236 is the
 	ld d, a
 ; save bc for later
 	push bc
+	jr .loop1
+
+.save_without_copy
+; save the pointer to the next row
+	push hl
+; add de to w3_d000
+	ld hl, w3_d000
+	add hl, de
+; recover de from wcd2d (default: wEZChatSortedWords)
+	ld a, [wcd2d]
+	ld e, a
+	ld a, [wcd2e]
+	ld d, a
+	push bc
+	jr .done_copying
 
 .loop1
 ; copy 2*bc bytes from 3:hl to 5:de
@@ -3042,6 +3099,7 @@ EZChat_GetSeenPokemonByKana: ; From here all the way down to roughly 3236 is the
 	or b
 	jr nz, .loop1
 
+.done_copying
 ; recover the pointer from wcd2f (default: EZChat_SortedPokemon)
 	ld a, [wcd2f]
 	ld l, a
@@ -4134,9 +4192,9 @@ x = $d014
 	macro_11f23c  13 ; U
 	macro_11f23c   5 ; V
 	macro_11f23c  59 ; W
-;	macro_11f23c   0 ; X
+	macro_11f23c   0 ; X
 	macro_11f23c  17 ; Y
-;	macro_11f23c   0 ; Z
+	macro_11f23c   0 ; Z
 x = $d000
 	macro_11f23c  10 ; !?
 .End
