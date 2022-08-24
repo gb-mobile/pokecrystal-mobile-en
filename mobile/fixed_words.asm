@@ -3527,7 +3527,7 @@ ENDM
 	ezchat_word "FIGHT@@@", $19e
 	ezchat_word "REVIVE@@", $3fa
 	ezchat_word "POINTS@@", $3c8
-	ezchat_word "POKEMON@", $3cc
+	ezchat_word "POKéMON@", $3cc ; small e to conform better to existing style
 	ezchat_word "SERIOUS@", $422
 	ezchat_word "OH NO!@@", $382
 	ezchat_word "LOSS@@@@", $2f4
