@@ -1,82 +1,63 @@
-WIP Pokemon Crystal mobile restoration and localization. Built on Matze's substantial work 
-restoring mobile functionality to Pokemon Crystal using code disassembled from the Japanese ROM.
+# NOTE:  
+## This repository is a work in progress, you may experience bugs, glitches and general oddities. Should these occur please report them as issues.
 
-Matze's original project can be found here: https://github.com/Sudel-Matze/pokecrystal
 
-Old version of RGBDS required, 0.3.8 should work.
+## Information 
 
-Primary To-Do List:
-- Adjust Easy Chat to function with other languages. Trim word count from 6 to 4 and increase word length from 5 to 8.
-- Graphical changes to accomodate other languages.
-- Some languages could have minor bugs.
-- Testing is needed from native speakers of other languages, preferably anyone able to assess issues in assembly.
+A fork of pokecrystal designed to restore and localize Mobile Adapter functionality such as online battles and trades to Crystal using disassembled code from the Japanese ROM designed for use with the REON Project.
 
-To use this properly with an already existing save file for normal Crystal:
-- let the emulator create a new save for this mod, start a new game and save once you can
-- open your normal Crystal save and the newly created one in a hex editor and replace the first 0x8000 bytes of the new save with the first 0x8000 bytes of your normal Crystal save
+This repository is built upon a substantial amount of work done by Sudel-Matze.
 
-# Pokémon Crystal [![Build Status][travis-badge]][travis]
+A link to Matze’s repository can be found here:
+https://github.com/Sudel-Matze/pokecrystal
 
-This is a disassembly of Pokémon Crystal.
+## Setup [![Build Status][travis-badge]][travis]
 
-It builds the following ROMs:
+An older version of RGBDS is required, we recommend 0.3.8
 
-- Pokemon - Crystal Version (UE) (V1.0) [C][!].gbc `sha1: f4cd194bdee0d04ca4eac29e09b8e4e9d818c133`
-- Pokemon - Crystal Version (UE) (V1.1) [C][!].gbc `sha1: f2f52230b536214ef7c9924f483392993e226cfb`
-- Pokemon - Crystal Version (A) [C][!].gbc `sha1: a0fc810f1d4e124434f7be2c989ab5b5892ddf36`
+For more information, please see [INSTALL.md](INSTALL.md)
 
-To set up the repository, see [INSTALL.md](INSTALL.md).
+After setup has been completed, you can choose which version you wish to build.
+To build a specific version, run one of these commands inside the repository directory in cygwin64:
 
-## See also
+- US Version:	`make`
 
-- [**FAQ**](FAQ.md)
-- [**Documentation**][docs]
-- [**Wiki**][wiki] (includes [tutorials][tutorials])
-- **Discord:** [pret][discord]
-- **IRC:** [freenode#pret][irc]
+- EUR Version (Not done):	`make crystal_eu` 
 
-Other disassembly projects:
+- AUS Version:	`make crystal_au`
 
-- [**Pokémon Red/Blue**][pokered]
-- [**Pokémon Yellow**][pokeyellow]
-- [**Pokémon Gold**][pokegold]
-- [**Pokémon Pinball**][pokepinball]
-- [**Pokémon TCG**][poketcg]
-- [**Pokémon Ruby**][pokeruby]
-- [**Pokémon Fire Red**][pokefirered]
-- [**Pokémon Emerald**][pokeemerald]
+## Using Mobile Adapter Features
 
-[pokered]: https://github.com/pret/pokered
-[pokeyellow]: https://github.com/pret/pokeyellow
-[pokegold]: https://github.com/pret/pokegold
-[pokepinball]: https://github.com/pret/pokepinball
-[poketcg]: https://github.com/pret/poketcg
-[pokeruby]: https://github.com/pret/pokeruby
-[pokefirered]: https://github.com/pret/pokefirered
-[pokeemerald]: https://github.com/pret/pokeemerald
-[docs]: https://pret.github.io/pokecrystal/
-[wiki]: https://github.com/pret/pokecrystal/wiki
-[tutorials]: https://github.com/pret/pokecrystal/wiki/Tutorials
-[discord]: https://discord.gg/6EuWgX9
-[irc]: https://kiwiirc.com/client/irc.freenode.net/?#pret
-[travis]: https://travis-ci.org/pret/pokecrystal
-[travis-badge]: https://travis-ci.org/pret/pokecrystal.svg?branch=master
+To take advantage of the Mobile Adapter features, we currently recommend the GameBoy Emulator BGB:
+https://bgb.bircd.org/
 
-## Primary Contributors
+and libmobile-bgb:
+https://github.com/REONTeam/libmobile-bgb/releases
 
+Simply open BGB, right click the ‘screen’ and select `Link > Listen`, then accept the port it provides by clicking `OK`.
+Once done, run the latest version of libmobile for your operating system (`mobile-windows.exe` or windows and `mobile-linux` for linux).
+Now right click the ‘screen’ on BGB again and select `Load ROM…`, then choose the pokecrystal-mobile `.gbc` file you have built.
+
+## To-Do
+
+- Finish restrictions on Pokémon names in EZ Chat Menu.
+-	Finish localizing and restricting zip codes for each version
+
+## Contributors
+
+- Pret           : Initial disassembly
 - Matze          : Mobile Restoration & Japanese Code Disassembly
-
-- Darkshade      : Graphics and Project Management
-- Ryuzac         : Code and Japanese Translation
-
+- Damien         : Code
+- DS             : GFX & Code
+- Ryuzac         : Code & Japanese Translation
 - Zumilsawhat?   : Code (Large amounts of work on the EZ Chat system)
-- mid-kid        : For his previous work on i18n builds.
-
 - Arves          : Italian Mobile Translation
 - Federx         : Italian Mobile Translation
 - FerozElMejor   : Spanish Mobile Translation
 - FrenchOrange   : French Mobile Translation
 - Lesserkuma     : German Mobile Translation
 - Muffet         : German Mobile Translation
-
 - REON Community : Support and Assistance
+
+[travis]: https://travis-ci.org/pret/pokecrystal
+[travis-badge]: https://travis-ci.org/pret/pokecrystal.svg?branch=master
