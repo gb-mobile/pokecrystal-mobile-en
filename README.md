@@ -1,10 +1,6 @@
-# NOTE:  
-## This repository is a work in progress, you may experience bugs, glitches and general oddities. Should these occur please report them as issues.
-
-
 ## Information 
 
-A fork of pokecrystal designed to restore and localize Mobile Adapter functionality such as online battles and trades to Crystal using disassembled code from the Japanese ROM designed for use with the REON Project.
+A WIP fork of pokecrystal designed to restore and localize Mobile Adapter functionality such as online battles and trades to Crystal using disassembled code from the Japanese ROM designed for use with the REON Project.
 
 This repository is built upon a substantial amount of work done by Sudel-Matze.
 
