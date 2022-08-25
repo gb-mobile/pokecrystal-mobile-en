@@ -22,6 +22,10 @@ To build a specific version, run one of these commands inside the repository dir
 
 - AUS Version:	`make crystal_au`
 
+If you're looking for other languages, you can find them here: (https://github.com/pokecrystal-mobile)
+
+But please note that they still require a lot of polish.
+
 ## Using Mobile Adapter Features
 
 To take advantage of the Mobile Adapter features, we currently recommend the GameBoy Emulator BGB:
