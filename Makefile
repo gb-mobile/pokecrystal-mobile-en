@@ -1,4 +1,4 @@
-roms := pokecrystal.gbc pokecrystal11.gbc pokecrystal-au.gbc
+roms := pokecrystal.gbc pokecrystal11.gbc pokecrystal-au.gbc pokecrystal-eu.gbc
 
 crystal_obj := \
 audio.o \
@@ -18,6 +18,7 @@ lib/mobile/main.o
 
 crystal11_obj := $(crystal_obj:.o=11.o)
 crystal_au_obj := $(crystal_obj:.o=_au.o)
+crystal_eu_obj := $(crystal_obj:.o=_eu.o)
 
 
 ### Build tools
@@ -38,7 +39,7 @@ RGBLINK ?= $(RGBDS)rgblink
 ### Build targets
 
 .SUFFIXES:
-.PHONY: all crystal crystal11 crystal_au clean tidy compare tools
+.PHONY: all crystal crystal11 crystal_au crystal_eu clean tidy compare tools
 .SECONDEXPANSION:
 .PRECIOUS:
 .SECONDARY:
@@ -47,6 +48,7 @@ all: crystal
 crystal: pokecrystal.gbc
 crystal11: pokecrystal11.gbc
 crystal-au: pokecrystal-au.gbc
+crystal-eu: pokecrystal-eu.gbc
 
 clean:
 	rm -f $(roms) $(crystal_obj) $(crystal11_obj) $(crystal_au_obj) $(roms:.gbc=.map) $(roms:.gbc=.sym)
@@ -68,6 +70,7 @@ tools:
 $(crystal_obj):   RGBASMFLAGS =
 $(crystal11_obj): RGBASMFLAGS = -D _CRYSTAL11
 $(crystal_au_obj): RGBASMFLAGS = -D _CRYSTAL11 -D _CRYSTAL_AU
+$(crystal_eu_obj): RGBASMFLAGS = -D _CRYSTAL11 -D _CRYSTAL_EU
 
 # The dep rules have to be explicit or else missing files won't be reported.
 # As a side effect, they're evaluated immediately instead of when the rule is invoked.
@@ -83,6 +86,7 @@ ifeq (,$(filter clean tools,$(MAKECMDGOALS)))
 
 $(info $(shell $(MAKE) -C tools))
 
+$(foreach obj, $(crystal_eu_obj), $(eval $(call DEP,$(obj),$(obj:_eu.o=.asm))))
 $(foreach obj, $(crystal_au_obj), $(eval $(call DEP,$(obj),$(obj:_au.o=.asm))))
 $(foreach obj, $(crystal11_obj), $(eval $(call DEP,$(obj),$(obj:11.o=.asm))))
 $(foreach obj, $(crystal_obj), $(eval $(call DEP,$(obj),$(obj:.o=.asm))))
@@ -104,6 +108,11 @@ pokecrystal-au.gbc: $(crystal_au_obj) pokecrystal.link
 	$(RGBLINK) -n pokecrystal-au.sym -m pokecrystal-au.map -l pokecrystal.link -o $@ $(crystal_au_obj)
 	$(RGBFIX) -Cjv -i BXTU -k 01 -l 0x33 -m 0x10 -p 0 -r 5 -t PM_CRYSTAL $@
 	tools/sort_symfile.sh pokecrystal-au.sym
+
+pokecrystal-eu.gbc: $(crystal_eu_obj) pokecrystal.link
+	$(RGBLINK) -n pokecrystal-eu.sym -m pokecrystal-eu.map -l pokecrystal.link -o $@ $(crystal_eu_obj)
+	$(RGBFIX) -Cjv -i BXTU -k 01 -l 0x33 -m 0x10 -p 0 -r 5 -t PM_CRYSTAL $@
+	tools/sort_symfile.sh pokecrystal-eu.sym
 
 
 # For files that the compressor can't match, there will be a .lz file suffixed with the md5 hash of the correct uncompressed file.
