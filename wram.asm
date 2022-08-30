@@ -1776,7 +1776,16 @@ wEndFlypoint:: db
 NEXTU ; d002
 ; unidentified
 wd002:: db
-wd003:: db
+; - bits 4 and 5: used as a counter for the purpose of blinking.
+; - bit 6: set if the Mobile Profile has been initialized. 
+; - bit 7: set if the blinking just happened.
+
+UNION
+wMobileProfileParametersFilled:: db
+NEXTU
+wd003:: ds 1 
+ENDU
+
 wd004:: db
 
 ; mobile?
@@ -1790,7 +1799,13 @@ wd00d:: ds 1
 wd00f:: ds 1
 wd010:: ds 1
 wd011:: ds 1
+
+UNION
+wCursorFrameCounter:: db
+NEXTU
 wd012:: ds 1
+ENDU
+
 wd013:: ds 1
 wd014:: ds 2
 	ds 1
@@ -2415,10 +2430,13 @@ wReceiveCallDelay_StartTime:: ds 3 ; d466
 	ds 3
 wBugContestMinsRemaining:: db ; d46c
 wBugContestSecsRemaining:: db ; d46d
-	ds 2
+
+;	ds 2 ; Moved to wZipCode.
+
 wMapStatusEnd:: ; d470
 
-	ds 2
+;	ds 1 ; Moved to wZipCode.
+ds 1
 
 wCrystalData::
 wPlayerGender:: ; d472
@@ -2428,13 +2446,21 @@ wPlayerGender:: ; d472
 	db
 wd473:: ds 1
 wd474:: ds 1
+
+UNION
+wZipCode:: ds 7
+NEXTU
 wd475:: ds 1
 wd476:: ds 1
 wd477:: ds 1
 wd478:: ds 1
+ds 3
+ENDU
+
 wCrystalDataEnd::
 
-wd479:: ds 2
+wd479:: ds 2 
+; bit 0: set if the player saved a zip code.
 
 wGameData::
 wPlayerData::
