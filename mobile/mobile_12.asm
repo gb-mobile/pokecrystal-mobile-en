@@ -108,7 +108,7 @@ InitMobileProfile:
 	call GetNthString
 	ld d, h
 	ld e, l
-	hlcoord 13, 9 ; Default Prefectures position in MOBILE menu
+	hlcoord 19 - REGION_CODE_STRING_LENGTH, 9 ; Default Prefectures position in MOBILE menu
 	call PlaceString 
 	hlcoord 18 - ZIPCODE_LENGTH, 11 ; Zip Code Position in MOBILE menu
 	call DisplayZipCode
@@ -341,9 +341,9 @@ RegionCodePressed:
 	call LoadMenuHeader
 	ld hl, MenuHeader_0x48513
 	call LoadMenuHeader
-	hlcoord 10, 0
-	ld b, $c
-	ld c, $8
+	hlcoord 16 - REGION_CODE_STRING_LENGTH, 0
+	ld b, 12
+	ld c, REGION_CODE_STRING_LENGTH + 2
 	call DisplayBlankGoldenBox ; This has to do with some display.
 	ld a, [wMenuCursorBuffer]
 	ld b, a
@@ -458,17 +458,21 @@ DisplayRegionCodesList:
 	ld c, $8
 	hlcoord 11, 8 ; ??? Clears the surrounding tiles when prefecture is selected, needs to be moved with preferectures
 	call ClearBox
-	hlcoord 13, 9 ; Prefectures position when selected
+	hlcoord 19 - REGION_CODE_STRING_LENGTH, 9 ; Prefectures position when selected
 	call PlaceString
 	ret
 
 Function483e8:
 	push de
+if DEF(_CRYSTAL_AU)
+	ld hl, PrefecturesScrollList
+else
 	ld hl, Prefectures
+endc
 	ld a, [wMenuSelection]
 	cp $ff
 	jr nz, .asm_483f8
-	ld hl, Prefectures + (NUM_REGION_CODES - 1) * 6 ; last string
+	ld hl, LastPrefecture ; Prefectures + (NUM_REGION_CODES - 1) * REGION_CODE_STRING_LENGTH ; last string
 	jr .asm_48405
 
 .asm_483f8
@@ -516,12 +520,30 @@ ReturnToMobileProfileMenu:
 	call ClearBox
 	jp Function48157
 
+; Inputs: char pool index in A, screen tile coord in HL.
 Mobile12_Index2Char:
 	push bc
 	push af
 	push de
 	push hl
-	ld hl, .DigitStrings
+
+	;ld hl, .CharPool0
+	push af
+	ld a, l
+	hlcoord 18 - ZIPCODE_LENGTH, 11 
+	; Zip Code Location. Note that wTilemap is added to it. wTilemap is "align 8" ($X00) + $A0. "18 - ZIPCODE_LENGTH, 11" is $E7. Which makes $C587. 
+	; The last zipcode char would be stored at address $C58E. The last byte doesn't overflow or underflow between the first and the last chat pos, so we can subtract those to get the index in the string of the current char.
+	sub l ; A now contains the char index in the zipcode string between 0 and ZIPCODE_LENGTH.
+	add a ; We double A.
+	ld e, a
+	ld d, 0
+	ld hl, Zipcode_CharPools
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+
+	pop af
 .loop
 	and a
 	jr z, .got_string
@@ -539,7 +561,69 @@ Mobile12_Index2Char:
 	pop bc
 	ret
 
-.DigitStrings:
+Zipcode_CharPools:
+N = ZIPCODE_LENGTH
+IF N > 8
+  FAIL "make the STRSUB longer"
+ENDC
+IDX = 0
+REPT N
+S EQUS STRCAT("Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+1, 1))
+	dw S
+PURGE S
+IDX = IDX + 1
+ENDR
+
+Zipcode_CharPoolForStringIndex0:
+if DEF(_CRYSTAL_AU)
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+
+Zipcode_CharPoolForStringIndex1:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+
+Zipcode_CharPoolForStringIndex2:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+
+Zipcode_CharPoolForStringIndex3:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+
+elif DEF(_CRYSTAL_EU)
 	db "0@"
 	db "1@"
 	db "2@"
@@ -576,7 +660,393 @@ Mobile12_Index2Char:
 	db "X@"
 	db "Y@"
 	db "Z@"
+
+Zipcode_CharPoolForStringIndex1:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "D@"
+	db "E@"
+	db "F@"
+	db "G@"
+	db "H@"
+	db "I@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "O@"
+	db "P@"
+	db "Q@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "U@"
+	db "V@"
+	db "W@"
+	db "X@"
+	db "Y@"
+	db "Z@"
+
+Zipcode_CharPoolForStringIndex2:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "D@"
+	db "E@"
+	db "F@"
+	db "G@"
+	db "H@"
+	db "I@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "O@"
+	db "P@"
+	db "Q@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "U@"
+	db "V@"
+	db "W@"
+	db "X@"
+	db "Y@"
+	db "Z@"
+
+Zipcode_CharPoolForStringIndex3:
 	db " @"
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "D@"
+	db "E@"
+	db "F@"
+	db "G@"
+	db "H@"
+	db "I@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "O@"
+	db "P@"
+	db "Q@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "U@"
+	db "V@"
+	db "W@"
+	db "X@"
+	db "Y@"
+	db "Z@"
+
+Zipcode_CharPoolForStringIndex4:
+	db " @"
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "D@"
+	db "E@"
+	db "F@"
+	db "G@"
+	db "H@"
+	db "I@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "O@"
+	db "P@"
+	db "Q@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "U@"
+	db "V@"
+	db "W@"
+	db "X@"
+	db "Y@"
+	db "Z@"
+
+Zipcode_CharPoolForStringIndex5:
+	db " @"
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "D@"
+	db "E@"
+	db "F@"
+	db "G@"
+	db "H@"
+	db "I@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "O@"
+	db "P@"
+	db "Q@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "U@"
+	db "V@"
+	db "W@"
+	db "X@"
+	db "Y@"
+	db "Z@"
+
+Zipcode_CharPoolForStringIndex6:
+	db " @"
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "D@"
+	db "E@"
+	db "F@"
+	db "G@"
+	db "H@"
+	db "I@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "O@"
+	db "P@"
+	db "Q@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "U@"
+	db "V@"
+	db "W@"
+	db "X@"
+	db "Y@"
+	db "Z@"
+
+else ; US
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "E@"
+	db "G@"
+	db "H@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "P@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "V@"
+	db "X@"
+	db "Y@"
+
+Zipcode_CharPoolForStringIndex1:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+
+Zipcode_CharPoolForStringIndex2:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "E@"
+	db "G@"
+	db "H@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "P@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "V@"
+	db "W@"
+	db "X@"
+	db "Y@"
+	db "Z@"
+
+Zipcode_CharPoolForStringIndex3:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+
+Zipcode_CharPoolForStringIndex4:
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+	db "A@"
+	db "B@"
+	db "C@"
+	db "D@"
+	db "E@"
+	db "F@"
+	db "G@"
+	db "H@"
+	db "I@"
+	db "J@"
+	db "K@"
+	db "L@"
+	db "M@"
+	db "N@"
+	db "O@"
+	db "P@"
+	db "Q@"
+	db "R@"
+	db "S@"
+	db "T@"
+	db "U@"
+	db "V@"
+	db "W@"
+	db "X@"
+	db "Y@"
+	db "Z@"
+
+Zipcode_CharPoolForStringIndex5:
+	db " @"
+	db "0@"
+	db "1@"
+	db "2@"
+	db "3@"
+	db "4@"
+	db "5@"
+	db "6@"
+	db "7@"
+	db "8@"
+	db "9@"
+
+endc
+
+Zipcode_CharPoolsLength:
+N = ZIPCODE_LENGTH
+IDX = 0
+REPT N - 1
+S EQUS STRCAT("LOW(Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+2, 1))
+T EQUS STRCAT("- Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+1, 1))
+	db S T ) / 2
+PURGE S
+PURGE T
+IDX = IDX + 1
+ENDR
+
+N = ZIPCODE_LENGTH - 1
+S EQUS STRCAT("LOW(Zipcode_CharPoolsLength - Zipcode_CharPoolForStringIndex", STRSUB("01234567", N+1, 1))
+	db S ) / 2
 
 MobileProfileString:         db "  Mobile Profile@"
 MobileString_Gender:         db "Gender@"
@@ -608,21 +1078,21 @@ String_48500: db "Girl@"
 
 MenuHeader_0x48504:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 10, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 ; For clearing the Address Box
+	menu_coords 16 - REGION_CODE_STRING_LENGTH, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 ; For clearing the Address Box
 
 MenuHeader_0x48509:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 10, 5, SCREEN_WIDTH - 1, 8 ; For clearing the Age Box
+	menu_coords 10, 5, SCREEN_WIDTH - 1 + ZIPCODE_FRAME_RIGHT_MARGIN, 8 ; For clearing the Age Box
 
 MenuHeader_ZipCodeEditBox:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 10, 10, SCREEN_WIDTH - 1, TEXTBOX_Y - 0 ; For clearing the Zip Code box
+	menu_coords 17 - ZIPCODE_LENGTH, 10, SCREEN_WIDTH - 1 + ZIPCODE_FRAME_RIGHT_MARGIN, TEXTBOX_Y - 0 ; For clearing the Zip Code box
 	
 	;Bounding of left side ; bounding of top ; bounding of right side ; bounding of bottom
 
 MenuHeader_0x48513:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 11, 1, 18, 12 ; The placement of the text in the address box
+	menu_coords 17 - REGION_CODE_STRING_LENGTH, 1, 18, 12 ; The placement of the text in the address box
 	dw MenuData_0x4851b
 	db 1 ; default option
 
@@ -645,70 +1115,167 @@ endr
 	db -1
 
 Prefectures: ; Some names shortened to fit, check for official initials later.
-	db	"CA-AB@"  ;Alberta
-	db	"CA-BC@"  ;British_Columbia
-	db	"CA-MB@"  ;Manitoba
-	db	"CA-NB@"  ;New_Brunswick
-	db	"CA-NL@"  ;Newfoundland_and_Labrador
-	db	"CA-NS@"  ;Nova_Scotia
-	db	"CA-NT@"  ;Northwest_Territories
-	db	"CA-NU@"  ;Nunavut
-	db	"CA-ON@"  ;Ontario
-	db	"CA-PE@"  ;Prince_Edward_Island
-	db	"CA-QC@"  ;Quebec
-	db	"CA-SK@"  ;Saskatchewan
-	db	"CA-YT@"  ;Yukon
-	db	"US-AK@"  ;Alaska
-	db	"US-AL@"  ;Alabama
-	db	"US-AR@"  ;Arkansas
-	db	"US-AZ@"  ;Arizona
-	db	"US-CA@"  ;California
-	db	"US-CO@"  ;Colorado
-	db	"US-CT@"  ;Connecticut
-	db	"US-DC@"  ;District_Of_Columbia
-	db	"US-DE@"  ;Delaware
-	db	"US-FL@"  ;Florida
-	db	"US-GA@"  ;Georgia
-	db	"US-HI@"  ;Hawaii
-	db	"US-IA@"  ;Iowa
-	db	"US-ID@"  ;Idaho
-	db	"US-IL@"  ;Illinois
-	db	"US-IN@"  ;Indiana
-	db	"US-KS@"  ;Kansas
-	db	"US-KY@"  ;Kentucky
-	db	"US-LA@"  ;Louisiana
-	db	"US-MA@"  ;Massachusetts
-	db	"US-MD@"  ;Maryland
-	db	"US-ME@"  ;Maine
-	db	"US-MI@"  ;Michigan
-	db	"US-MN@"  ;Minnesota
-	db	"US-MO@"  ;Missouri
-	db	"US-MS@"  ;Mississippi
-	db	"US-MT@"  ;Montana
-	db	"US-NC@"  ;North_Carolina
-	db	"US-ND@"  ;North_Dakota
-	db	"US-NE@"  ;Nebraska
-	db	"US-NH@"  ;New_Hampshire
-	db	"US-NJ@"  ;New_Jersey
-	db	"US-NM@"  ;New_Mexico
-	db	"US-NV@"  ;Nevada
-	db	"US-NY@"  ;New_York
-	db	"US-OH@"  ;Ohio
-	db	"US-OK@"  ;Oklahoma
-	db	"US-OR@"  ;Oregon
-	db	"US-PA@"  ;Pennsylvania
-	db	"US-RI@"  ;Rhode_Island
-	db	"US-SC@"  ;South_Carolina
-	db	"US-SD@"  ;South_Dakota
-	db	"US-TN@"  ;Tennessee
-	db	"US-TX@"  ;Texas
-	db	"US-UT@"  ;Utah
-	db	"US-VA@"  ;Virginia
-	db	"US-VT@"  ;Vermont
-	db	"US-WA@"  ;Washington
-	db	"US-WI@"  ;Wisconsin
-	db	"US-WV@"  ;West_Virginia
-	db	"US-WY@"  ;Wyoming
+if DEF(_CRYSTAL_AU)
+	db "AU-ACT@"      ; Australian Capital Territory
+	db "AU-NSW@"      ; New South Wales
+	db " AU-NT@"       ; Northern Territory
+	db "AU-QLD@"      ; Queensland
+	db " AU-SA@"       ; South Australia
+	db "AU-TAS@"      ; Tasmania
+	db "AU-VIC@"      ; Victoria
+	db " AU-WA@"       ; Western Australia
+	db "NZ-AUK@"      ; Auckland
+	db "NZ-BOP@"      ; Bay of Plenty
+	db "NZ-CAN@"      ; Canterbury
+	db "NZ-CIT@"      ; Chatham Islands Territory
+	db "NZ-GIS@"      ; Gisborne
+	db "NZ-HKB@"      ; Hawke's Bay
+	db "NZ-MBH@"      ; Marlborough
+	db "NZ-MWT@"      ; Manawatu-Wanganui
+	db "NZ-NSN@"      ; Nelson
+	db "NZ-NTL@"      ; Northland
+	db "NZ-OTA@"      ; Otago
+	db "NZ-STL@"      ; Southland
+	db "NZ-TAS@"      ; Tasman
+	db "NZ-TKI@"      ; Taranaki
+	db "NZ-WGN@"      ; Wellington
+	db "NZ-WKO@"      ; Waikato
+	db "NZ-WTC@"      ; West Coast
+
+PrefecturesScrollList: ; Quick and dirty solution for the margin offset.
+	db "AU-ACT@"      ; Australian Capital Territory
+	db "AU-NSW@"      ; New South Wales
+	db "AU-NT@"       ; Northern Territory
+	db "AU-QLD@"      ; Queensland
+	db "AU-SA@"       ; South Australia
+	db "AU-TAS@"      ; Tasmania
+	db "AU-VIC@"      ; Victoria
+	db "AU-WA@"       ; Western Australia
+	db "NZ-AUK@"      ; Auckland
+	db "NZ-BOP@"      ; Bay of Plenty
+	db "NZ-CAN@"      ; Canterbury
+	db "NZ-CIT@"      ; Chatham Islands Territory
+	db "NZ-GIS@"      ; Gisborne
+	db "NZ-HKB@"      ; Hawke's Bay
+	db "NZ-MBH@"      ; Marlborough
+	db "NZ-MWT@"      ; Manawatu-Wanganui
+	db "NZ-NSN@"      ; Nelson
+	db "NZ-NTL@"      ; Northland
+	db "NZ-OTA@"      ; Otago
+	db "NZ-STL@"      ; Southland
+	db "NZ-TAS@"      ; Tasman
+	db "NZ-TKI@"      ; Taranaki
+	db "NZ-WGN@"      ; Wellington
+	db "NZ-WKO@"      ; Waikato
+LastPrefecture: db "NZ-WTC@"      ; West Coast
+
+elif DEF(_CRYSTAL_EU)
+	db "EU-AD@"     ; Andorra
+	db "EU-AL@"     ; Albania
+	db "EU-AT@"     ; Austria
+	db "EU-BA@"     ; Bosnia and Herzegovina
+	db "EU-BE@"     ; Belgium
+	db "EU-BG@"     ; Bulgaria
+	db "EU-BY@"     ; Belarus
+	db "EU-CH@"     ; Switzerland
+	db "EU-CZ@"     ; Czech Republic
+	db "EU-DE@"     ; Germany
+	db "EU-DK@"     ; Denmark
+	db "EU-EE@"     ; Estonia
+	db "EU-ES@"     ; Spain
+	db "EU-FI@"     ; Finland
+	db "EU-FR@"     ; France
+	db "EU-GB@"     ; United Kingdom
+	db "EU-GR@"     ; Greece
+	db "EU-HR@"     ; Croatia
+	db "EU-HU@"     ; Hungary
+	db "EU-IE@"     ; Ireland
+	db "EU-IS@"     ; Iceland
+	db "EU-IT@"     ; Italy
+	db "EU-LI@"     ; Liechtenstein
+	db "EU-LT@"     ; Lithuania
+	db "EU-LU@"     ; Luxembourg
+	db "EU-LV@"     ; Latvia
+	db "EU-MD@"     ; Moldova
+	db "EU-MT@"     ; Malta
+	db "EU-NL@"     ; Netherlands
+	db "EU-NO@"     ; Norway
+	db "EU-PL@"     ; Poland
+	db "EU-PT@"     ; Portugal
+	db "EU-RO@"     ; Romania
+	db "EU-RS@"     ; Serbia
+	db "EU-RU@"     ; Russian Federation
+	db "EU-SE@"     ; Sweden
+	db "EU-SI@"     ; Slovenia
+	db "EU-SK@"     ; Slovakia
+	db "EU-SM@"     ; San Marino
+LastPrefecture: db "EU-UA@"     ; Ukraine
+else
+	db	"CA-AB@"  	;Alberta
+	db	"CA-BC@"  	;British_Columbia
+	db	"CA-MB@"  	;Manitoba
+	db	"CA-NB@"  	;New_Brunswick
+	db	"CA-NL@"  	;Newfoundland_and_Labrador
+	db	"CA-NS@"  	;Nova_Scotia
+	db	"CA-NT@"  	;Northwest_Territories
+	db	"CA-NU@"  	;Nunavut
+	db	"CA-ON@"  	;Ontario
+	db	"CA-PE@"  	;Prince_Edward_Island
+	db	"CA-QC@"  	;Quebec
+	db	"CA-SK@"  	;Saskatchewan
+	db	"CA-YT@"  	;Yukon
+	db	"US-AK@"  	;Alaska
+	db	"US-AL@"  	;Alabama
+	db	"US-AR@"  	;Arkansas
+	db	"US-AZ@"  	;Arizona
+	db	"US-CA@"  	;California
+	db	"US-CO@"  	;Colorado
+	db	"US-CT@"  	;Connecticut
+	db	"US-DC@"  	;District_Of_Columbia
+	db	"US-DE@"  	;Delaware
+	db	"US-FL@"  	;Florida
+	db	"US-GA@"  	;Georgia
+	db	"US-HI@"  	;Hawaii
+	db	"US-IA@"  	;Iowa
+	db	"US-ID@"  	;Idaho
+	db	"US-IL@"  	;Illinois
+	db	"US-IN@"  	;Indiana
+	db	"US-KS@"  	;Kansas
+	db	"US-KY@"  	;Kentucky
+	db	"US-LA@"  	;Louisiana
+	db	"US-MA@"  	;Massachusetts
+	db	"US-MD@"  	;Maryland
+	db	"US-ME@"  	;Maine
+	db	"US-MI@"  	;Michigan
+	db	"US-MN@"  	;Minnesota
+	db	"US-MO@"  	;Missouri
+	db	"US-MS@"  	;Mississippi
+	db	"US-MT@"  	;Montana
+	db	"US-NC@"  	;North_Carolina
+	db	"US-ND@"  	;North_Dakota
+	db	"US-NE@"  	;Nebraska
+	db	"US-NH@"  	;New_Hampshire
+	db	"US-NJ@"  	;New_Jersey
+	db	"US-NM@"  	;New_Mexico
+	db	"US-NV@"  	;Nevada
+	db	"US-NY@"  	;New_York
+	db	"US-OH@"  	;Ohio
+	db	"US-OK@"  	;Oklahoma
+	db	"US-OR@"  	;Oregon
+	db	"US-PA@"  	;Pennsylvania
+	db	"US-RI@"  	;Rhode_Island
+	db	"US-SC@"  	;South_Carolina
+	db	"US-SD@"  	;South_Dakota
+	db	"US-TN@"  	;Tennessee
+	db	"US-TX@"  	;Texas
+	db	"US-UT@"  	;Utah
+	db	"US-VA@"  	;Virginia
+	db	"US-VT@"  	;Vermont
+	db	"US-WA@"  	;Washington
+	db	"US-WI@"  	;Wisconsin
+	db	"US-WV@"  	;West_Virginia
+LastPrefecture:	db	"US-WY@"  	;Wyoming
+endc
 
 DisplayInitializedMobileProfileLayout: ; Clears the 4 top lines, displays the "Mobile Profile" title, and displays an empty golden box.
 	ld c, 7
@@ -1095,7 +1662,7 @@ ZipCodePressed:
 
 	hlcoord 17 - ZIPCODE_LENGTH, 10
 	ld b, $1 ; Zip Code Menu starting point
-	ld c, ZIPCODE_LENGTH ; Zip Code Menu width
+	ld c, ZIPCODE_LENGTH + ZIPCODE_FRAME_RIGHT_MARGIN; Zip Code Menu width
 	call DisplayBlankGoldenBox
 	ld d, $0
 	hlcoord 18 - ZIPCODE_LENGTH, 11 ; Zip Code Position
@@ -1294,26 +1861,26 @@ endr
 
 DisplayZipCode:
 	push de
-	ld a, [wZipCode + 0]
+	ld de, 0
+
+.loop
+	ld a, e
+	cp ZIPCODE_LENGTH
+	jr nc, .end_loop
+
+	push hl
+	ld hl, wZipCode
+	add hl, de ; We get the zipcode char offset.
+	ld a, [hl]
+	pop hl
+
 	call Mobile12_Index2Char
-	ld a, [wZipCode + 1]
 	inc hl
-	call Mobile12_Index2Char
-	ld a, [wZipCode + 2]
-	inc hl
-	call Mobile12_Index2Char
-	ld a, [wZipCode + 3]
-	inc hl
-	call Mobile12_Index2Char
-	ld a, [wZipCode + 4]
-	inc hl
-	call Mobile12_Index2Char
-	ld a, [wZipCode + 5]
-	inc hl
-	call Mobile12_Index2Char
-	ld a, [wZipCode + 6]
-	inc hl
-	call Mobile12_Index2Char
+
+	inc e
+	jr .loop
+
+.end_loop
 	pop de
 	ret
 
@@ -1419,13 +1986,17 @@ InputZipcodeCharacters: ; Function48ab5. Zip code menu controls.
 	pop af
 	sub 1 ; We use this because dec doesn't set the carry flag.
 	jr nc, .no_underflow
-	ld a, 36
+
+	; We find the last char index (from the char pool) of the current char slot.
+	call Zipcode_GetCharPoolLengthForGivenCharSlot
+	dec a ; array length - 1 = last index of the array.
+
 .no_underflow
 	push de
 	push af
 	hlcoord 17 - ZIPCODE_LENGTH, 10
 	ld b, $1 ; Zip Code Menu starting point
-	ld c, ZIPCODE_LENGTH ; Zip Code Menu width
+	ld c, ZIPCODE_LENGTH + ZIPCODE_FRAME_RIGHT_MARGIN; Zip Code Menu width
 	call DisplayBlankGoldenBox
 	pop af
 	pop de
@@ -1434,9 +2005,11 @@ InputZipcodeCharacters: ; Function48ab5. Zip code menu controls.
 	ld a, $f0 ; Return value. It means the last input was up or down (zip code value changed).
 	jp DisplayZipCodeAfterChange
 .press_up ; press up, zip code number menu
+	call Zipcode_GetCharPoolLengthForGivenCharSlot
+	ld e, a
 	pop af
 	inc a
-	cp 37
+	cp e
 	jr c, .no_underflow ; Actually means "no overflow".
 	xor a
 	jr .no_underflow
@@ -1445,7 +2018,7 @@ InputZipcodeCharacters: ; Function48ab5. Zip code menu controls.
 	push de
 	hlcoord 17 - ZIPCODE_LENGTH, 10
 	ld b, $1 ; Zip Code Menu starting point
-	ld c, ZIPCODE_LENGTH ; Zip Code Menu width
+	ld c, ZIPCODE_LENGTH + ZIPCODE_FRAME_RIGHT_MARGIN; Zip Code Menu width
 	call DisplayBlankGoldenBox
 	pop de
 	ld a, d
@@ -1472,7 +2045,7 @@ InputZipcodeCharacters: ; Function48ab5. Zip code menu controls.
 	push de
 	hlcoord 17 - ZIPCODE_LENGTH, 10
 	ld b, $1 ; Zip Code Menu starting point
-	ld c, ZIPCODE_LENGTH ; Zip Code Menu width
+	ld c, ZIPCODE_LENGTH + ZIPCODE_FRAME_RIGHT_MARGIN; Zip Code Menu width
 	call DisplayBlankGoldenBox
 	pop de
 	ld a, d
@@ -1498,6 +2071,20 @@ InputZipcodeCharacters: ; Function48ab5. Zip code menu controls.
 	swap a
 	and $f
 	jr .asm_48bc7
+
+; Input in D: char slot index.
+; Output in A: char pool length of the given char slot in input.
+Zipcode_GetCharPoolLengthForGivenCharSlot:
+	push hl
+	push de
+	ld hl, Zipcode_CharPoolsLength
+	ld e, d
+	ld d, 0
+	add hl, de
+	ld a, [hl] ; length of the array.
+	pop de
+	pop hl
+	ret
 
 DisplayZipCodeAfterChange:
 	push af
@@ -1590,50 +2177,6 @@ Function48c63:
 
 .asm_48c8c
 	scf
-	ret
-
-Function48ca3:
-	push af
-	push bc
-	push de
-	push hl
-	ld b, 0
-	ld c, 0
-	ld d, 0
-.asm_48cad
-	cp 100
-	jr c, .asm_48cb6
-	sub 100
-	inc b
-	jr .asm_48cad
-
-.asm_48cb6
-	cp 10
-	jr c, .asm_48cbf
-	sub 10
-	inc c
-	jr .asm_48cb6
-
-.asm_48cbf
-	cp 1
-	jr c, .asm_48cc7
-	dec a
-	inc d
-	jr .asm_48cbf
-
-.asm_48cc7
-	ld a, b
-	call Mobile12_Index2Char
-	inc hl
-	ld a, c
-	call Mobile12_Index2Char
-	inc hl
-	ld a, d
-	call Mobile12_Index2Char
-	pop hl
-	pop de
-	pop bc
-	pop af
 	ret
 
 DisplayBlankGoldenBox_DE:
