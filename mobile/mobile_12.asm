@@ -111,7 +111,7 @@ InitMobileProfile:
 	hlcoord 19 - REGION_CODE_STRING_LENGTH, 9 ; Default Prefectures position in MOBILE menu
 	call PlaceString 
 	hlcoord 18 - ZIPCODE_LENGTH, 11 ; Zip Code Position in MOBILE menu
-	call DisplayZipCode
+	call DisplayZipCodeRightAlign
 	hlcoord 0, 14 ; 'Personal Info' box position 
 	ld b, $2
 	ld c, $12
@@ -521,16 +521,21 @@ ReturnToMobileProfileMenu:
 	jp Function48157
 
 ; Inputs: char pool index in A, screen tile coord in HL.
-Mobile12_Index2Char:
+Mobile12_Index2CharDisplay:
 	push bc
 	push af
 	push de
 	push hl
 
-	;ld hl, .CharPool0
 	push af
 	ld a, l
 	hlcoord 18 - ZIPCODE_LENGTH, 11 
+	push de
+	ld e, b
+	ld d, 0
+	add hl, de
+	pop de
+
 	; Zip Code Location. Note that wTilemap is added to it. wTilemap is "align 8" ($X00) + $A0. "18 - ZIPCODE_LENGTH, 11" is $E7. Which makes $C587. 
 	; The last zipcode char would be stored at address $C58E. The last byte doesn't overflow or underflow between the first and the last chat pos, so we can subtract those to get the index in the string of the current char.
 	sub l ; A now contains the char index in the zipcode string between 0 and ZIPCODE_LENGTH.
@@ -1851,21 +1856,46 @@ endr
 	pop af
 	call ExitMenu
 	hlcoord 18 - ZIPCODE_LENGTH, 11 ; Zip Code location
-	call DisplayZipCode
+	call DisplayZipCodeRightAlign
 	hlcoord 8, 11 ; Location of a clear box to clear any excess characters if 'Tell Now' is selected, but cannot overlap the position of the zip code itself, because otherwise it will clear that too.
-	lb bc, 1, 10 - ZIPCODE_LENGTH ; Determines the size of the clearing box
+
+	ld a, 10 - ZIPCODE_LENGTH ; Determines the size of the clearing box
+	add b ; We increase the clearbox width, in case the zipcode has been shifted to the right.
+	ld c, a
+	ld b, 1
 	call ClearBox
 	pop af
 	ldh [hInMenu], a
 	jp ReturnToMobileProfileMenu
 
+DisplayZipCodeRightAlign:
+	call CountZipcodeRightBlanks
+	push de
+	ld d, 0
+	ld e, a
+	add hl, de
+	pop de
+
+	ld b, a
+
+	jr DisplayZipCodeWithOffset
+
+; Input: HL contains the coords (using hlcoord) on the screen of the first char (leftmost) of the zipcode.
+; Output: the number of blanks on the right in B.
 DisplayZipCode:
+	ld b, 0
+DisplayZipCodeWithOffset:
 	push de
 	ld de, 0
 
 .loop
+	push bc
+	ld a, ZIPCODE_LENGTH
+	sub b ; Note that B should, must and will always be strictly smaller than ZIPCODE_LENGTH.
+	ld c, a
 	ld a, e
-	cp ZIPCODE_LENGTH
+	cp c
+	pop bc
 	jr nc, .end_loop
 
 	push hl
@@ -1874,7 +1904,7 @@ DisplayZipCode:
 	ld a, [hl]
 	pop hl
 
-	call Mobile12_Index2Char
+	call Mobile12_Index2CharDisplay
 	inc hl
 
 	inc e
@@ -1972,6 +2002,8 @@ InputZipcodeCharacters: ; Function48ab5. Zip code menu controls.
 	ld a, [hl]
 	and D_RIGHT
 	jr nz, .press_right
+
+	; If we reach this line, it means the player didn't press any button this frame.
 	hlcoord 18 - ZIPCODE_LENGTH, 11 ; Zip Code Location
 	call DisplayZipCode
 	ld a, [wd002]
@@ -2284,4 +2316,52 @@ Mobile12_MoveAndBlinkCursor:
 	ld [hli], a ; tile id
 	xor a
 	ld [hli], a ; attributes
+	ret
+
+; Output: in A: the number of blank chars at the right of the zipcode.
+CountZipcodeRightBlanks:
+	push hl
+	push de
+	push bc
+	
+	ld d, 0
+	ld e, ZIPCODE_LENGTH - 1
+
+	ld b, 0 ; B is the counter.
+
+.loop
+	ld hl, wZipCode
+	add hl, de ; Current zipcode char.
+
+	ld a, [hl] ; We get the index of the current char. 
+	add a ; We double the index to find its position within the array.
+	ld c, a ; Save the index in C for future use.
+
+	ld hl, Zipcode_CharPools
+	push de
+	ld a, e
+	add a
+	ld e, a ; We double E, because Zipcode_CharPools is an array of dw entries.
+	add hl, de ; Get the char pool for the current zipcode char.
+	pop de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a ; We have the address of the current char pool in HL.
+
+	push de
+	ld e, c ; We retrieve our zipcode char index (already multiplied by 2).
+	add hl, de 
+	ld a, [hl] ; A contains the current zipcode char value.
+	pop de
+
+	dec e ; Preparing for the next (actually previous) char loop.
+	inc b ; Increase the number of found blanks.
+	cp " "
+	jr z, .loop ; As long as we find blanks, we keep searching for some more.
+
+	dec b ; We increased B on the last loop even though a blank hasn't been found. So we need to negate it by decreasing B.
+	ld a, b ; Return value goes into A.
+	pop bc
+	pop de
+	pop hl
 	ret
