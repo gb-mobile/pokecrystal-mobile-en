@@ -54,7 +54,7 @@ BattleTower1FRulesSign: ; 70D8
 	;writetext Text_BattleTowerRules
 	;waitbutton
 	db $0F, $78, $00
-	
+
 .skip:
 	closetext
 	end
@@ -111,7 +111,7 @@ Script_ChooseChallenge:
 	setval BATTLETOWERACTION_0D
 	special BattleTowerAction
 	iftrue Script_ReachedBattleLimit;$726E
-	
+
 ;	setval BATTLETOWERACTION_RESETDATA ; ResetBattleTowerTrainerSRAM
 ;	special BattleTowerAction
 	special CheckForBattleTowerRules
@@ -132,12 +132,12 @@ Script_ChooseChallenge:
 	special BattleTowerAction
 	writetext Text_RightThisWayToYourBattleRoom
 	waitbutton
-	
+
 	setval BATTLETOWERACTION_SAVELEVELGROUP
 	special BattleTowerAction
 	setval BATTLETOWERACTION_0C ; start timer?
 	special BattleTowerAction
-	
+
 ;	closetext
 ;	setval BATTLETOWERACTION_CHOOSEREWARD
 ;	special BattleTowerAction

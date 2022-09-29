@@ -1361,8 +1361,8 @@ GameInit::
 	ld a, $90
 	ldh [hWY], a
 	call WaitBGMap
-	
+
 	ld a, $5b
 	farcall MobileAdapterCheck
-	
+
 	jp IntroSequence

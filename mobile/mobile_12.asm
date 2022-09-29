@@ -109,10 +109,10 @@ InitMobileProfile:
 	ld d, h
 	ld e, l
 	hlcoord 19 - REGION_CODE_STRING_LENGTH, 9 ; Default Prefectures position in MOBILE menu
-	call PlaceString 
+	call PlaceString
 	hlcoord 18 - ZIPCODE_LENGTH, 11 ; Zip Code Position in MOBILE menu
 	call DisplayZipCodeRightAlign
-	hlcoord 0, 14 ; 'Personal Info' box position 
+	hlcoord 0, 14 ; 'Personal Info' box position
 	ld b, $2
 	ld c, $12
 	call Textbox
@@ -529,14 +529,14 @@ Mobile12_Index2CharDisplay:
 
 	push af
 	ld a, l
-	hlcoord 18 - ZIPCODE_LENGTH, 11 
+	hlcoord 18 - ZIPCODE_LENGTH, 11
 	push de
 	ld e, b
 	ld d, 0
 	add hl, de
 	pop de
 
-	; Zip Code Location. Note that wTilemap is added to it. wTilemap is "align 8" ($X00) + $A0. "18 - ZIPCODE_LENGTH, 11" is $E7. Which makes $C587. 
+	; Zip Code Location. Note that wTilemap is added to it. wTilemap is "align 8" ($X00) + $A0. "18 - ZIPCODE_LENGTH, 11" is $E7. Which makes $C587.
 	; The last zipcode char would be stored at address $C58E. The last byte doesn't overflow or underflow between the first and the last chat pos, so we can subtract those to get the index in the string of the current char.
 	sub l ; A now contains the char index in the zipcode string between 0 and ZIPCODE_LENGTH.
 	add a ; We double A.
@@ -567,16 +567,16 @@ Mobile12_Index2CharDisplay:
 	ret
 
 Zipcode_CharPools:
-N = ZIPCODE_LENGTH
+DEF N = ZIPCODE_LENGTH
 IF N > 8
   FAIL "make the STRSUB longer"
 ENDC
-IDX = 0
+DEF IDX = 0
 REPT N
-S EQUS STRCAT("Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+1, 1))
+DEF S EQUS STRCAT("Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+1, 1))
 	dw S
 PURGE S
-IDX = IDX + 1
+DEF IDX = IDX + 1
 ENDR
 
 Zipcode_CharPoolForStringIndex0:
@@ -1065,19 +1065,19 @@ Zipcode_CharPoolForStringIndex5:
 endc
 
 Zipcode_CharPoolsLength:
-N = ZIPCODE_LENGTH
-IDX = 0
+DEF N = ZIPCODE_LENGTH
+DEF IDX = 0
 REPT N - 1
-S EQUS STRCAT("LOW(Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+2, 1))
-T EQUS STRCAT("- Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+1, 1))
+DEF S EQUS STRCAT("LOW(Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+2, 1))
+DEF T EQUS STRCAT("- Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+1, 1))
 	db S T ) / 2
 PURGE S
 PURGE T
-IDX = IDX + 1
+DEF IDX = IDX + 1
 ENDR
 
-N = ZIPCODE_LENGTH - 1
-S EQUS STRCAT("LOW(Zipcode_CharPoolsLength - Zipcode_CharPoolForStringIndex", STRSUB("01234567", N+1, 1))
+DEF N = ZIPCODE_LENGTH - 1
+DEF S EQUS STRCAT("LOW(Zipcode_CharPoolsLength - Zipcode_CharPoolForStringIndex", STRSUB("01234567", N+1, 1))
 	db S ) / 2
 
 MobileProfileString:         db "  Mobile Profile@"
@@ -1131,7 +1131,7 @@ MenuHeader_0x48509:
 MenuHeader_ZipCodeEditBox:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 17 - ZIPCODE_LENGTH, 10, SCREEN_WIDTH - 1 + ZIPCODE_FRAME_RIGHT_MARGIN, TEXTBOX_Y - 0 ; For clearing the Zip Code box
-	
+
 	;Bounding of left side ; bounding of top ; bounding of right side ; bounding of bottom
 
 MenuHeader_0x48513:
@@ -1151,10 +1151,10 @@ MenuData_0x4851b:
 
 .Items:
 	db NUM_REGION_CODES - 1 ; The number of locations in the prefectures list (-1 because it starts at 0)
-x = 0
+DEF x = 0
 rept NUM_REGION_CODES - 1 ; The number of locations in the prefectures list (-1 because it starts at 0)
 	db x
-x = x + 1
+	DEF x = x + 1
 endr
 	db -1
 
@@ -1305,7 +1305,7 @@ else
 	db	"US-WA@"  	;Washington
 	db	"US-WI@"  	;Wisconsin
 	db	"US-WV@"  	;West_Virginia
-	db	"US-WY@"  	;Wyoming	
+	db	"US-WY@"  	;Wyoming
 	db	"CA-AB@"  	;Alberta
 	db	"CA-BC@"  	;British_Columbia
 	db	"CA-MB@"  	;Manitoba
@@ -1403,7 +1403,7 @@ SetCursorParameters_MobileProfile:
 	bit 6, a
 	jr z, .got_joypad_mask ; If the Mobile Profile has not been initialized yet, we prevent the player from leaving this screen until all parameters are filled and the OK button shows.
 	pop af
-	add B_BUTTON 
+	add B_BUTTON
 	push af
 .got_joypad_mask
 	pop af
@@ -1429,7 +1429,7 @@ CheckIfAllProfileParametersHaveBeenFilled: ; Returns carry if all parameters hav
 ;	 ret
 
 	; The following code bit does the same as the code commented out above, but is slower.
-	ld a, [wMobileProfileParametersFilled] 
+	ld a, [wMobileProfileParametersFilled]
 	bit 0, a
 	jr z, .clear_carry
 	bit 1, a
@@ -1684,7 +1684,7 @@ INCBIN "gfx/mobile/up_arrow.1bpp"
 MobileDownArrowGFX:
 INCBIN "gfx/mobile/down_arrow.1bpp"
 
-ZipCodePressed: 
+ZipCodePressed:
 	call ClearMobileProfileBottomTextBox
 	hlcoord 1, 16
 	ld de, MobileDesc_ZipCode
@@ -1698,7 +1698,7 @@ ZipCodePressed:
 
 	ld hl, MenuHeader_ZipCodeEditBox
 	call LoadMenuHeader
-	
+
 	ldh a, [hInMenu]
 	push af
 	ld a, TRUE
@@ -1741,13 +1741,13 @@ ZipCodeEditMenu:
 	ldh a, [hJoyDown]
 	and a
 	jp z, Function4896e ; If no button is pressed, jump to Function4896e.
-	
+
 	bit A_BUTTON_F, a
 	jp nz, Function4896e ; If button A is pressed, jump to Function4896e.
-	
+
 	bit B_BUTTON_F, a
 	jp nz, Function4896e ; If button B is pressed, jump to Function4896e.
-	
+
 	ld a, [wd002]
 	and %11001111
 	res 7, a
@@ -1768,7 +1768,7 @@ ZipCodeEditMenu:
 	ld a, b
 	cp $4
 	jr nz, asm_48972 ; If b is within [0;3], jump to asm_48972.
-	
+
 	ld c, 10
 	call DelayFrames
 	jr asm_48972
@@ -1777,7 +1777,7 @@ Function4895a: ; unreferenced
 	ldh a, [hJoyPressed]
 	and a
 	jr z, .asm_48965
-	
+
 	pop bc
 	ld b, $1
 	push bc
@@ -1812,7 +1812,7 @@ asm_48972:
 	pop af
 
 	push af
-	cp $f0 
+	cp $f0
 	jr z, .skip_all_blinking ; Jump if last input was up or down (zip code value changed).
 
 	cp $f
@@ -1861,7 +1861,7 @@ asm_48972:
 	ld [wZipCode + 0], a
 	ld a, c
 	ld [wZipCode + 1], a
-	
+
 	jr .quit_zip_code_edit_menu
 
 .confirm_save
@@ -2024,7 +2024,7 @@ InputZipcodeCharacters: ; Function48ab5. Zip code menu controls.
 	add hl, de
 	pop de
 	ld a, [hl]
-	
+
 	push hl
 	push af ; Stores the value of the zip code char from A.
 	ld e, d
@@ -2187,7 +2187,7 @@ BlinkSelectedCharacter:
 	swap a
 	and $3 ; Masking bits 4 and 5 (0011 0000) that are now bits 0 and 1 (0000 0011) after the swap.
 	inc a
-	cp 3 
+	cp 3
 	jr nz, .save_counter_in_wd002 ; When the counter reaches its maximum value, we immediately save.
 
 	ld a, [wd002]
@@ -2362,7 +2362,7 @@ CountZipcodeRightBlanks:
 	push hl
 	push de
 	push bc
-	
+
 	ld d, 0
 	ld e, ZIPCODE_LENGTH - 1
 
@@ -2372,7 +2372,7 @@ CountZipcodeRightBlanks:
 	ld hl, wZipCode
 	add hl, de ; Current zipcode char.
 
-	ld a, [hl] ; We get the index of the current char. 
+	ld a, [hl] ; We get the index of the current char.
 	add a ; We double the index to find its position within the array.
 	ld c, a ; Save the index in C for future use.
 
@@ -2389,7 +2389,7 @@ CountZipcodeRightBlanks:
 
 	push de
 	ld e, c ; We retrieve our zipcode char index (already multiplied by 2).
-	add hl, de 
+	add hl, de
 	ld a, [hl] ; A contains the current zipcode char value.
 	pop de
 

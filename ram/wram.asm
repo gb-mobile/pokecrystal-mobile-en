@@ -2123,13 +2123,13 @@ SECTION UNION "Miscellaneous WRAM 1", WRAMX
 ; mobile?
 wd002:: ds 1
 ; - bits 4 and 5: used as a counter for the purpose of blinking.
-; - bit 6: set if the Mobile Profile has been initialized. 
+; - bit 6: set if the Mobile Profile has been initialized.
 ; - bit 7: set if the blinking just happened.
 
 UNION
 wMobileProfileParametersFilled:: db
 NEXTU
-wd003:: ds 1 
+wd003:: ds 1
 ENDU
 wd004:: ds 1
 	ds 3

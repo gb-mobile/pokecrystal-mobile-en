@@ -406,76 +406,76 @@ EZChat_MasterLoop:
 
 .Jumptable: ; and jumptable constants
 	const_def
-	
+
 	const EZCHAT_SPAWN_OBJECTS
 	dw .SpawnObjects ; 00
-	
+
 	const EZCHAT_INIT_RAM
 	dw .InitRAM ; 01
-	
+
 	const EZCHAT_02
 	dw Function11c35f ; 02
-	
+
 	const EZCHAT_03
 	dw Function11c373 ; 03
-	
+
 	const EZCHAT_DRAW_CHAT_WORDS
 	dw EZChatDraw_ChatWords ; 04
-	
+
 	const EZCHAT_MENU_CHAT_WORDS
 	dw EZChatMenu_ChatWords ; 05
-	
+
 	const EZCHAT_DRAW_CATEGORY_MENU
 	dw EZChatDraw_CategoryMenu ; 06
-	
+
 	const EZCHAT_MENU_CATEOGRY_MENU
 	dw EZChatMenu_CategoryMenu ; 07
-	
+
 	const EZCHAT_DRAW_WORD_SUBMENU
 	dw EZChatDraw_WordSubmenu ; 08
-	
+
 	const EZCHAT_MENU_WORD_SUBMENU
 	dw EZChatMenu_WordSubmenu ; 09
-	
+
 	const EZCHAT_DRAW_ERASE_SUBMENU
 	dw EZChatDraw_EraseSubmenu ; 0a
-	
+
 	const EZCHAT_MENU_ERASE_SUBMENU
 	dw EZChatMenu_EraseSubmenu ; 0b
-	
+
 	const EZCHAT_DRAW_EXIT_SUBMENU
 	dw EZChatDraw_ExitSubmenu ; 0c
-	
+
 	const EZCHAT_MENU_EXIT_SUBMENU
 	dw EZChatMenu_ExitSubmenu ; 0d
-	
+
 	const EZCHAT_DRAW_MESSAGE_TYPE_MENU
 	dw EZChatDraw_MessageTypeMenu ; 0e
-	
+
 	const EZCHAT_MENU_MESSAGE_TYPE_MENU
 	dw EZChatMenu_MessageTypeMenu ; 0f
-	
+
 	const EZCHAT_10
 	dw Function11cbf5 ; 10 (Something related to sound)
-	
+
 	const EZCHAT_MENU_WARN_EMPTY_MESSAGE
 	dw EZChatMenu_WarnEmptyMessage ; 11 (Something related to SortBy menus)
-	
+
 	const EZCHAT_12
 	dw Function11cd04 ; 12 (Something related to input)
-	
+
 	const EZCHAT_DRAW_SORT_BY_MENU
 	dw EZChatDraw_SortByMenu ; 13
-	
+
 	const EZCHAT_MENU_SORT_BY_MENU
 	dw EZChatMenu_SortByMenu ; 14
-	
+
 	const EZCHAT_DRAW_SORT_BY_CHARACTER
 	dw EZChatDraw_SortByCharacter ; 15
-	
+
 	const EZCHAT_MENU_SORT_BY_CHARACTER
 	dw EZChatMenu_SortByCharacter ; 16
-	
+
 .SpawnObjects:
 	depixel 3, 1, 2, 5
 	ld a, SPRITE_ANIM_INDEX_EZCHAT_CURSOR
@@ -633,7 +633,7 @@ EZChatDraw_ChatWords: ; Switches between menus?, not sure which.
 	const EZCHAT_MAIN_WORD4
 	;const EZCHAT_MAIN_WORD5
 	;const EZCHAT_MAIN_WORD6
-	
+
 	const EZCHAT_MAIN_RESET
 	const EZCHAT_MAIN_QUIT
 	const EZCHAT_MAIN_OK
@@ -804,7 +804,7 @@ EZChatDrawBKG_ChatWords:
 	farcall ReloadMapPart
 	ret
 
-EZChatString_ChatExplanation: ; Explanation string 
+EZChatString_ChatExplanation: ; Explanation string
 	db   "Combine 4 words or";"６つのことば¯くみあわせます"
 	next "phrases.";"かえたいところ¯えらぶと　でてくる"
 	next "Select a space";"ことばのグループから　いれかえたい"
@@ -1187,11 +1187,11 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld a, [hl]
 	and a ; cp a, 0
 	ret z
-x = EZCHAT_WORDS_PER_ROW
+DEF x = EZCHAT_WORDS_PER_ROW
 rept EZCHAT_WORDS_PER_COL - 1
 	cp x
 	ret z
-x = x + EZCHAT_WORDS_PER_ROW
+	DEF x = x + EZCHAT_WORDS_PER_ROW
 endr
 	dec a
 	jr .finish_dpad
@@ -1205,11 +1205,11 @@ endr
 	cp b
 	ret nc
 	ld a, [hl]
-x = EZCHAT_WORDS_PER_ROW
+DEF x = EZCHAT_WORDS_PER_ROW
 rept EZCHAT_WORDS_PER_COL
 	cp x - 1
 	ret z
-x = x + EZCHAT_WORDS_PER_ROW
+	DEF x = x + EZCHAT_WORDS_PER_ROW
 endr
 	inc a
 
@@ -1841,7 +1841,7 @@ EZChatMenu_ExitSubmenu: ; Exit Message menu
 	inc [hl]
 	ret
 
-EZChatString_ExitPrompt: ; Exit menu string 
+EZChatString_ExitPrompt: ; Exit menu string
 	db   "Want to stop";"あいさつ<NO>とうろく¯ちゅうし"
 	next "setting a MESSAGE?@";"しますか？@"
 
@@ -2270,7 +2270,7 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 	db $03, $0d, $15, $0b ; M 0C
 	db $04, $0e, $16, $0c ; N 0D
 	db $05, $0f, $17, $0d ; O 0E
-	db $06, $10, $18, $0e ; P 0F 
+	db $06, $10, $18, $0e ; P 0F
 	db $07, $11, $19, $0f ; Q 10
 	db $08, $ff, $1d, $10 ; R 11
 	db $09, $13, $1a, $ff ; S 12
@@ -2796,7 +2796,7 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dbpixel 13, 18, 5, 2 ; CANCEL
 
 .Coords_Three: ; Words Submenu Arrow Positions
-	dbpixel  2, 10 
+	dbpixel  2, 10
 	dbpixel  11, 10 ; 8, 10 MENU_WIDTH
 	dbpixel  2, 12
 	dbpixel  11, 12 ; 8, 12 MENU_WIDTH
@@ -3308,7 +3308,7 @@ MobileEZChatCategoryNames:
 	db "EMOTE@" 	; 07 ; Feelings		; "きもち@@@"
 	db "DESC@@" 	; 08 ; Conditions	; "じょうたい@"
 	db "LIFE@@" 	; 09 ; Lifestyle	; "せいかつ@@"
-	db "HOBBY@" 	; 0a ; Hobbies		; "しゅみ@@@" 
+	db "HOBBY@" 	; 0a ; Hobbies		; "しゅみ@@@"
 	db "ACT@@@" 	; 0b ; Actions		; "こうどう@@"
 	db "ITEM@@" 	; 0c ; Time			; "じかん@@@"
 	db "END@@@" 	; 0d ; Endings		; "むすび@@@"
@@ -3331,7 +3331,7 @@ MobileEZChatCategoryPointers:
 	dw .Farewells      ; 0d
 	dw .ThisAndThat    ; 0e
 
-ezchat_word: MACRO
+MACRO ezchat_word
 	db \1 ; word
 	dw \2 ; where to put the word relative to the start of the sorted words array (must be divisible by 2)
 	db 0 ; padding
@@ -4127,11 +4127,11 @@ MobileEZChatData_WordAndPageCounts:
 MACRO macro_11f220
 ; parameter: number of words
 	db \1
-; 12 words per page (0-based indexing)									  
-x = \1 / (EZCHAT_WORD_COUNT * 2) ; 12 MENU_WIDTH to 8
-if \1 % (EZCHAT_WORD_COUNT * 2) == 0 ; 12 MENU_WIDTH to 8
-x = x + -1
-endc
+; 12 words per page (0-based indexing)
+	DEF x = \1 / (EZCHAT_WORD_COUNT * 2) ; 12 MENU_WIDTH to 8
+	if \1 % (EZCHAT_WORD_COUNT * 2) == 0 ; 12 MENU_WIDTH to 8
+		DEF x = x + -1
+	endc
 	db x
 ENDM
 	macro_11f220 18 ; 01: Types
@@ -4157,9 +4157,9 @@ EZChat_SortedWords:
 ; any Pokemon you've seen that starts with each kana.
 MACRO macro_11f23c
 	dw x - w3_d000, \1
-x = x + 2 * \1
+	DEF x = x + 2 * \1
 ENDM
-x = $d014
+DEF x = $d014
 	macro_11f23c  50 ; A
 	macro_11f23c  31 ; B
 	macro_11f23c  41 ; C

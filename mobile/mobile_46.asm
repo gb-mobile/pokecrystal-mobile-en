@@ -649,7 +649,7 @@ BattleTowerRoomMenu_Jumptable: ; Call_046_454d in jp crystal
 ;	dw Function118e76 ; mobile
 ;	dw BattleTowerRoomMenu_CallRoomMenu2 ; mobile
 ;	dw Function118e76 ; mobile
-	
+
 	; the jumptable in the japanese version
 	dw BattleTowerRoomMenu_PickLevelMessage ;6849
 	dw BattleTowerRoomMenu_PlacePickLevelMenu ;7C49
@@ -1420,7 +1420,7 @@ jr_046_4ad2:
     call BattleTowerRoomMenu_IncrementJumptable;Call_046_635f
 
 ; initialize the menu for picking the battle room
-; similar to the menu for picking the level (BattleTowerRoomMenu_PlacePickLevelMenu) 
+; similar to the menu for picking the level (BattleTowerRoomMenu_PlacePickLevelMenu)
 RemovedFunction2:
     ld a, [$c31a];$c340
     and a
@@ -3824,11 +3824,11 @@ Function1198f7:
 	ld a, [wc31a]
 	and a
 	ret nz
-	
+
 	; insert email address into data to post
 	ld hl, $d820 + 2;$c608 + 2
 	call Function119940
-	
+
 	; configuration for post
 	ld hl, w3_d800
 	ld a, LOW($d820);$c608 ; memory location of data to post
@@ -6194,7 +6194,7 @@ Function11acb7: ; mobile phone animation?
 	decoord 4, 6 ;0, 7
 	;ld bc, 7
 	;call CopyBytes
-	
+
 	; vertical
 	ld a, [hli]
 	ld [de], a
@@ -6216,8 +6216,8 @@ Function11acb7: ; mobile phone animation?
 	decoord 4, 12
 	ld a, [hli]
 	ld [de], a
-	
-	
+
+
 	ld a, [wcd49]
 	inc a
 	ld [wcd49], a
@@ -6241,7 +6241,7 @@ Function11acb7: ; mobile phone animation?
 	decoord 2, 8 ;3, 9 ; wanted pokemon animation coordinates
 	;ld bc, 7
 	;call CopyBytes
-	
+
 	; vertical
 	ld a, [hli]
 	ld [de], a
@@ -6263,8 +6263,8 @@ Function11acb7: ; mobile phone animation?
 	decoord 2, 14
 	ld a, [hli]
 	ld [de], a
-	
-	
+
+
 	ld a, [wcd4a]
 	inc a
 	ld [wcd4a], a

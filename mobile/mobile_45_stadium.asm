@@ -53,7 +53,7 @@ Call_045_767b:
 	ld [wCurItemQuantity], a
 	ld hl, wNumItems
 	call TossItem
-	
+
     ldh a, [rSVBK]
     push af
     ld a, $03
@@ -88,7 +88,7 @@ Call_045_767b:
 	ld [wMobileMonStructPointer], a
 	ld a, HIGH(wOddEgg)
 	ld [wMobileMonStructPointer + 1], a
-	
+
     ld hl, .Odd;$7712
     ld de, wOddEggOT;$cd1f
     ld bc, NAME_LENGTH;$0006
@@ -111,7 +111,7 @@ Call_045_767b:
 	ld [wMobileMonNicknamePointer], a
 	ld a, HIGH(wOddEggName)
 	ld [wMobileMonNicknamePointer + 1], a
-	
+
     ;ld a, $46
     ;ld hl, $7c91
     ;rst $08

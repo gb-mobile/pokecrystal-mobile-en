@@ -77,11 +77,11 @@ Function170114:
 	call CopyBytes
 	call CloseSRAM
 	call Function170c8b
-	
+
 	; restore wram bank
 	pop af
 	ldh [rSVBK], a
-	
+
 	ret
 
 ; generate data to upload?
@@ -172,14 +172,14 @@ Function170139:
 	ld bc, EASY_CHAT_MESSAGE_LENGTH * 3
 	call CopyBytes
 	call CloseSRAM
-	
+
 	; ?
 	ld a, BANK(s5_a894) ; aka BANK(s5_a948)
 	call OpenSRAM
 	ld hl, s5_a894
 	ld bc, 6
 	call CopyBytes
-	
+
 	; save to sram
 	ld hl, wc608
 	ld de, s5_a948
@@ -259,10 +259,10 @@ RunBattleTowerTrainer:
 	ld [wScriptVar], a
 	and a ; WIN?
 	jr nz, .lost
-	
+
 	farcall StubbedTrainerRankings_BattleTowerWins
 	farcall BackupMobileEventIndex
-	
+
 	ld a, BANK(sNrOfBeatenBattleTowerTrainers)
 	call OpenSRAM
 	ld a, [sNrOfBeatenBattleTowerTrainers]
@@ -672,7 +672,7 @@ Function1704e1: ; honor roll
 	ld de, wStringBuffer3
 	ld bc, 22 ; also writes the room number to wStringBuffer4
 	call CopyBytes
-	
+
 	; two lines added by me to place a terminator after the room number
 	; in the japanese version the string buffers are smaller so the write from sram to wStringBuffer3 above would also fill wStringBuffer4 completely
 	; this is the simplest way to fix this (i'm lazy and there is no more space in mobile_46 where this data is written to sram)
@@ -1596,7 +1596,7 @@ LoadOpponentTrainerAndPokemonWithOTSprite:
 
 	ld a, [hl]
 	dec a
-	
+
 	cp $42
 	jr c, .jr_05c_4aa6
 	ld a, $16

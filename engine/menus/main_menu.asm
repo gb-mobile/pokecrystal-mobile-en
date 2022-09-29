@@ -227,7 +227,7 @@ MainMenu_GetWhichMenu:
     and a
     ld a, $3
     ret z
-	
+
 	ld a, $4
     ret
 
@@ -244,7 +244,7 @@ MainMenu_GetWhichMenu:
     and a
     ld a, $1
     ret z
-	
+
 	ret
 
 .ok2
@@ -285,7 +285,7 @@ MainMenu_GetWhichMenu:
     and a
     ld a, $6
     ret z
-	
+
 	ret
 
 .ok4

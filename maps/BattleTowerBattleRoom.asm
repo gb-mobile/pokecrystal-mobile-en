@@ -101,7 +101,7 @@ Script_FailedBattleTowerChallenge: ; 7a32
 	setval BATTLETOWERACTION_05
 	special BattleTowerAction
 	ifequal 8, Script_TooMuchTimeElapsedNoRegister;$7a84
-	
+
 	setval BATTLETOWERACTION_CHALLENGECANCELED
 	special BattleTowerAction
 	opentext

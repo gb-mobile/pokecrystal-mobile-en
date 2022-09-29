@@ -4812,7 +4812,7 @@ Function10218d: ; load opponent's data
 	ld bc, PLAYER_NAME_LENGTH + 1
 	ld a, $05
 	call FarCopyWRAM
-	
+
 	ld hl, w5_dc00 + NAME_LENGTH + 1
 	ld de, wc608 + PLAYER_NAME_LENGTH + 1
 	ld bc, PLAYER_NAME_LENGTH
@@ -6701,11 +6701,11 @@ Function102f85:
 	;call PlaceString
 	;ld de, String_102fcc
 	;call PlaceString
-	
+
 	ld hl, String_102fb2
 	bccoord 1, 14
 	call PlaceHLTextAtBC
-	
+
 	ret
 
 String_102fb2:

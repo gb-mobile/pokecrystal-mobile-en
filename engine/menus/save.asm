@@ -427,7 +427,7 @@ EraseBattleTowerStatus: ; Call_005_4d09 in crystal jp
 ;	call OpenSRAM
 ;	xor a
 ;	ld [sBattleTowerChallengeState], a
-	
+
 	ld a, BANK(s5_a800)
 	call OpenSRAM
 	xor a
@@ -444,7 +444,7 @@ EraseBattleTowerStatus: ; Call_005_4d09 in crystal jp
     ld hl, s5_a8b2
     ld bc, HONOR_ROLL_DATA_LENGTH;$0096
     call ByteFill;$300d
-	
+
 	jp CloseSRAM
 
 .HonorRollLevelRoomPlaceholder

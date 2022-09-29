@@ -2765,7 +2765,7 @@ Strings_8a1cc:
 
 	db   "Return to the";"まえ<NO>がめん<NI>もどります@"
 	next "previous screen.@"
-	db   "@"	
+	db   "@"
 
 Function8a20d:
 	ld hl, MobileCardFolderAskDeleteText
@@ -3252,7 +3252,7 @@ Mobile22_LoadCardFolderPals::
 	ld de, wBGPals1 + 4 palettes
 	ld bc, 3 palettes
 	call CopyBytes
-	
+
 .skip_bg_pals
 	ld hl, Palette_8a5fd
 	ld de, wOBPals1
@@ -3513,7 +3513,7 @@ Function8a78c:
 	;call InitName
 	ld c, PLAYER_NAME_LENGTH - 1
 	call InitString
-	
+
 	call CloseSRAM
 	call DelayFrame
 	call JoyTextDelay

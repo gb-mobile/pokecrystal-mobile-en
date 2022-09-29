@@ -164,7 +164,7 @@ CreditsScript:
 	db        NOBUHIRO_SEYA, 3
 
 	db CREDITS_WAIT, 12
-	
+
 	db    MOBILE_PRJ_LEADER, 0
 	db           TORU_OSAWA, 1
 
@@ -178,8 +178,8 @@ CreditsScript:
 
 	db   MOBILE_STADIUM_DIR, 0
 	db        TAKAO_SHIMIZU, 1
-	
-	
+
+
 	db         COORDINATION, 1
 	db      HIROYUKI_ZINNAI, 2
 

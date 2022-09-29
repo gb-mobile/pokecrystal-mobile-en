@@ -379,10 +379,10 @@ Function4a28a:
 	call MobileMenu_FillBGArea
 	call PlaceHollowCursor
 	call WaitBGMap
-	
+
 	ld hl, MenuHeader_0x4a346
 	call LoadMenuHeader
-	
+
 	;call LoadStandardMenuHeader
 	ld a, BANK(sMobileLoginPassword)
 	call OpenSRAM

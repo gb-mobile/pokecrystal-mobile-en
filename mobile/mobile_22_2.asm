@@ -22,7 +22,7 @@ Function8b342::
 	dw .zero
 	dw .one
 	dw .two
-	
+
 .zero
     ld hl, BattleTowerOutside_MapAttributes
     call Function8b35d
