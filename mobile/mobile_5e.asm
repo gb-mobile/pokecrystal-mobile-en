@@ -18,7 +18,7 @@
 ;INCBIN "gfx/mobile/card_sprite.2bpp"
 
 MobileAdapterGFX::
-INCBIN "gfx/mobile/mobile_adapter.2bpp.bin"
+INCBIN "gfx/mobile/mobile_adapter.2bpp"
 
 Function17a68f:: ; phone number entry screen
 	call Function17a6a8

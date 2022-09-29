@@ -242,6 +242,7 @@ gfx/pokedex/pokedex.2bpp: tools/gfx += --trim-whitespace
 gfx/pokedex/pokedex_sgb.2bpp: tools/gfx += --trim-whitespace
 gfx/pokedex/question_mark.2bpp: rgbgfx += -h
 gfx/pokedex/slowpoke.2bpp: tools/gfx += --trim-whitespace
+gfx/pokedex/slowpoke_mobile.2bpp: tools/gfx += --trim-whitespace
 
 gfx/pokegear/pokegear.2bpp: rgbgfx += -x2
 gfx/pokegear/pokegear_sprites.2bpp: tools/gfx += --trim-whitespace
@@ -313,6 +314,7 @@ gfx/mobile/card_folder.2bpp: tools/gfx += --trim-whitespace
 gfx/mobile/phone_tiles.2bpp: tools/gfx += --remove-whitespace
 gfx/mobile/pichu_animated.2bpp: tools/gfx += --trim-whitespace
 gfx/mobile/stadium2_n64.2bpp: tools/gfx += --trim-whitespace
+gfx/mobile/mobile_adapter.2bpp: tools/gfx += --trim-whitespace
 
 
 ### Catch-all graphics rules

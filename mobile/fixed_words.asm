@@ -3294,7 +3294,7 @@ SelectStartGFX:
 INCBIN "gfx/mobile/select_start.2bpp"
 
 EZChatSlowpokeLZ:
-INCBIN "gfx/pokedex/slowpoke_mobile.2bpp.lz.bin"
+INCBIN "gfx/pokedex/slowpoke_mobile.2bpp.lz"
 
 MobileEZChatCategoryNames:
 ; Fixed message categories
