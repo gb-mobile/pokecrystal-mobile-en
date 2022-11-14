@@ -715,7 +715,10 @@ NEXTU
 
 wEZChatWordBuffer:: ds NAME_LENGTH
 
-	ds 53
+wEZChatAreNamesRenderedFully:: ds 1
+wEZChatPokemonNameRendered:: ds 1
+
+	ds 51
 
 wEZChatSortedWordPointers:: ds 2
 	ds 2 ; wc64a already defined above...
@@ -1337,21 +1340,32 @@ wMobileMonMailPointer:: dw
 
 NEXTU
 ; more mobile data
-wEZChatSelection:: ; cd20
-wcd20:: ds 1
-wEZChatCategorySelection::
-wcd21:: ds 1
-wEZChatSortedSelection::
-wcd22:: ds 1
-wcd23:: ds 1
-wcd24:: ds 1
+wcd20::
+wEZChatSelection:: ds 1
+
+wcd21::
+wEZChatCategorySelection:: ds 1
+
+wcd22::
+wEZChatSortedSelection:: ds 1
+
+wcd23::
+wEZChatBlinkingMask:: ds 1 ; bit set = blink
+
+wcd24::
+wEZChatSpritesMask:: ds 1 ; bit set = hide
+
 wEZChatWordSelection::
 wMobileCommsJumptableIndex:: ds 1
+
 wEZChatPageOffset::
 wcd26:: ds 1
+
 wcd27:: ds 1
+
 wEZChatLoadedItems::
 wcd28:: ds 1
+
 wcd29:: ds 1
 
 wMobileMonIndex::
