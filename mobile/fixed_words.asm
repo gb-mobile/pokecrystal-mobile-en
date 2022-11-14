@@ -664,16 +664,16 @@ EZChatMenu_ChatWords: ; EZChat Word Menu
 	ld de, hJoyLast
 	ld a, [de]
 	and D_UP
-	jr nz, .up
+	jp nz, .up
 	ld a, [de]
 	and D_DOWN
-	jr nz, .down
+	jp nz, .down
 	ld a, [de]
 	and D_LEFT
-	jr nz, .left
+	jp nz, .left
 	ld a, [de]
 	and D_RIGHT
-	jr nz, .right
+	jp nz, .right
 	ret
 
 .click_sound_and_quit
@@ -743,14 +743,48 @@ EZChatMenu_ChatWords: ; EZChat Word Menu
 	ld a, [hl]
 	cp 2
 	ret c
+; if in 2nd row and 2nd column
+	cp 3
+	jr nz, .up_normal
+; to first row
+	ld a, [wEZChatWord1 + 1]
+	and a
+	jr nz, .up_normal
+; 1st word not empty
+	ld a, [wEZChatWord1]
+	and a
+	jr z, .up_normal
+; pokemon is 1st word
+	ld a, EZCHAT_MAIN_WORD1
+	jr .finish_dpad
+.up_normal
+	ld a, [hl]
 	sub 2
 	jr .finish_dpad
+
 .down
 	ld a, [hl]
 	cp 4
 	ret nc
+; if in top row	
+	cp 2
+	jr nc, .down_normal
+; to second row
+	ld a, [wEZChatWord3 + 1]
+	and a
+	jr nz, .down_normal
+; 3rd word not empty
+	ld a, [wEZChatWord3]
+	and a
+	jr z, .down_normal
+; pokemon is 3rd word
+	ld a, EZCHAT_MAIN_WORD3
+	jr .finish_dpad
+.down_normal
+	ld a, [hl]
 	add 2
 	jr .finish_dpad
+
 .left
 	ld a, [hl]
 	and a ; cp a, 0
@@ -770,6 +804,34 @@ EZChatMenu_ChatWords: ; EZChat Word Menu
 	ret z
 	cp 6
 	ret z
+; prevent selection if it's a pokemon
+	and a
+	jr nz, .right_not_0th
+; for word 0
+	ld c, a
+	ld a, [wEZChatWord1 + 1]
+	and a
+	ld a, c
+	jr nz, .right_normal
+; is category 0
+	ld a, [wEZChatWord1]
+	and a
+	ret nz ; stop here if is pokemon
+.right_not_0th
+	cp 2
+	jr nz, .right_normal
+; for word 2
+	ld c, a
+	ld a, [wEZChatWord3 + 1]
+	and a
+	ld a, c
+	jr nz, .right_normal
+; is category 0
+	ld a, [wEZChatWord3]
+	and a
+	ret nz ; stop here if is pokemon
+	ld a, 2 ; jank
+.right_normal
 	inc a
 .finish_dpad
 	ld [hl], a
@@ -1097,14 +1159,15 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	jr nz, .down
 	ld a, [de]
 	and D_LEFT
-	jr nz, .left
+	jp nz, .left
 	ld a, [de]
 	and D_RIGHT
 	jp nz, .right
 	ret
 
 .a
-	call Function11c8f6
+	call EZChat_SetOneWord
+	call EZChat_VerifyWordPlacement
 	ld a, EZCHAT_DRAW_CHAT_WORDS
 	ld [wcd35], a
 
@@ -1489,39 +1552,141 @@ MobileString_Prev:
 MobileString_Next:
 	db "NEXT@";"つぎ@"
 
-Function11c8f6:
+EZChat_VerifyWordPlacement:
+; make sure that if one row contains a mon name
+; that row only contain the pokemon name
+	push hl
+	push bc
+; fix selection placement
 	ld a, [wEZChatSelection]
-	call EZChat_ClearWords
+	cp 1
+	jr z, .one
+	cp 3
+	jr z, .three
+	jr .limit_words ; out of range
+.one
+; is current word a pokemon?
+	ld hl, wEZChatWord2 + 1
+	ld a, [hld]
+	and a
+	jr nz, .limit_words
+	ld a, [hl]
+	jr nz, .limit_words
+; change selection
+	ld a, 0
+	ld [wEZChatSelection], a
+	jr .limit_words
+.three
+; is current word a pokemon?
+	ld hl, wEZChatWord4 + 1
+	ld a, [hld]
+	and a
+	jr nz, .limit_words
+	ld a, [hl]
+	jr nz, .limit_words
+; change selection
+	ld a, 2
+	ld [wEZChatSelection], a
+	; jr .limit_words
+.limit_words
+; row 1
+	ld hl, wEZChatWord1
+	ld bc, 0
+.loop
+	call .iterate
+	ld b, 0
+	ld a, c
+	cp EZCHAT_WORD_COUNT
+	jr nc, .done
+	jr .loop
+.done
+; rerender words
+	ld de, EZChatBKG_ChatWords
+	call EZChat_Textbox
+	call EZChatMenu_MessageSetup
+	
+	pop bc
+	pop hl
+	ret
+
+.iterate
+	ld a, [hli]
+	ld b, a
+	ld a, [hli]
+	and a
+	jr nz, .skip_iteration ; skip if category != 0
+	or b
+	jr z, .skip_iteration ; skip if category||index == 0000
+	ld a, b
+	and a
+	jr z, .skip_iteration ; skip if index == 0
+; is pokemon
+	ld a, c
+	and $1
+	jr z, .even_index
+; odd index
+	dec hl
+	dec hl
+	ld a, [hl]
+	dec hl
+	dec hl
+	ld [hli], a
+	ld [hl], 0
+	inc hl
+	ld [hl], 0
+	inc hl
+	ld [hl], 0
+	inc hl
+	;inc c
+	jr .skip_iteration
+.even_index
+	ld [hl], 0
+	inc hl
+	ld [hl], 0
+	inc hl
+	inc c
+	jr .skip_iteration
+.skip_iteration
+	inc c
+	ret
+
+EZChat_SetOneWord:
+; clear the word that it's occupying
+	ld a, [wEZChatSelection]
+	call EZChat_ClearOneWord
+; get which category mode
 	push hl
 	ld a, [wEZChatCategoryMode]
 	and a
-	jr nz, .asm_11c938
+	jr nz, .alphabetical
+; categorical
 	ld a, [wEZChatCategorySelection]
 	ld d, a
 	and a
-	jr z, .asm_11c927
+	jr z, .pokemon
 	ld hl, wEZChatPageOffset
 	ld a, [wEZChatWordSelection]
 	add [hl]
-.asm_11c911
+.got_word_entry
 	ld e, a
-.asm_11c912
+.put_word
 	pop hl
 	push de
 	call EZChat_RenderOneWord
 	pop de
 	ld a, [wEZChatSelection]
 	ld c, a
-	ld b, $0
+	ld b, 0
 	ld hl, wEZChatWords
 	add hl, bc
 	add hl, bc
 	ld [hl], e
 	inc hl
 	ld [hl], d
+; finished
 	ret
 
-.asm_11c927
+.pokemon
 	ld hl, wEZChatPageOffset
 	ld a, [wEZChatWordSelection]
 	add [hl]
@@ -1530,8 +1695,9 @@ Function11c8f6:
 	ld hl, wListPointer
 	add hl, bc
 	ld a, [hl]
-	jr .asm_11c911
-.asm_11c938
+	jr .got_word_entry
+
+.alphabetical
 	ld hl, wEZChatSortedWordPointers
 	ld a, [wEZChatSortedSelection]
 	ld e, a
@@ -1557,38 +1723,41 @@ Function11c8f6:
 	ld e, a
 	ld a, [hl]
 	ld d, a
-	jr .asm_11c912
+	jr .put_word
 
-EZChat_ClearWords:
+EZChat_ClearOneWord:
+; a = idx of which word
+; get starting coordinate to clear out
 	sla a
 	ld c, a
 	ld b, 0
 	ld hl, EZChatCoord_ChatWords
 	add hl, bc
+; coord -> bc
 	ld a, [hli]
 	ld c, a
 	ld a, [hl]
 	ld b, a
 	push bc
-	push bc
-	pop hl
-	ld a, EZCHAT_WORD_LENGTH
-	ld c, a
-	ld a, " "
-.asm_11c972
-	ld [hli], a
-	dec c
-	jr nz, .asm_11c972
-	dec hl
-	ld bc, -SCREEN_WIDTH
-	add hl, bc
-	ld a, EZCHAT_WORD_LENGTH
-	ld c, a
-	ld a, " "
-.asm_11c980
-	ld [hld], a
-	dec c
-	jr nz, .asm_11c980
+; bc -> hl
+		push bc
+		pop hl
+		ld c, EZCHAT_WORD_LENGTH
+		ld a, " "
+.clear_word
+		ld [hli], a
+		dec c
+		jr nz, .clear_word
+; clear the row above it
+		dec hl
+		ld bc, -SCREEN_WIDTH
+		add hl, bc
+		ld c, EZCHAT_WORD_LENGTH
+		ld a, " "
+.clear_row_above
+		ld [hld], a
+		dec c
+		jr nz, .clear_row_above
 	pop hl
 	ret
 
@@ -1743,7 +1912,7 @@ EZChatDraw_EraseWordsLoop:
 	ld [hl], b
 	inc hl
 	ld [hl], b
-	call EZChat_ClearWords
+	call EZChat_ClearOneWord
 	ld de, EZChatString_EmptyWord
 	call PlaceString
 	ret

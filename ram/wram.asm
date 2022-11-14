@@ -1396,8 +1396,8 @@ NEXTU
 
 wEZChatWords::
 ; format:
-;	db CATEGORY
 ;	db WHICH_WORD
+;	db CATEGORY
 
 wEZChatWord1:: dw
 wEZChatWord2:: dw
