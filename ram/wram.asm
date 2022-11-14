@@ -713,12 +713,12 @@ wc6a8:: ds 40
 
 NEXTU
 
-wEZChatWordBuffer:: ds NAME_LENGTH
+wEZChatWordBuffer:: ds NAME_LENGTH + 1
 
 wEZChatAreNamesRenderedFully:: ds 1
 wEZChatPokemonNameRendered:: ds 1
 
-	ds 51
+	ds 50
 
 wEZChatSortedWordPointers:: ds 2
 	ds 2 ; wc64a already defined above...
