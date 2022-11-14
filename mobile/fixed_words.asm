@@ -2724,11 +2724,41 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dw .nine
 	dw .ten
 
+.is_pkmn
+	or a ; reset carry
+	push bc
+	push hl
+		ld c, a
+		ld b, 0
+		ld hl, wEZChatWords
+		add hl, bc
+		add hl, bc
+		ld a, [hli]
+		ld b, a
+		ld a, [hl]
+		or b
+		jr z, .chk_pkmn_ok ; == 0
+		ld a, [hl]
+		and a
+		jr nz, .chk_pkmn_ok ; != 0
+		scf
+.chk_pkmn_ok
+	pop hl
+	pop bc
+	ret
+
 .zero ; EZChat Message Menu
 ; reinit sprite
 	ld a, [wEZChatSelection]
 	cp EZCHAT_MAIN_RESET
 	jr nc, .shorter_cursor
+	call .is_pkmn
+	jr nc, .normal
+; is pokemon
+	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_10
+	call ReinitSpriteAnimFrame
+	jr .cont0
+.normal
 	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_8
 	call ReinitSpriteAnimFrame
 	jr .cont0

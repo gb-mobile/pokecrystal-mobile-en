@@ -191,6 +191,7 @@ DEF NUM_SPRITE_ANIM_SEQS EQU const_value
 	const SPRITE_ANIM_FRAMESET_CELEBI_RIGHT              ; 41
 	const SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_8           ; 42
 	const SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9           ; 43
+	const SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_10          ; 44
 DEF NUM_SPRITE_ANIM_FRAMESETS EQU const_value
 
 ; SpriteAnimOAMData indexes (see data/sprite_anims/oam.asm)
@@ -337,4 +338,5 @@ DEF NUM_SPRITE_ANIM_FRAMESETS EQU const_value
 	const SPRITE_ANIM_OAMSET_GAMEFREAK_LOGO_11           ; 8b
 	const SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_8             ; 8c
 	const SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_9             ; 8d
+	const SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_10            ; 8e
 DEF NUM_SPRITE_ANIM_OAMSETS EQU const_value
