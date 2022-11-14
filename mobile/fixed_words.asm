@@ -765,10 +765,13 @@ EZChatMenu_ChatWords: ; EZChat Word Menu
 
 .up
 	ld a, [hl]
-	cp 2
+	cp EZCHAT_MAIN_WORD3
 	ret c
+; if at QUIT
+	cp EZCHAT_MAIN_QUIT
+	jr z, .up_on_quit
 ; if in 2nd row and 2nd column
-	cp 3
+	cp EZCHAT_MAIN_WORD4
 	jr nz, .up_normal
 ; to first row
 	ld a, [wEZChatWord1 + 1]
@@ -784,6 +787,9 @@ EZChatMenu_ChatWords: ; EZChat Word Menu
 .up_normal
 	ld a, [hl]
 	sub 2
+	jr .finish_dpad
+.up_on_quit
+	ld a, EZCHAT_MAIN_WORD3
 	jr .finish_dpad
 
 .down
