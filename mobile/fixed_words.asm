@@ -172,6 +172,14 @@ PrintEZChatBattleMessage:
 	; if $0000, we're done
 	or e
 	jr z, .done
+	
+	cp $ff
+	jr nz, .d_not_ff
+	ld a, e
+	cp $ff
+	jr z, .done ; de == $ffff, done
+
+.d_not_ff
 	; preserving hl and bc, get the length of the word
 	push hl
 	push bc

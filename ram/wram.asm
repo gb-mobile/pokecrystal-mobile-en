@@ -3691,10 +3691,11 @@ w5_da00:: ds $200
 w5_dc00:: ds $d
 w5_dc0d:: ds 4
 w5_dc11:: ds 9
-w5_MobileOpponentBattleMessages:: ds $c
-w5_MobileOpponentBattleStartMessage:: ds $c
-w5_MobileOpponentBattleWinMessage:: ds $c
-w5_MobileOpponentBattleLossMessage:: ds $c
+	ds 10 ; ??????
+w5_MobileOpponentBattleMessages:: ds EASY_CHAT_MESSAGE_WORD_COUNT * 2
+w5_MobileOpponentBattleStartMessage:: ds EASY_CHAT_MESSAGE_WORD_COUNT * 2
+w5_MobileOpponentBattleWinMessage:: ds EASY_CHAT_MESSAGE_WORD_COUNT * 2
+w5_MobileOpponentBattleLossMessage:: ds EASY_CHAT_MESSAGE_WORD_COUNT * 2
 
 
 SECTION "Scratch RAM", WRAMX

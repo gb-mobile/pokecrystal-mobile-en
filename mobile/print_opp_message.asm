@@ -5,11 +5,11 @@ Mobile_PrintOpponentBattleMessage:
 	call MobileTextBorder
 	pop af
 	dec a
-	ld bc, $c
+	ld bc, EASY_CHAT_MESSAGE_WORD_COUNT * 2
 	ld hl, w5_MobileOpponentBattleMessages
 	call AddNTimes
 	ld de, wMobileOpponentBattleMessage
-	ld bc, $c
+	ld bc, EASY_CHAT_MESSAGE_WORD_COUNT * 2
 	ld a, BANK(w5_MobileOpponentBattleMessages)
 	call FarCopyWRAM
 
