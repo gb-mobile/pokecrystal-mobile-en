@@ -1753,7 +1753,7 @@ StageDataForNameCard:
 	ld hl, sPhoneNumber ; address of MBC30 bank
 	ld bc, PHONE_NUMBER_LENGTH
 	call CopyBytes
-	ld hl, s4_a007 ; address of MBC30 bank
+	ld hl, sEZChatIntroductionMessage ; address of MBC30 bank
 	ld bc, EASY_CHAT_MESSAGE_LENGTH
 	call CopyBytes
 	call CloseSRAM

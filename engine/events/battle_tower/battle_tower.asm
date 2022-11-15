@@ -166,9 +166,9 @@ Function170139:
 	jr nz, .CopyLoop
 
 	; easy chat messages
-	ld a, BANK(s4_a013)
+	ld a, BANK(sEZChatBeginBattleMessage)
 	call OpenSRAM
-	ld hl, s4_a013
+	ld hl, sEZChatBeginBattleMessage
 	ld bc, EASY_CHAT_MESSAGE_LENGTH * 3
 	call CopyBytes
 	call CloseSRAM

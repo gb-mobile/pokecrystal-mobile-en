@@ -2516,7 +2516,7 @@ Function89ff6:
 	call Function8987f
 	call OpenSRAMBank4
 	hlcoord 1, 13
-	ld bc, s4_a007
+	ld bc, sEZChatIntroductionMessage
 	call Function89a0c
 	call CloseSRAM
 	call Function891ab
@@ -3962,7 +3962,7 @@ Function8ab3b:
 	call Function8987f
 	call OpenSRAMBank4
 	hlcoord 1, 13
-	ld bc, s4_a007
+	ld bc, sEZChatIntroductionMessage
 	call Function89a0c
 	call CloseSRAM
 	call Function891ab

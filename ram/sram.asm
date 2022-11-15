@@ -207,10 +207,10 @@ SECTION "Boxes 8-14", SRAM
 SECTION "SRAM Mobile 1", SRAM
 
 	ds $7 ; former location of sCrystalData
-s4_a007:: ds EASY_CHAT_MESSAGE_LENGTH
-s4_a013:: ds EASY_CHAT_MESSAGE_LENGTH
-s4_a01f:: ds EASY_CHAT_MESSAGE_LENGTH
-s4_a02b:: ds EASY_CHAT_MESSAGE_LENGTH
+sEZChatIntroductionMessage:: ds EASY_CHAT_MESSAGE_LENGTH
+sEZChatBeginBattleMessage:: ds EASY_CHAT_MESSAGE_LENGTH
+sEZChatWinBattleMessage:: ds EASY_CHAT_MESSAGE_LENGTH
+sEZChatLoseBattleMessage:: ds EASY_CHAT_MESSAGE_LENGTH
 sCardFolderPasscode:: ds 4
 sCardFolderData:: ds CARD_FOLDER_ENTRY_LENGTH * NUM_CARD_FOLDER_ENTRIES ; a03b
 sPhoneNumber:: ds PHONE_NUMBER_LENGTH

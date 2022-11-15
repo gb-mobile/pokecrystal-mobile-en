@@ -408,10 +408,10 @@ EraseHallOfFame:
 	jp CloseSRAM
 
 InitDefaultEZChatMsgs:
-	ld a, BANK(s4_a007)
+	ld a, BANK(sEZChatIntroductionMessage)
 	call OpenSRAM
 	ld hl, .Data
-	ld de, s4_a007
+	ld de, sEZChatIntroductionMessage
 	ld bc, 4 * (2 * 4) ; words
 	call CopyBytes
 	jp CloseSRAM

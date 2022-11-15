@@ -1,4 +1,4 @@
-EZCHAT_WORD_COUNT equ 4
+EZCHAT_WORD_COUNT equ EASY_CHAT_MESSAGE_WORD_COUNT
 EZCHAT_WORD_LENGTH equ 8
 EZCHAT_WORDS_PER_ROW equ 2
 EZCHAT_WORDS_PER_COL equ 4
@@ -407,15 +407,14 @@ Function11c1b9:
 
 Function11c254:
 	push af
-	ld a, BANK(s4_a007)
+	ld a, BANK(sEZChatIntroductionMessage)
 	call OpenSRAM
-	ld hl, s4_a007
+	ld hl, sEZChatIntroductionMessage
 	pop af
+; a * 4 * 2
 	sla a
 	sla a
-	ld c, a
 	sla a
-	add c
 	ld c, a
 	ld b, 0
 	add hl, bc
@@ -2241,27 +2240,25 @@ EZChatMenu_MessageTypeMenu: ; Message Type Menu Controls (Intro/Battle Start/Win
 	ld a, [hl]
 	and a
 	jr nz, .clicksound
-	ld a, BANK(s4_a007)
+	ld a, BANK(sEZChatIntroductionMessage)
 	call OpenSRAM
-	ld hl, s4_a007
+	ld hl, sEZChatIntroductionMessage
 	ld a, [wMenuCursorY]
 	dec a
 	sla a
 	sla a
-	ld c, a
 	sla a
-	add c
 	ld c, a
 	ld b, 0
 	add hl, bc
 	ld de, wEZChatWords
 	ld c, EZCHAT_WORD_COUNT * 2
-.asm_11cba2
+.save_message
 	ld a, [de]
 	ld [hli], a
 	inc de
 	dec c
-	jr nz, .asm_11cba2
+	jr nz, .save_message
 	call CloseSRAM
 	call PlayClickSFX
 	ld de, EZChatBKG_SortBy

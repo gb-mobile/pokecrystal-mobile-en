@@ -2436,7 +2436,7 @@ Unknown_100ff3:
 	macro_100fc0 wSecretID,            2
 	macro_100fc0 wPlayerGender,        1
 	macro_100fc0 sPhoneNumber,         PHONE_NUMBER_LENGTH
-	macro_100fc0 s4_a007,              EASY_CHAT_MESSAGE_LENGTH * 4
+	macro_100fc0 sEZChatIntroductionMessage,              EASY_CHAT_MESSAGE_LENGTH * 4
 	db -1 ; end
 
 Unknown_10102c:
