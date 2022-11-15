@@ -3,6 +3,9 @@ EZCHAT_WORD_LENGTH equ 8
 EZCHAT_WORDS_PER_ROW equ 2
 EZCHAT_WORDS_PER_COL equ 4
 EZCHAT_WORDS_IN_MENU equ EZCHAT_WORDS_PER_ROW * EZCHAT_WORDS_PER_COL
+EZCHAT_PKMN_WORDS_PER_ROW equ 1
+EZCHAT_PKMN_WORDS_PER_COL equ 4
+EZCHAT_PKMN_WORDS_IN_MENU equ EZCHAT_PKMN_WORDS_PER_ROW * EZCHAT_PKMN_WORDS_PER_COL
 
 	const_def
 	const EZCHAT_SORTED_A
@@ -32,6 +35,7 @@ EZCHAT_WORDS_IN_MENU equ EZCHAT_WORDS_PER_ROW * EZCHAT_WORDS_PER_COL
 	const EZCHAT_SORTED_Y
 	const EZCHAT_SORTED_Z
 	const EZCHAT_SORTED_ETC
+	const EZCHAT_SORTED_PKMN
 	const EZCHAT_SORTED_ERASE
 	const EZCHAT_SORTED_MODE
 	const EZCHAT_SORTED_CANCEL
@@ -901,11 +905,20 @@ EZChatMenu_ChatWords: ; EZChat Word Menu
 	ld [hl], a
 	ret
 
+EZChat_CheckCategorySelectionConsistency:
+	ld a, [wEZChatCategoryMode]
+	bit 7, a
+	ret z
+	set 0, a
+	ld [wEZChatCategoryMode], a
+	ret
+
 EZChat_MoveToCategoryOrSortMenu:
+	call EZChat_CheckCategorySelectionConsistency
 	ld hl, wEZChatBlinkingMask
 	res 0, [hl]
 	ld a, [wEZChatCategoryMode]
-	and a
+	bit 0, a
 	jr nz, .to_sort_menu
 	xor a
 	ld [wEZChatCategorySelection], a
@@ -1011,7 +1024,7 @@ EZChatMenu_CategoryMenu: ; Category Menu Controls
 
 .select
 	ld a, [wEZChatCategoryMode]
-	xor 1
+	xor (1 << 0) + (1 << 7)
 	ld [wEZChatCategoryMode], a
 	ld a, EZCHAT_DRAW_SORT_BY_CHARACTER
 	jr .go_to_function
@@ -1148,14 +1161,15 @@ EZChatCoord_Categories: ; Category Coordinates
 	dwcoord 13, 15 ; MISC.
 
 EZChatDraw_WordSubmenu: ; Opens/Draws Word Submenu
-	xor a
-	ld [wEZChatAreNamesRenderedFully], a
+	;xor a
+	;ld [wEZChatAreNamesRenderedFully], a
 	call EZChat_ClearBottom12Rows
+	call EZChat_ForcePokemonSubmenu
 	call EZChat_DetermineWordAndPageCounts
 	ld de, EZChatBKG_WordSubmenu
 	call EZChat_Textbox2
 	call EZChat_WhiteOutLowerMenu
-	call Function11c7bc
+	call EZChat_RenderWordChoices
 	call EZChatMenu_WordSubmenuBottom
 	ld hl, wEZChatSpritesMask
 	res 3, [hl]
@@ -1166,7 +1180,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld de, hJoypadPressed
 	ld a, [de]
 	and A_BUTTON
-	jr nz, .a
+	jp nz, .a
 	ld a, [de]
 	and B_BUTTON
 	jp nz, .b
@@ -1181,18 +1195,34 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld a, [wEZChatPageOffset]
 	and a
 	ret z
+	call EZChat_IsPKMNMenu
+	jr nc, .prev_page_normal
+	ld a, [wEZChatPageOffset]
+	sub EZCHAT_PKMN_WORDS_IN_MENU
+	jr .prev_page_cont
+.prev_page_normal
+	ld a, [wEZChatPageOffset]
 	sub EZCHAT_WORDS_IN_MENU
-	jr nc, .prev_page
+.prev_page_cont
+	jr nc, .prev_page_ok
 ; page 0
 	xor a
-.prev_page
+.prev_page_ok
 	ld [wEZChatPageOffset], a
 	jr .navigate_to_page
 
 .next_page
+	call EZChat_IsPKMNMenu
+	jr nc, .next_page_normal
+	ld hl, wEZChatLoadedItems
+	ld a, [wEZChatPageOffset]
+	add EZCHAT_PKMN_WORDS_IN_MENU
+	jr .next_page_cont
+.next_page_normal
 	ld hl, wEZChatLoadedItems
 	ld a, [wEZChatPageOffset]
 	add EZCHAT_WORDS_IN_MENU
+.next_page_cont
 	cp [hl]
 	ret nc
 	ld [wEZChatPageOffset], a
@@ -1212,7 +1242,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld [wEZChatWordSelection], a
 .navigate_to_page
 	call Function11c992
-	call Function11c7bc
+	call EZChat_RenderWordChoices
 	call EZChatMenu_WordSubmenuBottom
 	ret
 
@@ -1223,7 +1253,7 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	jr nz, .up
 	ld a, [de]
 	and D_DOWN
-	jr nz, .down
+	jp nz, .down
 	ld a, [de]
 	and D_LEFT
 	jp nz, .left
@@ -1233,8 +1263,8 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ret
 
 .a
-	ld a, 1
-	ld [wEZChatAreNamesRenderedFully], a
+	;ld a, 1
+	;ld [wEZChatAreNamesRenderedFully], a
 	call EZChat_SetOneWord
 	call EZChat_VerifyWordPlacement
 	ld a, EZCHAT_DRAW_CHAT_WORDS
@@ -1260,10 +1290,11 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	jr .jump_to_index
 
 .b
-	ld a, 1
-	ld [wEZChatAreNamesRenderedFully], a
+	call EZChat_CheckCategorySelectionConsistency
+	;ld a, 1
+	;ld [wEZChatAreNamesRenderedFully], a
 	ld a, [wEZChatCategoryMode]
-	and a
+	bit 0, a
 	jr nz, .to_sorted_menu
 	ld a, EZCHAT_DRAW_CATEGORY_MENU
 	jr .jump_to_index
@@ -1278,18 +1309,34 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ret
 
 .up
+	call EZChat_IsPKMNMenu
+	jr c, .up_in_pkmn_menu
 	ld a, [hl]
 	cp EZCHAT_WORDS_PER_ROW
 	jr c, .move_menu_up
 	sub EZCHAT_WORDS_PER_ROW
-	jr .finish_dpad
+	jp .finish_dpad
+
+.up_in_pkmn_menu
+	ld a, [hl]
+	cp EZCHAT_PKMN_WORDS_PER_ROW
+	jr c, .move_pkmn_menu_up
+	sub EZCHAT_PKMN_WORDS_PER_ROW
+	jp .finish_dpad
 
 .move_menu_up
 	ld a, [wEZChatPageOffset]
 	sub EZCHAT_WORDS_PER_ROW
 	ret c
 	ld [wEZChatPageOffset], a
-	jr .navigate_to_page
+	jp .navigate_to_page
+
+.move_pkmn_menu_up
+	ld a, [wEZChatPageOffset]
+	sub EZCHAT_PKMN_WORDS_PER_ROW
+	ret c
+	ld [wEZChatPageOffset], a
+	jp .navigate_to_page
 
 .move_menu_down
 	ld hl, wEZChatLoadedItems
@@ -1303,7 +1350,21 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ld [wEZChatPageOffset], a
 	jp .navigate_to_page
 
+.move_pkmn_menu_down
+	ld hl, wEZChatLoadedItems
+	ld a, [wEZChatPageOffset]
+	add EZCHAT_PKMN_WORDS_IN_MENU
+	ret c
+	cp [hl]
+	ret nc
+	ld a, [wEZChatPageOffset]
+	add EZCHAT_PKMN_WORDS_PER_ROW
+	ld [wEZChatPageOffset], a
+	jp .navigate_to_page
+
 .down
+	call EZChat_IsPKMNMenu
+	jr c, .down_in_pkmn_menu
 	ld a, [wEZChatLoadedItems]
 	ld b, a
 	ld a, [wEZChatPageOffset]
@@ -1317,7 +1378,23 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	add EZCHAT_WORDS_PER_ROW
 	jr .finish_dpad
 
+.down_in_pkmn_menu
+	ld a, [wEZChatLoadedItems]
+	ld b, a
+	ld a, [wEZChatPageOffset]
+	add [hl]
+	add EZCHAT_PKMN_WORDS_PER_ROW
+	cp b
+	ret nc
+	ld a, [hl]
+	cp EZCHAT_PKMN_WORDS_IN_MENU - EZCHAT_PKMN_WORDS_PER_ROW
+	jr nc, .move_pkmn_menu_down
+	add EZCHAT_PKMN_WORDS_PER_ROW
+	jr .finish_dpad
+
 .left
+	call EZChat_IsPKMNMenu
+	ret c
 	ld a, [hl]
 	and a ; cp a, 0
 	ret z
@@ -1331,6 +1408,8 @@ endr
 	jr .finish_dpad
 
 .right
+	call EZChat_IsPKMNMenu
+	ret c
 	ld a, [wEZChatLoadedItems]
 	ld b, a
 	ld a, [wEZChatPageOffset]
@@ -1350,6 +1429,18 @@ endr
 .finish_dpad
 	ld [hl], a
 	ret
+	
+EZChat_IsPKMNMenu:
+	or a
+	ld a, [wEZChatCategoryMode]
+	bit 0, a
+	ret nz
+	ld a, [wEZChatCategorySelection]
+	and a
+	ret nz
+	scf ; this is the pkmn menu
+	ret
+	
 
 EZChat_DetermineWordAndPageCounts:
 	xor a
@@ -1357,11 +1448,11 @@ EZChat_DetermineWordAndPageCounts:
 	ld [wEZChatPageOffset], a
 	ld [wcd27], a
 	ld a, [wEZChatCategoryMode]
-	and a
-	jr nz, .cd2b_is_nonzero
+	bit 0, a
+	jr nz, .is_sorted_mode
 	ld a, [wEZChatCategorySelection]
 	and a
-	jr z, .cd21_is_zero
+	jr z, .is_pokemon_selection
 	; load from data array
 	dec a
 	sla a
@@ -1376,12 +1467,12 @@ EZChat_DetermineWordAndPageCounts:
 	ld [wcd29], a
 	ret
 
-.cd21_is_zero
+.is_pokemon_selection
 	; compute from [wc7d2]
 	ld a, [wc7d2]
 	ld [wEZChatLoadedItems], a
 .div_12
-	ld c, EZCHAT_WORDS_IN_MENU
+	ld c, EZCHAT_PKMN_WORDS_IN_MENU
 	call SimpleDivide
 	and a
 	jr nz, .no_need_to_floor
@@ -1390,7 +1481,7 @@ EZChat_DetermineWordAndPageCounts:
 	ld a, b
 	jr .load
 
-.cd2b_is_nonzero
+.is_sorted_mode
 	; compute from [c6a8 + 2 * [cd22]]
 	ld hl, wc6a8 ; $c68a + 30
 	ld a, [wEZChatSortedSelection]
@@ -1402,13 +1493,31 @@ EZChat_DetermineWordAndPageCounts:
 	ld [wEZChatLoadedItems], a
 	jr .div_12
 
-Function11c7bc: ; Related to drawing words in the lower menu after picking a category
+EZChat_ForcePokemonSubmenu:
+	ld a, [wEZChatCategoryMode]
+	bit 0, a
+	ret z
+	ld a, [wEZChatSortedSelection]
+	cp EZCHAT_SORTED_PKMN
+	ret nz
+	ld a, [wEZChatCategoryMode]
+	res 0, a
+	ld [wEZChatCategoryMode], a
+	xor a
+	ld [wEZChatCategorySelection], a
+	ret
+	
+EZChat_RenderWordChoices:
 	ld bc, EZChatCoord_WordSubmenu
 	ld a, [wEZChatCategoryMode]
-	and a
+	bit 0, a
 	jr nz, .is_sorted
 ; grouped
 	ld a, [wEZChatCategorySelection]
+	and a
+	jr nz, .not_pkmn_submenu
+	ld bc, EZChatCoord_PkmnWordSubmenu
+.not_pkmn_submenu
 	ld d, a
 	and a
 	jr z, .at_page_0
@@ -1534,6 +1643,13 @@ EZChatCoord_WordSubmenu: ; Word coordinates (within category submenu)
 	dwcoord  11, 12 ; 8, 12 MENU_WIDTH
 	dwcoord  2, 14
 	dwcoord  11, 14 ; 8, 14 MENU_WIDTH
+	dw -1
+
+EZChatCoord_PkmnWordSubmenu:
+	dwcoord  2,  8
+	dwcoord  2, 10
+	dwcoord  2, 12
+	dwcoord  2, 14
 	dw -1
 
 EZChatMenu_WordSubmenuBottom: ; Seems to handle the bottom of the word menu.
@@ -1726,7 +1842,7 @@ EZChat_SetOneWord:
 ; get which category mode
 	push hl
 	ld a, [wEZChatCategoryMode]
-	and a
+	bit 0, a
 	jr nz, .alphabetical
 ; categorical
 	ld a, [wEZChatCategorySelection]
@@ -2278,7 +2394,7 @@ EZChatDraw_SortByMenu: ; Draws/Opens Sort By Menu
 	hlcoord 1, 14
 	ld a, [wEZChatCategoryMode]
 	ld [wcd2c], a
-	and a
+	bit 0, a
 	jr nz, .asm_11cd3a
 	ld de, EZChatString_SortByCategory
 	jr .asm_11cd3d
@@ -2313,10 +2429,17 @@ EZChatMenu_SortByMenu: ; Sort Menu Controls
 
 .a
 	ld a, [hl]
+	bit 0, a
+	jr z, .a_skip_setting_7
+	set 7, a
+	jr .a_ok
+.a_skip_setting_7
+	res 7, a
+.a_ok
 	ld [wEZChatCategoryMode], a
 .b
 	ld a, [wEZChatCategoryMode]
-	and a
+	bit 0, a
 	jr nz, .asm_11cd7d
 	ld a, EZCHAT_DRAW_CATEGORY_MENU
 	jr .jump_to_index
@@ -2453,7 +2576,7 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 
 .select
 	ld a, [wEZChatCategoryMode]
-	xor 1
+	xor (1 << 0) + (1 << 7)
 	ld [wEZChatCategoryMode], a
 	ld a, EZCHAT_DRAW_CATEGORY_MENU
 	jr .load
@@ -2535,7 +2658,7 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 ; T
 	db EZCHAT_SORTED_K,    EZCHAT_SORTED_U,      EZCHAT_SORTED_ETC,    EZCHAT_SORTED_S
 ; U
-	db EZCHAT_SORTED_L,    EZCHAT_SORTED_V,      EZCHAT_SORTED_ERASE,  EZCHAT_SORTED_T
+	db EZCHAT_SORTED_L,    EZCHAT_SORTED_V,      EZCHAT_SORTED_PKMN,   EZCHAT_SORTED_T
 ; V
 	db EZCHAT_SORTED_M,    EZCHAT_SORTED_W,      EZCHAT_SORTED_MODE,   EZCHAT_SORTED_U
 ; W
@@ -2547,11 +2670,13 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 ; Z
 	db EZCHAT_SORTED_Q,    EZCHAT_SORTED_NULL,   EZCHAT_SORTED_CANCEL, EZCHAT_SORTED_Y
 ; ETC.
-	db EZCHAT_SORTED_S,    EZCHAT_SORTED_NULL,   EZCHAT_SORTED_ERASE,  EZCHAT_SORTED_NULL
+	db EZCHAT_SORTED_S,    EZCHAT_SORTED_PKMN,   EZCHAT_SORTED_ERASE,  EZCHAT_SORTED_NULL
+; PKMN
+	db EZCHAT_SORTED_U,    EZCHAT_SORTED_NULL,   EZCHAT_SORTED_MODE,   EZCHAT_SORTED_ETC
 ; ERASE
 	db EZCHAT_SORTED_ETC,  EZCHAT_SORTED_MODE,   EZCHAT_SORTED_NULL,   EZCHAT_SORTED_NULL
 ; MODE
-	db EZCHAT_SORTED_V,    EZCHAT_SORTED_CANCEL, EZCHAT_SORTED_NULL,   EZCHAT_SORTED_ERASE
+	db EZCHAT_SORTED_PKMN, EZCHAT_SORTED_CANCEL, EZCHAT_SORTED_NULL,   EZCHAT_SORTED_ERASE
 ; CANCEL
 	db EZCHAT_SORTED_X,    EZCHAT_SORTED_NULL,   EZCHAT_SORTED_NULL,   EZCHAT_SORTED_MODE
 	assert_table_length NUM_EZCHAT_SORTED
@@ -2560,7 +2685,7 @@ EZChatScript_SortByCharacterTable:
 	db   "A B C D E F G H I"
 	next "J K L M N O P Q R"
 	next "S T U V W X Y Z"
-	next "!?"
+	next "!?  <PK><MN>"
 	db   "@"
 
 EZChat_IncreaseJumptable:
@@ -2883,9 +3008,17 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 .three ; Words Submenu
 	ld a, SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_2 ; $27
 	call ReinitSpriteAnimFrame
+	call EZChat_IsPKMNMenu
+	jr nc, .three_normal
+	ld a, [wEZChatWordSelection]
+	sla a
+	ld hl, .Coords_Six
+	jr .three_cont
+.three_normal
 	ld a, [wEZChatWordSelection]
 	sla a
 	ld hl, .Coords_Three
+.three_cont
 	ld e, $8
 .load
 	push de
@@ -3092,6 +3225,7 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	dbpixel 14, 13 ; Y
 	dbpixel 16, 13 ; Z
 	dbpixel  2, 15 ; ETC.
+	dbpixel  6, 15 ; PKMN
 	dbpixel  1, 18, 5, 2 ; ERASE
 	dbpixel  7, 18, 5, 2 ; MODE
 	dbpixel 13, 18, 5, 2 ; CANCEL
@@ -3114,6 +3248,12 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 .Coords_Five: ; Sort By Menu
 	dbpixel  4, 10 ; Group Mode
 	dbpixel  4, 12 ; ABC Mode
+
+.Coords_Six
+	dbpixel  2, 10
+	dbpixel  2, 12
+	dbpixel  2, 14
+	dbpixel  2, 16
 
 .FramesetsIDs_Two:
 	table_width 1, .FramesetsIDs_Two
@@ -3144,6 +3284,7 @@ AnimateEZChatCursor: ; EZChat cursor drawing code, extends all the way down to r
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 18 (Letter selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_3 ; 19 (Letter selection box for the sort by menu)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_4 ; 1a (Misc selection box for the sort by menu)
+	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_4 ; 1b (Bottom Menu Selection box?)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1b (Bottom Menu Selection box?)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1c (Bottom Menu Selection box?)
 	db SPRITE_ANIM_FRAMESET_EZCHAT_CURSOR_9 ; 1d (Bottom Menu Selection box?)

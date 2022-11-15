@@ -1373,7 +1373,9 @@ wMobileMonMiscSpecies::
 wcd2a:: db
 
 UNION
-wEZChatCategoryMode:: ; 0 = grouped, 1 = sorted
+wEZChatCategoryMode::
+	; bit 0 = grouped (0) or sorted (1)
+	; bit 7 = is "ABC mode" previously selected?
 wTempOddEggNickname:: ds MON_NAME_LENGTH
 NEXTU
 wcd2b:: ds 1
