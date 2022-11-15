@@ -362,7 +362,7 @@ ErasePreviousSave:
 	call EraseHallOfFame
 	call EraseLinkBattleStats
 	call EraseMysteryGift
-	call Function14d18
+	call InitDefaultEZChatMsgs
 	call EraseBattleTowerStatus
 	call SaveData
 	call Function14d6c
@@ -407,20 +407,28 @@ EraseHallOfFame:
 	call ByteFill
 	jp CloseSRAM
 
-Function14d18: ; unreferenced
-	ld a, BANK(s4_a007) ; MBC30 bank used by JP Crystal; inaccessible by MBC3
+InitDefaultEZChatMsgs:
+	ld a, BANK(s4_a007)
 	call OpenSRAM
 	ld hl, .Data
 	ld de, s4_a007
-	ld bc, 4 * 12
+	ld bc, 4 * (2 * 4) ; words
 	call CopyBytes
 	jp CloseSRAM
 
 .Data:
-	db $0d, $02, $00, $05, $00, $00, $22, $02, $01, $05, $00, $00
-	db $03, $04, $05, $08, $03, $05, $0e, $06, $03, $02, $00, $00
-	db $39, $07, $07, $04, $00, $05, $04, $07, $01, $05, $00, $00
-	db $0f, $05, $14, $07, $05, $05, $11, $0c, $0c, $06, $06, $04
+; introduction
+	dw $020d, $0500 ; `HELLO` `!`
+	dw $020e, $0501 ; `GOOD-BYE` `!!`
+; begin battle
+	dw $0629, $0503 ; `READY` `?`
+	dw $0d0d, $0401 ; `LET'S` `GO!`
+; win battle
+	dw $053d, $0500 ; `YAY` `!`
+	dw $0404, $0501 ; `I WIN` `!!`
+; lose battle
+	dw $050f, $0505 ; `URGH` `...!`
+	dw $0638, $0504 ; `NO WAY` `...`
 
 EraseBattleTowerStatus: ; Call_005_4d09 in crystal jp
 ;	ld a, BANK(sBattleTowerChallengeState)
