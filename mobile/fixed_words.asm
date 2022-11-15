@@ -3296,10 +3296,10 @@ EZChat_GetSeenPokemonByKana:
 	ld [wcd2e], a
 	ld [hl], a
 
-	ld a, LOW(EZChat_SortedPokemon)
-	ld [wcd2f], a
-	ld a, HIGH(EZChat_SortedPokemon)
-	ld [wcd30], a
+	;ld a, LOW(EZChat_SortedPokemon)
+	;ld [wcd2f], a
+	;ld a, HIGH(EZChat_SortedPokemon)
+	;ld [wcd30], a
 
 	ld a, LOW(wc6a8)
 	ld [wcd31], a
@@ -3395,53 +3395,53 @@ EZChat_GetSeenPokemonByKana:
 
 .done_copying
 ; recover the pointer from wcd2f (default: EZChat_SortedPokemon)
-	ld a, [wcd2f]
-	ld l, a
-	ld a, [wcd30]
-	ld h, a
+	;ld a, [wcd2f]
+	;ld l, a
+	;ld a, [wcd30]
+	;ld h, a
 ; copy the pointer from [hl] to bc
-	ld a, [hli]
-	ld c, a
-	ld a, [hli]
-	ld b, a
+	;ld a, [hli]
+	;ld c, a
+	;ld a, [hli]
+	;ld b, a
 ; store the pointer to the next pointer back in wcd2f
-	ld a, l
-	ld [wcd2f], a
-	ld a, h
-	ld [wcd30], a
+	;ld a, l
+	;ld [wcd2f], a
+	;ld a, h
+	;ld [wcd30], a
 ; push pop that pointer to hl
-	push bc
-	pop hl
-	ld c, $0
+	;push bc
+	;pop hl
+	;ld c, $0
 .loop2
 ; Have you seen this Pokemon?
-	ld a, [hl]
-	cp $ff
-	jr z, .done
-	call .CheckSeenMon
-	jr nz, .next
+	;ld a, [hl]
+	;cp $ff
+	;jr z, .done
+	;call .CheckSeenMon
+	;jr nz, .next
 ; If not, skip it.
-	inc hl
-	jr .loop2
+	;inc hl
+	;jr .loop2
 
 .next
 ; If so, append it to the list at 5:de, and increase the count.
-	ld a, [hli]
-	ld [de], a
-	inc de
-	xor a
-	ld [de], a
-	inc de
-	inc c
-	jr .loop2
+	;ld a, [hli]
+	;ld [de], a
+	;inc de
+	;xor a
+	;ld [de], a
+	;inc de
+	;inc c
+	;jr .loop2
 
 .done
 ; Remember the original value of bc from the table?
 ; Well, the stack remembers it, and it's popping it to hl.
 	pop hl
 ; Add the number of seen Pokemon from the list.
-	ld b, $0
-	add hl, bc
+;	ld b, $0
+;	add hl, bc
 ; Push pop to bc.
 	push hl
 	pop bc
