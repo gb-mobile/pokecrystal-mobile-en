@@ -116,7 +116,7 @@ EZChat_RenderWords:
 	pop hl
 	ld de, 2 * SCREEN_WIDTH
 	add hl, de
-	ld a, $3
+	ld a, EZCHAT_WORDS_PER_ROW
 .loop2
 	push af
 	ld a, [bc]
