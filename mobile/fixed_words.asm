@@ -2562,6 +2562,12 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 
 .a
 	ld a, [wEZChatSortedSelection]
+; exit early on "no words begin with this letter" - sort count 0
+	cp EZCHAT_SORTED_X
+	ret z
+	cp EZCHAT_SORTED_Z
+	ret z
+; otherwise
 	cp EZCHAT_SORTED_ERASE
 	jr c, .place
 	sub EZCHAT_SORTED_ERASE
