@@ -331,12 +331,6 @@ endr
 	ld hl, wStringBuffer1
 	ld a, 1
 	ld [wEZChatPokemonNameRendered], a
-	ld a, [wEZChatAreNamesRenderedFully]
-	and a
-	jr nz, .copy_full_name
-	ld bc, EZCHAT_WORD_LENGTH
-	jr .copy_string
-.copy_full_name
 	ld bc, NAME_LENGTH
 	jr .copy_string
 
@@ -374,8 +368,6 @@ Function11c1b9:
 	ld [wEZChatPokemonNameRendered], a
 	ld [wcd35], a
 	ld [wEZChatCategoryMode], a
-	ld a, 1
-	ld [wEZChatAreNamesRenderedFully], a
 	ld a, $ff
 	ld [wEZChatSpritesMask], a
 	ld a, [wMenuCursorY]
@@ -1168,8 +1160,6 @@ EZChatCoord_Categories: ; Category Coordinates
 	dwcoord 13, 15 ; MISC.
 
 EZChatDraw_WordSubmenu: ; Opens/Draws Word Submenu
-	;xor a
-	;ld [wEZChatAreNamesRenderedFully], a
 	call EZChat_ClearBottom12Rows
 	call EZChat_ForcePokemonSubmenu
 	call EZChat_DetermineWordAndPageCounts
@@ -1270,8 +1260,6 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 	ret
 
 .a
-	;ld a, 1
-	;ld [wEZChatAreNamesRenderedFully], a
 	call EZChat_SetOneWord
 	call EZChat_VerifyWordPlacement
 	ld a, EZCHAT_DRAW_CHAT_WORDS
@@ -1298,8 +1286,6 @@ EZChatMenu_WordSubmenu: ; Word Submenu Controls
 
 .b
 	call EZChat_CheckCategorySelectionConsistency
-	;ld a, 1
-	;ld [wEZChatAreNamesRenderedFully], a
 	ld a, [wEZChatCategoryMode]
 	bit 0, a
 	jr nz, .to_sorted_menu
