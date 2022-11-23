@@ -750,22 +750,22 @@ SpriteAnimOAMData:
 
 ; wider cursor in the menu screen
 .OAMData_EZChatCursor8:
-	db 12
+	db 18
 	dsprite  0,  0,  0,  0, $30, 0
 	dsprite  0,  0,  1,  0, $31, 0
 	dsprite  0,  0,  2,  0, $31, 0
-	;dsprite  0,  0,  3,  0, $31, 0
-	;dsprite  0,  0,  4,  0, $31, 0
-	;dsprite  0,  0,  5,  0, $31, 0
+	dsprite  0,  0,  3,  0, $31, 0
+	dsprite  0,  0,  4,  0, $31, 0
+	dsprite  0,  0,  5,  0, $31, 0
 	dsprite  0,  0,  6,  0, $31, 0
 	dsprite  0,  0,  7,  0, $31, 0
 	dsprite  0,  0,  8,  0, $32, 0
 	dsprite  1,  0,  0,  0, $33, 0
 	dsprite  1,  0,  1,  0, $34, 0
 	dsprite  1,  0,  2,  0, $34, 0
-	;dsprite  1,  0,  3,  0, $34, 0
-	;dsprite  1,  0,  4,  0, $34, 0
-	;dsprite  1,  0,  5,  0, $34, 0
+	dsprite  1,  0,  3,  0, $34, 0
+	dsprite  1,  0,  4,  0, $34, 0
+	dsprite  1,  0,  5,  0, $34, 0
 	dsprite  1,  0,  6,  0, $34, 0
 	dsprite  1,  0,  7,  0, $34, 0
 	dsprite  1,  0,  8,  0, $35, 0
@@ -780,32 +780,34 @@ SpriteAnimOAMData:
 	dsprite  0,  0,  4,  0, $32, 0
 	dsprite  1,  0,  0,  0, $33, 0
 	dsprite  1,  0,  1,  0, $34, 0
-	;    dsprite  1,  0,  2,  0, $34, 0
+;	dsprite  1,  0,  2,  0, $34, 0
 	dsprite  1,  0,  3,  0, $34, 0
 	dsprite  1,  0,  4,  0, $35, 0
 
 ; split cursor for mon names
 .OAMData_EZChatCursor10:
-	db 12
+	db 18
 	dsprite  0,  0,  0,  0, $30, 0
 	dsprite  0,  0,  1,  0, $31, 0
 	dsprite  0,  0,  2,  0, $31, 0
-	;dsprite  0,  0,  3,  0, $31, 0
-	;dsprite  0,  0,  4,  0, $31, 0
-	;dsprite  0,  0,  (5+2),  0, $31, 0
+	dsprite  0,  0,  3,  0, $31, 0
+	dsprite  0,  0,  4,  0, $31, 0
+
+	dsprite  0,  0,  (5+2),  0, $31, 0
 	dsprite  0,  0,  (6+2),  0, $31, 0
 	dsprite  0,  0,  (7+2),  0, $31, 0
 	dsprite  0,  0,  (8+2),  0, $32, 0
+
 	dsprite  1,  0,  0,  0, $33, 0
 	dsprite  1,  0,  1,  0, $34, 0
 	dsprite  1,  0,  2,  0, $34, 0
-	;dsprite  1,  0,  3,  0, $34, 0
-	;dsprite  1,  0,  4,  0, $34, 0
-	;dsprite  1,  0,  (5+2),  0, $34, 0
+	dsprite  1,  0,  3,  0, $34, 0
+	dsprite  1,  0,  4,  0, $34, 0
+
+	dsprite  1,  0,  (5+2),  0, $34, 0
 	dsprite  1,  0,  (6+2),  0, $34, 0
 	dsprite  1,  0,  (7+2),  0, $34, 0
 	dsprite  1,  0,  (8+2),  0, $35, 0
-
 
 .OAMData_BlueWalk:
 	db 4
