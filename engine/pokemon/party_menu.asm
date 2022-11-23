@@ -484,16 +484,31 @@ PlacePartyMonMobileBattleSelection:
 	hlcoord 12, 2;12, 1
 .loop
 	push bc
+	
+	call PartyMenuCheckEgg
+	jr nz, .mon_able
+	
 	push hl
-	ld de, .String_Sanka_Shinai
+	ld de, .String_NotAble
 	call PlaceString
 	pop hl
+	jr .mon_ok
+
+.mon_able	
+	push hl
+	ld de, .String_Able
+	call PlaceString
+	pop hl
+
+.mon_ok
 	ld de, 2 * SCREEN_WIDTH
 	add hl, de
+	
 	pop bc
 	inc b
 	dec c
 	jr nz, .loop
+
 	ld a, l
 	ld e, MON_NAME_LENGTH + 20
 	sub e
@@ -505,7 +520,7 @@ PlacePartyMonMobileBattleSelection:
 	call PlaceString
 	ld b, $3
 	ld c, $0
-	ld hl, wd002
+	ld hl, wd002 ; selected partymon indices
 	ld a, [hl]
 .loop2
 	push hl
@@ -520,10 +535,10 @@ PlacePartyMonMobileBattleSelection:
 	jr .loop3
 
 .done
-	ld de, .String_Banme
-	push hl
-	call PlaceString
-	pop hl
+;	ld de, .String_Banme
+;	push hl
+;	call PlaceString
+;	pop hl
 	pop bc
 	push bc
 	push hl
@@ -543,10 +558,12 @@ PlacePartyMonMobileBattleSelection:
 	ret z
 	jr .loop2
 
-.String_Banme:
-	db "@";"　ばんめ　　@" ; Place
-.String_Sanka_Shinai:
+;.String_Banme:
+;	db "@";"　ばんめ　　@" ; Place
+.String_Able:
 	db "ABLE@";"さんかしない@" ; Cancel
+.String_NotAble:
+	db "NOT ABLE@"
 .String_Kettei_Yameru:
 	db "OK  CANCEL@";"けってい　　やめる@" ; Quit
 .Strings_1_2_3:
