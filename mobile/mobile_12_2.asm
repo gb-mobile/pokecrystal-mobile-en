@@ -503,7 +503,7 @@ Function4ab1a:
 .asm_4ab1a
 	ld a, $fb
 	ld [wMenuJoypadFilter], a
-	ld a, $26
+	ld a, $24
 	ld [w2DMenuCursorOffsets], a
 	ld a, $2
 	ld [w2DMenuNumCols], a
@@ -665,7 +665,7 @@ Function4abc3:
 	call ClearBox
 	call Function4aab6
 	ld a, [wPartyCount]
-	hlcoord 6, 1
+	hlcoord 4, 1
 .asm_4ac3b
 	ld bc, $28
 	add hl, bc
