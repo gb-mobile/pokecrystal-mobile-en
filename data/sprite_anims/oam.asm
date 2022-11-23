@@ -750,22 +750,22 @@ SpriteAnimOAMData:
 
 ; wider cursor in the menu screen
 .OAMData_EZChatCursor8:
-	db 18
+	db 12
 	dsprite  0,  0,  0,  0, $30, 0
 	dsprite  0,  0,  1,  0, $31, 0
 	dsprite  0,  0,  2,  0, $31, 0
-	dsprite  0,  0,  3,  0, $31, 0
-	dsprite  0,  0,  4,  0, $31, 0
-	dsprite  0,  0,  5,  0, $31, 0
+	;dsprite  0,  0,  3,  0, $31, 0
+	;dsprite  0,  0,  4,  0, $31, 0
+	;dsprite  0,  0,  5,  0, $31, 0
 	dsprite  0,  0,  6,  0, $31, 0
 	dsprite  0,  0,  7,  0, $31, 0
 	dsprite  0,  0,  8,  0, $32, 0
 	dsprite  1,  0,  0,  0, $33, 0
 	dsprite  1,  0,  1,  0, $34, 0
 	dsprite  1,  0,  2,  0, $34, 0
-	dsprite  1,  0,  3,  0, $34, 0
-	dsprite  1,  0,  4,  0, $34, 0
-	dsprite  1,  0,  5,  0, $34, 0
+	;dsprite  1,  0,  3,  0, $34, 0
+	;dsprite  1,  0,  4,  0, $34, 0
+	;dsprite  1,  0,  5,  0, $34, 0
 	dsprite  1,  0,  6,  0, $34, 0
 	dsprite  1,  0,  7,  0, $34, 0
 	dsprite  1,  0,  8,  0, $35, 0
