@@ -7573,7 +7573,7 @@ TradeCornerHoldMon_PrepareForUpload:
 	dec a
 	and a
 	jr nz, .loop5
-	ld de, NAME_LENGTH
+	ld de, MON_NAME_LENGTH
 	ld hl, wPartyMonNicknames
 	pop af
 	push af
@@ -7585,7 +7585,7 @@ TradeCornerHoldMon_PrepareForUpload:
 	jr .loop6
 
 .okay3
-	ld a, PLAYER_NAME_LENGTH - 1
+	ld a, MON_NAME_LENGTH - 1
 .loop7
 	push af
 	ld a, [hli]
@@ -8219,7 +8219,7 @@ AddMobileMonToParty:
 	ld l, a
 	ld a, [wMobileMonOTPointer + 1]
 	ld h, a
-	ld bc, MON_NAME_LENGTH - 1
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, "@"
 	ld [de], a

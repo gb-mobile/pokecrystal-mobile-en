@@ -272,7 +272,7 @@ Function17d0f3:
 	ld [wc74e], a
 	ld hl, wc608 + 53
 	ld de, wOTTrademonOTName
-	ld bc, NAME_LENGTH_JAPANESE - 1
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, "@"
 	ld [de], a
