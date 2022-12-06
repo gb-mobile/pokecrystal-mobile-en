@@ -2583,14 +2583,14 @@ Function1190ec:
 	ld a, $1
 	ld [s5_aa72], a
 	call CloseSRAM
-	ld a, BANK(sNewsData)
+	ld a, BANK(s6_a000)
 	call OpenSRAM
 	ld a, [w3_d000]
 	ld c, a
 	ld a, [w3_d000 + 1]
 	ld b, a
 	ld hl, wd002
-	ld de, sNewsData
+	ld de, s6_a000
 	call Function119192
 	ret c
 	ld a, [wcd89]
@@ -7679,7 +7679,7 @@ Function11b570:
 
 	ld hl, w3_d800
 	ld de, wc608
-	ld bc, w3_d88f - w3_d800 + 2 + 2 + 5
+	ld bc, w3_d88f - w3_d800 + 2 + 2 + 5 + 5
 	call CopyBytes
 
 	ld a, $1
@@ -7692,7 +7692,7 @@ Function11b570:
 	ld [de], a
 	inc de
 	ld hl, wc608
-	ld bc, w3_d88f - w3_d800 + 2 + 2 + 5
+	ld bc, w3_d88f - w3_d800 + 2 + 2 + 5 + 5
 	call CopyBytes
 
 	push de
@@ -8130,7 +8130,7 @@ Function11b93b:
 	ld [s5_a800], a
 	ld hl, sOfferGender
 	ld de, wc608
-	ld bc, TRADE_CORNER_REQUEST_LENGTH + 2 + 2 + 5
+	ld bc, TRADE_CORNER_REQUEST_LENGTH + 2 + 2 + 5 + 5
 	call CopyBytes
 	call CloseSRAM
 

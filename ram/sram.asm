@@ -53,7 +53,6 @@ sRTCStatusFlags:: db
 	ds 7
 sLuckyNumberDay:: db
 sLuckyIDNumber::  dw
-sNewsData:: db
 
 SECTION "Backup Save", SRAM
 
@@ -299,7 +298,7 @@ NEXTU
 	ds $2a
 s5_a890:: ds 4
 ENDU
-s5_a894:: ds PLAYER_NAME_LENGTH - 1 ; a894
+s5_a894:: ds 6 ; a894
 s5_a89a:: dw
 s5_a89c:: ds 22 ; a89c honor roll level and room string
 
@@ -376,7 +375,7 @@ s5_bfff:: ds 1
 SECTION "SRAM Mobile 3", SRAM
 
 UNION
-s6_a000:: db
+s6_a000:: db ; start of news data
 	db
 s6_a002:: db
 s6_a003:: db
