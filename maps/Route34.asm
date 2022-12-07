@@ -385,7 +385,7 @@ TrainerYoungsterSamuel:
 .Script:
 	endifjustbattled
 	opentext
-	writetext YoungsterSamuelAfterText
+	writetext YoungsterSamuelMobileText
 	waitbutton
 	closetext
 	end
@@ -515,7 +515,7 @@ YoungsterSamuelBeatenText:
 	line "passing stranger!"
 	done
 
-YoungsterSamuelMobileText: ; unreferenced
+YoungsterSamuelMobileText:
 	text "Have you been to"
 	line "GOLDENROD CITY?"
 

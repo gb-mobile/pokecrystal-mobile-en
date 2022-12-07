@@ -272,7 +272,7 @@ Function17d0f3:
 	ld [wc74e], a
 	ld hl, wc608 + 53
 	ld de, wOTTrademonOTName
-	ld bc, NAME_LENGTH_JAPANESE - 1
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, "@"
 	ld [de], a
@@ -601,14 +601,14 @@ Function17d314:
 	call CloseSRAM
 	cp $21
 	jr nc, .asm_17d354
-	ld a, BANK(sNewsData)
+	ld a, BANK(s6_a000)
 	call OpenSRAM
 	ld l, 0
 	ld h, l
-	ld de, sNewsData + 6
-	ld a, [sNewsData + 4]
+	ld de, s6_a000 + 6
+	ld a, [s6_a000 + 4]
 	ld c, a
-	ld a, [sNewsData + 5]
+	ld a, [s6_a000 + 5]
 	ld b, a
 .asm_17d336
 	push bc
@@ -622,10 +622,10 @@ Function17d314:
 	ld a, b
 	or c
 	jr nz, .asm_17d336
-	ld a, [sNewsData + 2]
+	ld a, [s6_a000 + 2]
 	cp l
 	jr nz, .asm_17d354
-	ld a, [sNewsData + 3]
+	ld a, [s6_a000 + 3]
 	cp h
 	jr nz, .asm_17d354
 	call CloseSRAM
@@ -688,9 +688,9 @@ Function17d370:
 	ld [wBGMapBuffer], a
 	ld a, $d0
 	ld [wcd21], a
-	ld a, BANK(sNewsData)
+	ld a, BANK(s6_a000)
 	call OpenSRAM
-	ld hl, sNewsData + 6
+	ld hl, s6_a000 + 6
 	ld de, w4_d000
 	ld bc, $1000
 	call CopyBytes
@@ -1229,9 +1229,9 @@ Function17d78d:
 	ld a, [hli]
 	ld b, a
 	call HlToCrashCheckPointer
-	ld a, BANK(sNewsData)
+	ld a, BANK(s6_a000)
 	call OpenSRAM
-	ld hl, sNewsData + 6
+	ld hl, s6_a000 + 6
 	add hl, bc
 	ld de, w4_d000
 	ld bc, $1000

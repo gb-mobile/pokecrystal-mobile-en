@@ -77,7 +77,12 @@ VioletPokecenter1F_ElmsAideScript:
 	sjump .AskTakeEgg
 
 VioletPokecenter1FGameboyKidScript:
-	jumptextfaceplayer VioletPokecenter1FGameboyKidText
+	special Mobile_DummyReturnFalse
+	iftrue .mobile
+	jumptextfaceplayer VioletPokecenterGameboyKidPreMobileText 
+	
+.mobile
+	jumptextfaceplayer VioletPokecenterGameboyKidMobileText
 
 VioletPokecenter1FGentlemanScript:
 	jumptextfaceplayer VioletPokecenter1FGentlemanText
@@ -157,7 +162,7 @@ VioletPokecenterElmsAideAskEggText:
 	line "take the EGG?"
 	done
 
-VioletPokecenterFarawayLinkText: ; unreferenced
+VioletPokecenterGameboyKidPreMobileText:
 	text "I've been thinking"
 	line "it'd be great to"
 
@@ -167,8 +172,8 @@ VioletPokecenterFarawayLinkText: ; unreferenced
 	para "friends who live"
 	line "far away."
 	done
-
-VioletPokecenterMobileAdapterText: ; unreferenced
+ 
+VioletPokecenterGameboyKidMobileText:
 	text "I just battled a"
 	line "friend in CIANWOOD"
 	cont "over a link."
@@ -180,7 +185,7 @@ VioletPokecenterMobileAdapterText: ; unreferenced
 	line "a friend far away."
 	done
 
-VioletPokecenter1FGameboyKidText:
+VioletPokecenter1FGameboyKidText: ; unreferenced
 	text "A guy named BILL"
 	line "made the #MON"
 	cont "PC storage system."

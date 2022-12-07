@@ -813,7 +813,7 @@ Function895f2:
 	pop bc
 	ret
 
-Function89605:
+Function89605: ; Right Edge Palette
 	hlcoord 19, 2, wAttrmap
 	ld a, 1
 	ld de, SCREEN_WIDTH
@@ -851,13 +851,13 @@ Function89605:
 	ret
 
 Function8963d:
-	hlcoord 12, 3, wAttrmap
+	hlcoord 13, 3, wAttrmap
 	ld a, 6
 	ld de, SCREEN_WIDTH
 	lb bc, 7, 7
 .loop
 	push hl
-	ld c, 7
+	ld c, 6
 .next
 	ld [hli], a
 	dec c
@@ -868,7 +868,7 @@ Function8963d:
 	jr nz, .loop
 	ret
 
-Function89655:
+Function89655: ; Message Box Palette
 	hlcoord 1, 12, wAttrmap
 	ld de, SCREEN_WIDTH
 	ld a, 5
@@ -1134,7 +1134,7 @@ Function89797:
 	ld a, $11
 	ld [hli], a
 	ld a, $10
-	ld c, $8
+	ld c, $a ; $8
 .asm_897a6
 	ld [hli], a
 	dec c
@@ -1168,7 +1168,7 @@ Function897d5:
 	push bc
 	call Function8934a
 	jr nc, .asm_897f3
-	hlcoord 12, 3, wAttrmap
+	hlcoord 13, 3, wAttrmap
 	xor a
 	ld de, SCREEN_WIDTH
 	lb bc, 7, 7
@@ -1189,7 +1189,7 @@ Function897d5:
 .asm_897f3
 	ld a, $37
 	ldh [hGraphicStartTile], a
-	hlcoord 12, 3
+	hlcoord 13, 3
 	lb bc, 7, 7
 	predef PlaceGraphic
 	call Function8963d
@@ -1323,7 +1323,7 @@ Function898dc:
 	ld de, String_89116
 
 .asm_898eb
-	hlcoord 4, 4;6, 4
+	hlcoord 6, 4
 	call PlaceString
 	pop bc
 	ret
@@ -1481,7 +1481,7 @@ Function899b2:
 .asm_899bf
 	ld de, String_89116
 .asm_899c2
-	hlcoord 4, 4;6, 4
+	hlcoord 6, 4
 	call PlaceString
 	ret
 
@@ -1502,7 +1502,7 @@ Function899d3:
 	call Function8977a ; "message" text and gfx
 	hlcoord 1, 5
 	call Function89797 ; arrow gfx
-	hlcoord 2, 3;2, 4
+	hlcoord 2, 4
 	call Function89962 ; "name/" text
 	hlcoord 2, 9
 	call Function89915 ; "phone number" text

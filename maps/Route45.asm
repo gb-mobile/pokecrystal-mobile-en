@@ -268,7 +268,7 @@ TrainerCamperQuentin:
 	opentext
 	checkevent EVENT_BEAT_CAMPER_QUENTIN
 	iftrue .Defeated
-	writetext CamperQuentinSeenText
+	writetext CamperQuentinSeenMobileText
 	waitbutton
 	closetext
 	winlosstext CamperQuentinBeatenText, 0
@@ -286,7 +286,7 @@ TrainerCamperQuentin:
 	end
 
 Route45DummyScript: ; unreferenced
-	writetext Route45DummyText
+	writetext CamperQuentinSeenMobileText
 	waitbutton
 	closetext
 	end
@@ -497,7 +497,7 @@ CooltrainerfKellyAfterBattleText:
 	cont "to harm #MON."
 	done
 
-Route45DummyText:
+CamperQuentinSeenMobileText:
 	text "I'm really, really"
 	line "tough!"
 

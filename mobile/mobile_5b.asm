@@ -523,7 +523,7 @@ Function16cb0f:
 	ld [wd1ee], a
 	ld a, $4
 	ld [wd1ed], a
-	ld a, $a0 + $10
+	ld a, $a0
 	ld [wd1ef], a
 	xor a
 	ld [wd1f0], a
@@ -548,14 +548,14 @@ Function16cb40:
 	xor a
 	ld [hl], a
 	ld a, [wd1ef]
-	cp $a0 + $10
+	cp $a0
 	jr nz, .asm_16cb57
-	ld a, $a7 + $10
+	ld a, $a7
 	ld [wd1ef], a
 	ret
 
 .asm_16cb57
-	ld a, $a0 + $10
+	ld a, $a0
 	ld [wd1ef], a
 	ret
 
@@ -670,7 +670,7 @@ Function16cc02:
 Function16cc18:
 	ld hl, vTiles1
 	ld de, MobileAdapterCheckGFX
-	lb bc, BANK(MobileAdapterCheckGFX), 46 + $10
+	lb bc, BANK(MobileAdapterCheckGFX), 46
 	call Get2bpp
 	ret
 
@@ -693,14 +693,14 @@ Function16cc25:
 
 Function16cc49:
 	hlcoord 4, 14
-	ld a, $80
+	ld a, $70
 	call Function16cc5a
 
 	hlcoord 4, 15
-	ld a, $90;$80
+	ld a, $80
 	call Function16cc5a
 	hlcoord 4, 16
-	ld a, $A0;$90
+	ld a, $90
 	call Function16cc5a
 	ret
 
@@ -714,8 +714,8 @@ Function16cc5a:
 	ret
 
 Function16cc62:
-	hlcoord 0, 14, wAttrmap;0, 15, wAttrMap
-	ld bc, $0028 + $14
+	hlcoord 0, 15, wAttrmap
+	ld bc, $0028
 	ld a, $1
 	call ByteFill
 	ret

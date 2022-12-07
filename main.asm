@@ -678,6 +678,11 @@ INCLUDE "mobile/news/news.asm"
 INCLUDE "mobile/error.asm"
 
 
+SECTION "Currency Finder", ROMX
+
+INCLUDE "mobile/currency_finder.asm"
+
+
 SECTION "Crystal Events", ROMX
 
 ;INCLUDE "engine/events/battle_tower/load_trainer.asm"

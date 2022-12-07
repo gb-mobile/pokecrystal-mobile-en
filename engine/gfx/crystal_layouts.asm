@@ -270,7 +270,7 @@ _InitMG_Mobile_LinkTradePalMap:
 	ld [hli], a
 	ld a, $2
 	ld [hl], a
-	hlcoord 2, 17, wAttrmap
+	hlcoord 1, 17, wAttrmap
 	ld a, $3
 	ld bc, 6
 	call ByteFill

@@ -16,8 +16,8 @@ https://github.com/Sudel-Matze/pokecrystal
 ![image](https://user-images.githubusercontent.com/110418063/188284899-85bfa620-4cf2-4dc3-aac1-e950737ee2aa.png)
 ![image](https://user-images.githubusercontent.com/110418063/196643701-a3aea578-940b-463f-8d51-c1025cc5c5a7.png)
 ![image](https://user-images.githubusercontent.com/110418063/196290251-dc54e329-4924-4ab9-9366-d1e167ca9ca3.png)
-![image](https://user-images.githubusercontent.com/110418063/188287374-972fbb3c-df55-4e8b-b974-c9ebcb8c43d7.png)
-![image](https://user-images.githubusercontent.com/110418063/202602322-4db98429-e21a-44d6-8431-ae6ba40d680f.png)
+![image](https://user-images.githubusercontent.com/110418063/205540332-b49b9482-e121-4ba0-a2df-3630c04cdc1c.png)
+![image](https://user-images.githubusercontent.com/110418063/205537656-c2a99d27-b187-48fb-a4c3-660a6a716b00.png)
 ![image](https://user-images.githubusercontent.com/110418063/188287387-5cd5514c-267c-4fe6-b66f-0a0e36e712e6.png)
 ![image](https://user-images.githubusercontent.com/110418063/188287421-ff2eedad-1569-4512-8224-d1ee2c5622da.png)
 ![image](https://user-images.githubusercontent.com/110418063/195794695-0e24ed4c-4445-4608-aa65-371b9a10f2ec.png)
@@ -64,9 +64,15 @@ Simply open BGB, right click the ‘screen’ and select `Link > Listen`, then a
 Once done, run the latest version of libmobile for your operating system (`mobile-windows.exe` or windows and `mobile-linux` for linux).
 Now right click the ‘screen’ on BGB again and select `Load ROM…`, then choose the pokecrystal-mobile `.gbc` file you have built.
 
+## Mobile Adapter Features
+
+A full list of Mobile Adapter features for Pokémon Crystal can be found here:
+https://github.com/gb-mobile/pokecrystal-mobile-en/wiki/Pok%C3%A9mon-Crystal-Mobile-Features
+
 ## To-Do
 
-- Finish restrictions on Pokémon names in EZ Chat Menu.
+- Fix Pokemon name cut-off when trading via the mobile Trade Corner.
+- Fix issue with cursor not blinking in bottom of main EZ Chat screen.
 
 ## Contributors
 

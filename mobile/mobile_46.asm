@@ -2583,14 +2583,14 @@ Function1190ec:
 	ld a, $1
 	ld [s5_aa72], a
 	call CloseSRAM
-	ld a, BANK(sNewsData)
+	ld a, BANK(s6_a000)
 	call OpenSRAM
 	ld a, [w3_d000]
 	ld c, a
 	ld a, [w3_d000 + 1]
 	ld b, a
 	ld hl, wd002
-	ld de, sNewsData
+	ld de, s6_a000
 	call Function119192
 	ret c
 	ld a, [wcd89]
@@ -5101,8 +5101,7 @@ Function11a1e6:
 	call Function11a1ff
 	ld hl, wcd85
 	call Function11a1ff
-	ld hl, String_11a70b
-	call Function11a1ff
+	farcall WriteCurrencyName ; Copies the currency string at the end of the current string pointed by address stored into DE.
 	ld a, $50
 	ld [de], a
 	ret
@@ -5707,10 +5706,6 @@ String_11a6f1:
 
 String_11a706:
 	db   "Cost:@";"おかね<GA>@"
-
-String_11a70b:
-	db   " Yen";"えん" ; This currency will need to be changed
-	next "Is this OK?@";"かかります　よろしい　ですか？@"
 
 String_11a71e:
 	db   "Communication";"つうしん　しゅうりょう@" ; ???
@@ -7578,7 +7573,7 @@ TradeCornerHoldMon_PrepareForUpload:
 	dec a
 	and a
 	jr nz, .loop5
-	ld de, NAME_LENGTH
+	ld de, MON_NAME_LENGTH
 	ld hl, wPartyMonNicknames
 	pop af
 	push af
@@ -7590,7 +7585,7 @@ TradeCornerHoldMon_PrepareForUpload:
 	jr .loop6
 
 .okay3
-	ld a, PLAYER_NAME_LENGTH - 1
+	ld a, MON_NAME_LENGTH - 1
 .loop7
 	push af
 	ld a, [hli]
@@ -7684,7 +7679,7 @@ Function11b570:
 
 	ld hl, w3_d800
 	ld de, wc608
-	ld bc, w3_d88f - w3_d800 + 2 + 2 + 5
+	ld bc, w3_d88f - w3_d800 + 2 + 2 + 5 + 5
 	call CopyBytes
 
 	ld a, $1
@@ -7697,7 +7692,7 @@ Function11b570:
 	ld [de], a
 	inc de
 	ld hl, wc608
-	ld bc, w3_d88f - w3_d800 + 2 + 2 + 5
+	ld bc, w3_d88f - w3_d800 + 2 + 2 + 5 + 5
 	call CopyBytes
 
 	push de
@@ -8135,7 +8130,7 @@ Function11b93b:
 	ld [s5_a800], a
 	ld hl, sOfferGender
 	ld de, wc608
-	ld bc, TRADE_CORNER_REQUEST_LENGTH + 2 + 2 + 5
+	ld bc, TRADE_CORNER_REQUEST_LENGTH + 2 + 2 + 5 + 5
 	call CopyBytes
 	call CloseSRAM
 
@@ -8224,7 +8219,7 @@ AddMobileMonToParty:
 	ld l, a
 	ld a, [wMobileMonOTPointer + 1]
 	ld h, a
-	ld bc, MON_NAME_LENGTH - 1
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, "@"
 	ld [de], a
