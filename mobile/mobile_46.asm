@@ -2129,12 +2129,12 @@ asm_118d9f:
 	ld a, [wcd38]
 	and a
 	jr nz, .asm_118db2
-	ld a, TRADE_CORNER_REQUEST_LENGTH
+	ld a, TRADE_CORNER_REQUEST_LENGTH + 2 + 2 + 5 + 5
 	ld [wcd3b], a
 	jr .asm_118db7
 
 .asm_118db2
-	ld a, $26
+	ld a, $26 ; length of POST data for the cancel request
 	ld [wcd3b], a
 
 .asm_118db7
@@ -4259,10 +4259,10 @@ Function119b6b:
 	cp $d
 	jr nz, .asm_119b93
 	ld a, l
-	cp LOW(w3_d869)
+	cp LOW(w3_d869 + 2 + 2 + 5 + 5 + 1)
 	jr nz, .asm_119be3
 	ld a, h
-	cp HIGH(w3_d869)
+	cp HIGH(w3_d869 + 2 + 2 + 5 + 5 + 1)
 	jr nz, .asm_119be3
 	ld a, BANK(s5_b090) ; aka BANK(s5_b091) and BANK(s5_b023)
 	call OpenSRAM
@@ -4272,14 +4272,14 @@ Function119b6b:
 	ld [s5_b090 + 1], a
 	ld hl, w3_d800
 	ld de, s5_b023
-	ld bc, 105
+	ld bc, 105 + 2 + 2 + 5 + 5
 	call CopyBytes
 	ld a, $3
 	ld [s5_a800], a
 	call CloseSRAM
 	ld hl, w3_d800
 	ld de, wc608
-	ld bc, 105
+	ld bc, 105 + 2 + 2 + 5 + 5
 	call CopyBytes
 	jp BattleTowerRoomMenu_IncrementJumptable
 

@@ -291,13 +291,8 @@ sOfferMonSender::  ds PLAYER_NAME_LENGTH - 1
 sOfferMon::        party_struct sOfferMon
 sOfferMonOT::      ds PLAYER_NAME_LENGTH - 1
 sOfferMonNick::    ds MON_NAME_LENGTH - 1
-UNION
-sOfferMonMail::    mailmsg_jp sOfferMonMail
-
-NEXTU
-	ds $2a
+sOfferMonMail::    mailmsg sOfferMonMail
 s5_a890:: ds 4
-ENDU
 s5_a894:: ds 6 ; a894
 s5_a89a:: dw
 s5_a89c:: ds 22 ; a89c honor roll level and room string
@@ -342,7 +337,7 @@ s5_aa8e:: ds BATTLE_TOWER_STRUCT_LENGTH * BATTLETOWER_STREAK_LENGTH ; aa8e battl
 
 sBattleTowerSaveFileFlags:: db
 
-s5_b023:: ds 105 ; b023
+s5_b023:: ds 105 + 2 + 2 + 5 + 5 ; b023
 s5_b08c:: ds 4 ; b08c
 s5_b090:: ds 2
 s5_b092:: ds 31
@@ -368,7 +363,7 @@ s5_b2f3:: ds 2
 s5_b2f9:: db ; b2f9
 s5_b2fa:: db ; b2fa
 s5_b2fb:: db ; b2fb
-	ds $c20;$d03
+	ds $c0e;$d03
 s5_bfff:: ds 1
 
 
