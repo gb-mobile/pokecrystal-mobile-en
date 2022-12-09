@@ -513,7 +513,7 @@ String_17fb2a:
 String_17fb6e:
 	db   "Incorrect Log-in" ; "ログインパスワードに"
 	next "Password or" ; "まちがいが　あるか"
-	next "Mobile Center." ; "モバイルセンターの　エラーです"
+	next "Mobile Center" ; "モバイルセンターの　エラーです"
 	next "error." ; "パスワードを　かくにんして"
 	next "Please try again" ; "しばらく　まって"
 	next "later." ; "かけなおして　ください"

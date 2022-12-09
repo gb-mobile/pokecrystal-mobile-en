@@ -48,9 +48,7 @@ The EUR Version covers all countries in Europe (as of 2001).
 
 The AUS Version covers Australia and New Zealand.
 
-If you're looking for other languages, you can find them here: (https://github.com/pokecrystal-mobile)
-
-But please note that they still require a lot of polish.
+Other languages are being worked on, but are not complete and still require a lot of polish.
 
 ## Using Mobile Adapter Features
 
@@ -64,10 +62,15 @@ Simply open BGB, right click the ‘screen’ and select `Link > Listen`, then a
 Once done, run the latest version of libmobile for your operating system (`mobile-windows.exe` or windows and `mobile-linux` for linux).
 Now right click the ‘screen’ on BGB again and select `Load ROM…`, then choose the pokecrystal-mobile `.gbc` file you have built.
 
+## Mobile Adapter Features
+
+A full list of Mobile Adapter features for Pokémon Crystal can be found here:
+https://github.com/gb-mobile/pokecrystal-mobile-en/wiki/Pok%C3%A9mon-Crystal-Mobile-Features
+
 ## To-Do
 
-- Fix Pokemon name cut-off when trading via the mobile Trade Corner.
-- Fix issue with cursor not blinking in bottom of main EZ Chat screen.
+- Make sure NEWS can be downloaded
+- Make sure Battle Tower functionality works.
 
 ## Contributors
 
@@ -77,12 +80,6 @@ Now right click the ‘screen’ on BGB again and select `Load ROM…`, then cho
 - DS             : GFX & Code
 - Ryuzac         : Code & Japanese Translation
 - Zumilsawhat?   : Code (Large amounts of work on the EZ Chat system)
-- Arves          : Italian Mobile Translation
-- Federx         : Italian Mobile Translation
-- FerozElMejor   : Spanish Mobile Translation
-- FrenchOrange   : French Mobile Translation
-- Lesserkuma     : German Mobile Translation
-- Muffet         : German Mobile Translation
 - REON Community : Support and Assistance
 
 [travis]: https://travis-ci.org/pret/pokecrystal

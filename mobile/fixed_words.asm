@@ -669,23 +669,6 @@ EZChatMenu_MessageSetup:
 EZChatString_EmptyWord: ; EZChat Unassigned Words
 	db "--------@"
 
-EZChatDraw_ChatWords: ; Switches between menus?, not sure which.
-	call EZChat_ClearBottom12Rows
-	ld de, EZChatBKG_ChatExplanation
-	call EZChat_Textbox2
-	hlcoord 1, 7 ; Location of EZChatString_ChatExplanation
-	ld de, EZChatString_ChatExplanation
-	call PlaceString
-	hlcoord 1, 16 ; Location of EZChatString_ChatExplanationBottom
-	ld de, EZChatString_ChatExplanationBottom
-	call PlaceString
-	call EZChatDrawBKG_ChatWords
-	;ld hl, wEZChatBlinkingMask
-	set 0, [hl]
-	ld hl, wEZChatSpritesMask
-	res 0, [hl]
-	call EZChat_IncreaseJumptable
-
 ; ezchat main options
 	const_def
 	const EZCHAT_MAIN_WORD1
@@ -698,6 +681,21 @@ EZChatDraw_ChatWords: ; Switches between menus?, not sure which.
 	const EZCHAT_MAIN_RESET
 	const EZCHAT_MAIN_QUIT
 	const EZCHAT_MAIN_OK
+
+EZChatDraw_ChatWords: ; Switches between menus?, not sure which.
+	call EZChat_ClearBottom12Rows
+	ld de, EZChatBKG_ChatExplanation
+	call EZChat_Textbox2
+	hlcoord 1, 7 ; Location of EZChatString_ChatExplanation
+	ld de, EZChatString_ChatExplanation
+	call PlaceString
+	hlcoord 1, 16 ; Location of EZChatString_ChatExplanationBottom
+	ld de, EZChatString_ChatExplanationBottom
+	call PlaceString
+	call EZChatDrawBKG_ChatWords
+	ld hl, wEZChatSpritesMask
+	res 0, [hl]
+	call EZChat_IncreaseJumptable
 
 EZChatMenu_ChatWords: ; EZChat Word Menu
 
@@ -735,6 +733,16 @@ EZChatMenu_ChatWords: ; EZChat Word Menu
 	ld a, [de]
 	and D_RIGHT
 	jp nz, .right
+; manage blinkies
+	ld a, [wEZChatSelection]
+	cp EZCHAT_MAIN_RESET
+	ld hl, wEZChatBlinkingMask
+	jr nc, .blink
+; no blink
+	res 0, [hl]
+	ret
+.blink
+	set 0, [hl]
 	ret
 
 .click_sound_and_quit
@@ -2546,19 +2554,19 @@ EZChatMenu_SortByCharacter: ; Sort By Character Menu Controls
 
 	ret
 	
-.invalid
-	ld de, SFX_WRONG
-	call PlaySFX
-	jp WaitSFX
+;.invalid ; Removed to be more in line with Gen 3
+;	ld de, SFX_WRONG
+;	call PlaySFX
+;	jp WaitSFX
 
 .a
 	ld a, [wEZChatSortedSelection]
 ; exit early on "no words begin with this letter" - sort count 0
 	cp EZCHAT_SORTED_X
-	jr z, .invalid
+;	jr z, .invalid ; Removed to be more in line with Gen 3
 	ret z
 	cp EZCHAT_SORTED_Z
-	jr z, .invalid
+;	jr z, .invalid ; Removed to be more in line with Gen 3
 	ret z
 ; otherwise
 	cp EZCHAT_SORTED_ERASE

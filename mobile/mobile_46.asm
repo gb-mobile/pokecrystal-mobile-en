@@ -4259,6 +4259,7 @@ DecodeReceivedTradeCornerTrade:
 	cp $d
 	jr nz, .asm_119b93
 	ld a, l
+
 	cp LOW(w3_d800 + TRADE_CORNER_RECEIVE_TRADE_LENGTH + 1) ; base64 encoding adds a filler byte
 	jr nz, .dataInvalid
 	ld a, h
