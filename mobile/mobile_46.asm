@@ -551,29 +551,29 @@ Function1184a5:
 
 .Jumptable:
 	dw Function11886e
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
-	dw SetExchangeDownloadURL
-	dw Function11878d
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
+	dw HttpGetExchangeIndexFile
+	dw MobileAdapterCommunication
 	dw Function118d80
-	dw Function118d9b
-	dw Function11878d
+	dw DoHttpPostTradeRequestOrCancelRequest
+	dw MobileAdapterCommunication
 	dw Function118ded
-	dw Function118e6d
-	dw Function11878d
-	dw Function11984e
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
+	dw DisplaySendToTradeCornerAnimation
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function118e76
 	dw BattleTowerRoomMenu_CallRoomMenu2
@@ -584,44 +584,44 @@ Function1184ec:
 
 .Jumptable:
 	dw Function11886e
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
-	dw Function119954
-	dw Function11878d
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
+	dw LoginToPop3Service
+	dw MobileAdapterCommunication
 	dw Function119973
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function119987
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function1199b4
 	dw Function1199ca
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function1199e2
 	dw Function119b0d
-	dw Function11878d
-	dw Function119b6b
-	dw Function119b3b
-	dw Function11878d
-	dw Function119b52
-	dw Function11878d
-	dw Function118e6d
-	dw Function11878d
+	dw MobileAdapterCommunication
+	dw DecodeReceivedTradeCornerTrade
+	dw DeleteTradeEmail
+	dw MobileAdapterCommunication
+	dw LogoutOfPop3Service
+	dw MobileAdapterCommunication
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function118e76
 	dw BattleTowerRoomMenu_CallRoomMenu2
-	dw Function119b45
-	dw Function11878d
+	dw DeleteInvalidTradeEmail
+	dw MobileAdapterCommunication
 	dw Function119ac9
 	dw Function118e76
 
@@ -656,22 +656,22 @@ BattleTowerRoomMenu_Jumptable: ; Call_046_454d in jp crystal
 	dw BattleTowerRoomMenu_UpdatePickLevelMenu ;C849
 	dw RemovedFunction8 ;9A4A
 	dw Function11886e ;B448
-	dw Function118880 ;C648
-	dw Function11878d ;D347
-	dw Function1188b0 ;F648
-	dw Function11878d ;D347
-	dw Function1188b8 ;FE48
-	dw Function11878d ;D347
-	dw Function1188c0 ;0649
-	dw Function11878d ;D347
-	dw Function1188c8 ;0E49
-	dw Function11878d ;D347
-	dw Function118903 ;4949
-	dw Function118a65 ;4E4D
-	dw Function11878d ;D347
+	dw InitMobileAdapter ;C648
+	dw MobileAdapterCommunication ;D347
+	dw ReadMobileAdapterEeprom ;F648
+	dw MobileAdapterCommunication ;D347
+	dw SetLoginId ;FE48
+	dw MobileAdapterCommunication ;D347
+	dw SetEmailAddress ;0649
+	dw MobileAdapterCommunication ;D347
+	dw LoginToIsp ;0E49
+	dw MobileAdapterCommunication ;D347
+	dw StopPichuMobileAnimation ;4949
+	dw HttpGetBattleIndexFile ;4E4D
+	dw MobileAdapterCommunication ;D347
 	dw Function11891c ;6249
 	dw Function118a54 ;3D4D
-	dw Function11878d ;D347
+	dw MobileAdapterCommunication ;D347
 	dw RemovedFunction ;A84A
 	dw RemovedFunction2 ;D84A
 	dw RemovedFunction3 ;244B
@@ -679,13 +679,13 @@ BattleTowerRoomMenu_Jumptable: ; Call_046_454d in jp crystal
 	dw RemovedFunction5 ;D54C
 	dw RemovedFunction6 ;DE4C
 	dw RemovedFunction7 ;154D
-	dw Function11878d ;D347
-	dw Function118d35 ;5B50
-	dw Function118e6d ;9351
-	dw Function11878d ;D347
+	dw MobileAdapterCommunication ;D347
+	dw ValidateBattleDownload ;5B50
+	dw LogoutOfIsp ;9351
+	dw MobileAdapterCommunication ;D347
 	dw Function118e76 ;9C51
 	dw Function118e7e ;A451
-	dw Function11878d ;D347
+	dw MobileAdapterCommunication ;D347
 	dw BattleTowerRoomMenu_DoNothing ;5E40
 	dw BattleTowerRoomMenu_PartyMonTopsThisLevelMessage ;B260
 	dw BattleTowerRoomMenu_WaitForMessage ;BB60
@@ -709,29 +709,29 @@ Function11857c:
 
 .Jumptable:
 	dw Function11886e
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
-	dw SetBattleDownloadURL
-	dw Function11878d
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
+	dw HttpGetBattleIndexFile2
+	dw MobileAdapterCommunication
 	dw Function11891c
 	dw Function1198ee
 	dw Function1198f7
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function119937
-	dw Function118e6d
-	dw Function11878d
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function118e76
 	dw BattleTowerRoomMenu_CallRoomMenu2
@@ -742,38 +742,38 @@ Function1185c3:
 
 .Jumptable:
 	dw Function11886e
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
-	dw SetNewsDownloadURL
-	dw Function11878d
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
+	dw HttpGetNewsIndexFile
+	dw MobileAdapterCommunication
 	dw Function118e92
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function118eb0
 	dw Function118ec6
 	dw Function118f0d
 	dw Function118f14
 	dw Function118f5e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function118fc0
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function119054
 	dw Function1190d0
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function1190ec
-	dw Function118e6d
-	dw Function11878d
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function118e76
 	dw BattleTowerRoomMenu_CallRoomMenu2
@@ -788,32 +788,32 @@ Function118624:
 
 .Jumptable:
 	dw Function118866
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
-	dw SetNewsDownloadURL
-	dw Function11878d
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
+	dw HttpGetNewsIndexFile
+	dw MobileAdapterCommunication
 	dw Function118e92
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function11915d
 	dw Function118f68
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function119009
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function119054
-	dw Function118e6d
-	dw Function11878d
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function118e76
 	dw BattleTowerRoomMenu_CallRoomMenu2
@@ -824,26 +824,26 @@ Function118671:
 
 .Jumptable:
 	dw Function118866
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
 	dw Function119380
 	dw Function119388
 	dw Function1193a0
-	dw Function11878d
-	dw Function118e6d
-	dw Function11878d
+	dw MobileAdapterCommunication
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function118e76
 	dw BattleTowerRoomMenu_CallRoomMenu2
@@ -854,27 +854,27 @@ Function1186b2:
 
 .Jumptable:
 	dw Function118866
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
 	dw Function119380
 	dw Function1193e3
 	dw Function1193fb
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw Function119413
-	dw Function118e6d
-	dw Function11878d
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function118e76
 	dw BattleTowerRoomMenu_CallRoomMenu2
@@ -885,30 +885,30 @@ Function1186f5:
 
 .Jumptable:
 	dw Function11886a
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
-	dw SetStadiumDownloadURL
-	dw Function11878d
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
+	dw HttpGetStadiumGSIndexFile
+	dw MobileAdapterCommunication
 	dw Function119451
 	dw Function1195f8
 	dw Function119612
 	dw Function119629
 	dw Function119648
-	dw Function11878d
-	dw Function118e6d
-	dw Function11878d
+	dw MobileAdapterCommunication
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function11967d
 	dw Function119685
@@ -923,35 +923,35 @@ Function118746:
 
 .Jumptable:
 	dw Function11886e
-	dw Function118880
-	dw Function11878d
-	dw Function1188b0
-	dw Function11878d
-	dw Function1188b8
-	dw Function11878d
-	dw Function1188c0
-	dw Function11878d
-	dw Function1188c8
-	dw Function11878d
-	dw Function118903
-	dw SetOddEggDownloadURL
-	dw Function11878d
+	dw InitMobileAdapter
+	dw MobileAdapterCommunication
+	dw ReadMobileAdapterEeprom
+	dw MobileAdapterCommunication
+	dw SetLoginId
+	dw MobileAdapterCommunication
+	dw SetEmailAddress
+	dw MobileAdapterCommunication
+	dw LoginToIsp
+	dw MobileAdapterCommunication
+	dw StopPichuMobileAnimation
+	dw HttpGetEggIndexFile
+	dw MobileAdapterCommunication
 	dw Function1196f2
 	dw Function1197c9
 	dw Function1197dc
-	dw Function11878d
-	dw Function118e6d
-	dw Function11878d
+	dw MobileAdapterCommunication
+	dw LogoutOfIsp
+	dw MobileAdapterCommunication
 	dw Function119800
 	dw Function118e76
 	dw Function118e7e
-	dw Function11878d
+	dw MobileAdapterCommunication
 	dw BattleTowerRoomMenu_DoNothing
 	dw Function118e76
 	dw BattleTowerRoomMenu_CallRoomMenu2
 	dw Function118e76
 
-Function11878d:
+MobileAdapterCommunication:
 	ld a, [wc821]
 	bit 1, a
 	jr nz, .asm_1187af
@@ -1090,7 +1090,7 @@ asm_11886f:
 	ld a, [wcd33]
 	ld [wMobileInactivityTimerSeconds], a
 
-Function118880:
+InitMobileAdapter:
 	call BattleTowerRoomMenu2
 	ret c
 	xor a
@@ -1118,22 +1118,22 @@ Function118896: ; unreferenced
 	call BattleTowerRoomMenu_IncrementJumptable
 	jp BattleTowerRoomMenu_IncrementJumptable
 
-Function1188b0:
+ReadMobileAdapterEeprom:
 	ld de, wc346
 	ld a, MOBILEAPI_06
 	jp Function119e2b
 
-Function1188b8:
+SetLoginId:
 	ld de, wc3ac
 	ld a, MOBILEAPI_07
 	jp Function119e2b
 
-Function1188c0:
+SetEmailAddress:
 	ld de, wEmailAddress
 	ld a, MOBILEAPI_08
 	jp Function119e2b
 
-Function1188c8:
+LoginToIsp:
 	ld a, $1
 	ld [wcd65], a
 	call Function1188e7
@@ -1169,7 +1169,7 @@ Function1188e7:
 	jr nz, .asm_1188fa
 	ret
 
-Function118903:
+StopPichuMobileAnimation:
 	ld a, [wc3f0]
 	ld [wc319], a
 	ld c, $1
@@ -1801,7 +1801,7 @@ jr_046_4d2c:
 jr_046_4d34:
     ld de, $d200
     ld bc, $0e00
-    jp Function118ae4;Jump_046_4dcd
+    jp HttpGet;Jump_046_4dcd
 
 ; download number of available battle rooms using the 2nd URL in the index file
 Function118a54: ; unreferenced
@@ -1811,10 +1811,10 @@ Function118a54: ; unreferenced
 	ld h, a
 	ld de, wc3ec
 	ld bc, $0004
-	jp Function118ae4
+	jp HttpGet
 
 ; download battle tower index file
-Function118a65:
+HttpGetBattleIndexFile:
 	ld hl, BattleDownloadURL
 	ld de, wcc60
 	ld bc, $80
@@ -1823,27 +1823,27 @@ Function118a65:
 	; if the received data is too big, the game will display an error
 	ld de, w3_d000 ; location
 	ld bc, $1000 ; size
-	jp Function118b10
+	jp HttpGetIndexFile
 
-SetBattleDownloadURL:
+HttpGetBattleIndexFile2:
 	ld hl, BattleDownloadURL
 	ld de, wcc60
 	ld bc, $80
 	call CopyBytes
 	ld de, w3_d000
 	ld bc, $1000
-	jp Function118b10
+	jp HttpGetIndexFile
 
-SetExchangeDownloadURL:
+HttpGetExchangeIndexFile:
 	ld hl, ExchangeDownloadURL
 	ld de, wcc60
 	ld bc, $80
 	call CopyBytes
 	ld de, w3_d000
 	ld bc, $1000
-	jp Function118b10
+	jp HttpGetIndexFile
 
-SetNewsDownloadURL:
+HttpGetNewsIndexFile:
 	ld hl, NewsDownloadURL
 	ld de, wcc60
 	ld bc, $80
@@ -1852,28 +1852,28 @@ SetNewsDownloadURL:
 	ldh [rSVBK], a
 	ld de, w3_d100
 	ld bc, $e00
-	jr Function118b10
+	jr HttpGetIndexFile
 
-SetStadiumDownloadURL:
+HttpGetStadiumGSIndexFile:
 	ld hl, StadiumDownloadURL
 	ld de, wcc60
 	ld bc, $80
 	call CopyBytes
 	ld de, w3_d000
 	ld bc, $1000
-	jr Function118b10
+	jr HttpGetIndexFile
 
-SetOddEggDownloadURL:
+HttpGetEggIndexFile:
 	ld hl, OddEggDownloadURL
 	ld de, wcc60
 	ld bc, $80
 	call CopyBytes
 	ld de, w3_d000
 	ld bc, $1000
-	jr Function118b10
+	jr HttpGetIndexFile
 
 ; download data from server
-Function118ae4:
+HttpGet:
 	push bc
 	push de
 	push hl
@@ -1904,7 +1904,7 @@ Function118ae4:
 	jp Function119e2b
 
 ; download data from server
-Function118b10:
+HttpGetIndexFile:
 	push de
 	push bc
 	ld a, $8
@@ -2062,17 +2062,17 @@ OddEggDownloadURL:
 popc
 
 ; validates the length of the received battle room (1428 bytes) or honor roll data (150 bytes)
-Function118d35:
+ValidateBattleDownload:
 	ld hl, $d200
 	ld a, [wcd38]
 	and a
 	jr nz, .asm_118d6e
 	ld a, [hli]
 	cp BATTLE_TOWER_STRUCT_LENGTH * BATTLETOWER_STREAK_LENGTH & $ff ;$94
-	jr nz, .asm_118d7b
+	jr nz, .dataInvalid
 	ld a, [hl]
 	cp BATTLE_TOWER_STRUCT_LENGTH * BATTLETOWER_STREAK_LENGTH >> 8 ;$5
-	jr nz, .asm_118d7b
+	jr nz, .dataInvalid
 	ld a, [wcd4f]
 	sla a
 	ld b, a
@@ -2092,15 +2092,15 @@ Function118d35:
 .asm_118d6e
 	ld a, [hli]
 	cp HONOR_ROLL_DATA_LENGTH & $ff;$96
-	jr nz, .asm_118d7b
+	jr nz, .dataInvalid
 	ld a, [hl]
 	cp HONOR_ROLL_DATA_LENGTH >> 8;$0
-	jr nz, .asm_118d7b
+	jr nz, .dataInvalid
 
 .asm_118d78
 	jp BattleTowerRoomMenu_IncrementJumptable
 
-.asm_118d7b
+.dataInvalid
 	ld a, $d3
 	jp SetMobileErrorCode
 
@@ -2119,7 +2119,7 @@ Function118d80:
 	ld [wMobileInactivityTimerSeconds], a
 	call BattleTowerRoomMenu_IncrementJumptable
 
-Function118d9b:
+DoHttpPostTradeRequestOrCancelRequest:
 	call BattleTowerRoomMenu2
 	ret c
 
@@ -2129,12 +2129,12 @@ asm_118d9f:
 	ld a, [wcd38]
 	and a
 	jr nz, .asm_118db2
-	ld a, TRADE_CORNER_REQUEST_LENGTH + 2 + 2 + 5 + 5
+	ld a, TRADE_CORNER_TRADE_REQUEST_LENGTH
 	ld [wcd3b], a
 	jr .asm_118db7
 
 .asm_118db2
-	ld a, $26 ; length of POST data for the cancel request
+	ld a, TRADE_CORNER_CANCEL_REQUEST_LENGTH
 	ld [wcd3b], a
 
 .asm_118db7
@@ -2254,7 +2254,7 @@ asm_118e3e:
 	inc de
 	jr .asm_118e63
 
-Function118e6d:
+LogoutOfIsp:
 	xor a
 	ld [wcd65], a
 	ld a, MOBILEAPI_05
@@ -2291,7 +2291,7 @@ Function118e92:
 	ret c
 	ld de, w3_d800
 	ld bc, $0800
-	jp Function118b10
+	jp HttpGetIndexFile
 
 Function118eb0:
 	call Function118440
@@ -2568,7 +2568,7 @@ Function1190d0:
 	ret c
 	ld de, w3_d000
 	ld bc, $1000
-	jp Function118b10
+	jp HttpGetIndexFile
 
 Function1190ec:
 	ld a, BANK(s5_aa73)
@@ -3057,7 +3057,7 @@ Function1193fb:
 	call BattleTowerRoomMenu2
 	ld de, w3_d000
 	ld bc, $1000
-	jp Function118b10
+	jp HttpGetIndexFile
 
 Function119413:
 	ld a, $6 ; ???
@@ -3745,7 +3745,7 @@ Function119800:
 	farcall Function115dc3
 	jp BattleTowerRoomMenu_IncrementJumptable
 
-Function11984e:
+DisplaySendToTradeCornerAnimation:
 	ld a, [wcd80]
 	and a
 	jr nz, .asm_1198a0
@@ -3885,7 +3885,7 @@ Function119940:
 .asm_119953
 	ret
 
-Function119954:
+LoginToPop3Service:
 	ld a, $1c
 	ld [wBattleTowerRoomMenu2JumptableIndex], a
 	call BattleTowerRoomMenu2
@@ -4058,7 +4058,7 @@ Function1199e2:
 .asm_119aa7
 	ld a, $25
 	ld [wBattleTowerRoomMenuJumptableIndex], a
-	jp Function119b45
+	jp DeleteInvalidTradeEmail
 
 .asm_119aaf
 	ld a, [w3_d090]
@@ -4109,7 +4109,7 @@ Function119b0d:
 	jr z, .asm_119b23
 	ld a, $19
 	ld [wBattleTowerRoomMenuJumptableIndex], a
-	jr Function119b3b
+	jr DeleteTradeEmail
 
 .asm_119b23
 	ld a, $10
@@ -4123,14 +4123,14 @@ Function119b0d:
 	ld a, MOBILEAPI_12
 	jp Function119e2b
 
-Function119b3b:
+DeleteTradeEmail:
 	ld a, [w3_d090 + 1]
 	ld l, a
 	ld a, [w3_d090 + 2]
 	ld h, a
 	jr asm_119b4d
 
-Function119b45:
+DeleteInvalidTradeEmail:
 	ld a, [wcf64]
 	ld l, a
 	ld a, [wcf65]
@@ -4140,7 +4140,7 @@ asm_119b4d:
 	ld a, MOBILEAPI_13
 	jp Function119e2b
 
-Function119b52:
+LogoutOfPop3Service:
 	ld a, [w3_d090]
 	cp $1
 	jr nz, .asm_119b66
@@ -4154,7 +4154,7 @@ Function119b52:
 	ld a, MOBILEAPI_0E
 	jp Function119e2b
 
-Function119b6b:
+DecodeReceivedTradeCornerTrade:
 	ld a, [w3_d090]
 	cp $1
 	jr z, .asm_119b75
@@ -4165,7 +4165,7 @@ Function119b6b:
 	ld b, a
 	ld a, [w3_d100 + 1]
 	or b
-	jr z, .asm_119be3
+	jr z, .dataInvalid
 	ld hl, w3_d800
 	ld de, w3_d100 + 2
 .asm_119b85
@@ -4241,7 +4241,7 @@ Function119b6b:
 	cp $e0
 	jr c, .asm_119b93
 
-.asm_119be3
+.dataInvalid
 	ld a, $19
 	ld [wBattleTowerRoomMenuJumptableIndex], a
 	ld a, BANK(s5_a800)
@@ -4259,11 +4259,11 @@ Function119b6b:
 	cp $d
 	jr nz, .asm_119b93
 	ld a, l
-	cp LOW(w3_d869 + 2 + 2 + 5 + 5 + 1)
-	jr nz, .asm_119be3
+	cp LOW(w3_d800 + TRADE_CORNER_RECEIVE_TRADE_LENGTH + 1) ; base64 encoding adds a filler byte
+	jr nz, .dataInvalid
 	ld a, h
-	cp HIGH(w3_d869 + 2 + 2 + 5 + 5 + 1)
-	jr nz, .asm_119be3
+	cp HIGH(w3_d800 + TRADE_CORNER_RECEIVE_TRADE_LENGTH + 1)
+	jr nz, .dataInvalid
 	ld a, BANK(s5_b090) ; aka BANK(s5_b091) and BANK(s5_b023)
 	call OpenSRAM
 	ld a, [wcf64]
@@ -4272,14 +4272,14 @@ Function119b6b:
 	ld [s5_b090 + 1], a
 	ld hl, w3_d800
 	ld de, s5_b023
-	ld bc, 105 + 2 + 2 + 5 + 5
+	ld bc, TRADE_CORNER_RECEIVE_TRADE_LENGTH
 	call CopyBytes
 	ld a, $3
 	ld [s5_a800], a
 	call CloseSRAM
 	ld hl, w3_d800
 	ld de, wc608
-	ld bc, 105 + 2 + 2 + 5 + 5
+	ld bc, TRADE_CORNER_RECEIVE_TRADE_LENGTH
 	call CopyBytes
 	jp BattleTowerRoomMenu_IncrementJumptable
 
@@ -8130,7 +8130,7 @@ Function11b93b:
 	ld [s5_a800], a
 	ld hl, sOfferGender
 	ld de, wc608
-	ld bc, TRADE_CORNER_REQUEST_LENGTH + 2 + 2 + 5 + 5
+	ld bc, TRADE_CORNER_TRADE_REQUEST_LENGTH
 	call CopyBytes
 	call CloseSRAM
 
