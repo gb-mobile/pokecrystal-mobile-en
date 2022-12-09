@@ -9,7 +9,7 @@ Function170000:
 	ld [de], a
 	ld hl, wOfferMonOT
 	ld de, wPlayerTrademonOTName
-	ld bc, MON_NAME_LENGTH - 1
+	ld bc, PLAYER_NAME_LENGTH - 1
 	call CopyBytes
 	ld a, "@"
 	ld [de], a

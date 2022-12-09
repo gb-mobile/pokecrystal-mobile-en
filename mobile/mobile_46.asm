@@ -5868,7 +5868,7 @@ Function11a90f:
 	call SpeechTextbox
 	ld a, $50
 	ld hl, wc320
-	ld bc, $008c
+	ld bc, $0026 ; original value here was $008c, which causes a crash when downloading the news. japanese version uses $0026
 	call ByteFill
 	ld a, [wc31b]
 	ld l, a
