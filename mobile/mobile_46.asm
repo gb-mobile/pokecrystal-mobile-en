@@ -5733,7 +5733,7 @@ String_11a779:
 	next "corrupted.@";"こわれて　います@"
 
 String_11a791:
-	db   "The received data"
+	db   "The data"
 	next "already exists!@"
 
 String_11a7ac:
