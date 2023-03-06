@@ -369,7 +369,7 @@ s5_bfff:: ds 1
 
 SECTION "SRAM Mobile 3", SRAM
 
-UNION
+
 s6_a000:: db ; start of news data
 	db
 s6_a002:: db
@@ -378,14 +378,15 @@ s6_a004:: db
 s6_a005:: db
 s6_a006:: ds $1000
 
-NEXTU
+
+
+
+
+SECTION "SRAM Mobile 4", SRAM
+
+; Bank 7 in bank 6??
 s7_a000:: db
 s7_a001:: ds $799
 s7_a800:: ds $800
 s7_b000:: ds $fea
 s7_bfea:: ds 1
-ENDU
-
-SECTION "SRAM Mobile 4", SRAM
-
-; Bank 7 in bank 6??
