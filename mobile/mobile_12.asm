@@ -8,6 +8,7 @@ InitMobileProfile:
 	and a
 	call z, InitCrystalData
 	call ClearBGPalettes
+	call LoadZipcodeWithUniversalFormat
 
 	call DisableLCD
 	farcall Mobile22_Clear24FirstOAM
@@ -102,7 +103,7 @@ InitMobileProfile:
 .asm_48113
 	hlcoord 15, 7 ; Default age position in MOBILE menu
 	call Function487ec
-	ld a, [wd474]
+	ld a, [wPrefecture]
 	dec a
 	ld hl, Prefectures
 	call GetNthString
@@ -150,6 +151,7 @@ asm_4815f:
 
 .b_button
 	call ClearBGPalettes
+	call SaveZipcodeWithUniversalFormat
 	pop bc
 	call ClearTilemap
 	ld a, $ff
@@ -259,6 +261,7 @@ MobileProfileOptionPressed:
 
 .LeaveMobileProfileMenu
 	call ClearBGPalettes
+	call SaveZipcodeWithUniversalFormat
 	pop bc
 	call ClearTilemap
 	ld b, SCGB_DIPLOMA
@@ -350,7 +353,7 @@ RegionCodePressed:
 	ld a, [wMenuScrollPosition]
 	ld c, a
 	push bc
-	ld a, [wd474]
+	ld a, [wPrefecture]
 	dec a
 	cp NUM_REGION_CODES
 	jr c, .asm_4833f
@@ -436,7 +439,7 @@ DisplayRegionCodesList:
 	ld hl, wScrollingMenuCursorPosition
 	ld a, [hl]
 	inc a
-	ld [wd474], a
+	ld [wPrefecture], a
 	dec a
 	ld b, a
 	ld hl, Prefectures
@@ -522,8 +525,6 @@ ReturnToMobileProfileMenu:
 
 ; Inputs: char pool index in A, screen tile coord in HL.
 Mobile12_Index2CharDisplay:
-	push bc
-	push af
 	push de
 	push hl
 
@@ -539,7 +540,7 @@ Mobile12_Index2CharDisplay:
 	; Zip Code Location. Note that wTilemap is added to it. wTilemap is "align 8" ($X00) + $A0. "18 - ZIPCODE_LENGTH, 11" is $E7. Which makes $C587.
 	; The last zipcode char would be stored at address $C58E. The last byte doesn't overflow or underflow between the first and the last chat pos, so we can subtract those to get the index in the string of the current char.
 	sub l ; A now contains the char index in the zipcode string between 0 and ZIPCODE_LENGTH.
-	add a ; We double A.
+	add a ; We double A because Zipcode_CharPools is a list of dw (2 bytes).
 	ld e, a
 	ld d, 0
 	ld hl, Zipcode_CharPools
@@ -549,21 +550,12 @@ Mobile12_Index2CharDisplay:
 	ld l, a
 
 	pop af
-.loop
-	and a
-	jr z, .got_string
-	inc hl
-	inc hl
-	dec a
-	jr .loop
-.got_string
-	ld d, h
-	ld e, l
+	ld e, a
+	add hl, de
+	ld a, [hl]
 	pop hl
-	call PlaceString
+	ld [hl], a
 	pop de
-	pop af
-	pop bc
 	ret
 
 Zipcode_CharPools:
@@ -581,486 +573,55 @@ ENDR
 
 Zipcode_CharPoolForStringIndex0:
 if DEF(_CRYSTAL_AU)
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
+	db "0123456789"
 
 Zipcode_CharPoolForStringIndex1:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
+	db "0123456789"
 
 Zipcode_CharPoolForStringIndex2:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
+	db "0123456789"
 
 Zipcode_CharPoolForStringIndex3:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
+	db "0123456789"
 
 elif DEF(_CRYSTAL_EU)
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 Zipcode_CharPoolForStringIndex1:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 Zipcode_CharPoolForStringIndex2:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 Zipcode_CharPoolForStringIndex3:
-	db " @"
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 Zipcode_CharPoolForStringIndex4:
-	db " @"
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 Zipcode_CharPoolForStringIndex5:
-	db " @"
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 Zipcode_CharPoolForStringIndex6:
-	db " @"
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 else ; US
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "E@"
-	db "G@"
-	db "H@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "P@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "V@"
-	db "X@"
-	db "Y@"
+	db "0123456789ABCEGHJKLMNPRSTVXY"
 
 Zipcode_CharPoolForStringIndex1:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
+	db "0123456789"
 
 Zipcode_CharPoolForStringIndex2:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "E@"
-	db "G@"
-	db "H@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "P@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db "0123456789ABCEGHJKLMNPRSTVWXYZ"
 
 Zipcode_CharPoolForStringIndex3:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
+	db "0123456789"
 
 Zipcode_CharPoolForStringIndex4:
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
+	db "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 Zipcode_CharPoolForStringIndex5:
-	db " @"
-	db "0@"
-	db "1@"
-	db "2@"
-	db "3@"
-	db "4@"
-	db "5@"
-	db "6@"
-	db "7@"
-	db "8@"
-	db "9@"
-	db "A@"
-	db "B@"
-	db "C@"
-	db "D@"
-	db "E@"
-	db "F@"
-	db "G@"
-	db "H@"
-	db "I@"
-	db "J@"
-	db "K@"
-	db "L@"
-	db "M@"
-	db "N@"
-	db "O@"
-	db "P@"
-	db "Q@"
-	db "R@"
-	db "S@"
-	db "T@"
-	db "U@"
-	db "V@"
-	db "W@"
-	db "X@"
-	db "Y@"
-	db "Z@"
-	db " @"
+	db " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 endc
 
@@ -1070,7 +631,7 @@ DEF IDX = 0
 REPT N - 1
 DEF S EQUS STRCAT("LOW(Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+2, 1))
 DEF T EQUS STRCAT("- Zipcode_CharPoolForStringIndex", STRSUB("01234567", IDX+1, 1))
-	db S T ) / 2
+	db S T ) / 1
 PURGE S
 PURGE T
 DEF IDX = IDX + 1
@@ -1078,7 +639,7 @@ ENDR
 
 DEF N = ZIPCODE_LENGTH - 1
 DEF S EQUS STRCAT("LOW(Zipcode_CharPoolsLength - Zipcode_CharPoolForStringIndex", STRSUB("01234567", N+1, 1))
-	db S ) / 2
+	db S ) / 1
 
 MobileProfileString:         db "  Mobile Profile@"
 MobileString_Gender:         db "Gender@"
@@ -1501,7 +1062,7 @@ AgePressed:
 	ld c, $4
 	call DisplayBlankGoldenBox
 	call WaitBGMap
-	ld a, [wd473]
+	ld a, [wAge]
 	and a
 	jr z, .asm_487ab
 	cp $64
@@ -1523,7 +1084,7 @@ AgePressed:
 	call Function487ec
 	ld c, 10
 	call DelayFrames
-	ld a, [wd473]
+	ld a, [wAge]
 	push af
 .asm_487c6
 	call JoyTextDelay
@@ -1534,9 +1095,9 @@ AgePressed:
 	pop bc
 	jr nz, .asm_487da
 	ld a, b
-	ld [wd473], a
+	ld [wAge], a
 .asm_487da
-	ld a, [wd473]
+	ld a, [wAge]
 	call ExitMenu
 	hlcoord 15, 7 ; Age position
 	call Function487ec
@@ -1546,7 +1107,7 @@ AgePressed:
 
 Function487ec:
 	push hl
-	ld de, wd473
+	ld de, wAge
 	call Function487ff
 	pop hl
 rept 4
@@ -1594,7 +1155,7 @@ Function4880e:
 	and a
 	ret
 .asm_48838
-	ld hl, wd473
+	ld hl, wAge
 	ld a, [hl]
 	and a
 	jr z, .asm_48840
@@ -1603,7 +1164,7 @@ Function4880e:
 	ld [hl], a
 	jr .asm_4886f
 .asm_48843
-	ld hl, wd473
+	ld hl, wAge
 	ld a, [hl]
 	cp $64
 	jr nc, .asm_4884c
@@ -1612,25 +1173,25 @@ Function4880e:
 	ld [hl], a
 	jr .asm_4886f
 .asm_4884f
-	ld a, [wd473]
+	ld a, [wAge]
 	cp $5b
 	jr c, .asm_48858
 	ld a, $5a
 .asm_48858
 	add $a
-	ld [wd473], a
+	ld [wAge], a
 	jr .asm_4886f
 .asm_4885f
-	ld a, [wd473]
+	ld a, [wAge]
 	cp $a
 	jr nc, .asm_48868
 	ld a, $a
 .asm_48868
 	sub $a
-	ld [wd473], a
+	ld [wAge], a
 	jr .asm_4886f
 .asm_4886f
-	ld a, [wd473]
+	ld a, [wAge]
 	and a
 	jr z, .asm_48887
 	cp $64
@@ -2213,40 +1774,40 @@ BlinkSelectedCharacter:
 	ld [wd002], a
 	ret
 
-Function48c63:
+Mobile_DisplayPrefecture:
 	ld a, "@"
 	ld [de], a
 	ld a, c
-	cp $30
-	jr nc, .asm_48c8c
+	cp NUM_REGION_CODES + 1
+	jr nc, .exit
 	and a
-	jr z, .asm_48c8c
+	jr z, .exit
 	dec c
 	push de
 	ld h, d
 	ld l, e
 	ld a, "@"
-	ld b, 7
-.asm_48c76
+	ld b, REGION_NAME_MAX_LENGTH
+.buffer_clear_loop
 	ld [hli], a
 	dec b
-	jr nz, .asm_48c76
+	jr nz, .buffer_clear_loop
 	ld hl, Prefectures
 	ld a, c
 	call GetNthString
-.asm_48c81
+.write_buffer_loop
 	ld a, [hli]
 	ld [de], a
 	inc de
 	ld a, [hl]
 	cp "@"
-	jr nz, .asm_48c81
+	jr nz, .write_buffer_loop
 	and a
 	pop de
 	ret
 
-.asm_48c8c
-	scf
+.exit
+	scf ; The carry is actually never used.
 	ret
 
 DisplayBlankGoldenBox_DE:
@@ -2377,9 +1938,6 @@ CountZipcodeRightBlanks:
 
 	ld hl, Zipcode_CharPools
 	push de
-	ld a, e
-	add a
-	ld e, a ; We double E, because Zipcode_CharPools is an array of dw entries.
 	add hl, de ; Get the char pool for the current zipcode char.
 	pop de
 	ld a, [hli]
@@ -2402,4 +1960,83 @@ CountZipcodeRightBlanks:
 	pop bc
 	pop de
 	pop hl
+	ret
+
+SaveZipcodeWithUniversalFormat:
+	push de
+
+	ld a, BANK(sZipcodeCharIndexes)
+	call OpenSRAM
+	ld hl, wZipCode
+	ld de, sZipcodeCharIndexes
+	ld bc, ZIPCODE_MAX_LENGTH
+	call CopyBytes
+	call CloseSRAM
+
+	ld hl, wZipCode + ZIPCODE_LENGTH
+	ld bc, ZIPCODE_MAX_LENGTH - ZIPCODE_LENGTH
+	ld a, "@"
+	call ByteFill
+
+	ld hl, wZipCode
+	ld bc, 0
+	ld d, 0
+.loop
+	ld e, [hl]
+	push hl
+	ld hl, Zipcode_CharPools
+	add hl, bc
+	add hl, bc
+	
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+
+	add hl, de
+	ld a, [hl]
+	pop hl
+
+	ld [hl], a
+
+	inc hl
+	inc c
+	ld a, c
+	cp ZIPCODE_LENGTH
+	jr nz, .loop
+
+.truncate_trailing_spaces
+	dec hl
+	ld a, [hl]
+	cp " "
+	jr nz, .truncate_done
+
+	ld a, "@"
+	ld [hl], a
+	jr .truncate_trailing_spaces
+
+.truncate_done
+	pop de
+	ret
+
+LoadZipcodeWithUniversalFormat:
+	ld a, BANK(sZipcodeCharIndexes)
+	call OpenSRAM
+	ld hl, sZipcodeCharIndexes
+
+	ld a, $ff
+	cp [hl]
+	jr z, .blankZipcode
+
+	ld de, wZipCode
+	ld bc, ZIPCODE_MAX_LENGTH
+	call CopyBytes
+	call CloseSRAM
+	ret
+
+.blankZipcode
+	ld hl, wZipCode
+	xor a
+	ld bc, ZIPCODE_MAX_LENGTH
+	call ByteFill
+	call CloseSRAM
 	ret

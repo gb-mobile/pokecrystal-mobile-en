@@ -1,16 +1,16 @@
-; Input: DE = the memory address were the string should be written. Also, wd474 should be set to the prefecture of the user.
+; Input: DE = the memory address were the string should be written. Also, wPrefecture should be set to the prefecture of the user.
 ; Output: it edits the bytes pointed by DE.
 WriteCurrencyName::
 	call DetermineCurrencyName
 	call CopyCurrencyString
 	ret
 
-; Input: none. wd474 should be set to the prefecture of the user.
+; Input: none. wPrefecture should be set to the prefecture of the user.
 ; Output: HL = the address of the string to use for the currency.
 DetermineCurrencyName:
 if DEF(_CRYSTAL_EU) 
 	; EU region.
-	ld a, [wd474] ; Loads the Prefectures index (starts at 0) selected by the player. The Prefectures list is stored into mobile_12.asm
+	ld a, [wPrefecture] ; Loads the Prefectures index (starts at 0) selected by the player. The Prefectures list is stored into mobile_12.asm
 	dec a ; Beware: it the value is 0, dec will underflow and default to the default value
 
 	ld hl, String_Currency_Lek

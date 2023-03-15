@@ -3635,7 +3635,7 @@ _RunMobileScript:
 	dw Function17f2cb ; 7
 	dw MobileScript_PlayerName ; 8
 	dw MobileScript_Prefecture ; 9
-	dw Function17f382 ; a
+	dw MobileScript_Zipcode    ; a
 	dw Function17f3c9 ; b
 	dw Function17f3f0 ; c
 	dw Function17f41d ; d
@@ -3724,7 +3724,7 @@ Function17f081:
 .asm_17f0ee
 	pop hl
 	ld a, [wcd58]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -3782,7 +3782,7 @@ Function17f0f8:
 	ld a, b
 	ld [wcd53], a
 	ld a, [wcd57]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -3866,7 +3866,7 @@ Function17f181:
 	ld a, [hl]
 	ld c, a
 	ld de, wc608
-	farcall Function48c63
+	farcall Mobile_DisplayPrefecture
 	pop hl
 	ld de, wc608
 	call PlaceString
@@ -3875,7 +3875,7 @@ Function17f181:
 	ld a, b
 	ld [wcd53], a
 	ld a, [wcd54]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -3931,7 +3931,7 @@ Function17f1d0:
 	ld a, $4
 	ldh [rSVBK], a
 	ld a, [wcd54]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -3990,7 +3990,7 @@ Function17f220:
 	ld a, b
 	ld [wcd53], a
 	ld a, [wcd54]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -4050,7 +4050,7 @@ Function17f27b:
 	ld a, $4
 	ldh [rSVBK], a
 	ld a, [wcd54]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -4081,7 +4081,7 @@ Function17f2cb:
 	ld [wcd53], a
 	pop hl
 	ld a, [wcd55]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -4110,7 +4110,7 @@ MobileScript_PlayerName:
 	ld a, b
 	ld [wcd53], a
 	ld a, [wcd54]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -4129,22 +4129,22 @@ MobileScript_Prefecture:
 	push hl
 	ld a, [wcd55]
 	bit 7, a
-	jr nz, .asm_17f355
+	jr nz, .read_downloaded_content_address
 	ld a, BANK(sCrystalData)
 	call OpenSRAM
-	ld a, [sCrystalData + 2]
-	jr .asm_17f35d
+	ld a, [sCrystalData + (wPrefecture - wCrystalData)]
+	jr .display
 
-.asm_17f355
-	ld a, BANK(s5_b2f3)
+.read_downloaded_content_address
+	ld a, BANK(sDownloadedContentPrefectureAndZipcode)
 	call OpenSRAM
-	ld a, [s5_b2f3]
+	ld a, [sDownloadedContentPrefectureAndZipcode]
 
-.asm_17f35d
+.display
 	ld c, a
 	call CloseSRAM
 	ld de, wc608
-	farcall Function48c63
+	farcall Mobile_DisplayPrefecture
 	pop hl
 	ld de, wc608
 	call PlaceString
@@ -4153,12 +4153,12 @@ MobileScript_Prefecture:
 	ld a, b
 	ld [wcd53], a
 	ld a, [wcd54]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
 
-Function17f382:
+MobileScript_Zipcode:
 	pop hl
 	push bc
 	ld a, [hli]
@@ -4172,23 +4172,33 @@ Function17f382:
 	ld h, b
 	ld a, [wcd55]
 	bit 7, a
-	jr nz, .asm_17f3a3
+	jr nz, .read_downloaded_content_address
 	ld a, BANK(sCrystalData)
 	call OpenSRAM
-	ld de, sCrystalData + 3
-	jr .asm_17f3ab
+	ld de, sCrystalData + (wZipCode - wCrystalData)
+	jr .display
 
-.asm_17f3a3
-	ld a, BANK(s5_b2f3)
+.read_downloaded_content_address
+	ld a, BANK(sDownloadedContentPrefectureAndZipcode)
 	call OpenSRAM
-	ld de, s5_b2f3 + 1
+	ld de, sDownloadedContentPrefectureAndZipcode + 1
 
-.asm_17f3ab
-	ld a, PRINTNUM_LEADINGZEROS | 2
-	ld b, a
-	ld a, 3
-	ld c, a
-	call PrintNum
+.display
+	; We can't just use PrintText, because there may be no "@" at the end of the wZipCode (because I wanted to save 1 stupid byte of WRAM...).
+	ld b, ZIPCODE_LENGTH + 1
+.display_loop
+	dec b
+	jr z, .display_done
+
+	ld a, [de]
+	cp "@"
+	jr z, .display_done
+
+	ld [hli], a
+	inc de
+	jr .display_loop
+
+.display_done
 	call CloseSRAM
 	ld a, l
 	ld [wcd52], a
@@ -4196,7 +4206,7 @@ Function17f382:
 	ld [wcd53], a
 	pop hl
 	ld a, [wcd54]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -4412,7 +4422,7 @@ Function17f44f:
 .asm_17f4ec
 	pop hl
 	ld a, [wcd59]
-	call Function17f50f
+	call OffsetTextBasedOnScriptParameter
 	pop de
 	and a
 	ret
@@ -4434,9 +4444,9 @@ Function17f4f6:
 	add hl, bc
 	jr .asm_17f509
 
-Function17f50f:
+OffsetTextBasedOnScriptParameter:
 	and a
-	jr z, .asm_17f519
+	jr z, .auto_adjust_offset
 	ld c, a
 	ld b, 0
 	add hl, bc
@@ -4444,7 +4454,7 @@ Function17f50f:
 	ld b, h
 	ret
 
-.asm_17f519
+.auto_adjust_offset
 	ld a, [wcd52]
 	ld c, a
 	ld l, a

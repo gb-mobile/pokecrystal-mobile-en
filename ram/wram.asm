@@ -2931,18 +2931,16 @@ wPlayerGender::
 ;	0 male
 ;	1 female
 	db
-wd473:: ds 1
-wd474:: ds 1
-
-UNION
-wZipCode:: ds 7
-NEXTU
-wd475:: ds 1
-wd476:: ds 1
-wd477:: ds 1
-wd478:: ds 1
-ds 3
-ENDU
+wAge:: ds 1
+wPrefecture:: ds 1
+wZipCode:: ds ZIPCODE_MAX_LENGTH
+	; IMPORTANT NOTE: For the new zipcode format, I had to use 3 extra bytes by moving stuff around (search wZipCode in this file to find out where).
+	; This can break save compatibility with vanilla Pokémon crystal.
+	; It offsets wCrystalData by 3 bytes, which is the main issue.
+	; However, it should be fine because the memory addresses I swapped are very close to each other, which makes for a small memory footprint.
+	; The memory I touched is only related to mobile features and this is left unused in a regular gameplay...
+	; ...expect for wPlayerGender, which could affect wBugContestMinsRemaining at worst case, when transferring a save from this ROM to a vanilla ROM. Not a huge deal.
+	; I didn't add or substract memory, to there is no RAM-wide offset.
 
 wCrystalDataEnd::
 

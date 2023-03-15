@@ -353,13 +353,18 @@ s5_b1d3:: ds 2
 
 	ds $1e
 
-s5_b1f3:: ds 1
+s5_b1f3:: ds $19
 
-	ds $ff
+	ds $d4
 
-s5_b2f3:: ds 2
+sZipcodeCharIndexes:: ds ZIPCODE_MAX_LENGTH ; Stores the char indexes of the zipcode, for fast and easy retrieval.
 
-	ds 4
+	ds $10 - ZIPCODE_MAX_LENGTH
+	;ds 3 ; 3 bytes moved to sDownloadedContentPrefectureAndZipcode, for the new zipcode length (now 7 chars instead of 4). Breaks save compatibility with vanilla.
+
+sDownloadedContentPrefectureAndZipcode:: ds 8 ; Backs up the player's prefecture and zipcode before downloaded region-based content. Thanks to this, if the player updates his/her zipcode after having downloaded some content, the downloaded content will still be displayed as comming from where it was downloaded.
+
+	ds 1
 s5_b2f9:: db ; b2f9
 s5_b2fa:: db ; b2fa
 s5_b2fb:: db ; b2fb

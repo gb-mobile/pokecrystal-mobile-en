@@ -2571,7 +2571,7 @@ Function119054:
 	call CloseSRAM
 	ld a, $3 ; ???
 	ldh [rSVBK], a
-	ld a, BANK(s5_b1b3) ; aka BANK(s5_b1b4) and BANK(s5_aa7f) and BANK(s5_b2f3) and BANK(s5_b2f4)
+	ld a, BANK(s5_b1b3) ; aka BANK(s5_b1b4) and BANK(s5_aa7f) and BANK(sDownloadedContentPrefectureAndZipcode) and BANK(s5_b2f4)
 	call OpenSRAM
 	ld a, [wcd4f]
 	ld [s5_b1b3], a
@@ -2583,13 +2583,13 @@ Function119054:
 	call CopyBytes
 	ldh a, [rSVBK]
 	push af
-	ld a, BANK(wd474) ; aka BANK(wd475)
+	ld a, BANK(wPrefecture) ; aka BANK(wZipCode)
 	ldh [rSVBK], a
-	ld a, [wd474]
-	ld [s5_b2f3], a
-	ld hl, wd475
-	ld de, s5_b2f3 + 1
-	ld bc, 4
+	ld a, [wPrefecture]
+	ld [sDownloadedContentPrefectureAndZipcode], a
+	ld hl, wZipCode
+	ld de, sDownloadedContentPrefectureAndZipcode + 1
+	ld bc, ZIPCODE_LENGTH
 	call CopyBytes
 	pop af
 	ldh [rSVBK], a
