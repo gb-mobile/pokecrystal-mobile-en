@@ -1120,7 +1120,7 @@ Mobile22_CheckIfCardEntryIsFilled: ; check if entry is filled out?
 	call Mobile22_CheckEmptyOrBlankPlayerNameInBC
 	jr c, .blank_or_empty_name
 ; non-empty name
-	ld hl, 2 * PLAYER_NAME_LENGTH + 5 + 1 ; Phone number first byte in struct.
+	ld hl, PLAYER_NAME_LENGTH + wNameCardPhoneNumber - wNameCardData
 	add hl, bc
 	call Mobile22_CheckPhoneNumberConformity ; decode number?
 	jr c, .asm_8ba08

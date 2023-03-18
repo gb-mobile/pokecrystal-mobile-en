@@ -276,7 +276,7 @@ MenuData_YesNo:
 Mobile22_DeleteSelectedCard:
 	call Mobile22_GetSelectedCardFolderEntryInBC
 
-Mobile22_DeleteCardInBC: ; delete entry?
+Mobile22_DeleteCardInBC:
 	ld d, b
 	ld e, c
 	ld hl, 0
@@ -1661,7 +1661,7 @@ Function89a57:
 	push de
 	call Mobile22_CheckEmptyOrBlankPlayerNameInBC ; find a non-space character within 5 bytes of bc
 	jr c, .no_nonspace_character
-	ld hl, 2 * PLAYER_NAME_LENGTH + 5 + 1 ; Phone number first byte in struct.
+	ld hl, PLAYER_NAME_LENGTH + wNameCardPhoneNumber - wNameCardData
 	add hl, bc
 	call Mobile22_CheckPhoneNumberConformity
 	jr c, .finish_decode
@@ -1743,7 +1743,7 @@ Mobile22_CheckPhoneNumberConformity:
 	cp 10
 	jr c, .low_nybble_less_than_10
 	ld a, c
-	cp $b ; Min length of the phone number.
+	cp PHONE_NUMBER_DIGITS_QUANTITY - PHONE_NUMBER_DIGITS_MIN_REQUIRED_QUANTITY + 1
 	jr nc, .clear_carry
 	jr .set_carry
 
@@ -1756,7 +1756,7 @@ Mobile22_CheckPhoneNumberConformity:
 	cp 10
 	jr c, .high_nybble_less_than_10
 	ld a, c
-	cp $b ; Min length of the phone number.
+	cp PHONE_NUMBER_DIGITS_QUANTITY - PHONE_NUMBER_DIGITS_MIN_REQUIRED_QUANTITY + 1
 	jr nc, .clear_carry
 	jr .set_carry
 
@@ -3484,12 +3484,12 @@ Function8a765:
 	ld hl, $0
 	add hl, bc
 	ld de, wd002
-	ld c, PLAYER_NAME_LENGTH;$6
+	ld c, PLAYER_NAME_LENGTH
 	call Function89185
 	pop bc
 	jr nz, .asm_8a78a
 	push bc
-	ld hl, PLAYER_NAME_LENGTH * 2 + 5;$11
+	ld hl, PLAYER_NAME_LENGTH + wNameCardPhoneNumber - wNameCardData
 	add hl, bc
 	ld de, wCardPhoneNumber
 	ld c, $8
@@ -4017,7 +4017,7 @@ Function8aba9: ; pick a friend to call
 	ld [wMenuSelection], a
 	call OpenSRAMBank4
 	call Mobile22_GetSelectedCardFolderEntryInBC
-	ld hl, 2 * PLAYER_NAME_LENGTH + 5 + 1 ; Phone number first byte in struct.
+	ld hl, PLAYER_NAME_LENGTH + wNameCardPhoneNumber - wNameCardData
 	add hl, bc
 	call Mobile22_CheckPhoneNumberConformity
 	call CloseSRAM
@@ -4112,7 +4112,7 @@ Mobile22_SelectCardEntryToOverride: ; insert friend's card to card folder
 	call CloseSRAM
 	jr nc, .entry_already_contains_card
 	call OpenSRAMBank4
-	ld hl, 2 * PLAYER_NAME_LENGTH + 5 + 1 ; Phone number first byte in struct.
+	ld hl, PLAYER_NAME_LENGTH + wNameCardPhoneNumber - wNameCardData
 	add hl, bc
 	call Mobile22_CheckPhoneNumberConformity
 	call CloseSRAM
@@ -4137,7 +4137,7 @@ Mobile22_SelectCardEntryToOverride: ; insert friend's card to card folder
 	ld d, h
 	ld e, l
 	pop hl
-	ld c, PLAYER_NAME_LENGTH + 5 + PHONE_NUMBER_LENGTH + EASY_CHAT_MESSAGE_LENGTH
+	ld c, wNameCardDataEnd - wNameCardData
 	call Mobile22_CopyCBytesFromHLToDE ; copy c bytes from hl to de
 	jr .copy_done
 
@@ -4154,7 +4154,7 @@ Mobile22_SelectCardEntryToOverride: ; insert friend's card to card folder
 	ld a, $0
 	adc d
 	ld d, a
-	ld c, PLAYER_NAME_LENGTH + 5 + PHONE_NUMBER_LENGTH + EASY_CHAT_MESSAGE_LENGTH
+	ld c, wNameCardDataEnd - wNameCardData
 	call Mobile22_CopyCBytesFromHLToDE
 
 .copy_done
