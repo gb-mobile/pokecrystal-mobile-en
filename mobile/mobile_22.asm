@@ -63,7 +63,7 @@ Function89185:
 	pop de
 	ret
 
-Function89193:
+Mobile22_CopyCBytesFromHLToDE:
 ; copy(hl, de, 4)
 ; Copies c bytes from hl to de.
 ; Preserves hl and de.
@@ -208,21 +208,23 @@ Function89245:
 	and a
 	ret
 
-Function89254:
-	ld bc, $d07
-	jr Function89261
+Mobile22_ConfirmationDialog_MiddleLeft:
+	ld bc, $0d07
+	jr Mobile22_ConfirmationDialog
 
-Function89259:
+Mobile22_ConfirmationDialog_MiddleRight:
 	ld bc, $0e07
-	jr Function89261
+	jr Mobile22_ConfirmationDialog
 
-Function8925e:
+Mobile22_ConfirmationDialog_BottomRight:
 	ld bc, $0e0c
 
-Function89261:
+; Input: Top Left coord of the menu in BC.
+; Output: nc is YES has been pressed.
+Mobile22_ConfirmationDialog:
 	push af
 	push bc
-	ld hl, MenuHeader_0x892a3
+	ld hl, MenuHeader_YesNo
 	call CopyMenuHeader
 	pop bc
 	ld hl, wMenuBorderTopCoord
@@ -259,22 +261,22 @@ Function89261:
 	scf
 	ret
 
-MenuHeader_0x892a3:
+MenuHeader_YesNo:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 10, 5, 15, 9
-	dw MenuData_0x892ab
+	dw MenuData_YesNo
 	db 1 ; default option
 
-MenuData_0x892ab:
+MenuData_YesNo:
 	db STATICMENU_CURSOR | STATICMENU_NO_TOP_SPACING ; flags
 	db 2 ; items
 	db "YES@"
 	db "NO@"
 
-Function892b4:
-	call Function8931b
+Mobile22_DeleteSelectedCard:
+	call Mobile22_GetSelectedCardFolderEntryInBC
 
-Function892b7: ; delete entry?
+Mobile22_DeleteCardInBC: ; delete entry?
 	ld d, b
 	ld e, c
 	ld hl, 0
@@ -331,13 +333,14 @@ Function89305:
 	inc a
 	ld [wMenuSelection], a
 	push bc
-	call Function892b4
+	call Mobile22_DeleteSelectedCard
 	pop bc
 	dec c
 	jr nz, .loop
 	ret
 
-Function8931b:
+; Returns the selected entry 
+Mobile22_GetSelectedCardFolderEntryInBC:
 	push hl
 	ld hl, sCardFolderData ; 4:a03b
 	ld a, [wMenuSelection]
@@ -349,11 +352,12 @@ Function8931b:
 	pop hl
 	ret
 
-Function8932d:
+Mobile22_CheckEmptyOrBlankPlayerNameInBC:
 	ld hl, 0
 	add hl, bc
+	; fallthrough
 
-Function89331:
+Mobile22_CheckEmptyOrBlankPlayerNameInHL:
 ; Scans up to 5 characters starting at hl, looking for a nonspace character up to the next terminator.
 ; Sets carry if it does not find a nonspace character.
 ; Returns the location of the following character in hl.
@@ -445,7 +449,7 @@ Function89363:
 Function89381:
 	push bc
 	push de
-	call Function89b45
+	call Mobile22_CheckPhoneNumberConformity
 	jr c, .ok
 	push hl
 	ld a, -1
@@ -456,7 +460,7 @@ Function89381:
 .ok
 	pop de
 	ld c, PHONE_NUMBER_LENGTH
-	call Function89193
+	call Mobile22_CopyCBytesFromHLToDE
 	pop bc
 	ret
 
@@ -466,7 +470,7 @@ Function8939a:
 	add hl, bc
 	ld de, wd002
 	ld c, PLAYER_NAME_LENGTH;6
-	call Function89193
+	call Mobile22_CopyCBytesFromHLToDE
 	pop bc
 	ld hl, 17 + 4
 	add hl, bc
@@ -1296,7 +1300,7 @@ Function898be:
 	push bc
 	ld de, wd002
 	ld hl, wd002
-	call Function89331
+	call Mobile22_CheckEmptyOrBlankPlayerNameInHL
 	jr nc, .asm_898cd
 	ld de, String_89116
 
@@ -1648,18 +1652,18 @@ Function89a57:
 
 .Function89ac7:
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	call .Function89ad4
 	call CloseSRAM
 	ret
 
 .Function89ad4:
 	push de
-	call Function8932d ; find a non-space character within 5 bytes of bc
+	call Mobile22_CheckEmptyOrBlankPlayerNameInBC ; find a non-space character within 5 bytes of bc
 	jr c, .no_nonspace_character
-	ld hl, 17 + 4
+	ld hl, 2 * PLAYER_NAME_LENGTH + 5 + 1 ; Phone number first byte in struct.
 	add hl, bc
-	call Function89b45
+	call Mobile22_CheckPhoneNumberConformity
 	jr c, .finish_decode
 
 .no_nonspace_character
@@ -1724,12 +1728,13 @@ SetBGAndDisplayBlankGoldenBox_DE:
 	farcall DisplayBlankGoldenBox_DE
 	ret
 
-Function89b45:
-	; some sort of decoder?
+Mobile22_CheckPhoneNumberConformity:
+	; Returns carry if the phone number in HL as a valid format.
 	; BCD?
+	; The E value is never read in this function, and never used as a return value of this function and could be removed.
 	push hl
 	push bc
-	ld c, $10
+	ld c, PHONE_NUMBER_DIGITS_QUANTITY
 	ld e, $0
 .loop
 	ld a, [hli]
@@ -1738,7 +1743,7 @@ Function89b45:
 	cp 10
 	jr c, .low_nybble_less_than_10
 	ld a, c
-	cp $b
+	cp $b ; Min length of the phone number.
 	jr nc, .clear_carry
 	jr .set_carry
 
@@ -1751,7 +1756,7 @@ Function89b45:
 	cp 10
 	jr c, .high_nybble_less_than_10
 	ld a, c
-	cp $b
+	cp $b ; Min length of the phone number.
 	jr nc, .clear_carry
 	jr .set_carry
 
@@ -2771,12 +2776,12 @@ Function8a20d:
 	ld hl, MobileCardFolderAskDeleteText
 	call PrintText
 	ld a, $2
-	call Function89259
+	call Mobile22_ConfirmationDialog_MiddleRight
 	ret c
 	ld hl, MobileCardFolderDeleteAreYouSureText
 	call PrintText
 	ld a, $2
-	call Function89259
+	call Mobile22_ConfirmationDialog_MiddleRight
 	ret c
 	xor a
 	call Function8a2fe
@@ -2847,12 +2852,12 @@ Function8a2aa:
 	ld hl, MobileCardFolderAskOpenOldText
 	call PrintText
 	ld a, $1
-	call Function89259
+	call Mobile22_ConfirmationDialog_MiddleRight
 	jr nc, .asm_8a2cf
 	ld hl, MobileCardFolderAskDeleteOldText
 	call PrintText
 	ld a, $2
-	call Function89259
+	call Mobile22_ConfirmationDialog_MiddleRight
 	jr c, .asm_8a2ea
 	call Function8a20d
 	jr .asm_8a2ea
@@ -2912,7 +2917,7 @@ Function8a31c:
 	call DisplayCardFolderHeader
 	hlcoord 12, 4
 	call Function8a58d
-	call Function8a3b2
+	call DisplayCardFolderLayout
 	pop bc
 	ld a, c
 	ld [wMenuCursorPosition], a
@@ -2979,7 +2984,7 @@ Function8a3a2:
 	ld [wMenuSelection], a
 	ret
 
-Function8a3b2:
+DisplayCardFolderLayout:
 	ld a, $1
 	ld [wMenuSelection], a
 	call Function8a4fc
@@ -2996,7 +3001,7 @@ Function8a3b2:
 	ld b, $8
 	ld c, $9
 	call SetBGAndDisplayBlankGoldenBox_DE
-	ld hl, MenuHeader_0x8a40f
+	ld hl, MenuHeader_CardFolderLayout
 .asm_8a3db
 	call CopyMenuHeader
 	ret
@@ -3004,7 +3009,7 @@ Function8a3b2:
 Function8a3df:
 	call OpenSRAMBank4
 	ld hl, sPhoneNumber
-	call Function89b45
+	call Mobile22_CheckPhoneNumberConformity
 	call CloseSRAM
 	ld hl, wd002
 	jr c, .asm_8a3f8
@@ -3029,7 +3034,7 @@ Function8a400:
 Unknown_8a408: db 1, 2, -1
 Unknown_8a40b: db 1, 2, 3, -1
 
-MenuHeader_0x8a40f:
+MenuHeader_CardFolderLayout:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 0, 2, 10, TEXTBOX_Y - 1
 	dw MenuData_0x8a417
@@ -3319,14 +3324,14 @@ Function8a62c:
 	call LoadStandardMenuHeader
 	call Mobile22_ClearScreenThenDelay
 	xor a
-	call Function8b94a
+	call Mobile22_SetCardListNavigationAction
 	call Function8b677
 .asm_8a639
 	xor a
 	ld [wd033], a
 	ld [wd032], a
 	ld [wd0e3], a
-	call Function8b7bd
+	call Mobile22_CardListNavigationLoop
 	ld a, c
 	and a
 	jr z, .asm_8a66a
@@ -3336,7 +3341,7 @@ Function8a62c:
 	inc a
 	ld [wd034], a
 	push bc
-	call Function8b960
+	call Mobile22_CardListEntryMenu
 	ld a, c
 	pop bc
 	jr z, .asm_8a639
@@ -3364,7 +3369,7 @@ Function8a679:
 	call ClearBGPalettes
 	call Function893cc
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	call Function89844
 	call CloseSRAM
 	call OpenSRAMBank4
@@ -3408,13 +3413,13 @@ Function8a6cd:
 	call ClearBGPalettes
 	call Function893cc
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	call Function89844
 	call Function8a757
 	call CloseSRAM
 .asm_8a6e5
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	call Function89856
 	call Function89a2e
 	call Function891ab
@@ -3448,7 +3453,7 @@ Function8a6cd:
 	call PlaceString
 	call WaitBGMap
 	ld a, $2
-	call Function89254
+	call Mobile22_ConfirmationDialog_MiddleLeft
 	jr c, .asm_8a6e5
 .asm_8a73f
 	call CloseSRAM
@@ -3474,7 +3479,7 @@ Function8a757:
 	ret
 
 Function8a765:
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	push bc
 	ld hl, $0
 	add hl, bc
@@ -3503,7 +3508,7 @@ Function8a78c:
 	ld b, NAME_FRIEND
 	farcall NamingScreen
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	push bc
 	ld hl, $0
 	add hl, bc
@@ -3543,7 +3548,7 @@ Function8a7cb:
 	ld l, e
 	ld de, wCardPhoneNumber
 	ld c, $8
-	call Function89193
+	call Mobile22_CopyCBytesFromHLToDE
 .asm_8a7f4
 	pop af
 	ld [wMenuSelection], a
@@ -3551,7 +3556,7 @@ Function8a7cb:
 	call ClearBGPalettes
 	call Function893cc
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	call Function89844
 	call Function89856
 	call Function89a2e
@@ -3563,15 +3568,15 @@ Function8a7cb:
 Function8a818:
 	call Function89a23
 	ld hl, wd002
-	call Function89331
+	call Mobile22_CheckEmptyOrBlankPlayerNameInHL
 	jr c, .asm_8a875
 	ld hl, wCardPhoneNumber
-	call Function89b45
+	call Mobile22_CheckPhoneNumberConformity
 	jr nc, .asm_8a87a
 	call OpenSRAMBank4
 	call Function8a765
 	jr nc, .asm_8a863
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	push bc
 	ld hl, $0
 	add hl, bc
@@ -3579,7 +3584,7 @@ Function8a818:
 	ld e, l
 	ld hl, wd002
 	ld c, PLAYER_NAME_LENGTH;$6
-	call Function89193
+	call Mobile22_CopyCBytesFromHLToDE
 	pop bc
 	ld hl, PLAYER_NAME_LENGTH * 2 + 5;$11
 	add hl, bc
@@ -3587,7 +3592,7 @@ Function8a818:
 	ld e, l
 	ld hl, wCardPhoneNumber
 	ld c, $8
-	call Function89193
+	call Mobile22_CopyCBytesFromHLToDE
 	hlcoord 1, 13
 	ld de, .string_8a868
 	call PlaceString
@@ -3629,7 +3634,7 @@ Function8a8a1:
 	ld de, String_89135
 	call PlaceString
 	ld a, $2
-	call Function89254
+	call Mobile22_ConfirmationDialog_MiddleLeft
 	jr c, .asm_8a8c1
 .asm_8a8bf
 	scf
@@ -3643,7 +3648,7 @@ Function8a8c3:
 	call ClearBGPalettes
 	call Function893cc
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	call Function89844
 	call Function8939a
 	call Function89856
@@ -3653,10 +3658,10 @@ Function8a8c3:
 	ld de, String_8a919
 	call PlaceString
 	ld a, $2
-	call Function89254
+	call Mobile22_ConfirmationDialog_MiddleLeft
 	jr c, .asm_8a90f
 	call OpenSRAMBank4
-	call Function892b4
+	call Mobile22_DeleteSelectedCard
 	call CloseSRAM
 	call Function89a23
 	call Mobile22_SetBGMapMode0
@@ -3688,7 +3693,7 @@ Function8a930: ; switch entries?
 	ld a, [wd034]
 	ld [wd0e3], a
 .asm_8a943
-	call Function8b7bd
+	call Mobile22_CardListNavigationLoop
 	ld a, [wMenuJoypad]
 	and A_BUTTON
 	jr nz, .asm_8a953
@@ -3704,7 +3709,7 @@ Function8a930: ; switch entries?
 	jr z, .asm_8a995
 	push bc
 	ld [wMenuSelection], a
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	push bc
 	ld h, b
 	ld l, c
@@ -3715,7 +3720,7 @@ Function8a930: ; switch entries?
 	pop bc
 	ld a, c
 	ld [wMenuSelection], a
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	push bc
 	ld h, b
 	ld l, c
@@ -3872,7 +3877,7 @@ Function8aa73:
 	ld l, e
 	ld de, wCardPhoneNumber
 	ld c, $8
-	call Function89193
+	call Mobile22_CopyCBytesFromHLToDE
 .asm_8aa9d
 	call Mobile22_ClearScreenThenDelay
 	call ClearBGPalettes
@@ -3889,7 +3894,7 @@ Function8aa73:
 Function8aab6:
 	call Function89a23
 	ld hl, wCardPhoneNumber
-	call Function89b45
+	call Mobile22_CheckPhoneNumberConformity
 	jr nc, Function8ab00
 	call OpenSRAMBank4
 	ld de, wCardPhoneNumber
@@ -3900,7 +3905,7 @@ Function8aab6:
 	ld hl, wCardPhoneNumber
 	ld de, sPhoneNumber
 	ld c, PHONE_NUMBER_LENGTH
-	call Function89193
+	call Mobile22_CopyCBytesFromHLToDE
 	hlcoord 1, 13
 	ld de, String_8aaf0
 	call PlaceString
@@ -3937,7 +3942,7 @@ Function8ab11:
 	ld de, String_89135
 	call PlaceString
 	ld a, $2
-	call Function89254
+	call Mobile22_ConfirmationDialog_MiddleLeft
 	jr c, .asm_8ab39
 .asm_8ab37
 	scf
@@ -3999,22 +4004,22 @@ Function8ab93:
 
 Function8aba9: ; pick a friend to call
 	ld a, $2
-	call Function8b94a
+	call Mobile22_SetCardListNavigationAction
 	ld a, $1
 	ld [wd032], a
 .asm_8abb3
 	call Mobile22_ClearScreenThenDelay
 	call Function8b677
 .asm_8abb9
-	call Function8b7bd
+	call Mobile22_CardListNavigationLoop
 	jr z, .asm_8abdf
 	ld a, c
 	ld [wMenuSelection], a
 	call OpenSRAMBank4
-	call Function8931b
-	ld hl, $0011 + 4
+	call Mobile22_GetSelectedCardFolderEntryInBC
+	ld hl, 2 * PLAYER_NAME_LENGTH + 5 + 1 ; Phone number first byte in struct.
 	add hl, bc
-	call Function89b45
+	call Mobile22_CheckPhoneNumberConformity
 	call CloseSRAM
 	jr c, .asm_8abe2
 	ld de, SFX_WRONG
@@ -4034,7 +4039,7 @@ Function8aba9: ; pick a friend to call
 	call ClearBGPalettes
 	call Function893cc
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	call Function89844
 	call CloseSRAM
 	call OpenSRAMBank4
@@ -4059,7 +4064,7 @@ Function8aba9: ; pick a friend to call
 	ld de, String_8ac3b
 	call PlaceString
 	ld a, $1
-	call Function8925e
+	call Mobile22_ConfirmationDialog_BottomRight
 	jp c, .asm_8abb3
 	ld a, [wMenuSelection]
 	ld c, a
@@ -4085,72 +4090,74 @@ Function8ac4e:
 	call Function891ab
 	ret
 
-Function8ac70: ; insert friend's card to card folder
+; Input: DE = card temp data to register.
+Mobile22_SelectCardEntryToOverride: ; insert friend's card to card folder
 	push de
 	ld a, $3
-	call Function8b94a
+	call Mobile22_SetCardListNavigationAction
 
-Function8ac76:
+.clear_screen
 	call Mobile22_ClearScreenThenDelay
-	call Function8b677
+	call Function8b677 ; Screen setup tasks.
 
-Function8ac7c:
-	call Function8b7bd
-	jr z, .asm_8acf0
+.start_navigation
+	call Mobile22_CardListNavigationLoop
+	jr z, .confirm_cancellation
 	ld a, c
 	ld [wd02f], a
 	ld [wMenuSelection], a
 	call OpenSRAMBank4
-	call Function8931b
-	call Function8932d
+	call Mobile22_GetSelectedCardFolderEntryInBC
+	call Mobile22_CheckEmptyOrBlankPlayerNameInBC
 	call CloseSRAM
-	jr nc, .asm_8acb0
+	jr nc, .entry_already_contains_card
 	call OpenSRAMBank4
-	ld hl, $0011 + 4
+	ld hl, 2 * PLAYER_NAME_LENGTH + 5 + 1 ; Phone number first byte in struct.
 	add hl, bc
-	call Function89b45
+	call Mobile22_CheckPhoneNumberConformity
 	call CloseSRAM
-	jr nc, .asm_8accc
-	call OpenSRAMBank4
-	call Function892b7
-	call CloseSRAM
-	jr .asm_8accc
+	jr nc, .new_entry
 
-.asm_8acb0 ; overwrite entry keeping the entered name
-	call Function8ad0b
-	jr c, Function8ac76
+	call OpenSRAMBank4
+	call Mobile22_DeleteCardInBC
+	call CloseSRAM
+	jr .new_entry
+
+.entry_already_contains_card ; overwrite entry keeping the entered name
+	call Mobile22_AskOverwriteCardEntry
+	jr c, .clear_screen
 	and a
-	jr nz, .asm_8accc
+	jr nz, .new_entry
 	call OpenSRAMBank4
 	ld h, b
 	ld l, c
 	ld d, $0
-	ld e, PLAYER_NAME_LENGTH;$6
+	ld e, PLAYER_NAME_LENGTH
 	add hl, de
 	ld d, h
 	ld e, l
 	pop hl
-	ld c, $1f + 2
-	call Function89193 ; copy c bytes from hl to de
-	jr .asm_8ace4
+	ld c, PLAYER_NAME_LENGTH + 5 + PHONE_NUMBER_LENGTH + EASY_CHAT_MESSAGE_LENGTH
+	call Mobile22_CopyCBytesFromHLToDE ; copy c bytes from hl to de
+	jr .copy_done
 
-.asm_8accc ; new entry
+.new_entry
 	pop hl
 	call OpenSRAMBank4
 	ld d, b
 	ld e, c
-	ld c, PLAYER_NAME_LENGTH;$6
-	call Function89193
-	ld a, PLAYER_NAME_LENGTH;$6
+	ld c, PLAYER_NAME_LENGTH
+	call Mobile22_CopyCBytesFromHLToDE
+	ld a, PLAYER_NAME_LENGTH
 	add e
 	ld e, a
 	ld a, $0
 	adc d
 	ld d, a
-	ld c, $1f + 2
-	call Function89193
+	ld c, PLAYER_NAME_LENGTH + 5 + PHONE_NUMBER_LENGTH + EASY_CHAT_MESSAGE_LENGTH
+	call Mobile22_CopyCBytesFromHLToDE
 
-.asm_8ace4
+.copy_done
 	call CloseSRAM
 	call LoadStandardFont
 	ld a, [wd02f]
@@ -4158,12 +4165,12 @@ Function8ac7c:
 	and a
 	ret
 
-.asm_8acf0
+.confirm_cancellation
 	ld hl, MobileCardFolderFinishRegisteringCardsText
 	call PrintText
 	ld a, $2
-	call Function89259
-	jp c, Function8ac7c
+	call Mobile22_ConfirmationDialog_MiddleRight
+	jp c, .start_navigation
 	call LoadStandardFont
 	pop de
 	ld c, $0
@@ -4174,7 +4181,10 @@ MobileCardFolderFinishRegisteringCardsText:
 	text_far _MobileCardFolderFinishRegisteringCardsText
 	text_end
 
-Function8ad0b:
+; Output:    Carry: Carry if false, non-carry if true (meaning the card must be overwritten).
+;          A value: 0 if friend's name must be saved (only goes with true/carry), 1 if friend's name must be overridden (only goes with true/carry), 2 otherwise (only goes with false/nc).
+
+Mobile22_AskOverwriteCardEntry:
 .asm_8ad0b
 	ld a, [wMenuSelection]
 	ld [wd02f], a
@@ -4182,7 +4192,7 @@ Function8ad0b:
 	call ClearBGPalettes
 	call Function893cc
 	call OpenSRAMBank4
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	push bc
 	call Function89844
 	call Function8939a
@@ -4192,56 +4202,60 @@ Function8ad0b:
 	call CloseSRAM
 	call Function891ab
 	pop bc
-.asm_8ad37
+
+.input_loop
 	push bc
 	call Function89a57
 	pop bc
-	jr c, .asm_8ad37
+	jr c, .input_loop
 	and a
 	jr z, .asm_8ad0b
 	cp $2
-	jr z, .asm_8ad37
+	jr z, .input_loop
+
 	call Mobile22_SetBGMapMode0
 	push bc
 	hlcoord 0, 12
 	ld b, $4
 	ld c, $12
 	call Textbox
-	ld de, String_8ad89
+	ld de, String_AskOverwriteCard
 	hlcoord 1, 14
 	call PlaceString
 	ld a, $2
-	call Function8925e
-	jr c, .asm_8ad87
+	call Mobile22_ConfirmationDialog_BottomRight
+	jr c, .return
+
 	call Mobile22_SetBGMapMode0
 	hlcoord 0, 12
 	ld b, $4
 	ld c, $12
 	call Textbox
-	ld de, String_8ad9c
+	ld de, String_KeepFriendsName
 	hlcoord 1, 14
 	call PlaceString
 	ld a, $1
-	call Function8925e
-	jr c, .asm_8ad84
-	ld a, $0
-	jr .asm_8ad86
+	call Mobile22_ConfirmationDialog_BottomRight
+	jr c, .return_1
 
-.asm_8ad84
+	ld a, $0
+	jr .return_true
+
+.return_1
 	ld a, $1
 
-.asm_8ad86
+.return_true
 	and a
 
-.asm_8ad87
+.return
 	pop bc
 	ret
 
-String_8ad89:
+String_AskOverwriteCard:
 	db   "Overwrite";"こ<NO>めいし<WO>けして"
 	next "this data?@";"いれかえますか？@"
 
-String_8ad9c:
+String_KeepFriendsName:
 	db   "Keep the";"おともだち<NO>なまえを"
 	next "friend's name?@";"のこして　おきますか？@"
 
@@ -4256,7 +4270,7 @@ Function8adb3:
 Function8adbf: ; unreferenced
 	call OpenSRAMBank4
 	ld hl, sPhoneNumber
-	call Function89b45
+	call Mobile22_CheckPhoneNumberConformity
 	call CloseSRAM
 	ret
 

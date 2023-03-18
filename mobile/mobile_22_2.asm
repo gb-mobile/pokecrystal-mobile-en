@@ -143,7 +143,7 @@ Function8b391:
 	pop bc
 	ret
 
-Function8b3a4:
+Mobile22_CheckPasscode:
 	; strcmp(hl, bc, 4)
 	push de
 	push bc
@@ -471,7 +471,7 @@ Function8b555:
 	jr c, .loop
 	ld bc, wd017
 	ld hl, wd013
-	call Function8b3a4
+	call Mobile22_CheckPasscode
 	jr z, .strings_equal
 	call Mobile22_Clear24FirstOAM
 	ld bc, wd013
@@ -541,15 +541,15 @@ Function8b5e7:
 	call Mobile22_DisplayPINCodeAndFrame
 	call OpenSRAMBank4
 	ld hl, sCardFolderPasscode ; 4:a037
-	call Function8b3a4
+	call Mobile22_CheckPasscode
 	call CloseSRAM
-	jr z, .asm_8b635
+	jr z, .passcode_correct
 	ld hl, IncorrectPasscodeText
 	call PrintText
 	ld bc, wd013
 	call Function8b36c
 	jr .asm_8b602
-.asm_8b635
+.passcode_correct
 	ld hl, UnknownText_0x8b64c
 	call PrintText
 	and a
@@ -809,9 +809,10 @@ Function8b79e:
 	jr nz, .asm_8b7a9
 	ret
 
-Function8b7bd:
+; Returns the selected menu item in C.
+Mobile22_CardListNavigationLoop:
 	call Function8b855
-	ld hl, MenuHeader_0x8b867
+	ld hl, MenuHeader_CardsList
 	call CopyMenuHeader
 	ld a, [wd030]
 	ld [wMenuCursorPosition], a
@@ -827,11 +828,11 @@ Function8b7bd:
 .asm_8b7e0
 	ld a, [wd0e3]
 	and a
-	jr z, .asm_8b7ea
+	jr z, .input_main_loop
 	dec a
 	ld [wScrollingMenuCursorPosition], a
 
-.asm_8b7ea
+.input_main_loop
 	hlcoord 0, 2
 	ld b, $b
 	ld c, $12
@@ -839,31 +840,31 @@ Function8b7bd:
 	call Function8b75d
 	call UpdateSprites
 	call Mobile_EnableSpriteUpdates
-	call ScrollingMenu
+	call ScrollingMenu ; This function is blocking: you won't get out of it until the player presses either the LEFT, RIGHT, A, or B button.
 	call Mobile_DisableSpriteUpdates
 	ld a, [wMenuJoypad]
 	cp B_BUTTON
-	jr z, .asm_8b823
+	jr z, .cancel
 	cp D_LEFT
-	jr nz, .asm_8b813
-	call Function8b832
-	jr .asm_8b7ea
+	jr nz, .didnt_press_left
+	call Mobile22_ScrollOnePageUp
+	jr .input_main_loop
 
-.asm_8b813
+.didnt_press_left
 	cp D_RIGHT
-	jr nz, .asm_8b81c
-	call Function8b83e
-	jr .asm_8b7ea
+	jr nz, .didnt_press_right
+	call Mobile22_ScrollOnePageDown
+	jr .input_main_loop
 
-.asm_8b81c
+.didnt_press_right
 	ld a, [wMenuSelection]
 	cp $ff
-	jr nz, .asm_8b824
+	jr nz, .finish
 
-.asm_8b823
+.cancel
 	xor a
 
-.asm_8b824
+.finish
 	ld c, a
 	ld a, [wMenuCursorY]
 	ld [wd030], a
@@ -871,7 +872,7 @@ Function8b7bd:
 	ld [wd031], a
 	ret
 
-Function8b832:
+Mobile22_ScrollOnePageUp:
 	ld a, [wMenuScrollPosition]
 	ld hl, wMenuDataItems
 	sub [hl]
@@ -879,7 +880,7 @@ Function8b832:
 	xor a
 	jr Function8b84b
 
-Function8b83e:
+Mobile22_ScrollOnePageDown:
 	ld a, [wMenuScrollPosition]
 	ld hl, wMenuDataItems
 	add [hl]
@@ -908,22 +909,22 @@ Function8b855:
 	ld [hl], a
 	ret
 
-MenuHeader_0x8b867:
+MenuHeader_CardsList:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 1, 3, 18, 13
-	dw MenuData_0x8b870
+	dw MenuData_CardsList
 	db 1 ; default option
 
 	db 0
 
-MenuData_0x8b870:
+MenuData_CardsList:
 	db SCROLLINGMENU_ENABLE_FUNCTION3 | SCROLLINGMENU_DISPLAY_ARROWS | SCROLLINGMENU_ENABLE_RIGHT | SCROLLINGMENU_ENABLE_LEFT ; flags
 	db 5, 3 ; rows, columns
 	db SCROLLINGMENU_ITEMS_NORMAL ; item format
 	dbw 0, wd002
 	dba Function8b880
 	dba Function8b88c
-	dba Function8b8c8
+	dba Mobile22_DisplayCardListBottomTextBox
 
 Function8b880:
 	ld h, d
@@ -939,8 +940,8 @@ Function8b88c:
 	ld l, e
 	push hl
 	ld de, String_89116
-	call Function8931b
-	call Function8932d
+	call Mobile22_GetSelectedCardFolderEntryInBC
+	call Mobile22_CheckEmptyOrBlankPlayerNameInBC
 	jr c, .asm_8b8a3
 	ld hl, 0
 	add hl, bc
@@ -957,7 +958,7 @@ Function8b88c:
 	add hl, de
 	push hl
 	ld de, String_89116
-	call Function8931b
+	call Mobile22_GetSelectedCardFolderEntryInBC
 	call Function8934a
 	jr c, .asm_8b8c0
 	ld hl, PLAYER_NAME_LENGTH ;$0006
@@ -971,11 +972,14 @@ Function8b88c:
 	call CloseSRAM
 	ret
 
-Function8b8c8:
+Mobile22_DisplayCardListBottomTextBox:
+	; Displays the textbox at the bottom of the screen.
 	hlcoord 0, 14
 	ld b, $2
 	ld c, $12
 	call Textbox
+
+	; Displays the appropriate text in the textbox (based on wd033's value).
 	ld a, [wd033]
 	ld b, 0
 	ld c, a
@@ -989,15 +993,22 @@ Function8b8c8:
 	ld e, l
 	hlcoord 1, 16
 	call PlaceString
+
+	; Displays the leftmost vertical dotted line just above the textbox (why though?).
 	hlcoord 0, 13
 	ld a, $f
 	ld [hl], a
+
+	; Displays the rightmost vertical dotted line just above the textbox (why though?).
 	hlcoord 19, 13
 	ld a, $11
 	ld [hl], a
+
 	ld a, [wMenuScrollPosition]
 	cp $24
 	ret c
+
+	; Displays the top horizontal dotted line.
 	hlcoord 0, 13
 	ld c, $12
 	call DisplayDottedFrameTopLine
@@ -1014,7 +1025,7 @@ String_8b919: db "Move to where?@"    ; OK to swap with any noun?
 String_8b92a: db "Choose a friend.@"        ; Please select an opponent.
 String_8b938: db "Place it where?@" ; Please select a location.
 
-Function8b94a:
+Mobile22_SetCardListNavigationAction:
 	ld [wd033], a
 	xor a
 	ld [wMenuScrollPosition], a
@@ -1025,24 +1036,24 @@ Function8b94a:
 	ld [wd030], a
 	ret
 
-Function8b960:
+Mobile22_CardListEntryMenu:
 	ld hl, MenuHeader_0x8b9ac
 	call LoadMenuHeader
-	call Function8b9e9
-	jr c, .asm_8b97a
+	call Mobile22_CheckIfCardEntryIsFilled
+	jr c, .existing_entry
 	hlcoord 10, 0
 	ld b, $6
 	ld c, $8
 	call Function8b703
-	ld hl, MenuHeader_0x8b9b1
-	jr .asm_8b987
-.asm_8b97a
+	ld hl, MenuHeader_CardListEmptyEntry
+	jr .menu_selected
+.existing_entry
 	hlcoord 10, 0
 	ld b, $a
 	ld c, $8
 	call Function8b703
-	ld hl, MenuHeader_0x8b9ca
-.asm_8b987
+	ld hl, MenuHeader_CardListExistingEntry
+.menu_selected
 	ld a, $1
 	call Function89d5e
 	ld hl, Function8b9ab
@@ -1074,26 +1085,26 @@ MenuHeader_0x8b9ac:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 01, 0, SCREEN_WIDTH - 1, TEXTBOX_Y - 1
 
-MenuHeader_0x8b9b1:
+MenuHeader_CardListEmptyEntry:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 10, 0, SCREEN_WIDTH - 1, 7
-	dw MenuData_0x8b9b9
+	dw MenuData_CardListEmptyEntry
 	db 1 ; default option
 
-MenuData_0x8b9b9:
+MenuData_CardListEmptyEntry:
 	db STATICMENU_CURSOR | STATICMENU_WRAP ; flags
 	db 3 ; items
 	db "EDIT@" ; EDIT
 	db "SWITCH@"   ; REPLACE
 	db "CANCEL@"     ; QUIT
 
-MenuHeader_0x8b9ca:
+MenuHeader_CardListExistingEntry:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 10, 0, SCREEN_WIDTH - 1, TEXTBOX_Y - 1
-	dw MenuData_0x8b9d2
+	dw MenuData_CardListExistingEntry
 	db 1 ; default option
 
-MenuData_0x8b9d2:
+MenuData_CardListExistingEntry:
 	db STATICMENU_CURSOR | STATICMENU_WRAP ; flags
 	db 5 ; items
 	db "VIEW@"       ; VIEW
@@ -1102,19 +1113,19 @@ MenuData_0x8b9d2:
 	db "DELETE@"       ; ERASE
 	db "CANCEL@"     ; QUIT
 
-Function8b9e9: ; check if entry is filled out?
+; Returns carry is entry exists/is filled.
+Mobile22_CheckIfCardEntryIsFilled: ; check if entry is filled out?
 	call OpenSRAMBank4
-	call Function8931b
-	call Function8932d
-	jr nc, .asm_8b9f6
-	jr .asm_8b9ff
-.asm_8b9f6
-	ld hl, $11 + 4
+	call Mobile22_GetSelectedCardFolderEntryInBC
+	call Mobile22_CheckEmptyOrBlankPlayerNameInBC
+	jr c, .blank_or_empty_name
+; non-empty name
+	ld hl, 2 * PLAYER_NAME_LENGTH + 5 + 1 ; Phone number first byte in struct.
 	add hl, bc
-	call Function89b45 ; decode number?
+	call Mobile22_CheckPhoneNumberConformity ; decode number?
 	jr c, .asm_8ba08
-.asm_8b9ff
-	call Function892b4
+.blank_or_empty_name
+	call Mobile22_DeleteSelectedCard
 	and a
 	ld de, Unknown_8ba1c
 	jr .asm_8ba0c

@@ -4841,7 +4841,7 @@ Function1021b8:
 	call FadeToMenu
 	call Function10218d
 	ld de, wPlayerMoveStruct + 2 ; wPlayerMoveStruct = wc60f
-	farcall Function8ac70
+	farcall Mobile22_SelectCardEntryToOverride
 	ld a, c
 	ld [wStringBuffer1], a
 	push af
