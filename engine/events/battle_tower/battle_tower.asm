@@ -60,28 +60,14 @@ Function170114:
 
 ; load saved data for upload
 .Function170121:
-	; relocated from wc608 to $d820 (in wram bank 3) because available space at wc608 is slightly too small
-	; bank 3 is active during the post so this should work without breaking stuff
-	; also see Function170c8b and Function1198f7 in mobile_46
-	; pretty hacky, don't know if there is a better way to do this
-	ldh a, [rSVBK]
-	push af
-	ld a, 3
-	ldh [rSVBK], a
-
 	ld a, BANK(s5_a948)
 	call OpenSRAM
 	ld hl, s5_a948
-	ld de, $d820;wc608
-	ld bc, 246 + 17
+	ld de, wc608
+	ld bc, BATTLE_TOWER_DATA_UPLOAD_LENGTH
 	call CopyBytes
 	call CloseSRAM
 	call Function170c8b
-
-	; restore wram bank
-	pop af
-	ldh [rSVBK], a
-
 	ret
 
 ; generate data to upload?
@@ -109,7 +95,7 @@ Function170139:
 	ld a, l
 	ld [wc608 + 1], a
 	; during post the email address gets inserted into this free space
-	ld hl, wc608 + $20
+	ld hl, wc608 + 2 + MOBILE_EMAIL_LENGTH
 	ld a, [wPlayerID]
 	ld [hli], a
 	ld a, [wPlayerID + 1]
@@ -126,7 +112,7 @@ Function170139:
 	ld bc, wPlayerID
 	ld de, wPlayerGender
 	farcall GetMobileOTTrainerClass
-	ld de, $c631 + 2;$c631
+	ld de, wc608 + 2 + MOBILE_EMAIL_LENGTH + 4 + PLAYER_NAME_LENGTH - 1
 	ld a, c
 	ld [de], a
 	inc de
@@ -138,7 +124,7 @@ Function170139:
 	ld [wcd4b], a
 	ld a, HIGH(wPartyMonNicknames)
 	ld [wcd4c], a
-	ld a, 3
+	ld a, BATTLETOWER_PARTY_LENGTH
 .CopyLoop:
 	push af
 	ld a, [wcd49]
@@ -183,7 +169,7 @@ Function170139:
 	; save to sram
 	ld hl, wc608
 	ld de, s5_a948
-	ld bc, 246 + 17
+	ld bc, BATTLE_TOWER_DATA_UPLOAD_LENGTH
 	call CopyBytes
 	call CloseSRAM
 	ret
@@ -516,7 +502,7 @@ Function17042c:
 .loop
 	push af
 	push hl
-	ld c, BATTLETOWER_TRAINERDATALENGTH / 2
+	ld c, EASY_CHAT_MESSAGE_LENGTH * 3 / 2
 .loop2
 	; First byte is a comparison value.
 	ld a, [hli]
@@ -560,7 +546,7 @@ Function17042c:
 	pop de
 	push de
 	ld hl, Unknown_17047e
-	ld bc, BATTLETOWER_TRAINERDATALENGTH
+	ld bc, EASY_CHAT_MESSAGE_LENGTH * 3
 	call CopyBytes
 
 .next_trainer
@@ -1597,7 +1583,7 @@ LoadOpponentTrainerAndPokemonWithOTSprite:
 	ld a, [hl]
 	dec a
 
-	cp $42
+	cp $42 ; highest existing valid trainer class
 	jr c, .jr_05c_4aa6
 	ld a, $16
 	ld [hl], a

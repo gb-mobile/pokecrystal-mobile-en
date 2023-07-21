@@ -299,7 +299,7 @@ s5_a89c:: ds 22 ; a89c honor roll level and room string
 
 s5_a8b2:: ds HONOR_ROLL_DATA_LENGTH ; a8b2 honor roll downloaded names
 
-s5_a948:: ds 246 + 17 ; a948 battle tower data to upload
+s5_a948:: ds BATTLE_TOWER_DATA_UPLOAD_LENGTH ; a948 battle tower data to upload
 
 ; Battle Tower data must be in SRAM because you can save and leave between battles
 sBattleTowerChallengeState::

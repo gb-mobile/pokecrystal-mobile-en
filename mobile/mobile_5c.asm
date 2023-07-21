@@ -196,7 +196,7 @@ Function170c06:
 	ret
 
 Function170c8b:
-	ld hl, $d820 + $f1 + 17;$c608 + $f1 + 17
+	ld hl, wc608 + BATTLE_TOWER_DATA_UPLOAD_LENGTH - 5
 	ld b, $5
 .asm_170c90
 	ld a, [hl]

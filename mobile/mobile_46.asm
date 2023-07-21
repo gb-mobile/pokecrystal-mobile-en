@@ -3866,22 +3866,18 @@ Function1198f7:
 	ret nz
 
 	; insert email address into data to post
-	ld hl, $d820 + 2;$c608 + 2
+	ld hl, wc608 + 2
 	call Function119940
 
 	; configuration for post
 	ld hl, w3_d800
-	ld a, LOW($d820);$c608 ; memory location of data to post
+	ld a, LOW(wc608) ; memory location of data to post
 	ld [hli], a
-	ld a, HIGH($d820);$c608
+	ld a, HIGH(wc608)
 	ld [hli], a
-;	ld a, $f6 ; length of data to post
-;	ld [hli], a
-;	xor a
-;	ld [hli], a
-	ld a, LOW(246 + 17)
+	ld a, LOW(BATTLE_TOWER_DATA_UPLOAD_LENGTH)
 	ld [hli], a
-	ld a, HIGH(246 + 17)
+	ld a, HIGH(BATTLE_TOWER_DATA_UPLOAD_LENGTH)
 	ld [hli], a
 	ld a, LOW(wc708) ; memory location of login information
 	ld [hli], a
