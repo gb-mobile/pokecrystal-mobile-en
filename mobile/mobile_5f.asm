@@ -3624,23 +3624,24 @@ _RunMobileScript:
 	scf
 	ret
 
+; news text commands
 .Jumptable:
-	dw Function17f081 ; 0
-	dw Function17f0f8 ; 1
-	dw Function17f154 ; 2
-	dw Function17f181 ; 3
-	dw Function17f1d0 ; 4
-	dw Function17f220 ; 5
-	dw Function17f27b ; 6
-	dw Function17f2cb ; 7
-	dw MobileScript_PlayerName ; 8
-	dw MobileScript_Prefecture ; 9
-	dw MobileScript_Zipcode    ; a
-	dw Function17f3c9 ; b
-	dw Function17f3f0 ; c
-	dw Function17f41d ; d
-	dw Function17f44f ; e
+	dw Function17f081 ; 1
+	dw Function17f0f8 ; 2
+	dw Function17f154 ; 3
+	dw Function17f181 ; 4
+	dw Function17f1d0 ; 5
+	dw Function17f220 ; 6
+	dw Function17f27b ; 7
+	dw Function17f2cb ; 8
+	dw MobileScript_PlayerName ; 9
+	dw MobileScript_Prefecture ; a
+	dw MobileScript_Zipcode    ; b
+	dw Function17f3c9 ; c
+	dw Function17f3f0 ; d
+	dw Function17f41d ; e
 	dw Function17f44f ; f
+	dw Function17f44f ; 10
 
 Function17f081:
 	pop hl
@@ -4098,7 +4099,7 @@ MobileScript_PlayerName:
 	ldh [rSVBK], a
 	ld hl, wPlayerName
 	ld de, wc608
-	ld bc, NAME_LENGTH_JAPANESE
+	ld bc, PLAYER_NAME_LENGTH
 	call CopyBytes
 	ld a, $4
 	ldh [rSVBK], a
