@@ -1799,7 +1799,7 @@ jr_046_4d2c:
     ld h, a
 
 jr_046_4d34:
-    ld de, $d200
+    ld de, wBT_DownloadBuffer
     ld bc, $0e00
     jp HttpGet;Jump_046_4dcd
 
@@ -2103,7 +2103,7 @@ popc
 
 ; validates the length of the received battle room (1428 bytes) or honor roll data (150 bytes)
 ValidateBattleDownload:
-	ld hl, $d200
+	ld hl, wBT_DownloadBuffer
 	ld a, [wcd38]
 	and a
 	jr nz, .asm_118d6e

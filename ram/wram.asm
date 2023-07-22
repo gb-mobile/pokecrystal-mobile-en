@@ -3514,9 +3514,8 @@ w3_d090:: ds $70
 
 w3_d100::
 wBT_OTTrainer:: battle_tower_struct wBT_OT
-	ds $20
-wBT_TrainerTextIndex:: db
-	ds 1
+	ds $2c
+wBT_DownloadBuffer:: dw
 w3_d202:: battle_tower_struct w3_d202
 w3_d2e2:: battle_tower_struct w3_d2e2
 w3_d3c2:: battle_tower_struct w3_d3c2
@@ -3528,11 +3527,11 @@ UNION
 w3_d742:: battle_tower_struct w3_d742
 
 NEXTU
-	ds $be
+	ds $106
 w3_d800:: ds BG_MAP_WIDTH * SCREEN_HEIGHT
 
 NEXTU
-	ds $be
+	ds $106
 wBTChoiceOfLvlGroup:: db
 	ds $1
 w3_d802:: ds 12

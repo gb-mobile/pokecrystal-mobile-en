@@ -53,11 +53,11 @@ BattleTowerText::
 ;	ld b, 0
 ;	dec c
 ;	jr nz, .restore
-;	ld [wBT_TrainerTextIndex], a
+;	ld [wBT_DownloadBuffer], a
 ;	jr .okay2
 ;
 ;.restore
-;	ld a, [wBT_TrainerTextIndex]
+;	ld a, [wBT_DownloadBuffer]
 ;
 ;.okay2
 ;	push af
@@ -110,7 +110,7 @@ jr_047_4016:
 
 jr_047_401d:
     ld de, $c688
-    ld bc, $000c
+    ld bc, EASY_CHAT_MESSAGE_LENGTH
     call CopyBytes;$2ff2
     call CloseSRAM;$2fad
     ld de, $c5b9

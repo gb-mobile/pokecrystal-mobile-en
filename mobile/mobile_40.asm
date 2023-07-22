@@ -1198,14 +1198,14 @@ Function10079c:
 	jr nz, .dont_quit
 	ld a, [wcd6a]
 	add c
-	cp 60
+	cp MOBILE_BATTLE_ALLOWED_SECONDS
 	jr nc, .overflow
 	ld [wcd6a], a
 	and a
 	ret
 
 .overflow
-	sub 60
+	sub MOBILE_BATTLE_ALLOWED_SECONDS
 	ld [wcd6a], a
 	ld d, b
 	push de
@@ -1216,7 +1216,7 @@ Function10079c:
 	and a
 	jr nz, .quit
 	ld a, b
-	cp 10
+	cp MOBILE_BATTLE_ALLOWED_MINUTES
 	jr nc, .quit
 	ld a, d
 	and a
@@ -1304,7 +1304,7 @@ Function100846:
 	ld [wStringBuffer2 + 2], a
 	ld a, [wcd6d]
 	ld c, a
-	ld a, $0a
+	ld a, MOBILE_BATTLE_ALLOWED_MINUTES
 	sbc c
 	ld [wStringBuffer2 + 1], a
 	xor a
@@ -1400,7 +1400,7 @@ Function100902:
 	call Textbox
 	ld a, [wcd6d]
 	ld c, a
-	ld a, $0a
+	ld a, MOBILE_BATTLE_ALLOWED_MINUTES
 	sub c
 	ld [wStringBuffer2], a
 	jr z, .asm_10093f
