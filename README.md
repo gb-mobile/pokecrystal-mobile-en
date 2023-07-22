@@ -30,7 +30,7 @@ https://github.com/Sudel-Matze/pokecrystal
 
 
 
-## Setup [![Build Status][travis-badge]][travis]
+## Setup [![Build Status][ci-badge]][ci]
 
 For more information, please see [INSTALL.md](INSTALL.md)
 
@@ -80,5 +80,5 @@ https://github.com/gb-mobile/pokecrystal-mobile-en/wiki/Pok%C3%A9mon-Crystal-Mob
 - Zumilsawhat?   : Code (Large amounts of work on the EZ Chat system)
 - REON Community : Support and Assistance
 
-[travis]: https://travis-ci.org/pret/pokecrystal
-[travis-badge]: https://travis-ci.org/pret/pokecrystal.svg?branch=master
+[ci]: https://github.com/pret/pokecrystal/actions
+[ci-badge]: https://github.com/pret/pokecrystal/actions/workflows/main.yml/badge.svg
