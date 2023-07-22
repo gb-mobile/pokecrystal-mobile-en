@@ -186,7 +186,7 @@ MACRO battle_tower_struct
 	\1Mon{d:n}::     party_struct \1Mon{d:n}
 	\1Mon{d:n}Name:: ds MON_NAME_LENGTH
 	endr
-\1TrainerData::  ds BATTLETOWER_TRAINERDATALENGTH
+\1TrainerData::  ds EASY_CHAT_MESSAGE_LENGTH * 3
 \1TrainerEnd::
 ENDM
 

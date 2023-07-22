@@ -73,9 +73,9 @@ endc
 	pop af
 
 	ld hl, BattleTowerTrainerData
-	ld bc, BATTLETOWER_TRAINERDATALENGTH
+	ld bc, EASY_CHAT_MESSAGE_LENGTH * 3
 	call AddNTimes
-	ld bc, BATTLETOWER_TRAINERDATALENGTH
+	ld bc, EASY_CHAT_MESSAGE_LENGTH * 3
 .copy_bt_trainer_data_loop
 	ld a, BANK(BattleTowerTrainerData)
 	call GetFarByte
