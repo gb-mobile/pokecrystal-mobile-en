@@ -293,27 +293,27 @@ Mobile22_DeleteCardInBC:
 	call ByteFill
 	ld b, d
 	ld c, e
-	ld hl, 12 + 4
+	ld hl, PLAYER_NAME_LENGTH * 2
 	add hl, bc
 	xor a
 	ld [hli], a
 	ld [hl], a
-	ld hl, 14 + 4
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2
 	add hl, bc
 	ld [hli], a
 	ld [hl], a
-	ld hl, 16 + 4
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2 + 2
 	add hl, bc
 	ld [hl], a
-	ld hl, 17 + 4
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2 + 2 + 1
 	add hl, bc
 	ld a, -1
-	ld bc, 8
+	ld bc, PHONE_NUMBER_LENGTH
 	call ByteFill
 	ld b, d
 	ld c, e
-	ld e, 6
-	ld hl, 25 + 4
+	ld e, EASY_CHAT_MESSAGE_WORD_COUNT
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2 + 2 + 1 + PHONE_NUMBER_LENGTH
 	add hl, bc
 .loop
 	ld a, -1
@@ -472,7 +472,7 @@ Function8939a:
 	ld c, PLAYER_NAME_LENGTH;6
 	call Mobile22_CopyCBytesFromHLToDE
 	pop bc
-	ld hl, 17 + 4
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2 + 2 + 1
 	add hl, bc
 	ld de, wCardPhoneNumber ; wd008
 	call Function89381
@@ -728,7 +728,7 @@ Function894dc:
 
 Function8956f:
 	push bc
-	ld hl, 16 + 4
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2 + 2
 	add hl, bc
 	ld d, h
 	ld e, l
@@ -1155,7 +1155,7 @@ Function89797:
 
 Function897af:
 	push bc
-	ld hl, $0010 + 4
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2 + 2
 	add hl, bc
 	ld d, h
 	ld e, l
@@ -1522,7 +1522,7 @@ Function899d3:
 Function899fe:
 	push bc
 	push hl
-	ld hl, $0019 + 4
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2 + 2 + 1 + PHONE_NUMBER_LENGTH
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -3593,12 +3593,12 @@ Function8a818:
 	ld c, PLAYER_NAME_LENGTH;$6
 	call Mobile22_CopyCBytesFromHLToDE
 	pop bc
-	ld hl, PLAYER_NAME_LENGTH * 2 + 5;$11
+	ld hl, PLAYER_NAME_LENGTH * 2 + 2 + 2 + 1;$11
 	add hl, bc
 	ld d, h
 	ld e, l
 	ld hl, wCardPhoneNumber
-	ld c, $8
+	ld c, PHONE_NUMBER_LENGTH
 	call Mobile22_CopyCBytesFromHLToDE
 	hlcoord 1, 13
 	ld de, .string_8a868
