@@ -664,12 +664,12 @@ endc
 
 SECTION "Battle Tower Text", ROMX
 
-INCLUDE "data/battle_tower/trainer_text.asm"
+;INCLUDE "data/battle_tower/trainer_text.asm"
 
 
 SECTION "Battle Tower Trainer Data", ROMX
 
-INCLUDE "data/battle_tower/unknown.asm"
+;INCLUDE "data/battle_tower/unknown.asm"
 
 
 SECTION "Mobile News Data", ROMX
