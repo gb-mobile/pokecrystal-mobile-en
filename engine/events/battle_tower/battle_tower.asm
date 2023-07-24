@@ -238,6 +238,8 @@ RunBattleTowerTrainer:
 	call Clears5_a89a
 
 	predef StartBattle
+	
+	call Function170c06
 
 	farcall LoadPokemonData
 	farcall HealParty
@@ -1408,7 +1410,7 @@ BattleTowerAction_10:
 	call OpenSRAM
 	ld hl, s5_b023
 	ld de, wc608
-	ld bc, 105
+	ld bc, TRADE_CORNER_RECEIVE_TRADE_LENGTH
 	call CopyBytes
 	ld a, [sOfferReqGender]
 	ld [wcd30], a

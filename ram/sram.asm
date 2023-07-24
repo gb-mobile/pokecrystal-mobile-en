@@ -337,7 +337,7 @@ s5_aa8e:: ds BATTLE_TOWER_STRUCT_LENGTH * BATTLETOWER_STREAK_LENGTH ; aa8e battl
 
 sBattleTowerSaveFileFlags:: db
 
-s5_b023:: ds 105 + 2 + 2 + 5 + 5 ; b023
+s5_b023:: ds TRADE_CORNER_RECEIVE_TRADE_LENGTH ; b023
 s5_b08c:: ds 4 ; b08c
 s5_b090:: ds 2
 s5_b092:: ds 31
@@ -368,7 +368,7 @@ sDownloadedContentPrefectureAndZipcode:: ds 8 ; Backs up the player's prefecture
 s5_b2f9:: db ; b2f9
 s5_b2fa:: db ; b2fa
 s5_b2fb:: db ; b2fb
-	ds $c0e;$d03
+	ds $c6e;$d03
 s5_bfff:: ds 1
 
 
