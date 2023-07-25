@@ -21,14 +21,14 @@ jobs:
 
       # ==== Build Steps ====
       - name: Check out Source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           node-version: 16
           path: pokecrystal-mobile-en
           submodules: false
 
-      # ==== Install/Get Dependencies ====
-      - name: Linux Depends
+      # ==== Install/Get dependences ====
+      - name: Linux Dependences
         if: matrix.name == 'Linux-x64'
         run: |
           # Install necessary tools
@@ -52,7 +52,7 @@ jobs:
       # ==== Packaging ====
       - name: Store build
         if: (matrix.name == 'Linux-x64')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           node-version: 16
           name: Pokecrystal_Build
