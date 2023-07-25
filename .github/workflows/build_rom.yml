@@ -19,21 +19,26 @@ jobs:
             name: Linux-x64
     steps:
 
-      # ==== OS Specific Dependencies ====
-      - name: Linux Depends
-        if: matrix.name == 'Linux-x64'
-        run: |
-          # Pull in RGBDS-0.6.1
-          curl -Lo rgbds-0.6.1.tar.gz https://github.com/gbdev/rgbds/releases/download/v0.6.1/rgbds-0.6.1.tar.gz
-          tar xvfz rgbds-0.6.1.tar.gz
-          cd rgbds
-          make
       # ==== Build Steps ====
       - name: Check out Source
         uses: actions/checkout@v2
         with:
           path: pokecrystal-mobile-en
           submodules: false
+
+      # ==== OS Specific Dependencies ====
+      - name: Linux Depends
+        if: matrix.name == 'Linux-x64'
+        run: |
+          # Install necessary tools
+          sudo apt-get install -y bison pkg-config libpng-dev g++
+          # Pull in RGBDS-0.6.1
+          cd pokecrystal-mobile-en
+          curl -Lo rgbds-0.6.1.tar.gz https://github.com/gbdev/rgbds/releases/download/v0.6.1/rgbds-0.6.1.tar.gz
+          tar xvfz rgbds-0.6.1.tar.gz
+          cd rgbds
+          make
+          cd ..
 
       # ==== Pre-Build: Set environment vars ====
       # Needs to be in a separate step than build so that setting the environment var takes effect
@@ -48,31 +53,14 @@ jobs:
         if: (matrix.name == 'Linux-x64')
         shell: bash
         run: |
-          export GBDK_HOME=`pwd`/gbdk/
-          cd gb-photo
-          make
+          cd pokecrystal-mobile-en
+          make RGBDS=rgbds/
           cd ..
       # ==== Packaging ====
-      - name: Package build Linux/MacOS
-        if: (matrix.name == 'Linux-x64')
-        shell: bash
-        run: |
-          ls -la gb-photo/build
-          ls -la gb-photo/build/gb
-          ls -la gb-photo/build/gbc
-          # Remove debug artifacts
-          rm -f gb-photo/build/gb/*.noi gb-photo/build/gb/*.map gb-photo/build/gb/*.sym gb-photo/build/gb/*.ihx
-          rm -f gb-photo/build/gbc/*.noi gb-photo/build/gbc/*.map gb-photo/build/gbc/*.sym gb-photo/build/gbc/*.ihx
-          ls -la gb-photo/build
-          ls -la gb-photo/build/gb
-          ls -la gb-photo/build/gbc
-          # Don't use zip in linux since github will created a double nested zip
-          # 7z a ${{ env.BUILD_PACKAGE_FILENAME }} *.gb
       - name: Store build
         if: (matrix.name == 'Linux-x64')
         uses: actions/upload-artifact@v2
         with:
-          name: GB Photo! ROM Build
-          # path: gb-photo/build/gb/${{ env.BUILD_PACKAGE_FILENAME }}
-          path: gb-photo/build
+          name: Pokecrystal ROM Build
+          path: pokecrystal-mobile-en/pokecrystal.gbc
           # retention-days: 14
