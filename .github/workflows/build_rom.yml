@@ -23,7 +23,6 @@ jobs:
       - name: Check out Source
         uses: actions/checkout@v3
         with:
-          node-version: 16
           path: pokecrystal-mobile-en
           submodules: false
 
@@ -54,7 +53,6 @@ jobs:
         if: (matrix.name == 'Linux-x64')
         uses: actions/upload-artifact@v3
         with:
-          node-version: 16
           name: Pokecrystal_Build
           path: pokecrystal-mobile-en/pokecrystal.gbc
           # retention-days: 14
