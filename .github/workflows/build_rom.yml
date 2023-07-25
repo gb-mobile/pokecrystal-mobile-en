@@ -26,7 +26,7 @@ jobs:
           path: pokecrystal-mobile-en
           submodules: false
 
-      # ==== OS Specific Dependencies ====
+      # ==== Install/Get Dependencies ====
       - name: Linux Depends
         if: matrix.name == 'Linux-x64'
         run: |
@@ -40,16 +40,8 @@ jobs:
           make
           cd ..
 
-      # ==== Pre-Build: Set environment vars ====
-      # Needs to be in a separate step than build so that setting the environment var takes effect
-      #
-      - name: Pre-Build Linux
-        if: (matrix.name == 'Linux-x64')
-        shell: bash
-        run: |
-          echo "BUILD_PACKAGE_FILENAME=gb_photo.zip" >> $GITHUB_ENV
       # ==== Build ====
-      - name: Build GBDK-2020 Linux
+      - name: Build ROM
         if: (matrix.name == 'Linux-x64')
         shell: bash
         run: |
@@ -61,6 +53,6 @@ jobs:
         if: (matrix.name == 'Linux-x64')
         uses: actions/upload-artifact@v2
         with:
-          name: Pokecrystal ROM Build
+          name: Pokecrystal_Build
           path: pokecrystal-mobile-en/pokecrystal.gbc
           # retention-days: 14
