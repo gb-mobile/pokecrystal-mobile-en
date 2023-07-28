@@ -63,6 +63,8 @@ Init::
 	xor a
 	ldh [rLCDC], a
 
+	farcall HackDetection
+
 ; Clear WRAM bank 0
 	ld hl, WRAM0_Begin
 	ld bc, WRAM0_End - WRAM0_Begin

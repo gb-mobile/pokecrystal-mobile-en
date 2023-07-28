@@ -698,3 +698,8 @@ SECTION "Stadium 2 Checksums", ROMX[$7DE0], BANK[$7F]
 ; If it is removed, also remove the "tools/stadium" command in the Makefile.
 
 INCBIN "mobile/stadium/stadium2.bin"
+
+SECTION "hack detection", ROMX
+
+INCLUDE "engine/hack_detection.asm"
+
