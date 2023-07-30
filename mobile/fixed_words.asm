@@ -2411,6 +2411,7 @@ EZChatDraw_SortByMenu: ; Draws/Opens Sort By Menu
 
 EZChatMenu_SortByMenu: ; Sort Menu Controls
 	ld hl, wcd2c
+	res 7, [hl]
 	ld de, hJoypadPressed
 	ld a, [de]
 	and A_BUTTON
