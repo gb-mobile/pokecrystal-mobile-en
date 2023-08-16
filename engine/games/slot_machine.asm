@@ -491,7 +491,11 @@ SlotsAction_PayoutAnim:
 	ld [hl], d
 	ld a, [wSlotsDelay]
 	and $7
+IF DEF(_CRYSTALFIX)
+	ret nz
+ELSE
 	ret z
+ENDC
 	ld de, SFX_GET_COIN_FROM_SLOTS
 	call PlaySFX
 	ret
