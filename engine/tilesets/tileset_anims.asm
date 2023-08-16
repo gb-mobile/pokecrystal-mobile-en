@@ -639,6 +639,12 @@ ForestTreeRightAnimation2:
 
 GetForestTreeFrame:
 ; Return 0 if a is even, or 2 if odd.
+IF DEF(_CRYSTALFIX)
+	and 1
+	add a
+ 	ret
+	
+ELSE
 	and a
 	jr z, .even
 	cp 1
@@ -660,6 +666,7 @@ GetForestTreeFrame:
 .even
 	xor a
 	ret
+ENDC
 
 AnimateFlowerTile:
 ; Save the stack pointer in bc for WriteTile to restore
