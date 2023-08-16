@@ -884,18 +884,52 @@ RetrieveBreedmon:
 	dec a
 	ld [wCurPartyMon], a
 	farcall HealPartyMon
+IF DEF(_CRYSTALFIX)
+	ld d, MAX_LEVEL
+ELSE
 	ld a, [wCurPartyLevel]
 	ld d, a
+ENDC
 	callfar CalcExpAtLevel
 	pop bc
+IF DEF(_CRYSTALFIX)
+	ld hl, MON_EXP + 2
+ELSE
 	ld hl, MON_EXP
+ENDC
 	add hl, bc
 	ldh a, [hMultiplicand]
+IF DEF(_CRYSTALFIX)
+	ld b, a
+ELSE
 	ld [hli], a
+ENDC
 	ldh a, [hMultiplicand + 1]
+IF DEF(_CRYSTALFIX)
+	ld c, a
+ELSE
 	ld [hli], a
+ENDC
 	ldh a, [hMultiplicand + 2]
+IF DEF(_CRYSTALFIX)
+	ld d, a
+	ld a, [hld]
+	sub d
+	ld a, [hld]
+	sbc c
+	ld a, [hl]
+	sbc b
+	jr c, .not_max_exp
+	ld a, b
+	ld [hli], a
+	ld a, c
+	ld [hli], a
+	ld a, d
+ENDC
 	ld [hl], a
+IF DEF(_CRYSTALFIX)
+.not_max_exp
+ENDC
 	and a
 	ret
 
