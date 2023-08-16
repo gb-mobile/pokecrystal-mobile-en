@@ -282,10 +282,16 @@ CalcMagikarpLength:
 	ld a, b
 	cp d
 	ret c
+IF DEF(_CRYSTALFIX)
+	ld a, c
+	cp e
+	ret
+ELSE
 	ret nc
 	ld a, c
 	cp e
 	ret
+ENDC
 
 .BCMinusDE:
 ; bc -= de
