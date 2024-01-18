@@ -154,7 +154,7 @@ Function170139:
 	; easy chat messages
 	ld a, BANK(sEZChatBeginBattleMessage)
 	call OpenSRAM
-	ld hl, sEZChatBeginBattleMessage
+	ld hl, sEZChatBattleMessages
 	ld bc, EASY_CHAT_MESSAGE_LENGTH * 3
 	call CopyBytes
 	call CloseSRAM
@@ -249,7 +249,7 @@ RunBattleTowerTrainer:
 	jr nz, .lost
 
 	farcall StubbedTrainerRankings_BattleTowerWins
-	farcall BackupMobileEventIndex
+	farcall BackupGSBallFlag
 
 	ld a, BANK(sNrOfBeatenBattleTowerTrainers)
 	call OpenSRAM
@@ -513,7 +513,7 @@ Function17042c:
 	ld a, [hli]
 	and a
 	jr z, .empty
-	cp 15
+	cp (Unknown_170470.end - Unknown_170470) + 1
 	jr nc, .copy_data
 
 	push hl
@@ -526,7 +526,7 @@ Function17042c:
 	pop hl
 
 	; If Unknown_170470[a-1] <= b, overwrite the current trainer's data
-	; with Unknown17047e, and exit the inner loop.
+	; with Unknown_17047e, and exit the inner loop.
 	cp b
 	jr c, .copy_data
 	jr z, .copy_data
@@ -534,9 +534,9 @@ Function17042c:
 
 .empty
 	; If a == 0 and b >= $fc, overwrite the current trainer's data with
-	; Unknown17047e, and exit the inner loop.
+	; Unknown_17047e, and exit the inner loop.
 	ld a, b
-	cp $fc
+	cp NUM_POKEMON + 1
 	jr nc, .copy_data
 
 .next_iteration
@@ -901,7 +901,7 @@ BattleTowerAction:
 	dw LoadBattleTowerLevelGroup
 	dw BattleTower_CheckSaveFileExistsAndIsYours
 	dw BattleTowerAction_0A
-	dw CheckMobileEventIndex
+	dw BattleTowerAction_GSBall
 	dw BattleTowerAction_0C
 	dw BattleTowerAction_0D
 	dw BattleTowerAction_EggTicket
@@ -1212,10 +1212,10 @@ BattleTowerAction_0A:
 	call MaxVolume
 	ret
 
-CheckMobileEventIndex: ; something to do with GS Ball
-	ld a, BANK(sMobileEventIndex)
+BattleTowerAction_GSBall:
+	ld a, BANK(sGSBallFlag)
 	call OpenSRAM
-	ld a, [sMobileEventIndex]
+	ld a, [sGSBallFlag]
 	ld [wScriptVar], a
 	call CloseSRAM
 	ret

@@ -125,7 +125,7 @@ RuinsOfAlphResearchCenterScientist2Script:
 	end
 
 .GotAllUnown:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	writetext RuinsOfAlphResearchCenterUnusedText1 ; 5141
 	waitbutton

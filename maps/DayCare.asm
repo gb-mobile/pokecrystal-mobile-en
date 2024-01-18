@@ -23,7 +23,7 @@ DayCareEggCheckCallback:
 DayCareManScript_Inside:
 	faceplayer
 	opentext
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iffalse .AlreadyHaveOddEgg
 	checkevent EVENT_GOT_ODD_EGG
 	iftrue .AlreadyHaveOddEgg

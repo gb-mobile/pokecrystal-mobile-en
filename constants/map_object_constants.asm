@@ -97,6 +97,7 @@ DEF RELATIVE_ATTRIBUTES EQU 1 << RELATIVE_ATTRIBUTES_F
 DEF ABSOLUTE_TILE_ID    EQU 1 << ABSOLUTE_TILE_ID_F
 
 ; map_object struct members (see macros/ram.asm)
+; struct initialized by object_event macro (see macros/scripts/maps.asm)
 rsreset
 DEF MAPOBJECT_OBJECT_STRUCT_ID rb ; 0
 DEF MAPOBJECT_SPRITE           rb ; 1
@@ -104,16 +105,23 @@ DEF MAPOBJECT_Y_COORD          rb ; 2
 DEF MAPOBJECT_X_COORD          rb ; 3
 DEF MAPOBJECT_MOVEMENT         rb ; 4
 DEF MAPOBJECT_RADIUS           rb ; 5
-DEF MAPOBJECT_HOUR             rb ; 6
+DEF MAPOBJECT_HOUR_1           rb ; 6
+DEF MAPOBJECT_HOUR_2           rb ; 7
+rsset MAPOBJECT_HOUR_2
 DEF MAPOBJECT_TIMEOFDAY        rb ; 7
-DEF MAPOBJECT_COLOR            rb ; 8
-DEF MAPOBJECT_RANGE            rb ; 9
+DEF MAPOBJECT_PALETTE          rb ; 8
+rsset MAPOBJECT_PALETTE
+DEF MAPOBJECT_TYPE             rb ; 8
+DEF MAPOBJECT_SIGHT_RANGE      rb ; 9
 DEF MAPOBJECT_SCRIPT_POINTER   rw ; a
 DEF MAPOBJECT_EVENT_FLAG       rw ; c
                                rb_skip 2
 DEF MAPOBJECT_LENGTH EQU _RS
 DEF NUM_OBJECTS EQU 16
 DEF PLAYER_OBJECT EQU 0
+
+DEF MAPOBJECT_PALETTE_MASK EQU %11110000
+DEF MAPOBJECT_TYPE_MASK    EQU %00001111
 
 ; SpriteMovementData struct members (see data/sprites/map_objects.asm)
 rsreset

@@ -9,7 +9,7 @@ Route40BattleTowerGate_MapScripts:
 	callback MAPCALLBACK_OBJECTS, RouteBattleTowerGateShowSailorCallback
 
 RouteBattleTowerGateShowSailorCallback:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iffalse .nomobile
 	clearevent EVENT_BATTLE_TOWER_OPEN_CIVILIANS
 
@@ -20,7 +20,7 @@ Route40BattleTowerGateRockerScript:
 	jumptextfaceplayer Route40BattleTowerGateUnusedText3
 
 Route40BattleTowerGateTwinScript:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	jumptextfaceplayer Route40BattleTowerGateUnusedText1
 

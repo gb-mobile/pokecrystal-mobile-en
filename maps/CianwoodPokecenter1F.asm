@@ -33,7 +33,7 @@ CianwoodGymGuideScript:
 	end
 
 CianwoodPokecenter1FSuperNerdScript:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	jumptextfaceplayer CianwoodPokecenter1FPreMobileText
 	

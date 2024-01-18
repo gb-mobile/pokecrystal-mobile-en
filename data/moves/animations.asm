@@ -1,7 +1,7 @@
 BattleAnimations::
 ; entries correspond to constants/move_constants.asm
 	table_width 2, BattleAnimations
-	dw BattleAnim_0
+	dw BattleAnim_Dummy
 	dw BattleAnim_Pound
 	dw BattleAnim_KarateChop
 	dw BattleAnim_Doubleslap
@@ -254,9 +254,9 @@ BattleAnimations::
 	dw BattleAnim_Whirlpool
 	dw BattleAnim_BeatUp
 	assert_table_length NUM_ATTACKS + 1
-	dw BattleAnim_252
-	dw BattleAnim_253
-	dw BattleAnim_254
+	dw BattleAnim_Dummy
+	dw BattleAnim_Dummy
+	dw BattleAnim_Dummy
 	dw BattleAnim_SweetScent2
 	assert_table_length $100
 ; $100
@@ -284,10 +284,7 @@ BattleAnimations::
 	dw BattleAnim_HitConfusion
 	assert_table_length NUM_BATTLE_ANIMS + 1
 
-BattleAnim_0:
-BattleAnim_252:
-BattleAnim_253:
-BattleAnim_254:
+BattleAnim_Dummy:
 BattleAnim_MirrorMove:
 	anim_ret
 
@@ -1243,7 +1240,7 @@ BattleAnim_Thunderpunch:
 	anim_obj ANIM_OBJ_PUNCH_SHAKE, 136, 56, $43
 	anim_bgeffect ANIM_BG_FLASH_INVERTED, $0, $8, $2
 	anim_sound 0, 1, SFX_THUNDER
-	anim_obj ANIM_OBJ_THUNDER3, 152, 68, $0
+	anim_obj ANIM_OBJ_THUNDER_RIGHT, 152, 68, $0
 	anim_wait 64
 	anim_ret
 
@@ -1283,13 +1280,13 @@ BattleAnim_Thunder:
 	anim_1gfx ANIM_GFX_LIGHTNING
 	anim_bgeffect ANIM_BG_FLASH_INVERTED, $0, $6, $20
 	anim_sound 0, 1, SFX_THUNDER
-	anim_obj ANIM_OBJ_THUNDER2, 120, 68, $0
+	anim_obj ANIM_OBJ_THUNDER_LEFT, 120, 68, $0
 	anim_wait 16
 	anim_sound 0, 1, SFX_THUNDER
-	anim_obj ANIM_OBJ_THUNDER3, 152, 68, $0
+	anim_obj ANIM_OBJ_THUNDER_RIGHT, 152, 68, $0
 	anim_wait 16
 	anim_sound 0, 1, SFX_THUNDER
-	anim_obj ANIM_OBJ_THUNDER1, 136, 68, $0
+	anim_obj ANIM_OBJ_THUNDER_CENTER, 136, 68, $0
 	anim_wait 48
 	anim_ret
 
@@ -2648,7 +2645,7 @@ BattleAnim_TriAttack:
 	anim_wait 16
 	anim_bgeffect ANIM_BG_FLASH_INVERTED, $0, $4, $4
 	anim_sound 0, 1, SFX_THUNDER
-	anim_obj ANIM_OBJ_THUNDER3, 152, 68, $0
+	anim_obj ANIM_OBJ_THUNDER_RIGHT, 152, 68, $0
 	anim_wait 16
 	anim_ret
 

@@ -77,7 +77,7 @@ VioletPokecenter1F_ElmsAideScript:
 	sjump .AskTakeEgg
 
 VioletPokecenter1FGameboyKidScript:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	jumptextfaceplayer VioletPokecenterGameboyKidPreMobileText 
 	

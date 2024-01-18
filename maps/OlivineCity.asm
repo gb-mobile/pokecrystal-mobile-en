@@ -105,7 +105,7 @@ OlivineLighthouseSign:
 	jumptext OlivineLighthouseSignText
 
 OlivineCityBattleTowerSign:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	jumptext OlivineCityBattleTowerSignPreMobileText
 	

@@ -330,7 +330,7 @@ gfx/mobile/mobile_adapter.2bpp: tools/gfx += --trim-whitespace
 		tools/gfx $(tools/gfx) -d1 -o $@ $@)
 
 %.gbcpal: %.png
-	$(RGBGFX) -p $@ $<
+	$(RGBGFX) -c embedded -p $@ $<
 
 %.dimensions: %.png
 	tools/png_dimensions $< $@

@@ -870,7 +870,7 @@ String_4ad9a:
 	db   "ENTER@";"さんかする@"
 
 String_4ada0:
-	db   "WITHDRAW@";"さんかしない@"
+	db   "NO ENTRY@";"さんかしない@"
 
 String_4ada7:
 	db   "STATS";"つよさをみる"

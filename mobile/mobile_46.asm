@@ -6484,8 +6484,8 @@ MenuHeader_11ae38:
 
 String_11ae40:
 	db   "EITHER"
-	next "♂" ; male
-	next "♀" ; female
+	next "♂MALE" ; male
+	next "♀FEMALE" ; female
 	db   "@"
 
 Function11ae4e:
@@ -6757,57 +6757,34 @@ Function11b022:
 	ret
 
 Function11b03d:
-	push hl
 	push af
 	ld c, $1
 .loop
 	ld a, [hli]
 	cp "♂"
-	jr z, .gender
+	jr z, .done
 	cp "♀"
-	jr z, .gender
+	jr z, .done
 	cp "@"
 	jr z, .done
 	inc c
 	jr .loop
 
-.gender
-	dec hl
-	ld a, "@"
-	ld [hli], a
-
 .done
 	dec hl
-	push hl
-	ld e, 2
-	ld d, 0
-	add hl, de
 	ld e, l
 	ld d, h
-	pop hl
-.loop2
-	ld a, [hld]
-	ld [de], a
-	dec de
-	dec c
-	jr nz, .loop2
 	pop af
-	pop de
-	cp $1
-	jr nz, .female
-	ld hl, .MaleString
-	jr .got_string
-
-.female
+	dec a
 	ld hl, .FemaleString
-
+	jr nz, .got_string
+	ld hl, .MaleString
 .got_string
 	ld bc, 2 ; string length
-	call CopyBytes
-	ret
+	jp CopyBytes
 
-.MaleString: db "♂　"
-.FemaleString: db "♀　"
+.MaleString: db "♂@"
+.FemaleString: db "♀@"
 
 Function11b082:
 	call Function11b242
@@ -7454,10 +7431,10 @@ Function11b3d9:
 	jr .loop1
 
 .skip
-	ld b, 14 * 8
+	ld b, 14 * TILE_WIDTH
 
 .load_sprites
-	ld a, 2 * 8 + 5
+	ld a, 2 * TILE_WIDTH + 5
 	add b
 	pop hl
 	ld [hli], a
@@ -7474,7 +7451,7 @@ Function11b3d9:
 	jr z, .version2
 
 .version1
-	ld a, 19 * 8 + 3
+	ld a, 19 * TILE_WIDTH + 3
 	ld [hli], a
 	ld a, [wcd4c]
 	add $3c
@@ -7485,7 +7462,7 @@ Function11b3d9:
 	ret
 
 .version2
-	ld a, 19 * 8 + 3
+	ld a, 19 * TILE_WIDTH + 3
 	ld [hli], a
 	ld a, $39
 	ld [hli], a

@@ -1,6 +1,6 @@
 	object_const_def
 	const GOLDENRODPOKECENTER1F_NURSE
-	const GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST
+	const GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST
 	const GOLDENRODPOKECENTER1F_SUPER_NERD ; $04
 	const GOLDENRODPOKECENTER1F_LASS2 ; $05
 	const GOLDENRODPOKECENTER1F_YOUNGSTER
@@ -35,7 +35,7 @@ GoldenrodPokecenter1F_MapScripts:
 	end
 
 .prepareMap
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile ; $5067
 	moveobject GOLDENRODPOKECENTER1F_LASS2, 16, 9 ; this is 71 in jp crystal???
 	moveobject GOLDENRODPOKECENTER1F_GRAMPS, 0, 7
@@ -247,7 +247,7 @@ scenejmp02: ; 568B5
 	sjump PlayerHasEggTicket.receivedOddEgg ; $A968
 
 GoldenrodPokecenter1F_NewsMachineScript:
-	special Mobile_DummyReturnFalse ; 568B9
+	special CheckMobileAdapterStatusSpecial ; 568B9
 	iftrue .mobileEnabled ; $C268
 	jumptext GoldenrodPokecomCenterNewsMachineNotYetText ; $1F76
 .mobileEnabled
@@ -319,48 +319,48 @@ Unreferenced:
 	end
 
 GoldenrodPokecenter1F_GSBallSceneLeft:
-	setval $0B ; 56940 (load mobile event index)
+	setval BATTLETOWERACTION_GSBALL ; 56940 (load mobile event index)
 	special BattleTowerAction
 	iffalse GoldenrodPokecenter1F_GSBallSceneRight.nogsball ; $9769
-	checkevent EVENT_GOT_GS_BALL_FROM_POKECOM_CENTER ; 340
+	checkevent EVENT_GOT_GS_BALL_FROM_GOLDENROD_POKEMON_CENTER ; 340
 	iftrue GoldenrodPokecenter1F_GSBallSceneRight.nogsball ; $9769
-	moveobject GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST, 12, 11
+	moveobject GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST, 12, 11
 	sjump GoldenrodPokecenter1F_GSBallSceneRight.gsball ; 6769
 
 GoldenrodPokecenter1F_GSBallSceneRight:
-	setval $0B ; 56955 (load mobile event index)
+	setval BATTLETOWERACTION_GSBALL ; 56955 (load mobile event index)
 	special BattleTowerAction
 	iffalse .nogsball ; $9769
-	checkevent EVENT_GOT_GS_BALL_FROM_POKECOM_CENTER ; 340
+	checkevent EVENT_GOT_GS_BALL_FROM_GOLDENROD_POKEMON_CENTER ; 340
 	iftrue .nogsball ; $9769
-	moveobject GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST, 13, 11
+	moveobject GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST, 13, 11
 
 .gsball ; 56769
-	disappear GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST
-	appear GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST
+	disappear GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST
+	appear GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST
 	playmusic MUSIC_SHOW_ME_AROUND
-	applymovement GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST, GoldenrodPokeCenter1FLinkReceptionistApproachPlayerMovement ; $0F6A
+	applymovement GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST, GoldenrodPokeCenter1FLinkReceptionistApproachPlayerMovement ; $0F6A
 	turnobject PLAYER, UP
 	opentext
 	writetext GoldenrodPokeCenter1FLinkReceptionistPleaseAcceptGSBallText
 	waitbutton
 	verbosegiveitem GS_BALL
-	setevent EVENT_GOT_GS_BALL_FROM_POKECOM_CENTER
+	setevent EVENT_GOT_GS_BALL_FROM_GOLDENROD_POKEMON_CENTER
 	setevent EVENT_CAN_GIVE_GS_BALL_TO_KURT
 	writetext GoldenrodPokeCenter1FLinkReceptionistPleaseDoComeAgainText
 	waitbutton
 	closetext
-	applymovement GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST, GoldenrodPokeCenter1FLinkReceptionistWalkBackMovement ; $196A
+	applymovement GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST, GoldenrodPokeCenter1FLinkReceptionistWalkBackMovement ; $196A
 	special RestartMapMusic
-	moveobject GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST, 16,  8
-	disappear GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST
-	appear GOLDENRODPOKECENTER1F_LINK_RECEPTIONIST
+	moveobject GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST, 16,  8
+	disappear GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST
+	appear GOLDENRODPOKECENTER1F_PCC_TRADE_CORNER_RECEPTIONIST
 
 .nogsball
 	end
 
 GoldenrodPokecenter1FSuperNerdScript:
-	special Mobile_DummyReturnFalse ; 56998
+	special CheckMobileAdapterStatusSpecial ; 56998
 	iftrue .mobile ; $A169
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOffSuperNerdText  ; $E071
 
@@ -368,7 +368,7 @@ GoldenrodPokecenter1FSuperNerdScript:
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOnSuperNerdText ; $1E72
 
 GoldenrodPokecenter1FLass2Script:
-	special Mobile_DummyReturnFalse ; 569A4
+	special CheckMobileAdapterStatusSpecial ; 569A4
 	iftrue .mobile
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOffLassText ; $AD72
 
@@ -395,7 +395,7 @@ GoldenrodPokecenter1FLass2Script:
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOnLassText2 ; $2373
 
 GoldenrodPokecenter1FYoungsterScript:
-	special Mobile_DummyReturnFalse ; 569D6
+	special CheckMobileAdapterStatusSpecial ; 569D6
 	iftrue .mobile ; $DF69
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOffYoungsterText ; $5473
 
@@ -403,7 +403,7 @@ GoldenrodPokecenter1FYoungsterScript:
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOnYoungsterText ; $1074
 
 GoldenrodPokecenter1FTeacherScript:
-	special Mobile_DummyReturnFalse ; 569E2
+	special CheckMobileAdapterStatusSpecial ; 569E2
 	iftrue .mobile ; $EB69
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOffTeacherText ; $8273
 
@@ -411,7 +411,7 @@ GoldenrodPokecenter1FTeacherScript:
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOnTeacherText ; $3274
 
 GoldenrodPokecenter1FRockerScript:
-	special Mobile_DummyReturnFalse ; 569EE
+	special CheckMobileAdapterStatusSpecial ; 569EE
 	iftrue .mobile ; $F769
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOffRockerText ; $D073
 
@@ -419,7 +419,7 @@ GoldenrodPokecenter1FRockerScript:
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOnRockerText ; $5474
 
 GoldenrodPokecenter1FGrampsScript:
-	special Mobile_DummyReturnFalse ; 569FD
+	special CheckMobileAdapterStatusSpecial ; 569FD
 	iftrue .mobile ; $066A
 	jumptextfaceplayer GoldenrodPokecenter1FMobileOffGrampsText ; $D674
 

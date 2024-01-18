@@ -12,7 +12,7 @@ BattleTowerOutside_MapScripts:
 	callback MAPCALLBACK_OBJECTS, BattleTowerOutsideShowCiviliansCallback
 
 BattleTowerOutsideDoorsCallback:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .doorsopen;$7CE6
 	changeblock 8, 8, $2C
 	endcallback
@@ -22,7 +22,7 @@ BattleTowerOutsideDoorsCallback:
 	endcallback
 
 BattleTowerOutsideShowCiviliansCallback:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iffalse .nomobile
 	clearevent EVENT_BATTLE_TOWER_OPEN_CIVILIANS
 
@@ -30,7 +30,7 @@ BattleTowerOutsideShowCiviliansCallback:
 	endcallback
 
 BattleTowerOutsideYoungsterScript:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	jumptextfaceplayer BattleTowerOutsideYoungsterText_NotYetOpen
 
@@ -38,7 +38,7 @@ BattleTowerOutsideYoungsterScript:
 	jumptextfaceplayer BattleTowerOutsideYoungsterText_Mobile
 
 BattleTowerOutsideBeautyScript:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	jumptextfaceplayer BattleTowerOutsideBeautyText_NotYetOpen
 
@@ -49,7 +49,7 @@ BattleTowerOutsideSailorScript:
 	jumptextfaceplayer BattleTowerOutsideSailorText_Mobile
 
 BattleTowerOutsideSign:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	jumptext BattleTowerOutsideSignText_NotYetOpen
 
@@ -57,7 +57,7 @@ BattleTowerOutsideSign:
 	jumptext BattleTowerOutsideSignText
 
 BattleTowerOutsideDoor:
-	special Mobile_DummyReturnFalse
+	special CheckMobileAdapterStatusSpecial
 	iftrue .mobile
 	jumptext BattleTowerOutsideText_DoorsClosed
 

@@ -80,7 +80,7 @@ Function8b35d: ; unreferenced
 
 Function8b363: ; unreferenced
 	push bc
-	farcall Mobile_AlwaysReturnNotCarry
+	farcall CheckMobileAdapterStatus
 	pop bc
 	ret
 
@@ -613,15 +613,15 @@ Function8b677:
 Function8b690:
 	ld hl, GFX_friend_cards + $514
 	ld de, vTiles2
-	ld bc, $16 tiles
+	ld bc, $22 tiles
 	ld a, BANK(GFX_friend_cards)
 	call FarCopyBytes
-	ld hl, GFX_friend_cards + $514 + $160 - $10
+	ld hl, GFX_friend_cards + $514 + $1c0 - $10
 	ld de, vTiles2 tile $61
 	ld bc, 1 tiles
 	ld a, BANK(GFX_friend_cards)
 	call FarCopyBytes
-	ld hl, GFX_friend_cards + $514 + $160
+	ld hl, GFX_friend_cards + $514 + $1c0
 	ld de, vTiles0 tile $ee
 	ld bc, 1 tiles
 	ld a, BANK(GFX_friend_cards)
@@ -670,7 +670,7 @@ Function8b6ed:
 Function8b703:
 	call Mobile22_SetBGMapMode0
 	push hl
-	ld a, $c
+	ld a, $12
 	ld [hli], a
 	inc a
 	call Mobile22_Fill_HL_with_A_C_Times
@@ -683,11 +683,11 @@ Function8b703:
 	add hl, de
 .asm_8b717
 	push hl
-	ld a, $f
+	ld a, $15
 	ld [hli], a
 	ld a, $7f
 	call Mobile22_Fill_HL_with_A_C_Times
-	ld a, $11
+	ld a, $17
 	ld [hl], a
 	pop hl
 	ld de, SCREEN_WIDTH
@@ -700,11 +700,11 @@ Function8b703:
 	jr Function8b744
 
 DisplayDottedFrameTopLine:
-	ld a, $12 ; Dotted frame top-left corner in VRAM.
+	ld a, $18 ; Dotted frame top-left corner in VRAM.
 	ld [hli], a
-	ld a, $13
+	ld a, $19
 	call Mobile22_Fill_HL_with_A_C_Times
-	ld a, $14
+	ld a, $1a
 	ld [hl], a
 	ret
 
@@ -753,7 +753,7 @@ Function8b75d:
 	call Function8b788
 	hlcoord 1, 1
 	ld a, $4
-	ld e, $8
+	ld e, $c
 .asm_8b780
 	ld [hli], a
 	inc a
@@ -788,8 +788,8 @@ Function8b79e:
 	hlcoord 0, 1, wAttrmap
 	ld a, $1
 	ld [hli], a
-	hlcoord 9, 1, wAttrmap
-	ld e, $b
+	hlcoord 13, 1, wAttrmap
+	ld e, $8
 .asm_8b7a9
 	ld a, $2
 	ld [hli], a
@@ -996,12 +996,12 @@ Mobile22_DisplayCardListBottomTextBox:
 
 	; Displays the leftmost vertical dotted line just above the textbox (why though?).
 	hlcoord 0, 13
-	ld a, $f
+	ld a, $15
 	ld [hl], a
 
 	; Displays the rightmost vertical dotted line just above the textbox (why though?).
 	hlcoord 19, 13
-	ld a, $11
+	ld a, $17
 	ld [hl], a
 
 	ld a, [wMenuScrollPosition]

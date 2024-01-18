@@ -136,11 +136,11 @@ sHallOfFameEnd::
 
 SECTION "SRAM Crystal Data", SRAM
 
-sMobileEventIndex:: db
+sGSBallFlag:: db
 
 sCrystalData:: ds wCrystalDataEnd - wCrystalData
 
-sMobileEventIndexBackup:: db
+sGSBallFlagBackup:: db
 
 
 SECTION "SRAM Battle Tower", SRAM
@@ -204,10 +204,14 @@ SECTION "Boxes 8-14", SRAM
 SECTION "SRAM Mobile 1", SRAM
 
 	ds $7 ; former location of sCrystalData
+
+sEZChatMessages::
 sEZChatIntroductionMessage:: ds EASY_CHAT_MESSAGE_LENGTH
-sEZChatBeginBattleMessage:: ds EASY_CHAT_MESSAGE_LENGTH
-sEZChatWinBattleMessage:: ds EASY_CHAT_MESSAGE_LENGTH
-sEZChatLoseBattleMessage:: ds EASY_CHAT_MESSAGE_LENGTH
+sEZChatBattleMessages::
+sEZChatBeginBattleMessage::  ds EASY_CHAT_MESSAGE_LENGTH
+sEZChatWinBattleMessage::    ds EASY_CHAT_MESSAGE_LENGTH
+sEZChatLoseBattleMessage::   ds EASY_CHAT_MESSAGE_LENGTH
+
 sCardFolderPasscode:: ds 4
 sCardFolderData:: ds CARD_FOLDER_ENTRY_LENGTH * NUM_CARD_FOLDER_ENTRIES ; a03b
 sPhoneNumber:: ds PHONE_NUMBER_LENGTH
@@ -217,12 +221,12 @@ s4_a60e:: ds 2
 	ds 496
 sMobileBattleTimer:: ds 3
 	ds 797
-s4_b000:: ds 1
+sMobileAdapterStatus:: db
 
 
 SECTION "SRAM Mobile 2", SRAM
 
-sMobileEventIndexJP:: db ; JP: location of sMobileEventIndex
+sGSBallFlagJP:: db
 
 sTrainerRankings::
 sTrainerRankingGameTimeHOF:: ds 4
@@ -270,7 +274,7 @@ sTrainerRankingBugContestScore:: ds 2
 sTrainerRankingsChecksum:: ds 2
 sTrainerRankingsEnd::
 
-sMobileEventIndexBackupJP:: db ; JP: location of sMobileEventIndexBackup
+sGSBallFlagBackupJP:: db
 
 sTrainerRankingsBackup:: ds sTrainerRankingsEnd - sTrainerRankings
 
@@ -388,8 +392,8 @@ s6_a006:: ds $1000
 SECTION "SRAM Mobile 4", SRAM
 
 ; Bank 7 in bank 6??
-s7_a000:: db
+sMobileStadiumFlag:: db
 s7_a001:: ds $799
-s7_a800:: ds $800
+sMobileAdapterStatus2:: ds $800
 s7_b000:: ds $fea
 s7_bfea:: ds 1

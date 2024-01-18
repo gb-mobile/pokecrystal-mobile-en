@@ -16,23 +16,25 @@ if DEF(_CRYSTAL_EU)
 	ld hl, String_Currency_Lek
 	cp 1 ; "EU-AL@"     ; Albania
 	ret z
-	
+
 	ld hl, String_Currency_Fening
 	cp 3  ; "EU-BA@"     ; Bosnia and Herzegovina
 	ret z	
-	
+
 	ld hl, String_Currency_Stotinki
 	cp 5  ; "EU-BG@"     ; Bulgaria
 	ret z	
-	
+
 	ld hl, String_Currency_Copecks
 	cp 6  ; "EU-BY@"     ; Belarus
 	ret z	
+	cp 22  ; "EU-LI@"     ; Liechtenstein
+	ret z	
+
+	ld hl, String_Currency_Rappen
 	cp 7  ; "EU-CH@"     ; Switzerland
 	ret z		
-	cp 22  ; "EU-LI@"     ; Liechtenstein
-	ret z			
-	
+
 	ld hl, String_Currency_Crowns
 	cp 8  ; "EU-CZ@"     ; Czech Republic
 	ret z	
@@ -46,29 +48,29 @@ if DEF(_CRYSTAL_EU)
 	ld hl, String_Currency_Krooni
 	cp 11  ; "EU-EE@"     ; Estonia
 	ret z			
-	
+
 	ld hl, String_Currency_Lp
 	cp 17  ; "EU-HR@"     ; Croatia
 	ret z		
-	
+
 	ld hl, String_Currency_Filler
 	cp 18  ; "EU-HU@"     ; Hungary
 	ret z	
-	
+
 	ld hl, String_Currency_Pence
 	cp 15 ; "EU-GB@"     ; United Kingdom
 	ret z
 	cp 19 ; "EU-IE@"     ; Ireland
 	ret z		
-	
+
 	ld hl, String_Currency_Kronur
 	cp 20 ; "EU-IS@"     ; Iceland
 	ret z
-	
+
 	ld hl, String_Currency_Centai
 	cp 23  ; "EU-LT@"     ; Lithuania
 	ret z		
-	
+
 	ld hl, String_Currency_Santimi
 	cp 25  ; "EU-LV@"     ; Lavia
 	ret z
@@ -76,11 +78,11 @@ if DEF(_CRYSTAL_EU)
 	ld hl, String_Currency_Lei
 	cp 26  ; "EU-MD@"     ; Moldova
 	ret z	
-	
+
 	ld hl, String_Currency_Liri
 	cp 27  ; "EU-MT@"     ; Malta
 	ret z		
-	
+
 	ld hl, String_Currency_Groszy
 	cp 30  ; "EU-PL@"     ; Poland
 	ret z		
@@ -152,6 +154,10 @@ String_Currency_Stotinki:
 	
 String_Currency_Copecks:
 	db   " copecks";"えん"
+	next "Is this OK?@";"かかります　よろしい　ですか？@"	
+	
+String_Currency_Rappen:
+	db   " rappen";"えん"
 	next "Is this OK?@";"かかります　よろしい　ですか？@"	
 
 String_Currency_Crowns:

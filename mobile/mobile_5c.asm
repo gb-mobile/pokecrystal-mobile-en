@@ -776,9 +776,9 @@ INCBIN "gfx/pokedex/slowpoke_mobile.2bpp.lz"
 String_172e31:
 	db "Enter PASSWORD@";"パスワード<WO>いれてください@"
 String_172e3f:
-	db " 123  QUIT  OK @";"きりかえ　やめる　　けってい@"
+	db " SWAP QUIT  OK @";"きりかえ　やめる　　けってい@"
 String_172e4e:
-	db " ABC  QUIT  OK @";"きりかえ　やめる　　"
+	db " SWAP QUIT  OK @";"きりかえ　やめる　　"
 String_172e58:
 	db "OK@";"けってい@"
 String_172e5d:
@@ -867,8 +867,8 @@ INCBIN "gfx/mobile/stadium2_n64.2bpp"
 
 Stadium2N64Tilemap:
 ;if DEF(_CRYSTAL11)
-; Crystal 1.1 corrupted this tilemap by treating $0a bytes as Unix newlines,
-; and converting them to $0d $0a Windows newlines.
+; BUG: Crystal 1.1 corrupted this tilemap by treating $0a bytes as
+; Unix newlines, and converting them to $0d $0a Windows newlines.
 ;INCBIN "gfx/mobile/stadium2_n64_corrupt.tilemap"
 ;else
 INCBIN "gfx/mobile/stadium2_n64.tilemap"

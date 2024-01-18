@@ -880,12 +880,12 @@ MovementFunction_Shadow:
 	add hl, de
 	ld a, [hl]
 	maskbits NUM_DIRECTIONS
-	ld d, 1 * 8 + 6
+	ld d, 1 * TILE_WIDTH + 6
 	cp DOWN
 	jr z, .ok
 	cp UP
 	jr z, .ok
-	ld d, 1 * 8 + 4
+	ld d, 1 * TILE_WIDTH + 4
 .ok
 	ld hl, OBJECT_SPRITE_Y_OFFSET
 	add hl, bc
@@ -909,7 +909,7 @@ MovementFunction_Emote:
 	ld [hl], 0
 	ld hl, OBJECT_SPRITE_Y_OFFSET
 	add hl, bc
-	ld [hl], -2 * 8
+	ld [hl], -2 * TILE_WIDTH
 	ld hl, OBJECT_SPRITE_X_OFFSET
 	add hl, bc
 	ld [hl], 0
@@ -2034,7 +2034,7 @@ SpawnShadow:
 
 .ShadowObject:
 	; vtile, palette, movement
-	db $00, PAL_OW_SILVER, SPRITEMOVEDATA_SHADOW
+	db $00, PAL_OW_EMOTE, SPRITEMOVEDATA_SHADOW
 
 SpawnStrengthBoulderDust:
 	push bc
@@ -2046,7 +2046,7 @@ SpawnStrengthBoulderDust:
 
 .BoulderDustObject:
 	; vtile, palette, movement
-	db $00, PAL_OW_SILVER, SPRITEMOVEDATA_BOULDERDUST
+	db $00, PAL_OW_EMOTE, SPRITEMOVEDATA_BOULDERDUST
 
 SpawnEmote:
 	push bc
@@ -2058,7 +2058,7 @@ SpawnEmote:
 
 .EmoteObject:
 	; vtile, palette, movement
-	db $00, PAL_OW_SILVER, SPRITEMOVEDATA_EMOTE
+	db $00, PAL_OW_EMOTE, SPRITEMOVEDATA_EMOTE
 
 ShakeGrass:
 	push bc
@@ -2085,7 +2085,7 @@ ShakeScreen:
 
 .ScreenShakeObject:
 	; vtile, palette, movement
-	db $00, PAL_OW_SILVER, SPRITEMOVEDATA_SCREENSHAKE
+	db $00, PAL_OW_EMOTE, SPRITEMOVEDATA_SCREENSHAKE
 
 DespawnEmote:
 	push bc

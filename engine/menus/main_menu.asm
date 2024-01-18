@@ -217,7 +217,7 @@ MainMenu_GetWhichMenu:
 ;	jr .ok
 
 	hlcoord 1, 14
-    farcall Mobile_AlwaysReturnNotCarry
+    farcall CheckMobileAdapterStatus
     jr nc, .ok
 
     ld a, $7
@@ -234,7 +234,7 @@ MainMenu_GetWhichMenu:
 .ok
 ;	jr .ok2
     hlcoord 1, 14
-    farcall Mobile_AlwaysReturnNotCarry
+    farcall CheckMobileAdapterStatus
     jr nc, .ok2
 
     ld a, $7
@@ -259,7 +259,7 @@ MainMenu_GetWhichMenu:
 ;	jr .ok3
 
 	hlcoord 1, 14
-    farcall Mobile_AlwaysReturnNotCarry
+    farcall CheckMobileAdapterStatus
     jr nc, .ok3
 
     ld a, $7
@@ -275,7 +275,7 @@ MainMenu_GetWhichMenu:
 
 .ok3
 	hlcoord 1, 14
-    farcall Mobile_AlwaysReturnNotCarry
+    farcall CheckMobileAdapterStatus
     jr nc, .ok4
 
     ld a, $7

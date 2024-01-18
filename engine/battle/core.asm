@@ -3682,7 +3682,7 @@ TryToRunAwayFromBattle:
 	jp z, .cant_escape
 	cp BATTLETYPE_CELEBI
 	jp z, .cant_escape
-	cp BATTLETYPE_SHINY
+	cp BATTLETYPE_FORCESHINY
 	jp z, .cant_escape
 	cp BATTLETYPE_SUICUNE
 	jp z, .cant_escape
@@ -6108,7 +6108,7 @@ LoadEnemyMon:
 
 ; Forced shiny battle type
 ; Used by Red Gyarados at Lake of Rage
-	cp BATTLETYPE_SHINY
+	cp BATTLETYPE_FORCESHINY
 	jr nz, .GenerateDVs
 
 	ld b, ATKDEFDV_SHINY ; $ea
@@ -6500,7 +6500,7 @@ CheckUnownLetter:
 	inc e
 	inc e
 	ld a, e
-	cp UnlockedUnownLetterSets.End - UnlockedUnownLetterSets
+	cp NUM_UNLOCKED_UNOWN_SETS * 2
 	jr c, .loop
 
 ; Hasn't been unlocked, or the letter is invalid
@@ -8380,7 +8380,7 @@ CheckPayDay:
 
 ShowLinkBattleParticipantsAfterEnd:
 	farcall StubbedTrainerRankings_LinkBattles
-	farcall BackupMobileEventIndex
+	farcall BackupGSBallFlag
 	ld a, [wCurOTMon]
 	ld hl, wOTPartyMon1Status
 	call GetPartyLocation
@@ -8426,7 +8426,7 @@ DisplayLinkBattleResult:
 .store_result
 	hlcoord 6, 8
 	call PlaceString
-	farcall BackupMobileEventIndex
+	farcall BackupGSBallFlag
 	ld c, 200
 	call DelayFrames
 

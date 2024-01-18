@@ -13,17 +13,17 @@ https://github.com/Sudel-Matze/pokecrystal
 ## Screenshots
 
 ![image](https://user-images.githubusercontent.com/110418063/188284868-5d25cf63-ec57-4780-b6d0-8b7ff90e3826.png)
-![image](https://user-images.githubusercontent.com/110418063/188284842-21fb8827-cb15-4ab4-8b58-d7d58f648b27.png)
-![image](https://user-images.githubusercontent.com/110418063/196016480-a2fd8c6c-ea9b-4b8b-92a1-1bc5af47a2c0.png)
+![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/a1615c31-a83c-4406-ad72-beeb52abe0ad)
+![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/ea64d517-1069-4cdb-a68d-3d657613d16e)
 ![image](https://user-images.githubusercontent.com/110418063/188298896-8d03b589-8ab1-4d5f-b205-b163e4f616b9.png)
-![image](https://user-images.githubusercontent.com/110418063/188284899-85bfa620-4cf2-4dc3-aac1-e950737ee2aa.png)
+![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/42c3949c-ad17-4452-981d-5bb19647e022)
 ![image](https://user-images.githubusercontent.com/110418063/196643701-a3aea578-940b-463f-8d51-c1025cc5c5a7.png)
 ![image](https://user-images.githubusercontent.com/110418063/196290251-dc54e329-4924-4ab9-9366-d1e167ca9ca3.png)
 ![image](https://user-images.githubusercontent.com/110418063/205540332-b49b9482-e121-4ba0-a2df-3630c04cdc1c.png)
 ![image](https://user-images.githubusercontent.com/110418063/226153593-93985569-7682-43f9-91d1-e33f9478643d.png)
 ![image](https://user-images.githubusercontent.com/110418063/188287387-5cd5514c-267c-4fe6-b66f-0a0e36e712e6.png)
 ![image](https://user-images.githubusercontent.com/110418063/188287421-ff2eedad-1569-4512-8224-d1ee2c5622da.png)
-![image](https://user-images.githubusercontent.com/110418063/222832067-ce1ac5ba-c725-4311-b6f1-b033b55cca93.png)
+![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/46af69c9-da9f-4656-90e4-e46cc5aec4b2)
 ![image](https://user-images.githubusercontent.com/110418063/188331912-d862a3c6-a7d2-4636-b152-8ecd74e5250b.png)
 ![image](https://user-images.githubusercontent.com/110418063/196129175-eebdad9e-f4a0-44ae-8432-7aa538b3c722.png)
 ![image](https://user-images.githubusercontent.com/110418063/188289401-f0b79296-f4eb-4463-a8d6-6fb8c605adc1.png)
@@ -76,7 +76,9 @@ https://github.com/gb-mobile/pokecrystal-mobile-en/wiki/Pok%C3%A9mon-Crystal-Mob
 - Matze          : Mobile Restoration & Japanese Code Disassembly
 - Damien         : Code
 - DS             : GFX & Code
+- Nob Ogasawara  : Consultation on minor menu translations
 - Ryuzac         : Code & Japanese Translation
+- Vulcandth      : Rebasing and keeping the repo up to date
 - Zumilsawhat?   : Code (Large amounts of work on the EZ Chat system)
 - REON Community : Support and Assistance
 

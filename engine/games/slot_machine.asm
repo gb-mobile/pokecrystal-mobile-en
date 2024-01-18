@@ -685,7 +685,7 @@ Slots_InitReelTiles:
 	ld [hl], d
 	ld hl, REEL_X_COORD
 	add hl, bc
-	ld [hl], 6 * 8
+	ld [hl], 6 * TILE_WIDTH
 	call .OAM
 
 	ld bc, wReel2
@@ -703,7 +703,7 @@ Slots_InitReelTiles:
 	ld [hl], d
 	ld hl, REEL_X_COORD
 	add hl, bc
-	ld [hl], 10 * 8
+	ld [hl], 10 * TILE_WIDTH
 	call .OAM
 
 	ld bc, wReel3
@@ -721,7 +721,7 @@ Slots_InitReelTiles:
 	ld [hl], d
 	ld hl, REEL_X_COORD
 	add hl, bc
-	ld [hl], 14 * 8
+	ld [hl], 14 * TILE_WIDTH
 	call .OAM
 	ret
 
@@ -789,7 +789,7 @@ Slots_UpdateReelPositionAndOAM:
 	add hl, bc
 	ld a, [hl]
 	ld [wCurReelXCoord], a
-	ld a, 10 * 8
+	ld a, 10 * TILE_WIDTH
 	ld [wCurReelYCoord], a
 	ld hl, REEL_POSITION
 	add hl, bc
@@ -2023,7 +2023,7 @@ Slots_AnimateGolem:
 	jr c, .play_sound
 	dec [hl]
 	ld e, a
-	ld d, 14 * 8
+	ld d, 14 * TILE_WIDTH
 	farcall BattleAnim_Sine_e
 	ld a, e
 	ld hl, SPRITEANIMSTRUCT_YOFFSET
@@ -2050,7 +2050,7 @@ Slots_AnimateGolem:
 	ld a, [hl]
 	inc [hl]
 	inc [hl]
-	cp 9 * 8
+	cp 9 * TILE_WIDTH
 	jr nc, .restart
 	and $3
 	ret nz
@@ -2094,7 +2094,7 @@ Slots_AnimateChansey:
 	add hl, bc
 	ld a, [hl]
 	inc [hl]
-	cp 13 * 8
+	cp 13 * TILE_WIDTH
 	jr z, .limit
 	and $f
 	ret nz

@@ -1051,7 +1051,7 @@ String1006c2:
 String1006c6:
 	db " sec.@"			; "びょう@" Second
 String1006ca:
-	db "1 hour+ @" 		; "１じかんいじょう@" More than 1 hour
+	db "1 hour or more@" 		; "１じかんいじょう@" More than 1 hour
 
 Function1006d3:
 	call UpdateTime
@@ -2430,14 +2430,14 @@ Unknown_100feb:
 	db -1 ; end
 
 Unknown_100ff3:
-	macro_100fc0 wdc41,                1
-	macro_100fc0 wPlayerName,          NAME_LENGTH
-	macro_100fc0 wPlayerName,          NAME_LENGTH
-	macro_100fc0 wPlayerID,            2
-	macro_100fc0 wSecretID,            2
-	macro_100fc0 wPlayerGender,        1
-	macro_100fc0 sPhoneNumber,         PHONE_NUMBER_LENGTH
-	macro_100fc0 sEZChatIntroductionMessage,              EASY_CHAT_MESSAGE_LENGTH * 4
+	macro_100fc0 wdc41,           1
+	macro_100fc0 wPlayerName,     NAME_LENGTH
+	macro_100fc0 wPlayerName,     NAME_LENGTH
+	macro_100fc0 wPlayerID,       2
+	macro_100fc0 wSecretID,       2
+	macro_100fc0 wPlayerGender,   1
+	macro_100fc0 sPhoneNumber,    PHONE_NUMBER_LENGTH
+	macro_100fc0 sEZChatMessages, EASY_CHAT_MESSAGE_LENGTH * 4
 	db -1 ; end
 
 Unknown_10102c:
@@ -5189,7 +5189,7 @@ Function102423:
 	ret nc
 	farcall SaveAfterLinkTrade
 	farcall StubbedTrainerRankings_Trades
-	farcall BackupMobileEventIndex
+	farcall BackupGSBallFlag
 	ld hl, wcd4b
 	set 1, [hl]
 	ld a, 0
@@ -6649,8 +6649,8 @@ Function102f15:
 	ret
 
 .TooBadTheTradeWasCanceled:
-	db   "Canceling the"		; "こうかんを　キャンセルしました@"
-	next "trade..."
+	db   "The trade was"
+	next "canceled!"
 	db   "@"
 
 Function102f32:
@@ -7390,7 +7390,7 @@ MenuData_103648:
 	db "CABLE@"		; "ケーブル@"
 
 Function103654:
-	farcall Mobile_AlwaysReturnNotCarry
+	farcall CheckMobileAdapterStatus
 	bit 7, c
 	jr nz, .asm_103666
 	ld hl, wcd2a
@@ -7405,7 +7405,7 @@ Function103654:
 	ret
 
 Mobile_SelectThreeMons:
-	farcall Mobile_AlwaysReturnNotCarry
+	farcall CheckMobileAdapterStatus
 	bit 7, c
 	jr z, .asm_10369b
 	ld hl, MobileBattleMustPickThreeMonText
@@ -7665,8 +7665,7 @@ MobileBattleNoTimeLeftForLinkingText:
 	text_end
 
 MobileCheckRemainingBattleTime:
-; Returns carry if less than one minute remains
-	farcall Mobile_AlwaysReturnNotCarry
+	farcall CheckMobileAdapterStatus
 	bit 7, c
 	jr nz, .ok
 	farcall MobileBattleGetRemainingTime
@@ -7714,7 +7713,7 @@ PickThreeMonForMobileBattleText:
 	text_end
 
 Function10387b:
-	farcall Mobile_AlwaysReturnNotCarry
+	farcall CheckMobileAdapterStatus
 	bit 7, c
 	ret nz
 	farcall MobileBattleGetRemainingTime
