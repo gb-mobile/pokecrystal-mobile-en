@@ -7276,20 +7276,20 @@ Function11b31b:
 	ret
 
 .Coords:
-	dbpixel  9,  7, 2, 6 ;  0
-	dbpixel  9,  8, 2, 6 ;  1
-	dbpixel  9,  9, 2, 6 ;  2
-	dbpixel  9, 15, 2, 9 ;  3
-	dbpixel  9, 16, 2, 6 ;  4
-	dbpixel  9, 17, 2, 6 ;  5
-	dbpixel  9, 18, 2, 1 ;  6
-	dbpixel 10,  7, 2, 6 ;  7
-	dbpixel 10,  8, 2, 6 ;  8
-	dbpixel 10,  9, 2, 6 ;  9
-	dbpixel 10, 15, 2, 9 ; 10
-	dbpixel 10, 16, 2, 6 ; 11
-	dbpixel 10, 17, 2, 6 ; 12
-	dbpixel 10, 18, 2, 1 ; 13
+	dbpixel  9,  7, -1, 6 ;  0
+	dbpixel  9,  8, -1, 6 ;  1
+	dbpixel  9,  9, -1, 6 ;  2
+	dbpixel  9, 15, -1, 9 ;  3
+	dbpixel  9, 16, -1, 6 ;  4
+	dbpixel  9, 17, -1, 6 ;  5
+	dbpixel  9, 18, -1, 1 ;  6
+	dbpixel 10,  7,  5, 6 ;  7
+	dbpixel 10,  8,  5, 6 ;  8
+	dbpixel 10,  9,  5, 6 ;  9
+	dbpixel 10, 15,  5, 9 ; 10
+	dbpixel 10, 16,  5, 6 ; 11
+	dbpixel 10, 17,  5, 6 ; 12
+	dbpixel 10, 18,  5, 1 ; 13
 	db -1
 
 .Tilemap1: ; vtiles
