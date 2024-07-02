@@ -150,6 +150,7 @@ SpriteAnimOAMData:
 	spriteanimoam $00, .OAMData_EZChatCursor8            ; SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_8
 	spriteanimoam $00, .OAMData_EZChatCursor9            ; SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_9
 	spriteanimoam $00, .OAMData_EZChatCursor10           ; SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_10
+	spriteanimoam $00, wMobileBoxSpriteBuffer            ; SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_CUSTOM_BOX
 	assert_table_length NUM_SPRITE_ANIM_OAMSETS
 
 .OAMData_1x1_Palette0:
@@ -784,30 +785,21 @@ SpriteAnimOAMData:
 	dsprite  1,  0,  3,  0, $34, 0
 	dsprite  1,  0,  4,  0, $35, 0
 
-; split cursor for mon names
+; cursor for 'other'
 .OAMData_EZChatCursor10:
-	db 18
-	dsprite  0,  0,  0,  0, $30, 0
-	dsprite  0,  0,  1,  0, $31, 0
-	dsprite  0,  0,  2,  0, $31, 0
-	dsprite  0,  0,  3,  0, $31, 0
-	dsprite  0,  0,  4,  0, $31, 0
-
-	dsprite  0,  0,  (5+2),  0, $31, 0
-	dsprite  0,  0,  (6+2),  0, $31, 0
-	dsprite  0,  0,  (7+2),  0, $31, 0
-	dsprite  0,  0,  (8+2),  0, $32, 0
-
-	dsprite  1,  0,  0,  0, $33, 0
-	dsprite  1,  0,  1,  0, $34, 0
-	dsprite  1,  0,  2,  0, $34, 0
-	dsprite  1,  0,  3,  0, $34, 0
-	dsprite  1,  0,  4,  0, $34, 0
-
-	dsprite  1,  0,  (5+2),  0, $34, 0
-	dsprite  1,  0,  (6+2),  0, $34, 0
-	dsprite  1,  0,  (7+2),  0, $34, 0
-	dsprite  1,  0,  (8+2),  0, $35, 0
+	db 12
+	dsprite -1,  7,  0,  0, $30, 0
+	dsprite -1,  0,  1,  0, $34, 0
+	dsprite -1,  0,  2,  0, $34, 0
+	dsprite -1,  0,  3,  0, $34, 0
+	dsprite -1,  0,  4,  0, $34, 0
+	dsprite -1,  7,  5,  0, $32, 0
+	dsprite  0,  0,  0,  0, $33, 0
+	dsprite  0,  7,  1,  0, $31, 0
+	dsprite  0,  7,  2,  0, $31, 0
+	dsprite  0,  7,  3,  0, $31, 0
+	dsprite  0,  7,  4,  0, $31, 0
+	dsprite  0,  0,  5,  0, $35, 0
 
 .OAMData_BlueWalk:
 	db 4

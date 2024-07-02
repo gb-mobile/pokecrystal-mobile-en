@@ -157,9 +157,9 @@ HaveWantPals:
 	RGB 17, 12, 31
 	RGB 12,  6, 31
 
-	RGB  0, 16,  0
-	RGB 11, 11, 14
-	RGB  5,  5,  7
+	RGB  0,  0,  0
+	RGB 11, 23,  0
+	RGB  7, 17,  0
 	RGB 31, 31, 31
 
 	RGB  0, 31,  0

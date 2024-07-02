@@ -5766,12 +5766,11 @@ String_11a743:
     next "stored data!@";"あります！@"
 	
 String_11a755:
-    db   "Read the";"データ<WO>よみこみますか？@"
-    next "data?@"
+    db   "Read the data?@";"データ<WO>よみこみますか？@"
 	
 String_11a762:
-    db   "Read the";"おなじ　データ<WO>よみこんだ"
-    next "same data.@";"こと<GA>ありますが@"
+    db   "Read the same";"おなじ　データ<WO>よみこんだ"
+    next "data.@";"こと<GA>ありますが@"
 	
 String_11a779:
     db   "The data is";"そのデータ<WA>なくなっているか"
@@ -6235,32 +6234,32 @@ Function11acb7: ; mobile phone animation?
 	sla c
 	rl b
 	add hl, bc
-	decoord 5, 12 ;6, 6
+	decoord 1, 12 ;6, 6
 	ld a, [hli]
 	ld [de], a
-	decoord 4, 6 ;0, 7
+	decoord 2, 6 ;0, 7
 	;ld bc, 7
 	;call CopyBytes
 
 	; vertical
 	ld a, [hli]
 	ld [de], a
-	decoord 4, 7
+	decoord 2, 7
 	ld a, [hli]
 	ld [de], a
-	decoord 4, 8
+	decoord 2, 8
 	ld a, [hli]
 	ld [de], a
-	decoord 4, 9
+	decoord 2, 9
 	ld a, [hli]
 	ld [de], a
-	decoord 4, 10
+	decoord 2, 10
 	ld a, [hli]
 	ld [de], a
-	decoord 4, 11
+	decoord 2, 11
 	ld a, [hli]
 	ld [de], a
-	decoord 4, 12
+	decoord 2, 12
 	ld a, [hli]
 	ld [de], a
 
@@ -6285,29 +6284,29 @@ Function11acb7: ; mobile phone animation?
 	sla c
 	rl b
 	add hl, bc
-	decoord 2, 8 ;3, 9 ; wanted pokemon animation coordinates
+	decoord 4, 8 ;3, 9 ; wanted pokemon animation coordinates
 	;ld bc, 7
 	;call CopyBytes
 
 	; vertical
 	ld a, [hli]
 	ld [de], a
-	decoord 2, 9
+	decoord 4, 9
 	ld a, [hli]
 	ld [de], a
-	decoord 2, 10
+	decoord 4, 10
 	ld a, [hli]
 	ld [de], a
-	decoord 2, 11
+	decoord 4, 11
 	ld a, [hli]
 	ld [de], a
-	decoord 2, 12
+	decoord 4, 12
 	ld a, [hli]
 	ld [de], a
-	decoord 2, 13
+	decoord 4, 13
 	ld a, [hli]
 	ld [de], a
-	decoord 2, 14
+	decoord 4, 14
 	ld a, [hli]
 	ld [de], a
 
@@ -7277,53 +7276,50 @@ Function11b31b:
 	ret
 
 .Coords:
-	dbpixel  9,  7, 2, 6 ;  0
-	dbpixel  9,  8, 2, 6 ;  1
-	dbpixel  9,  9, 2, 6 ;  2
-	dbpixel  9, 15, 2, 9 ;  3
-	dbpixel  9, 16, 2, 6 ;  4
-	dbpixel  9, 17, 2, 6 ;  5
-	dbpixel  9, 18, 2, 1 ;  6
-	dbpixel 10,  7, 2, 6 ;  7
-	dbpixel 10,  8, 2, 6 ;  8
-	dbpixel 10,  9, 2, 6 ;  9
-	dbpixel 10, 15, 2, 9 ; 10
-	dbpixel 10, 16, 2, 6 ; 11
-	dbpixel 10, 17, 2, 6 ; 12
-	dbpixel 10, 18, 2, 1 ; 13
+	dbpixel  9,  7,  0, 7 ;  0
+	dbpixel  9,  8,  0, 7 ;  1
+	dbpixel  9,  9,  0, 6 ;  2
+	
+	dbpixel  9, 15,  0, 9 ;  5
+	dbpixel  9, 17,  0, 0 ;  6
+	dbpixel  9, 18,  0, 0 ;  7
+	
+	dbpixel 10,  7,  6, 7 ;  8
+	dbpixel 10,  8,  6, 7 ;  9
+	dbpixel 10,  9,  6, 6 ; 10
+	
+	dbpixel 10, 15,  6, 9 ; 13
+	dbpixel 10, 17,  6, 0 ; 14
+	dbpixel 10, 18,  6, 0 ; 15
 	db -1
 
 .Tilemap1: ; vtiles
 	db $30 ;  0
 	db $31 ;  1
-	db $31 ;  2
-	db $31 ;  3
+	db $4C ;  2
+	db $4D ;  3
 	db $31 ;  4
-	db $31 ;  5
-	db $32 ;  6
-	db $40 ;  7
-	db $41 ;  8
-	db $41 ;  9
+	db $32 ;  5
+	db $40 ;  6
+	db $41 ;  7
+	db $4E ;  8
+	db $4F ;  9
 	db $41 ; 10
-	db $41 ; 11
-	db $41 ; 12
-	db $42 ; 13
+	db $42 ; 11
 
 .Tilemap2: ; vtiles
 	db $30 ;  0
 	db $31 ;  1
-	db $31 ;  2
+	db $4C ;  2
 	db $39 ;  3
 	db $39 ;  4
 	db $39 ;  5
-	db $39 ;  6
-	db $40 ;  7
-	db $41 ;  8
-	db $41 ;  9
+	db $40 ;  6
+	db $41 ;  7
+	db $4E ;  8
+	db $39 ;  9
 	db $39 ; 10
 	db $39 ; 11
-	db $39 ; 12
-	db $39 ; 13
 
 .Tilemap3: ; vtiles
 	db $39 ;  0
@@ -7338,8 +7334,6 @@ Function11b31b:
 	db $39 ;  9
 	db $39 ; 10
 	db $39 ; 11
-	db $39 ; 12
-	db $39 ; 13
 
 Function11b397:
 	ld de, wShadowOAMSprite00
@@ -7409,7 +7403,7 @@ Function11b3d9:
 	cp e
 	jr z, .skip
 	ld hl, 0
-	ld bc, $70
+	ld bc, $79
 	call AddNTimes
 	ld e, l
 	ld d, h
@@ -7431,7 +7425,7 @@ Function11b3d9:
 	jr .loop1
 
 .skip
-	ld b, 14 * TILE_WIDTH
+	ld b, 15 * TILE_WIDTH
 
 .load_sprites
 	ld a, 2 * TILE_WIDTH + 5

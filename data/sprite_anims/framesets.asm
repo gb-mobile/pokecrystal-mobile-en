@@ -70,6 +70,7 @@ SpriteAnimFrameData:
 	dw .Frameset_EZChatCursor8
 	dw .Frameset_EZChatCursor9
 	dw .Frameset_EZChatCursor10
+	dw .Frameset_EZChatCursorCustomBox
 	assert_table_length NUM_SPRITE_ANIM_FRAMESETS
 
 .Frameset_00:
@@ -384,6 +385,10 @@ SpriteAnimFrameData:
 
 .Frameset_EZChatCursor10:
 	oamframe SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_10,  2
+	oamend
+
+.Frameset_EZChatCursorCustomBox:
+	oamframe SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_CUSTOM_BOX,  2
 	oamend
 
 .Frameset_MobileTradeSentBall:
