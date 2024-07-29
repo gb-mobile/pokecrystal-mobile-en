@@ -5,7 +5,8 @@ roms := \
 	pokecrystal_eu.gbc \
 	pokecrystal_debug.gbc \
 	pokecrystal11_debug.gbc \
-	pokecrystalfix_debug.gbc
+	pokecrystalfix_debug.gbc \
+    pokecrystal_plus.gbc
 patches := pokecrystal11.patch
 
 rom_obj := \
@@ -35,6 +36,7 @@ pokecrystal_debug_obj   := $(rom_obj:.o=_debug.o)
 pokecrystal11_debug_obj := $(rom_obj:.o=11_debug.o)
 pokecrystal11_vc_obj    := $(rom_obj:.o=11_vc.o)
 pokecrystalfix_debug_obj := $(rom_obj:.o=fix_debug.o)
+pokecrystal_plus_obj    := $(rom_obj:.o=plus.o)
 
 ### Build tools
 
@@ -68,6 +70,7 @@ crystal_debug:   pokecrystal_debug.gbc
 crystal11_debug: pokecrystal11_debug.gbc
 crystal11_vc:    pokecrystal11.patch
 crystalfix_debug: pokecrystalfix_debug.gbc
+plus:            pokecrystal_plus.gbc
 
 clean: tidy
 	find gfx \
@@ -101,6 +104,7 @@ tidy:
 	      $(pokecrystal_debug_obj) \
 	      $(pokecrystal11_debug_obj) \
 		  $(pokecrystalfix_debug_obj) \
+          $(pokecrystal_plus_obj) \
 	      rgbdscheck.o
 	$(MAKE) clean -C tools/
 
@@ -125,6 +129,7 @@ $(pokecrystal_debug_obj):   RGBASMFLAGS += -D _DEBUG
 $(pokecrystal11_debug_obj): RGBASMFLAGS += -D _CRYSTAL11 -D _DEBUG
 $(pokecrystal11_vc_obj):    RGBASMFLAGS += -D _CRYSTAL11 -D _CRYSTAL11_VC
 $(pokecrystalfix_debug_obj):RGBASMFLAGS += -D _CRYSTALFIX -D _CRYSTAL11 -D _DEBUG
+$(pokecrystal_plus_obj):    RGBASMFLAGS += -D _CRYSTALFIX -D _CRYSTAL11 -D _DEBUG -D _PLUS
 
 %.patch: vc/%.constants.sym %_vc.gbc %.gbc vc/%.patch.template
 	tools/make_patch $*_vc.sym $^ $@
@@ -156,6 +161,7 @@ $(foreach obj, $(pokecrystal_debug_obj), $(eval $(call DEP,$(obj),$(obj:_debug.o
 $(foreach obj, $(pokecrystal11_debug_obj), $(eval $(call DEP,$(obj),$(obj:11_debug.o=.asm))))
 $(foreach obj, $(pokecrystal11_vc_obj), $(eval $(call DEP,$(obj),$(obj:11_vc.o=.asm))))
 $(foreach obj, $(pokecrystalfix_debug_obj), $(eval $(call DEP,$(obj),$(obj:fix_debug.o=.asm))))
+$(foreach obj, $(pokecrystal_plus_obj), $(eval $(call DEP,$(obj),$(obj:plus.o=.asm))))
 
 # Dependencies for VC files that need to run scan_includes
 %.constants.sym: %.constants.asm $(shell tools/scan_includes %.constants.asm) $(preinclude_deps) | rgbdscheck.o
@@ -172,6 +178,7 @@ pokecrystal_debug_opt   = -Cjv -t PM_CRYSTAL -i BXTE -n 0 -k 01 -l 0x33 -m 0x10 
 pokecrystal11_debug_opt = -Cjv -t PM_CRYSTAL -i BXTE -n 1 -k 01 -l 0x33 -m 0x10 -r 5 -p 0
 pokecrystal11_vc_opt    = -Cjv -t PM_CRYSTAL -i BXTE -n 1 -k 01 -l 0x33 -m 0x10 -r 5 -p 0
 pokecrystalfix_debug_opt= -Cjv -t PM_CRYSTAL -i BXTE -n 1 -k 01 -l 0x33 -m 0x10 -r 5 -p 0
+pokecrystal_plus_opt    = -Cjv -t PM_CRYSTAL -i BXTE -n 0 -k 01 -l 0x33 -m 0x10 -r 5 -p 0
 
 %.gbc: $$(%_obj) layout.link
 	$(RGBLINK) -n $*.sym -m $*.map -l layout.link -o $@ $(filter %.o,$^)

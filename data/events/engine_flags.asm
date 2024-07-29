@@ -43,6 +43,7 @@ EngineFlags:
 	engine_flag wBikeFlags, BIKEFLAGS_STRENGTH_ACTIVE_F
 	engine_flag wBikeFlags, BIKEFLAGS_ALWAYS_ON_BIKE_F
 	engine_flag wBikeFlags, BIKEFLAGS_DOWNHILL_F
+	engine_flag wBikeFlags, BIKEFLAGS_SKATE_F
 
 	engine_flag wJohtoBadges, ZEPHYRBADGE
 	engine_flag wJohtoBadges, HIVEBADGE

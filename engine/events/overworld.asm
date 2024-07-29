@@ -1625,15 +1625,36 @@ BikeFunction:
 
 .TryBike:
 	call .CheckEnvironment
-	jr c, .CannotUseBike
+	jp c, .CannotUseBike
 	ld a, [wPlayerState]
 	cp PLAYER_NORMAL
 	jr z, .GetOnBike
+	cp PLAYER_SURF
+	jp z, .CannotUseBike
+	cp PLAYER_SURF_PIKA
+	jr z, .CannotUseBike
+	jr .whichItem
+
+.whichItem:
 	cp PLAYER_BIKE
+	jr z, .UsingBike
+	ld a, [wCurItem] ;currently skating
+	cp SKATEBOARD
 	jr z, .GetOffBike
-	jr .CannotUseBike
+	jr .GetOnBike
+
+.UsingBike
+	ld a, [wCurItem]
+	cp BICYCLE
+	jr z, .GetOffBike
+	jr .GetOnBoard
 
 .GetOnBike:
+	ld a, [wCurItem]
+	cp SKATEBOARD
+	jr z, .GetOnBoard
+	ld a, PLAYER_BIKE
+	ld [wPlayerState], a
 	ld hl, Script_GetOnBike
 	ld de, Script_GetOnBike_Register
 	call .CheckIfRegistered
@@ -1651,10 +1672,22 @@ BikeFunction:
 	ld a, $1
 	ret
 
+.GetOnBoard:
+	ld hl, wBikeFlags
+	set BIKEFLAGS_SKATE_F , [hl]
+	ld a, PLAYER_SKATE
+	ld [wPlayerState], a
+	ld hl, Script_GetOnBike
+	ld de, Script_GetOnBike_Register
+	call .CheckIfRegistered
+	jr .done
+	ret
+
 .GetOffBike:
 	ld hl, wBikeFlags
 	bit BIKEFLAGS_ALWAYS_ON_BIKE_F, [hl]
 	jr nz, .CantGetOffBike
+	res BIKEFLAGS_SKATE_F , [hl]
 	ld hl, Script_GetOffBike
 	ld de, Script_GetOffBike_Register
 	call .CheckIfRegistered
@@ -1678,7 +1711,7 @@ BikeFunction:
 	ld a, [wUsingItemWithSelect]
 	and a
 	ret z
-	ld h, d
+	ld h, d			;load script_GetOnBike_Register
 	ld l, e
 	ret
 
@@ -1706,22 +1739,17 @@ BikeFunction:
 Script_GetOnBike:
 	reloadmappart
 	special UpdateTimePals
-	loadvar VAR_MOVEMENT, PLAYER_BIKE
 	writetext GotOnBikeText
+	special PlayMapMusic
 	waitbutton
 	closetext
 	special UpdatePlayerSprite
 	end
 
 Script_GetOnBike_Register:
-	loadvar VAR_MOVEMENT, PLAYER_BIKE
 	closetext
 	special UpdatePlayerSprite
 	end
-
-Overworld_DummyFunction: ; unreferenced
-	nop
-	ret
 
 Script_GetOffBike:
 	reloadmappart
