@@ -13,7 +13,8 @@
 	const CHARPOOL_8
 	const CHARPOOL_9
 	const CHARPOOL_A_TO_Z_2
-	const CHARPOOL_A_TO_Z_BLANK	
+	const CHARPOOL_0_TO_9_2
+	const CHARPOOL_A_TO_9_BLANK	
 	const CHARPOOL_BLANK
 	const CHARPOOL_DASH
 
@@ -35,7 +36,8 @@ Zipcode_CharPools:
 	dwb Zipcode_CharPool_8,           1 ; CHARPOOL_8
 	dwb Zipcode_CharPool_9,           1 ; CHARPOOL_9
 	dwb Zipcode_CharPool_AtoZ_2,     26 ; CHARPOOL_A_TO_Z_2
-	dwb Zipcode_CharPool_AtoZ_Blank, 27 ; CHARPOOL_BLANK_A_TO_Z
+	dwb Zipcode_CharPool_0to9_2,     10 ; CHARPOOL_0_TO_9_2
+	dwb Zipcode_CharPool_Ato9_Blank, 37 ; CHARPOOL_BLANK_A_TO_Z
 	dwb Zipcode_CharPool_Blank,       1 ; CHARPOOL_BLANK
 	dwb Zipcode_CharPool_Dash,        1 ; CHARPOOL_DASH
 
@@ -64,9 +66,11 @@ Zipcode_CharPool_8:
 	db "8"
 Zipcode_CharPool_9:
 	db "9"
-Zipcode_CharPool_AtoZ_Blank:
+Zipcode_CharPool_Ato9_Blank:
 Zipcode_CharPool_AtoZ_2:
 	db "ABCDEFGHIJKLMNOPQRSTUVWXYZ"	
+Zipcode_CharPool_0to9_2:
+	db "0123456789"
 Zipcode_CharPool_Blank:
 	db " "	
 Zipcode_CharPool_Dash:

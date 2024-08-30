@@ -131,7 +131,9 @@ wUnusedScriptByte:: db
 
 wMapTimeOfDay:: db
 
-	ds 3
+	ds 2
+
+wZipcodeMultipleNonConsecutiveSpace:: db
 
 wPrinterConnectionOpen:: db
 wPrinterOpcode:: db
