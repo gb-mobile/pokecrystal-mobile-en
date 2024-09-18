@@ -14,15 +14,15 @@ UnusedTitleScreen: ; unreferenced
 	ld [hli], a ; wTitleScreenTimer
 	ld [hl], a  ; wTitleScreenTimer + 1
 
-	ld hl, UnusedTitleBG_GFX
-	ld de, vTiles2
-	ld bc, vBGMap0 - vTiles2
-	call CopyBytes
+	; ld hl, UnusedTitleBG_GFX
+	; ld de, vTiles2
+	; ld bc, vBGMap0 - vTiles2
+	; call CopyBytes
 
-	ld hl, UnusedTitleBG_GFX + $80 tiles
-	ld de, vTiles1
-	ld bc, vTiles2 - vTiles1
-	call CopyBytes
+	; ld hl, UnusedTitleBG_GFX + $80 tiles
+	; ld de, vTiles1
+	; ld bc, vTiles2 - vTiles1
+	; call CopyBytes
 
 	ld hl, UnusedTitleFG_GFX
 	ld de, vTiles0
@@ -96,8 +96,8 @@ UnusedTitleScreen: ; unreferenced
 
 	ret
 
-UnusedTitleBG_GFX:
-INCBIN "gfx/title/old_bg.2bpp"
+;UnusedTitleBG_GFX:
+;INCBIN "gfx/title/old_bg.2bpp"
 
 UnusedTitleBG_Tilemap:
 ; 32x32 (alternating tiles and attributes)

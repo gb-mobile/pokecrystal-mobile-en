@@ -26,6 +26,9 @@ _TitleScreen:
 	ld de, vTiles1
 	call Decompress
 
+	; db $96, $78
+	; db $96, $80
+	; db $96,	$88
 ; Clear screen palettes
 	hlbgcoord 0, 0
 	ld bc, 20 * BG_MAP_WIDTH
@@ -84,6 +87,7 @@ _TitleScreen:
 	ld a, 0 | VRAM_BANK_1
 	call ByteFill
 
+
 ; Back to VRAM bank 0
 	ld a, 0
 	ldh [rVBK], a
@@ -97,8 +101,29 @@ _TitleScreen:
 	ld hl, TitleCrystalGFX
 	ld de, vTiles0
 	call Decompress
+	ld a, [wCurSpecies]
+	cp 3
+	jr nz, .ClearTile
 
+; Load Unown graphic
+	ld hl, TitleUnownGFX
+	ld de, vTiles0 tile $60
+	ld bc, $C tiles
+	call CopyBytes
+	ld hl, .UnownOamData
+	ld de, wShadowOAMSprite30
+	ld bc, $18
+	call CopyBytes
+
+	.UnownOamData
+	db $78, $88, $60, 07
+	db $78, $90, $62, 07
+	db $78,	$98, $64, 07
+	db $88, $88, $66, 07
+	db $88, $90, $68, 07
+	db $88,	$98, $6A, 07
 ; Clear screen tiles
+.ClearTile
 	hlbgcoord 0, 0
 	ld bc, 64 * BG_MAP_WIDTH
 	ld a, " "
@@ -372,3 +397,6 @@ INCBIN "gfx/title/crystal.2bpp.lz"
 
 TitleScreenPalettes:
 INCLUDE "gfx/title/title.pal"
+
+TitleUnownGFX:
+INCBIN "gfx/title/old_bg.2bpp"

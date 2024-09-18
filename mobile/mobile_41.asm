@@ -1039,7 +1039,8 @@ Function106453:
 	ld a, [wMobileCommsJumptableIndex]
 	set 7, a
 	ld [wMobileCommsJumptableIndex], a
-	nop
+	ld a, [wcf64]
+	ld [wCurSpecies], a
 	ld a, $4
 	ld [wcf64], a
 	ret
