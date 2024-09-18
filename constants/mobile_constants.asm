@@ -85,14 +85,14 @@ DEF ZIPCODE_LENGTH EQU 4
 DEF NUM_REGION_CODES EQU 25
 DEF REGION_CODE_STRING_LENGTH EQU 6
 ELIF DEF(_CRYSTAL_EU)
-DEF ZIPCODE_LENGTH EQU 7
+DEF ZIPCODE_LENGTH EQU 8
 DEF NUM_REGION_CODES EQU 40
 DEF REGION_CODE_STRING_LENGTH EQU 5
 ELSE ; US
-DEF ZIPCODE_LENGTH EQU 6
+DEF ZIPCODE_LENGTH EQU 7
 DEF NUM_REGION_CODES EQU 63
 DEF REGION_CODE_STRING_LENGTH EQU 5
 ENDC
 
-DEF ZIPCODE_MAX_LENGTH EQU 7 ; This is the maximum length on a zipcode, all regions together. It is used as the fixed memory footprint for online communications.
+DEF ZIPCODE_MAX_LENGTH EQU 8 ; This is the maximum length on a zipcode, all regions together. It is used as the fixed memory footprint for online communications.
 DEF REGION_NAME_MAX_LENGTH EQU 7

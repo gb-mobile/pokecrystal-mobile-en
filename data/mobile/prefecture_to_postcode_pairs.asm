@@ -67,15 +67,15 @@ PrefectureZipcodeFormat:
 	db 9  ; EU-MT
 	db 6  ; EU-NL
 	db 2  ; EU-NO
-	db 3  ; EU-PL
+	db 14 ; EU-PL
 	db 5  ; EU-PT
 	db 4  ; EU-RO
 	db 3  ; EU-RS
 	db 4  ; EU-RU
-	db 3  ; EU-SE
+	db 15 ; EU-SE
 	db 12 ; EU-SI
 	db 3  ; EU-SK
-	db 13  ; EU-SM
+	db 13 ; EU-SM
 	db 3  ; EU-UA
 
 ZipcodeFormatLengths:
@@ -84,15 +84,17 @@ ZipcodeFormatLengths:
 	db 4 ;  2:   0-9   0-9   0-9   0-9
 	db 5 ;  3:   0-9   0-9   0-9   0-9   0-9
 	db 6 ;  4:   0-9   0-9   0-9   0-9   0-9   0-9
-	db 7 ;  5:   0-9   0-9   0-9   0-9   0-9   0-9   0-9
+	db 8 ;  5:   0-9   0-9   0-9   0-9   0-9   0-9   0-9
 	db 6 ;  6:   0-9   0-9   0-9   0-9   A-Z   A-Z
-	db 7 ;  7:   A-Z   0-9   0-Z   0-Z   0-Z   0-Z   0-Z
-	db 7 ;  8:   A-Z   0-Z   0-Z   0-Z   0-Z   Blank+A-Z   Blank+A-Z
-	db 5 ;  9:   A-Z   A-Z   A-Z   0-9   0-9
-	db 6 ; 10:   L     V     0-9   0-9   0-9   0-9
-	db 6 ; 11:   M     D     0-9   0-9   0-9   0-9
-	db 6 ; 12:   S     I     0-9   0-9   0-9   0-9
-	db 5 ; 13:   7  8  9  0-9
+	db 8 ;  7:   A-Z   0-9         0-Z   0-Z   0-Z   0-Z   0-Z
+	db 8 ;  8:   A-Z   0-Z   0-Z   0-Z   0-Z   Blank+A-Z   Blank+A-Z
+	db 6 ;  9:   A-Z   A-Z   A-Z         0-9   0-9
+	db 7 ; 10:   L     V     0-9   0-9   0-9   0-9
+	db 7 ; 11:   M     D     0-9   0-9   0-9   0-9
+	db 7 ; 12:   S     I     0-9   0-9   0-9   0-9
+	db 5 ; 13:   4     7      8     9    0-9
+	db 6 ; 14:   0-9   0-9    -    0-9   0-9   0-9
+	db 6 ; 15:   0-9   0-9   0-9         0-9   0-9
 
 
 
@@ -168,5 +170,5 @@ PrefectureZipcodeFormat:
 
 ZipcodeFormatLengths:
 	db 5 ;  0:   0-9   0-9   0-9   0-9   0-9
-	db 6 ;  1:   A-Z   0-9   A-Z   0-9   A-Z   0-9
+	db 7 ;  1:   A-Z   0-9   A-Z         0-9   A-Z   0-9
 endc
