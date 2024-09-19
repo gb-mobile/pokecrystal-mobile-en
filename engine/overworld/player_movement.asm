@@ -18,8 +18,15 @@ DoPlayerMovement::
 
 	ld hl, wBikeFlags
 	bit BIKEFLAGS_DOWNHILL_F, [hl]
+	jr nz, .Downhill
+	bit BIKEFLAGS_SKATE_F, [hl]
 	ret z
-
+	ld c, a
+	cp B_BUTTON
+	jr z, .NotMoving
+	ret
+	
+.Downhill
 	ld c, a
 	and D_PAD
 	ret nz
