@@ -646,8 +646,8 @@ BlkApricornDesc:
 
 SkateBoardDesc:
 	if DEF(_PLUS)
-	db   "A sporty board for"
-	next "rolling around.@"
+	db   "Ride anywhere at"	;18 max chars per line
+	next "twice the speed.@"
 	else
 	db   "?@"
 	endc

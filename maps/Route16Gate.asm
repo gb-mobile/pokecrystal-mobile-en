@@ -15,11 +15,11 @@ Route16GateOfficerScript:
 
 Route16GateBicycleCheck:
 	checkitem BICYCLE
-	iffalse .CheckBoard
-	end
+; 	iffalse .CheckBoard
+; 	end
 
-.CheckBoard
-	checkitem SKATEBOARD
+; .CheckBoard
+; 	checkitem SKATEBOARD
 	iffalse .NoBicycle
 	end
 

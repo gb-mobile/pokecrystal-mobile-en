@@ -17,16 +17,16 @@ DoPlayerMovement::
 ; Standing downhill instead moves down.
 
 	ld hl, wBikeFlags
-	bit BIKEFLAGS_DOWNHILL_F, [hl]
-	jr nz, .Downhill
 	bit BIKEFLAGS_SKATE_F, [hl]
-	ret z
+	jr nz, .NotSkate
 	ld c, a
 	cp B_BUTTON
-	jr z, .NotMoving
-	ret
-	
-.Downhill
+	jp z, .Standing
+
+.NotSkate
+	bit BIKEFLAGS_DOWNHILL_F, [hl]
+	ret z
+
 	ld c, a
 	and D_PAD
 	ret nz
