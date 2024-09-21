@@ -4250,7 +4250,7 @@ ENDM
 	ezchat_word "BLUSH@@@", $0a0
 	ezchat_word "HOHOHO@@", $26a
 	ezchat_word "UH-HUH@@", $51a
-	ezchat_word "OH DEAR@", $380
+	ezchat_word "OH, DEAR", $380
 	ezchat_word "ARRGH!@@", $064
 	ezchat_word "MUFU@@@@", $338
 	ezchat_word "MUFUFU@@", $33a
