@@ -1,87 +1,57 @@
 ## Information 
 
-A fork of pokecrystal designed to restore and localize Mobile Adapter functionality such as online battles and trades to Crystal using disassembled code from the Japanese ROM designed for use with Mobile System recreation projects like the REON Project.
+This is a project aimed at restoring lost content and features from the second generation of Pokemon games, as well as envisioning what could have been if Pink Version had released alongside Yellow.
 
-The intention of this project is to create a build of pokecrystal with all of the content that was featured in the Japanese version of the game and was cut from the international release(s).
-We've been very strict on ensuring that any decisions made on the localization or presentation of this content match the standards of a hypothetical scenario in which the Mobile Adapter was released outside of Japan and Crystal received a complete English release back in 2001.
+## Features
 
-This repository is built upon a substantial amount of work done by Sudel-Matze.
-
-A link to Matze’s repository can be found here:
-https://github.com/Sudel-Matze/pokecrystal
-
-## Screenshots
+Mobile GB Restoration: Battle and trade online like it's 2001.
 
 ![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/38f43741-10cb-44e3-adff-2a13f1c1a15c)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/2dcac8d6-9b58-47d6-9b0a-004d112267d0)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/ea64d517-1069-4cdb-a68d-3d657613d16e)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/5959587a-651b-4a45-9511-0977323aaa0a)
 ![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/42c3949c-ad17-4452-981d-5bb19647e022)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/a2753b55-920e-4ed9-bcc4-913655fdc87e)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/6c3f6fe9-9362-4f07-b5bf-f1ae785febf9)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/3f056306-7409-4c91-8c84-eb046ef6ba11)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/5cdd65ee-700d-4921-924a-c55ea29bc2ce)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/4942f0e5-8599-4bfb-a149-b06d487d29c7)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/1349bf82-7668-4573-8dce-021792013571)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/46af69c9-da9f-4656-90e4-e46cc5aec4b2)
 ![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/040a1f18-441b-4bc7-819c-8fc7ef43f949)
-![image](https://user-images.githubusercontent.com/110418063/196129175-eebdad9e-f4a0-44ae-8432-7aa538b3c722.png)
-![image](https://github.com/gb-mobile/pokecrystal-mobile-eng/assets/110418063/bd6ae5da-1994-474a-a21e-4b03b837fff5)
+
+(See https://github.com/gb-mobile/pokecrystal-mobile-eng for more information on how to use mobile features.)
 
 
+Skateboard functionality: Zip around at high speed! Use the B button to brake.
 
+![bgb00006](https://github.com/user-attachments/assets/49bdce45-59c6-420c-9f9b-949e5a20cbd3)
+![bgb00007](https://github.com/user-attachments/assets/7070055d-41af-43b7-9627-546c856ae863)
+![bgb00008](https://github.com/user-attachments/assets/f45642b4-7f6c-41f9-bed6-8230d005b8e3)
 
-## Setup [![Build Status][ci-badge]][ci]
+Optional tie-in with Pokemon Pink: replace Red with Green for a new twist.
+
+![bgb00003](https://github.com/user-attachments/assets/4b2c3121-f0d7-4671-97e0-ef45fd6766b6)
+![bgb00004](https://github.com/user-attachments/assets/2fb650b4-2c70-4fdf-afa9-c20331e6b508)
+![bgb00005](https://github.com/user-attachments/assets/3abc9b46-b68f-49c5-aebb-d26df4727d94)
+
+Also includes a handful of bugfixes to restore intended gameplay flow, and more soon to be revealed!
+
+## Setup
 
 For more information, please see [INSTALL.md](INSTALL.md)
 
-After setup has been completed, you can choose which version you wish to build.
-To build a specific version, run one of these commands inside the repository directory in cygwin64:
+By default, the target will build with both bugfixing and 1.1 revisions. You will need to run one of the following commands:
 
 - US Version:   `make`
 
-- EUR Version:	`make crystal_eu` 
+- US with debugging symbols: `make debug`
 
-- AUS Version:	`make crystal_au`
+- US without bugfixes:  `make nofix`
 
-For a more accurate experience, we advising picking the build version based on where you live as this will make different 'address' options available to you which are selectable for personal information.
-
-The US Version covers the United States and Canada.
-
-The EUR Version covers all countries in Europe (as of 2001).
-
-The AUS Version covers Australia & New Zealand.
-
-Other languages are being worked on, but are not complete and still require a lot of polish.
-
-## Using Mobile Adapter Features
-
-To take advantage of the Mobile Adapter features, we currently recommend the GameBoy Emulator BGB:
-https://bgb.bircd.org/
-
-and libmobile-bgb:
-https://github.com/REONTeam/libmobile-bgb/releases
-
-Simply open BGB, right click the ‘screen’ and select `Link > Listen`, then accept the port it provides by clicking `OK`.
-Once done, run the latest version of libmobile for your operating system (`mobile-windows.exe` or windows and `mobile-linux` for linux).
-Now right click the ‘screen’ on BGB again and select `Load ROM…`, then choose the pokecrystal-mobile `.gbc` file you have built.
+- EU Version:  `make eu`
+  
+- AU Version:  `make au`
 
 ## Mobile Adapter Features
 
 A full list of Mobile Adapter features for Pokémon Crystal can be found here:
 https://github.com/gb-mobile/pokecrystal-mobile-en/wiki/Pok%C3%A9mon-Crystal-Mobile-Features
 
-## Contributors
+## TO-DO
 
-- Pret           : Initial disassembly
-- Matze          : Mobile Restoration & Japanese Code Disassembly
-- Damien         : Code
-- DS             : GFX & Code
-- Nob Ogasawara  : Consultation on minor menu translations
-- Ryuzac         : Code & Japanese Translation
-- Vulcandth      : Rebasing and keeping the repo up to date
-- Zumilsawhat?   : Code (Large amounts of work on the EZ Chat system)
-- REON Community : Support and Assistance
-
-[ci]: https://github.com/pret/pokecrystal/actions
-[ci-badge]: https://github.com/pret/pokecrystal/actions/workflows/main.yml/badge.svg
+- Finish implementing Green battle
+- Restore cut minigames from GS Spaceworld
+- General polish and bugfixing
+- Implement changes into other languages
+- ???
