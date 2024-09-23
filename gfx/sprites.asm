@@ -5,7 +5,11 @@ ChrisBikeSpriteGFX::           INCBIN "gfx/sprites/chris_bike.2bpp"
 GameboyKidSpriteGFX::          INCBIN "gfx/sprites/gameboy_kid.2bpp"
 RivalSpriteGFX::               INCBIN "gfx/sprites/rival.2bpp"
 OakSpriteGFX::                 INCBIN "gfx/sprites/oak.2bpp"
+IF DEF (_PINK)
+RedSpriteGFX::                 INCBIN "gfx/sprites/green.2bpp"
+ELSE
 RedSpriteGFX::                 INCBIN "gfx/sprites/red.2bpp"
+ENDC
 BlueSpriteGFX::                INCBIN "gfx/sprites/blue.2bpp"
 BillSpriteGFX::                INCBIN "gfx/sprites/bill.2bpp"
 ElderSpriteGFX::               INCBIN "gfx/sprites/elder.2bpp"

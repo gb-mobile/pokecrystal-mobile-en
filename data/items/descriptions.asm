@@ -645,12 +645,12 @@ BlkApricornDesc:
 	next "@"
 
 SkateBoardDesc:
-	if DEF(_PLUS)
+	;if DEF(_PLUS)
 	db   "Ride anywhere at"	;18 max chars per line
 	next "twice the speed.@"
-	else
-	db   "?@"
-	endc
+	; else
+	; db   "?@"
+	; endc
 
 PnkApricornDesc:
 	db   "A pink APRICORN."

@@ -20,6 +20,9 @@ DEF NUM_TRAINER_ATTRIBUTES EQU _RS
 	shift_const AI_CAUTIOUS
 	shift_const AI_STATUS
 	shift_const AI_RISKY
+IF DEF (_PINK)
+	shift_const AI_METRONOME
+ENDC
 DEF NO_AI EQU 0
 
 ; TRNATTR_AI_ITEM_SWITCH bit flags

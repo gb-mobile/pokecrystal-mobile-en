@@ -18,7 +18,7 @@ DoPlayerMovement::
 
 	ld hl, wBikeFlags
 	bit BIKEFLAGS_SKATE_F, [hl]
-	jr nz, .NotSkate
+	jr z, .NotSkate
 	ld c, a
 	cp B_BUTTON
 	jp z, .Standing

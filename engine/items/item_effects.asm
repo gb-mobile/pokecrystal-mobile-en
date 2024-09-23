@@ -113,11 +113,11 @@ ItemEffects:
 	dw NoEffect            ; WHT_APRICORN
 	dw NoEffect            ; BLACKBELT_I
 	dw NoEffect            ; BLK_APRICORN
-	if DEF(_PLUS)
+	;if DEF(_PLUS)
 	dw BicycleEffect	   ; SKATEBOARD
-	else
-	dw NoEffect            
-	endc
+	; else
+	; dw NoEffect            
+	; endc
 	dw NoEffect            ; PNK_APRICORN
 	dw NoEffect            ; BLACKGLASSES
 	dw NoEffect            ; SLOWPOKETAIL

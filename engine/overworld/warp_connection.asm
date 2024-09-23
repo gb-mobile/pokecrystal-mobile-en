@@ -3,7 +3,11 @@ HandleNewMap:
 	call ResetMapBufferEventFlags
 	call ResetFlashIfOutOfCave
 	call GetCurrentMapSceneID
+	ld a, [wPlayerState]
+	cp PLAYER_SKATE
+	jr z, .skip
 	call ResetBikeFlags
+.skip
 	ld a, MAPCALLBACK_NEWMAP
 	call RunMapCallback
 HandleContinueMap:

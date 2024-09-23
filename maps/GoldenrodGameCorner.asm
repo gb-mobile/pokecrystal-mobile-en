@@ -319,6 +319,12 @@ GoldenrodGameCornerCardFlipMachineScript:
 	closetext
 	end
 
+GoldenrodGameCornerMemoryMachineScript:
+	refreshscreen
+	special UnusedMemoryGame
+	closetext
+	end
+
 GoldenrodGameCornerPrizeVendorIntroText:
 	text "Welcome!"
 
@@ -515,7 +521,7 @@ GoldenrodGameCorner_MapEvents:
 	bg_event 18,  8, BGEVENT_READ, GoldenrodGameCornerCardFlipMachineScript
 	bg_event 18,  9, BGEVENT_READ, GoldenrodGameCornerCardFlipMachineScript
 	bg_event 18, 10, BGEVENT_READ, GoldenrodGameCornerCardFlipMachineScript
-	bg_event 18, 11, BGEVENT_RIGHT, GoldenrodGameCornerCardFlipMachineScript
+	bg_event 18, 11, BGEVENT_RIGHT, GoldenrodGameCornerMemoryMachineScript
 	bg_event 12,  1, BGEVENT_LEFT, GoldenrodGameCornerLeftTheirDrinkScript
 
 	def_object_events

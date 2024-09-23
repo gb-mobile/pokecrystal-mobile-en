@@ -1632,7 +1632,7 @@ BikeFunction:
 	cp PLAYER_SURF
 	jp z, .CannotUseBike
 	cp PLAYER_SURF_PIKA
-	jr z, .CannotUseBike
+	jp z, .CannotUseBike
 	jr .whichItem
 
 .whichItem:
@@ -1674,6 +1674,8 @@ BikeFunction:
 
 .GetOnBoard:
 	ld hl, wBikeFlags
+	bit BIKEFLAGS_ALWAYS_ON_BIKE_F, [hl]
+	jr nz, .CantGetOffBike
 	set BIKEFLAGS_SKATE_F , [hl]
 	ld a, PLAYER_SKATE
 	ld [wPlayerState], a
