@@ -5,7 +5,11 @@ ChrisBikeSpriteGFX::           INCBIN "gfx/sprites/chris_bike.2bpp"
 GameboyKidSpriteGFX::          INCBIN "gfx/sprites/gameboy_kid.2bpp"
 RivalSpriteGFX::               INCBIN "gfx/sprites/rival.2bpp"
 OakSpriteGFX::                 INCBIN "gfx/sprites/oak.2bpp"
+IF DEF (_PINK)
+RedSpriteGFX::                 INCBIN "gfx/sprites/green.2bpp"
+ELSE
 RedSpriteGFX::                 INCBIN "gfx/sprites/red.2bpp"
+ENDC
 BlueSpriteGFX::                INCBIN "gfx/sprites/blue.2bpp"
 BillSpriteGFX::                INCBIN "gfx/sprites/bill.2bpp"
 ElderSpriteGFX::               INCBIN "gfx/sprites/elder.2bpp"
@@ -66,7 +70,7 @@ FishingGuruSpriteGFX::         INCBIN "gfx/sprites/fishing_guru.2bpp"
 ScientistSpriteGFX::           INCBIN "gfx/sprites/scientist.2bpp"
 KimonoGirlSpriteGFX::          INCBIN "gfx/sprites/kimono_girl.2bpp"
 SageSpriteGFX::                INCBIN "gfx/sprites/sage.2bpp"
-UnusedGuySpriteGFX::           INCBIN "gfx/sprites/unused_guy.2bpp"
+ChrisBoardSpriteGFX::          INCBIN "gfx/sprites/chris_skateboard.2bpp"
 GentlemanSpriteGFX::           INCBIN "gfx/sprites/gentleman.2bpp"
 BlackBeltSpriteGFX::           INCBIN "gfx/sprites/black_belt.2bpp"
 ReceptionistSpriteGFX::        INCBIN "gfx/sprites/receptionist.2bpp"
@@ -106,3 +110,7 @@ SuicuneSpriteGFX::             INCBIN "gfx/sprites/suicune.2bpp"
 EnteiSpriteGFX::               INCBIN "gfx/sprites/entei.2bpp"
 RaikouSpriteGFX::              INCBIN "gfx/sprites/raikou.2bpp"
 StandingYoungsterSpriteGFX::   INCBIN "gfx/sprites/standing_youngster.2bpp"
+
+SECTION "Sprites 3", ROMX
+
+KrisBoardSpriteGFX::           INCBIN "gfx/sprites/kris_skateboard.2bpp"

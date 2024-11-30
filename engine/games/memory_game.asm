@@ -14,11 +14,15 @@ _MemoryGame:
 	ld hl, MemoryGameLZ
 	ld de, vTiles2 tile $00
 	call Decompress
-	ld hl, MemoryGameGFX
+	;ld hl, MemoryGameGFX
+	;ld de, vTiles0 tile $00
+	;ld bc, 4 tiles
+	;ld a, BANK(MemoryGameGFX)
+	;call FarCopyBytes
+	ld hl, CursorGFX
 	ld de, vTiles0 tile $00
 	ld bc, 4 tiles
-	ld a, BANK(MemoryGameGFX)
-	call FarCopyBytes
+	call CopyBytes
 	ld a, SPRITE_ANIM_DICT_ARROW_CURSOR
 	ld hl, wSpriteAnimDict
 	ld [hli], a
@@ -77,8 +81,9 @@ _MemoryGame:
 	ret
 
 .ResetBoard:
-	call UnusedCursor_InterpretJoypad_AnimateCursor
-	jr nc, .proceed
+	;call UnusedCursor_InterpretJoypad_AnimateCursor
+	;jr nc, .proceed
+	jr .proceed
 	ld hl, wJumptableIndex
 	set 7, [hl]
 	ret
@@ -463,9 +468,9 @@ MemoryGame_InitStrings:
 .dummy_text
 	db "@"
 .japstr1
-	db "とったもの@"
+	db "aaa@"	;"とったもの@"
 .japstr2
-	db "あと　かい@"
+	db "bbb@"	;"あと　かい@"
 
 MemoryGame_Card2Coord:
 	ld d, 0
@@ -588,3 +593,6 @@ MemoryGame_InterpretJoypad_AnimateCursor:
 
 MemoryGameLZ:
 INCBIN "gfx/memory_game/memory_game.2bpp.lz"
+
+CursorGFX:
+INCBIN "gfx/memory_game/cursor.2bpp"

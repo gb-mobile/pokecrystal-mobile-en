@@ -16,6 +16,9 @@ FindFirstAliveMonAndStartBattle:
 	xor a
 	ldh [hMapAnims], a
 	call DelayFrame
+IF DEF(_CRYSTALFIX)
+	predef DoBattleTransition
+ELSE
 	ld b, PARTY_LENGTH
 	ld hl, wPartyMon1HP
 	ld de, PARTYMON_STRUCT_LENGTH - 1
@@ -34,6 +37,7 @@ FindFirstAliveMonAndStartBattle:
 	ld a, [hl]
 	ld [wBattleMonLevel], a
 	predef DoBattleTransition
+ENDC
 	farcall _LoadBattleFontsHPBar
 	ld a, 1
 	ldh [hBGMapMode], a
@@ -99,6 +103,14 @@ PlayBattleMusic:
 	jr z, .done
 	cp GRUNTF
 	jr z, .done
+IF DEF(_CRYSTALFIX)
+	cp EXECUTIVEM
+	jr z, .done
+	cp EXECUTIVEF
+	jr z, .done
+	cp SCIENTIST
+	jr z, .done
+ENDC
 
 	ld de, MUSIC_KANTO_GYM_LEADER_BATTLE
 	farcall IsKantoGymLeader

@@ -6170,7 +6170,11 @@ LoadEnemyMon:
 
 ; No reason to keep going if length > 1536 mm (i.e. if HIGH(length) > 6 feet)
 	ld a, [wMagikarpLength]
+IF DEF(_CRYSTALFIX)
+	cp 5
+ELSE
 	cp HIGH(1536)
+ENDC
 	jr nz, .CheckMagikarpArea
 
 ; 5% chance of skipping both size checks
@@ -6179,7 +6183,11 @@ LoadEnemyMon:
 	jr c, .CheckMagikarpArea
 ; Try again if length >= 1616 mm (i.e. if LOW(length) >= 4 inches)
 	ld a, [wMagikarpLength + 1]
+IF DEF(_CRYSTALFIX)
+	cp 4
+ELSE
 	cp LOW(1616)
+ENDC
 	jr nc, .GenerateDVs
 
 ; 20% chance of skipping this check
@@ -6188,24 +6196,40 @@ LoadEnemyMon:
 	jr c, .CheckMagikarpArea
 ; Try again if length >= 1600 mm (i.e. if LOW(length) >= 3 inches)
 	ld a, [wMagikarpLength + 1]
+IF DEF(_CRYSTALFIX)
+	cp 3
+ELSE
 	cp LOW(1600)
+ENDC
 	jr nc, .GenerateDVs
 
 .CheckMagikarpArea:
 ; BUG: Magikarp in Lake of Rage are shorter, not longer (see docs/bugs_and_glitches.md)
 	ld a, [wMapGroup]
 	cp GROUP_LAKE_OF_RAGE
+IF DEF(_CRYSTALFIX)
+	jr nz, .Happiness
+ELSE
 	jr z, .Happiness
+ENDC
 	ld a, [wMapNumber]
 	cp MAP_LAKE_OF_RAGE
+IF DEF(_CRYSTALFIX)
+	jr nz, .Happiness
+ELSE
 	jr z, .Happiness
+ENDC	
 ; 40% chance of not flooring
 	call Random
 	cp 39 percent + 1
 	jr c, .Happiness
 ; Try again if length < 1024 mm (i.e. if HIGH(length) < 3 feet)
 	ld a, [wMagikarpLength]
+IF DEF(_CRYSTALFIX)
+	cp 3
+ELSE
 	cp HIGH(1024)
+ENDC
 	jr c, .GenerateDVs ; try again
 
 ; Finally done with DVs
@@ -6802,7 +6826,13 @@ BadgeStatBoosts:
 ; BUG: Glacier Badge may not boost Special Defense depending on the value of Special Attack (see docs/bugs_and_glitches.md)
 	ld a, b
 	srl b
+IF DEF(_CRYSTALFIX)
+	push af
 	call c, BoostStat
+	pop af
+ELSE
+	call c, BoostStat
+ENDC
 	inc hl
 	inc hl
 ; Check every other badge.

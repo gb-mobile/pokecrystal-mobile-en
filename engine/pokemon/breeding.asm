@@ -625,7 +625,12 @@ GetEggFrontpic:
 	ld [wCurPartySpecies], a
 	ld [wCurSpecies], a
 	call GetBaseData
+IF DEF(_CRYSTALFIX)
+	ld a, MON_DVS
+	call GetPartyParamLocation
+ELSE
 	ld hl, wBattleMonDVs
+ENDC
 	predef GetUnownLetter
 	pop de
 	predef_jump GetMonFrontpic
@@ -635,7 +640,12 @@ GetHatchlingFrontpic:
 	ld [wCurPartySpecies], a
 	ld [wCurSpecies], a
 	call GetBaseData
+IF DEF(_CRYSTALFIX)
+	ld a, MON_DVS
+	call GetPartyParamLocation
+ELSE
 	ld hl, wBattleMonDVs
+ENDC
 	predef GetUnownLetter
 	pop de
 	predef_jump GetAnimatedFrontpic

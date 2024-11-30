@@ -181,6 +181,18 @@ LongAnim_UpdateVariables:
 	ld b, a
 ; BUG: HP bar animation is slow for high HP (see docs/bugs_and_glitches.md)
 	call ComputeHPBarPixels
+IF DEF(_CRYSTALFIX)
+	ld a, e
+	pop bc
+	pop de
+	pop hl
+	ld hl, wCurHPBarPixels
+	cp [hl]
+	jr z, .loop
+	ld [hl], a
+	and a
+	ret
+ELSE	
 	pop bc
 	pop de
 	pop hl
@@ -191,6 +203,7 @@ LongAnim_UpdateVariables:
 	ld [hl], a
 	and a
 	ret
+ENDC
 
 ShortHPBarAnim_UpdateTiles:
 	call HPBarAnim_UpdateHPRemaining
@@ -377,6 +390,9 @@ ShortHPBar_CalcPixelFrame:
 	ld a, h
 	sbc $0
 	ld h, a
+IF DEF(_CRYSTALFIX)
+	jr z, .done
+ENDC
 	jr c, .done
 	inc b
 	jr .loop

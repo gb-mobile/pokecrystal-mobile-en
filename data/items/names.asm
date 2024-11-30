@@ -99,7 +99,11 @@ ItemNames::
 	li "WHT APRICORN"
 	li "BLACKBELT"
 	li "BLK APRICORN"
-	li "TERU-SAMA"
+	;if DEF(_PLUS)
+	li "SKATEBOARD"
+	; else
+	; li "TERU-SAMA"
+	; endc
 	li "PNK APRICORN"
 	li "BLACKGLASSES"
 	li "SLOWPOKETAIL"

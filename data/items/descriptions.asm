@@ -100,7 +100,7 @@ ItemDescriptions:
 	dw WhtApricornDesc
 	dw BlackbeltDesc
 	dw BlkApricornDesc
-	dw TeruSama7Desc
+	dw SkateBoardDesc
 	dw PnkApricornDesc
 	dw BlackGlassesDesc
 	dw SlowpokeTailDesc
@@ -644,8 +644,13 @@ BlkApricornDesc:
 	db   "A black APRICORN."
 	next "@"
 
-TeruSama7Desc:
-	db   "?@"
+SkateBoardDesc:
+	;if DEF(_PLUS)
+	db   "Ride anywhere at"	;18 max chars per line
+	next "twice the speed.@"
+	; else
+	; db   "?@"
+	; endc
 
 PnkApricornDesc:
 	db   "A pink APRICORN."

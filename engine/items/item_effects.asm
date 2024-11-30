@@ -113,7 +113,11 @@ ItemEffects:
 	dw NoEffect            ; WHT_APRICORN
 	dw NoEffect            ; BLACKBELT_I
 	dw NoEffect            ; BLK_APRICORN
-	dw NoEffect            ; ITEM_64
+	;if DEF(_PLUS)
+	dw BicycleEffect	   ; SKATEBOARD
+	; else
+	; dw NoEffect            
+	; endc
 	dw NoEffect            ; PNK_APRICORN
 	dw NoEffect            ; BLACKGLASSES
 	dw NoEffect            ; SLOWPOKETAIL
@@ -214,6 +218,13 @@ PokeBallEffect:
 	ld a, [wBattleMode]
 	dec a
 	jp nz, UseBallInTrainerBattle
+	
+IF DEF(_CRYSTALFIX)
+	ld a, [wBattleType]
+	cp BATTLETYPE_TUTORIAL
+	jr z, .room_in_party
+ENDC
+
 
 	ld a, [wPartyCount]
 	cp PARTY_LENGTH
@@ -342,6 +353,9 @@ PokeBallEffect:
 	and 1 << FRZ | SLP_MASK
 	ld c, 10
 	jr nz, .addstatus
+IF DEF(_CRYSTALFIX)
+	ld a, [wEnemyMonStatus]
+ENDC
 	and a
 	ld c, 5
 	jr nz, .addstatus
@@ -357,6 +371,9 @@ PokeBallEffect:
 	ld d, a
 	push de
 	ld a, [wBattleMonItem]
+IF DEF(_CRYSTALFIX)
+	ld b, a
+ENDC
 	farcall GetItemHeldEffect
 	ld a, b
 	cp HELD_CATCH_CHANCE
@@ -757,6 +774,9 @@ HeavyBall_GetDexEntryBank:
 	push hl
 	push de
 	ld a, [wEnemyMonSpecies]
+IF DEF(_CRYSTALFIX)
+	dec a
+ENDC
 	rlca
 	rlca
 	maskbits NUM_DEX_ENTRY_BANKS
@@ -921,7 +941,11 @@ MoonBallMultiplier:
 	push bc
 	ld a, BANK("Evolutions and Attacks")
 	call GetFarByte
+IF DEF(_CRYSTALFIX)
+	cp MOON_STONE
+ELSE
 	cp MOON_STONE_RED ; BURN_HEAL
+ENDC
 	pop bc
 	ret nz
 
@@ -978,7 +1002,11 @@ LoveBallMultiplier:
 	pop de
 	cp d
 	pop bc
+IF DEF(_CRYSTALFIX)
+	ret z
+ELSE
 	ret nz
+ENDC
 
 	sla b
 	jr c, .max
@@ -1012,7 +1040,11 @@ FastBallMultiplier:
 	cp -1
 	jr z, .next
 	cp c
+IF DEF(_CRYSTALFIX)
+	jr nz, .loop
+ELSE
 	jr nz, .next
+ENDC
 	sla b
 	jr c, .max
 
